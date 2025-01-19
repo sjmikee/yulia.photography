@@ -10,17 +10,30 @@ import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
-import image1 from '~/assets/images/hero-image.png';
-import image2 from '~/assets/images/app-store.png';
-import image3 from '~/assets/images/google-play.png';
+import img1 from '~/assets/images/img1.jpg';
+import img2 from '~/assets/images/img2.jpg';
+import img3 from '~/assets/images/img3.jpg';
+import img4 from '~/assets/images/img4.jpg';
+import img5 from '~/assets/images/img5.jpg';
+import img6 from '~/assets/images/img6.jpg';
+import img7 from '~/assets/images/img7.jpg';
+import img8 from '~/assets/images/img8.jpg';
+
 
 const metadata = {
-  title: 'AstroWind — Free template for creating websites with Astro + Tailwind CSS',
+  title: 'Yulia-photogpraphy',
   ignoreTitleTemplate: true,
 };
 
 const images = [
-  { src: image1, alt: "aa" }, 
+  { src: img1, alt: "aa" },
+  { src: img2, alt: "aa" },
+  { src: img3, alt: "aa" },
+  { src: img4, alt: "aa" },
+  { src: img5, alt: "aa" },
+  { src: img6, alt: "aa" },
+  { src: img7, alt: "aa" },
+  { src: img8, alt: "aa" },
 ];
 ---
 
@@ -31,28 +44,24 @@ const images = [
     actions={[
       {
         variant: 'primary',
-        text: 'Get template',
+        text: 'דברו איתי',
         href: 'https://github.com/onwidget/astrowind',
         target: '_blank',
-        icon: 'tabler:download',
+        icon: 'tabler:phone',
       },
-      { text: 'Learn more', href: '#features' },
+      { text: 'מחירון', href: '#features' },
     ]}
-    image={{ src: '~/assets/images/hero-image.png', alt: 'AstroWind Hero Image' }}
+    image={{ src: '~/assets/images/hero.jpg', alt: 'יוליה צלמת' }}
   >
     <Fragment slot="title">
-      Free template for <span class="hidden xl:inline">creating websites with</span>
-      <span class="text-accent dark:text-white highlight"> Astro 5.0</span> + Tailwind CSS
+      היי!
+      אני <span class="text-accent dark:text-white highlight"> יוליה</span>
     </Fragment>
 
     <Fragment slot="subtitle">
-      <span class="hidden sm:inline">
-        <span class="font-semibold">AstroWind</span> is a free, customizable and production-ready template for Astro 5.0
-        + Tailwind CSS.</span
-      >
-      <span class="block mb-1 sm:hidden font-bold text-blue-600">AstroWind: Production-ready.</span>
-      Suitable for Startups, Small Business, SaaS websites, Professional Portfolios, Marketing websites, Landing Pages &
-      Blogs.
+      צלמת מקצועית, מתמכה בצילומי משפחה, הריון, הנקה ועוד<br>
+      בעולם של היום צילום ותיעוד מהווה חלק בלתי נפרד מהחיים שלנו, ולכן אני משתדלת שהמחירים שלי יהיו נגישים.
+      מוזמנים לפנות אלי לכל שאלה או התייעצות
     </Fragment>
   </Hero>
 
@@ -63,7 +72,7 @@ const images = [
   <!-- Content Widget **************** -->
 
   <Content
-    isReversed
+    isAfterContent
     tagline="Inside template"
     title="AstroWind's Blueprint: Fun Meets Functionality!"
     items={[

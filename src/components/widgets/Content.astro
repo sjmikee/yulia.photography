@@ -2,7 +2,8 @@
 import type { Content as Props } from '~/types';
 import Headline from '../ui/Headline.astro';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
-import Slider from './Slider.astro';
+//import Slider from './Slider.astro';
+import SwiperSlider from './SwiperSlider.astro';
 import Button from '~/components/ui/Button.astro';
 import ItemGrid from '../ui/ItemGrid.astro';
 
@@ -41,9 +42,9 @@ const {
       subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
     }}
   />
-  <div class="mx-auto max-w-7xl p-4 md:px-8">
-    <div class={`md:flex ${isReversed ? 'md:flex-row-reverse' : ''} md:gap-16`}>
-      <div class="md:basis-1/2 self-center">
+  <div class="mx-auto max-w-fit p-4 md:px-8">
+    <div class={`sm:flex-row ${isReversed ? 'sm:flex-row-reverse' : ''} sm:gap-16`}>
+      <div class="sm:basis-1/2">
         {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
         {
@@ -68,14 +69,14 @@ const {
           }}
         />
       </div>
-      <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
+      <div aria-hidden="true" class="sm:basis-1/2">
         {
           images && (
-            <div class="relative m-auto max-w-4xl">
+            <div class="relative max-w-xl object-scale-down">
               {typeof images === 'string' ? (
                 <Fragment set:html={images} />
               ) : (
-                <Slider class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg" images={images} />
+                <SwiperSlider images={images} />
               )}
             </div>
           )

@@ -1,0 +1,61 @@
+---
+import 'swiper/css/bundle';
+
+import Image from '~/components/common/Image.astro';
+
+const images = Astro.props.images;
+---
+
+<!-- Slider main container -->
+<div class="swiper">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+      <!-- Slides -->
+      {images.map((image) => (
+        <div class="swiper-slide">
+          {/* <Image src={image.src} alt={image.alt} loading="lazy"/> */
+          <Image
+              class="mx-auto rounded-lg bg-gray-500 shadow-lg"
+              width={image.src.width}
+              height={image.src.height}
+              
+              {...image}
+          />
+        }
+        </div>
+      ))}
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+</div>
+
+<script src="/js/swiper-bundle.min.js" defer></script>
+<script is:inline>
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const sliders = document.querySelectorAll('.swiper');
+
+        sliders.forEach((slider) => {
+            new Swiper(slider, {
+                direction: 'horizontal',
+                autoplay: {
+                    delay: 1500,
+                },
+                effect: 'flip',
+                keyboard: {
+                    enabled: true,
+                    onlyInViewport: false,
+                },
+                simulateTouch: true,
+                updateOnWindowResize: true,
+                loop: true,
+                speed: 400,
+                autoHeight: true,
+                // If we need pagination
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+            })});
+    });
+</script>
