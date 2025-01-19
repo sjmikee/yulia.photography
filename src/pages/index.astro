@@ -12,7 +12,6 @@ import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import img1 from '~/assets/images/img1.jpg';
 import img2 from '~/assets/images/img2.jpg';
-import img3 from '~/assets/images/img3.jpg';
 import img4 from '~/assets/images/img4.jpg';
 import img5 from '~/assets/images/img5.jpg';
 import img6 from '~/assets/images/img6.jpg';
@@ -21,14 +20,13 @@ import img8 from '~/assets/images/img8.jpg';
 
 
 const metadata = {
-  title: 'Yulia-photogpraphy',
+  title: 'X-photogpraphy',
   ignoreTitleTemplate: true,
 };
 
 const images = [
   { src: img1, alt: "aa" },
   { src: img2, alt: "aa" },
-  { src: img3, alt: "aa" },
   { src: img4, alt: "aa" },
   { src: img5, alt: "aa" },
   { src: img6, alt: "aa" },
@@ -51,11 +49,11 @@ const images = [
       },
       { text: 'מחירון', href: '#features' },
     ]}
-    image={{ src: '~/assets/images/hero.jpg', alt: 'יוליה צלמת' }}
+    image={{ src: '~/assets/images/hero.jpg', alt: 'X צלמת' }}
   >
     <Fragment slot="title">
       היי!
-      אני <span class="text-accent dark:text-white highlight"> יוליה</span>
+      אני <span class="text-accent dark:text-white highlight"> X</span>
     </Fragment>
 
     <Fragment slot="subtitle">
@@ -72,7 +70,7 @@ const images = [
   <!-- Content Widget **************** -->
 
   <Content
-    isAfterContent
+    isReversed
     tagline="Inside template"
     title="AstroWind's Blueprint: Fun Meets Functionality!"
     items={[
