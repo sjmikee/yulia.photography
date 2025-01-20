@@ -2,7 +2,6 @@
 import type { Content as Props } from '~/types';
 import Headline from '../ui/Headline.astro';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
-//import Slider from './Slider.astro';
 import SwiperSlider from './SwiperSlider.astro';
 import Button from '~/components/ui/Button.astro';
 import ItemGrid from '../ui/ItemGrid.astro';
@@ -42,9 +41,9 @@ const {
       subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
     }}
   />
-  <div class="mx-auto max-w-3xl justify-center p-4 md:px-8">
-    <div class={`sm:flex ${isReversed ? 'sm:flex-row-reverse' : ''} sm:gap-16`}>
-      <div class="sm:basis-1/2">
+  <div class="mx-auto max-w-6xl justify-center p-4 md:px-8 space-y-4">
+    <div class={`flex flex-col sm:flex-row ${isReversed ? 'sm:flex-row-reverse' : ''} sm:gap-16`}>
+      <div class="sm:w-1/2">
         {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
         {
@@ -58,18 +57,16 @@ const {
         <ItemGrid
           items={items}
           columns={columns}
-          defaultIcon="tabler:check"
           classes={{
             container: `gap-y-4 md:gap-y-8`,
             panel: 'max-w-none',
             title: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
             description: 'text-muted dark:text-slate-400 ml-2 rtl:ml-0 rtl:mr-2',
-            icon: 'flex h-7 w-7 items-center justify-center rounded-full bg-green-600 dark:bg-green-700 text-gray-50 p-1',
             action: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
           }}
         />
       </div>
-      <div aria-hidden="true" class="sm:basis-1/2">
+      <div aria-hidden="true" class="sm:w-1/2">
         {
           images && (
             <div class="max-w-xl object-scale-down">

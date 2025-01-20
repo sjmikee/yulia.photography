@@ -25,8 +25,6 @@ const images = Astro.props.images;
         </div>
       ))}
     </div>
-    <!-- If we need pagination -->
-    <div class="swiper-pagination"></div>
 </div>
 
 <script src="/js/swiper-bundle.min.js" defer></script>
@@ -43,7 +41,7 @@ const images = Astro.props.images;
                     delay: 1500,
                     pauseOnMouseEnter: true
                 },
-                effect: 'flip',
+                effect: 'slide',
                 keyboard: {
                     enabled: true,
                     onlyInViewport: true,
@@ -53,12 +51,6 @@ const images = Astro.props.images;
                 loop: true,
                 speed: 400,
                 autoHeight: true,
-                // If we need pagination
-                pagination: {
-                    el: '.swiper-pagination',
-                    dynamicBullets: true,
-                    dynamicMainBullets: 1,
-                },
             })});
     });
 </script>

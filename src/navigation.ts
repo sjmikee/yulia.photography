@@ -32,6 +32,10 @@ export const headerData = {
       href: getPermalink('/pricing'),
     },
     {
+      text: 'טיפים חשובים',
+      href: getPermalink('/blog'),
+    },
+    {
       text: 'מי אני',
       href: getPermalink('/about'),
     },
