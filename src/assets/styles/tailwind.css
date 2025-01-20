@@ -90,3 +90,22 @@
 .dd *:first-child {
   margin-top: 0;
 }
+
+#staticHero {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+#hero {
+  margin-top: 50vh;
+  background-color: white;
+}
+
+.dark #hero {
+  background-color: rgb(3 6 32);
+}

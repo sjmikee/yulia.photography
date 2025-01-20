@@ -41,9 +41,9 @@ const {
       subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
     }}
   />
-  <div class="mx-auto max-w-6xl justify-center p-4 md:px-8 space-y-4">
-    <div class={`flex flex-col sm:flex-row ${isReversed ? 'sm:flex-row-reverse' : ''} sm:gap-16`}>
-      <div class="sm:w-1/2">
+  <div class="mx-auto w-full justify-center p-4 md:px-8 space-y-4">
+    <div class={`flex flex-col ${isReversed ? 'flex-col-reverse' : ''} gap-16  justify-center items-center`}>
+      <div class="h-1/2 w-11/12 sm:w-2/3">
         {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
         {
@@ -66,10 +66,10 @@ const {
           }}
         />
       </div>
-      <div aria-hidden="true" class="sm:w-1/2">
+      <div aria-hidden="true" class="h-1/2 w-11/12 sm:w-2/3">
         {
           images && (
-            <div class="max-w-xl object-scale-down">
+            <div class="max-w-3xl object-scale-down">
               {typeof images === 'string' ? (
                 <Fragment set:html={images} />
               ) : (

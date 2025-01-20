@@ -1,0 +1,32 @@
+---
+import Image from '~/components/common/Image.astro';
+import staticHero from '~/assets/images/img8.jpg'
+---
+
+<Image
+    src={ staticHero }
+    alt="Static Hero Image"
+    id="staticHero"
+    loading={'eager'}
+/>
+
+<script>
+    const headerComponent = document.querySelector('#header');
+    const staticHeroComponent = document.querySelector('#staticHero');
+
+    // Update margin dynamically
+    function updateMargin() {
+        let height = 0;
+
+        if(null != headerComponent)
+        {
+            height = headerComponent.offsetHeight;         
+
+            staticHeroComponent.style.marginTop = `${height}px`;
+        }
+    }
+
+    // Call on load and resize
+    window.addEventListener('load', updateMargin);
+    window.addEventListener('resize', updateMargin);
+</script>
