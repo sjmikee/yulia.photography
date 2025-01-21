@@ -3,6 +3,7 @@ import type { Content as Props } from '~/types';
 import Headline from '../ui/Headline.astro';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
 import SwiperSlider from './SwiperSlider.astro';
+import SliderCard from './SliderCard.astro';
 import Button from '~/components/ui/Button.astro';
 import ItemGrid from '../ui/ItemGrid.astro';
 
@@ -23,6 +24,12 @@ const {
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+
+const sliderCard = {
+  title: title,
+  images: images,
+  description: items,
+}
 ---
 
 <WidgetWrapper
@@ -42,38 +49,40 @@ const {
     }}
   />
   <div class="mx-auto w-full justify-center p-4 md:px-8 space-y-4">
-    <div class={`flex flex-col ${isReversed ? 'flex-col-reverse' : ''} gap-16  justify-center items-center`}>
-      <div class="h-1/2 w-11/12 sm:w-2/3">
-        {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+    <div class={`flex flex-col lg:flex-row ${isReversed ? 'flex-col-reverse lg:flex-row-reverse' : ''} gap-0  justify-center items-center`}>
+      <div class="bg-transparent rounded-sm h-full w-full lg:w-2/3">
+        <div class="p-4 border border-gray-200 rounded-md shadow-md">
+          {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
 
-        {
-          callToAction && (
-            <div class="mt-[-40px] mb-8 text-primary">
-              <Button variant="link" {...callToAction} />
-            </div>
-          )
-        }
+          {
+            callToAction && (
+              <div class="mt-[-40px] mb-8 text-primary">
+                <Button variant="link" {...callToAction} />
+              </div>
+            )
+          }
 
-        <ItemGrid
-          items={items}
-          columns={columns}
-          classes={{
-            container: `gap-y-4 md:gap-y-8`,
-            panel: 'max-w-none',
-            title: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
-            description: 'text-muted dark:text-slate-400 ml-2 rtl:ml-0 rtl:mr-2',
-            action: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
-          }}
-        />
+          <ItemGrid
+            items={items}
+            columns={columns}
+            classes={{
+              container: `gap-y-4 md:gap-y-8`,
+              panel: 'max-w-none',
+              title: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
+              description: 'text-muted dark:text-slate-400 ml-2 rtl:ml-0 rtl:mr-2',
+              action: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
+            }}
+          />
+        </div>
       </div>
-      <div aria-hidden="true" class="h-1/2 w-11/12 sm:w-2/3">
+      <div aria-hidden="true" class="h-full w-full lg:w-2/3">
         {
           images && (
             <div class="max-w-3xl object-scale-down">
               {typeof images === 'string' ? (
                 <Fragment set:html={images} />
               ) : (
-                <SwiperSlider images={images} />
+                <SliderCard sliderCard={sliderCard}/>
               )}
             </div>
           )

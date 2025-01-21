@@ -1,0 +1,14 @@
+---
+import SliderCard from './SliderCard.astro';
+import type { SliderCardType } from '~/types';
+
+export interface Props {
+  sliderCards: Array<SliderCardType>;
+}
+
+const { sliderCards } = Astro.props;
+---
+
+<div class="grid gap-6 row-gap-5 md:grid-cols-2 lg:grid-cols-4 -mb-6">
+  {sliderCards.map((sliderCard) => <SliderCard sliderCard={sliderCard} />)}
+</div>

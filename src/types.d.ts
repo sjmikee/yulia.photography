@@ -189,6 +189,13 @@ export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
   type?: 'button' | 'submit' | 'reset';
 }
 
+export interface SliderCardType {
+  title?: string;
+  description?: Array<Item>;
+  callToAction?: CallToAction;
+  images?: Array<Image>;
+}
+
 export interface ItemGrid {
   items?: Array<Item>;
   columns?: number;
