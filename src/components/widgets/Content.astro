@@ -2,7 +2,6 @@
 import type { Content as Props } from '~/types';
 import Headline from '../ui/Headline.astro';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
-import SwiperSlider from './SwiperSlider.astro';
 import SliderCard from './SliderCard.astro';
 import Button from '~/components/ui/Button.astro';
 import ItemGrid from '../ui/ItemGrid.astro';
@@ -28,7 +27,7 @@ const {
 const sliderCard = {
   title: title,
   images: images,
-  description: items,
+  items: items,
 }
 ---
 

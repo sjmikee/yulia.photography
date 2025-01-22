@@ -191,7 +191,7 @@ export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
 
 export interface SliderCardType {
   title?: string;
-  description?: Array<Item>;
+  items?: Array<Item>;
   callToAction?: CallToAction;
   images?: Array<Image>;
 }
@@ -289,6 +289,14 @@ export interface Content extends Omit<Headline, 'classes'>, Widget {
   isReversed?: boolean;
   isAfterContent?: boolean;
   callToAction?: CallToAction;
+}
+
+export interface SliderCardsGridType extends Omit<Headline, 'classes'>, Widget {
+  image?: string | unknown;
+  sliderCards?: Array<SliderCardType>;
+  columns?: number;
+  isReversed?: boolean;
+  isAfterContent?: boolean;
 }
 
 export interface Contact extends Omit<Headline, 'classes'>, Form, Widget {}

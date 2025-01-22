@@ -1,12 +1,20 @@
 ---
 import SliderCard from './SliderCard.astro';
-import type { SliderCardType } from '~/types';
+import type { SliderCardsGridType as Props } from '~/types';
+import Headline from '../ui/Headline.astro';
+import WidgetWrapper from '../ui/WidgetWrapper.astro';
+import Button from '~/components/ui/Button.astro';
+import ItemGrid from '../ui/ItemGrid.astro';
 
-export interface Props {
-  sliderCards: Array<SliderCardType>;
+const {
+  sliderCards = [],
+  columns,
+  isAfterContent = false,
+  isDark = false,
+  bg = await Astro.slots.render('bg'),
 }
 
-const { sliderCards } = Astro.props;
+const { sliderCards, columns, isAfterContent, isDark } = Astro.props;
 ---
 
 <div class="grid gap-6 row-gap-5 md:grid-cols-2 lg:grid-cols-4 -mb-6">
