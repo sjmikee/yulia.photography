@@ -193,7 +193,7 @@ export interface SliderCardType {
   title?: string;
   items?: Array<Item>;
   callToAction?: CallToAction;
-  images?: Array<Image>;
+  images?: Array<ImageMetadata, string>;
 }
 
 export interface ItemGrid {

@@ -2,6 +2,20 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 import plugin from 'tailwindcss/plugin';
 import typographyPlugin from '@tailwindcss/typography';
 
+
+module.exports = {
+	content: [
+		'./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
+		'./node_modules/flowbite/**/*.js'
+	],
+	theme: {
+		extend: {},
+	},
+	plugins: [
+		require('flowbite/plugin')
+	],
+}
+
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,json,md,mdx,svelte,ts,tsx,vue}'],
   theme: {

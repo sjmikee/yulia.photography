@@ -40,7 +40,7 @@ export const headerData = {
       href: getPermalink('/about'),
     },
   ],
-  actions: [{ text: 'דברו איתי', href: 'https://github.com/onwidget/astrowind', target: '_blank', icon: 'tabler:phone' }],
+  actions: [{ text: 'דברו איתי', href: 'tel:0521234567', target: '_blank', icon: 'tabler:phone' }],
 };
 
 export const footerData = {

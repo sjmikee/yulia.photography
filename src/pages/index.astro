@@ -1,8 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-
 import Hero from '~/components/widgets/Hero.astro';
-import Content from '~/components/widgets/Content.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
@@ -14,6 +12,7 @@ import img6 from '~/assets/images/img6.jpg';
 import img7 from '~/assets/images/img7.jpg';
 import img8 from '~/assets/images/img8.jpg';
 import StaticHero from '~/components/widgets/StaticHero.astro';
+import SliderCardsGrid from '~/components/widgets/SliderCardsGrid.astro';
 
 
 const metadata = {
@@ -41,7 +40,7 @@ const images = [
       {
         variant: 'primary',
         text: 'דברו איתי',
-        href: 'https://github.com/onwidget/astrowind',
+        href: 'tel:0521234567',
         target: '_blank',
         icon: 'tabler:phone',
       },
@@ -61,90 +60,74 @@ const images = [
     </Fragment>
   </Hero>
 
-  <!-- Content Widget **************** -->
-
-  <Content
-    isReversed
-    tagline="זיכרונות מרגשים שנשארים לנצח"
-    title="צילומי משפחה"
-    items={[
-      {
-        description:
-          'רוצים לשמר את הרגעים המיוחדים עם האנשים היקרים לכם מכל? צילומי משפחה מקצועיים הם הדרך המושלמת להנציח את הקשר הייחודי שלכם. אני מציע חוויית צילום אישית ומהנה, באווירה רגועה שמתאימה לכל המשפחה – מהקטנים ועד הגדולים.',
-      },
-      {
-        description:
-          'אצור עבורכם תמונות מרהיבות שמשלבות אותנטיות, חיבור ורגעים מלאי קסם. כל תמונה תהפוך לזיכרון שתשמחו לשמור ולהציג.',
-      },
-      {
-        description:
-          'אל תחכו ליום מיוחד – בואו ליצור רגעים שתוכלו לחזור אליהם בכל עת!',
-      },
-    ]}
-    images={images}
-  >
-
+  <SliderCardsGrid
+    sliderCards= {
+      [
+        {
+          images: images,
+          title: "צילומי משפחה",
+          items: [
+            {
+              description:
+                'רוצים לשמר את הרגעים המיוחדים עם האנשים היקרים לכם מכל? צילומי משפחה מקצועיים הם הדרך המושלמת להנציח את הקשר הייחודי שלכם. אני מציע חוויית צילום אישית ומהנה, באווירה רגועה שמתאימה לכל המשפחה – מהקטנים ועד הגדולים.',
+            },
+            {
+              description:
+                'אצור עבורכם תמונות מרהיבות שמשלבות אותנטיות, חיבור ורגעים מלאי קסם. כל תמונה תהפוך לזיכרון שתשמחו לשמור ולהציג.',
+            },
+            {
+              description:
+                'אל תחכו ליום מיוחד – בואו ליצור רגעים שתוכלו לחזור אליהם בכל עת!',
+            },
+          ],
+          callToAction: { text: "עוד", href: "/", icon: "tabler:library-photo" }
+        },
+        {
+          images: images,
+          title: "צילומי הריון",
+          items: [
+            {
+              description: `תקופת ההריון היא אחת התקופות המיוחדות והמרגשות ביותר בחיים – זהו הזמן לתעד את הפלא הזה באופן שיעצים את היופי והחיבור שלך עם החיים החדשים שגדלים בתוכך.`,
+            },
+            {
+              description:
+                'צילומי הריון מקצועיים מאפשרים לך להרגיש זוהרת, ייחודית ונשית מתמיד. אני אדאג לתפוס את הרגעים הקסומים שמספרים את הסיפור המיוחד שלך.',
+            },
+            {
+              description:
+                "הנציחי את הרגעים המרגשים של ההריון – צרי קשר עוד היום וניצור יחד זיכרון חשוב שילווה אותך לעד.",
+            },
+          ],
+          callToAction: { text: "עוד", href: "/", icon: "tabler:library-photo" }
+        },
+        {
+          images: images,
+          title: "צילומי הנקה",
+          items: [
+            {
+              description:
+                'הרגעים האינטימיים והטבעיים של ההנקה הם חוויות ייחודיות ובלתי נשכחות שמספרות את סיפור החיבור העמוק בין אם לתינוק. צילומי הנקה מקצועיים מאפשרים לך להנציח את התקופה המיוחדת הזו באופן מרגש, טבעי ואמנותי.',
+            },
+            {
+              description:
+                'בין אם את מעדיפה צילומים בטבע שקט ומרגיע, בביתך המלא חום או בסטודיו מקצועי, אני אדאג ליצור עבורך תמונות שמבליטות את האהבה, החיבור והיופי שבאימהות. הצילומים מתבצעים באווירה רגועה ונעימה, תוך תשומת לב לכל פרט, כדי להבטיח חוויה נוחה ומרגשת.',
+            },
+            {
+              description:
+                'צרי קשר עוד היום להנצחת הרגעים המיוחדים של ההנקה בתמונות שישארו איתך לנצח.',
+            },
+          ],
+          callToAction: { text: "עוד", href: "/", icon: "tabler:library-photo" }
+        },
+      ]
+    }
+    columns={2}
+    >
+  
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-slate-900"></div>
     </Fragment>
-  </Content>
-
-  <!-- Content Widget **************** -->
-
-  <Content
-    isReversed
-    isAfterContent
-    tagline="לתעד את הפלא המרגש של החיים"
-    title="צילומי הריון"
-    items={[
-      {
-        description: `תקופת ההריון היא אחת התקופות המיוחדות והמרגשות ביותר בחיים – זהו הזמן לתעד את הפלא הזה באופן שיעצים את היופי והחיבור שלך עם החיים החדשים שגדלים בתוכך.`,
-      },
-      {
-        description:
-          'צילומי הריון מקצועיים מאפשרים לך להרגיש זוהרת, ייחודית ונשית מתמיד. אני אדאג לתפוס את הרגעים הקסומים שמספרים את הסיפור המיוחד שלך.',
-      },
-      {
-        description:
-          "הנציחי את הרגעים המרגשים של ההריון – צרי קשר עוד היום וניצור יחד זיכרון חשוב שילווה אותך לעד.",
-      },
-    ]}
-    images={images}
-  >
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-slate-900"></div>
-    </Fragment>
-  </Content>
-
-  <!-- Content Widget **************** -->
-
-  <Content
-    isReversed
-    isAfterContent
-    tagline="חיבור טבעי ואהבה ללא תנאים"
-    title="צילומי הנקה"
-    items={[
-      {
-        description:
-          'הרגעים האינטימיים והטבעיים של ההנקה הם חוויות ייחודיות ובלתי נשכחות שמספרות את סיפור החיבור העמוק בין אם לתינוק. צילומי הנקה מקצועיים מאפשרים לך להנציח את התקופה המיוחדת הזו באופן מרגש, טבעי ואמנותי.',
-      },
-      {
-        description:
-          'בין אם את מעדיפה צילומים בטבע שקט ומרגיע, בביתך המלא חום או בסטודיו מקצועי, אני אדאג ליצור עבורך תמונות שמבליטות את האהבה, החיבור והיופי שבאימהות. הצילומים מתבצעים באווירה רגועה ונעימה, תוך תשומת לב לכל פרט, כדי להבטיח חוויה נוחה ומרגשת.',
-      },
-      {
-        description:
-          'צרי קשר עוד היום להנצחת הרגעים המיוחדים של ההנקה בתמונות שישארו איתך לנצח.',
-      },
-    ]}
-    images={images}
-  >
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-slate-900"></div>
-    </Fragment>
-  </Content>
+  </SliderCardsGrid>
 
   <!-- HighlightedPosts Widget ******* -->
 
