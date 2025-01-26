@@ -10,23 +10,29 @@ import staticHero from '~/assets/images/img8.jpg'
     loading={'eager'}
 />
 
-<script>
-    const headerComponent = document.querySelector('#header');
-    const staticHeroComponent = document.querySelector('#staticHero');
-
+<script is:inline>
     // Update margin dynamically
     function updateMargin() {
-        let height = 0;
+        requestAnimationFrame(() => {
+            const headerComponent = document.querySelector('#header');
+            const staticHeroComponent = document.querySelector('#staticHero');
+            let height = 0;
 
-        if(null != headerComponent)
-        {
-            height = headerComponent.offsetHeight;         
+            if(null != headerComponent)
+            {
+                height = headerComponent.offsetHeight;         
 
-            staticHeroComponent.style.marginTop = `${height}px`;
-        }
+                staticHeroComponent.style.marginTop = `${height}px`;
+            }
+        });
     }
 
     // Call on load and resize
     window.addEventListener('load', updateMargin);
     window.addEventListener('resize', updateMargin);
+    window.addEventListener('pageshow', updateMargin);
+
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        updateMargin();
+    }
 </script>

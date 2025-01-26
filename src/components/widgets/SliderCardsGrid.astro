@@ -1,12 +1,10 @@
 ---
 import SliderCard from './SliderCard.astro';
 import type { SliderCardsGridType as Props } from '~/types';
-import { twMerge } from 'tailwind-merge';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
 
 const {
   sliderCards = [],
-  columns,
   isAfterContent = false,
   isDark = false,
   bg = await Astro.slots.render('bg'),
@@ -15,25 +13,13 @@ const {
 
 <WidgetWrapper
   isDark={isDark}
-  containerClass={`max-w-5xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''}}`}
+  containerClass={`max-w-4xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''}}`}
   bg={bg}
 >
 
 {
   sliderCards && (
-    <div
-      class={twMerge(
-        `grid mx-auto gap-8 md:gap-y-12 ${
-          columns === 4
-            ? 'lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1'
-            : columns === 3
-              ? 'lg:grid-cols-3 sm:grid-cols-2 grid-cols-1'
-              : columns === 2
-                ? 'sm:grid-cols-2 grid-cols-1'
-                : ''
-        }`,
-      )}
-    >
+    <div class="space-y-10">
       {sliderCards.map((sliderCard) => <SliderCard sliderCard={sliderCard} />)}
     </div>
   )

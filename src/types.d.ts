@@ -191,7 +191,8 @@ export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
 
 export interface SliderCardType {
   title?: string;
-  items?: Array<Item>;
+  subTitle?: string;
+  text?: string;
   callToAction?: CallToAction;
   images?: Array<ImageMetadata, string>;
 }

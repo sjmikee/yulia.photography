@@ -9,25 +9,24 @@ export interface Props {
 
 const { sliderCard } = Astro.props;
 
-const images = sliderCard.images;
 const title = sliderCard.title;
-const items = sliderCard.items;
+const subTitle = sliderCard.subTitle;
+const text = sliderCard.text;
+const images = sliderCard.images;
 const callToAction = sliderCard.callToAction;
 ---
 
-<div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 intersect-once motion-safe:opacity-0 motion-safe:intersect:animate-fade">
-    <div>
-      <SwiperSlider images={images} />
-    </div>
-    <div class="p-4 md:p-5">
-        <h3 class="text-lg font-bold text-gray-800 dark:text-white">
-        <div set:text={title} />
-        </h3>
-        <p class="mt-1 text-gray-500 dark:text-neutral-400">
-          {items && (items.map((item) => <div set:text={item.description} />))}
-        </p>
-        <div class="mt-4">
-          <Button variant="secondary" {...callToAction} />
-        </div>
-    </div>
+
+<div class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-xl md:flex-row md:max-w-full dark:border-gray-700 dark:bg-gray-800 p-4">
+  <div class="object-cover w-full h-auto md:w-2/3">
+    <SwiperSlider images={images} />
+  </div>
+  <div class="flex flex-col justify-between p-4 leading-normal">
+      <h1 class="mb-2 font-bold text-xl tracking-tight text-gray-900 dark:text-white"><div set:text={title} /></h1>
+      <h2 class="mb-2 font-bold text-sm tracking-tight text-violet-600 dark:text-white"><div set:text={subTitle} /></h2>
+      <h3 class="mb-3 mt-4 sm:mt-0 text-sm font-normal text-gray-700 dark:text-gray-200"><div set:text={text} /></h3>
+      <div class="mt-4">
+        <Button variant="secondary" {...callToAction} />
+      </div>
+  </div>
 </div>

@@ -15,7 +15,7 @@ const images = Astro.props.images;
         <div class="swiper-slide">
         {
           <Image
-              class="mx-auto rounded-xl"
+              class="rounded-lg"
               width={image.src.width}
               height={image.src.height}
               
@@ -30,8 +30,7 @@ const images = Astro.props.images;
 <script src="/js/swiper-bundle.min.js" defer></script>
 <script is:inline>
 
-
-    document.addEventListener('DOMContentLoaded', () => {
+    function initSliders() {
         const sliders = document.querySelectorAll('.swiper');
 
         sliders.forEach((slider) => {
@@ -52,5 +51,12 @@ const images = Astro.props.images;
                 speed: 400,
                 autoHeight: true,
             })});
-    });
+    }
+
+    window.addEventListener('load', initSliders);
+    window.addEventListener('pageshow', initSliders);
+
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        initSliders();
+    }
 </script>
