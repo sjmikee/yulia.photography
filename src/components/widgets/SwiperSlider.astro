@@ -15,7 +15,6 @@ const images = Astro.props.images;
         <div class="swiper-slide">
         {
           <Image
-              class="rounded-lg"
               width={image.src.width}
               height={image.src.height}
               
@@ -40,7 +39,7 @@ const images = Astro.props.images;
                     delay: 1500,
                     pauseOnMouseEnter: true
                 },
-                effect: 'fade',
+                effect: 'slide',
                 keyboard: {
                     enabled: true,
                     onlyInViewport: true,
@@ -50,6 +49,8 @@ const images = Astro.props.images;
                 loop: true,
                 speed: 400,
                 autoHeight: true,
+                slidesPerView: 2,
+                spaceBetween: 10,
             })});
     }
 
