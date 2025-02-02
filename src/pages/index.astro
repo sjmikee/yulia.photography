@@ -10,13 +10,12 @@ import img4 from '~/assets/images/img4.jpg';
 import img5 from '~/assets/images/img5.jpg';
 import img6 from '~/assets/images/img6.jpg';
 import img7 from '~/assets/images/img7.jpg';
-import img8 from '~/assets/images/img8.jpg';
 import StaticHero from '~/components/widgets/StaticHero.astro';
-import SliderCardsGrid from '~/components/widgets/SliderCardsGrid.astro';
+import ContentGrid from '~/components/widgets/ContentGrid.astro';
 
 
 const metadata = {
-  title: 'X-photogpraphy',
+  title: 'Y-photogpraphy',
   ignoreTitleTemplate: true,
 };
 
@@ -49,11 +48,11 @@ const images = [
   >
     <Fragment slot="title">
       היי!
-      אני <span class="text-accent dark:text-white highlight"> X</span>
+      אני <span class="text-accent dark:text-white highlight"> Y</span>
     </Fragment>
 
     <Fragment slot="subtitle">
-      צלמת מקצועית, מתמכה בצילומי משפחה, הריון, הנקה ועוד<br>
+      מתמכה בצילומי משפחה, הריון, הנקה ועוד<br>
       בעולם של היום צילום ותיעוד מהווה חלק בלתי נפרד מהחיים שלנו, ולכן אני משתדלת שהמחירים שלי יהיו נגישים.
       מוזמנים לפנות אלי לכל שאלה או התייעצות
     </Fragment>
@@ -63,8 +62,8 @@ const images = [
     </Fragment>
   </Hero>
 
-  <SliderCardsGrid
-    sliderCards= {
+  <ContentGrid
+    contentArray= {
       [
         {
           images: images,
@@ -95,9 +94,9 @@ const images = [
     >
   
     <Fragment slot="bg">
-      <div class="absolute inset-0 bg-page-secondary dark:bg-slate-900"></div>
+      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
     </Fragment>
-  </SliderCardsGrid>
+  </ContentGrid>
 
   <!-- HighlightedPosts Widget ******* -->
 

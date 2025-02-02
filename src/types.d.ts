@@ -197,6 +197,14 @@ export interface SliderCardType {
   images?: Array<ImageMetadata, string>;
 }
 
+export interface ContentType {
+  title?: string;
+  subTitle?: string;
+  text?: string;
+  callToAction?: CallToAction;
+  images?: Array<ImageMetadata, string>;
+}
+
 export interface ItemGrid {
   items?: Array<Item>;
   columns?: number;
@@ -292,9 +300,9 @@ export interface Content extends Omit<Headline, 'classes'>, Widget {
   callToAction?: CallToAction;
 }
 
-export interface SliderCardsGridType extends Omit<Headline, 'classes'>, Widget {
+export interface ContentGridType extends Omit<Headline, 'classes'>, Widget {
   image?: string | unknown;
-  sliderCards?: Array<SliderCardType>;
+  contentArray?: Array<ContentType>;
   columns?: number;
   isReversed?: boolean;
   isAfterContent?: boolean;
