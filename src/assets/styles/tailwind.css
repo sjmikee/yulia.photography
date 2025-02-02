@@ -40,10 +40,6 @@
   background-color: var(--aw-color-bg-footer);
 }
 
-@utility bg-header {
-  background-color: var(--aw-color-bg-header);
-}
-
 @utility text-page {
   color: var(--aw-color-bg-page);
 }
@@ -54,6 +50,10 @@
 
 @utility text-muted {
   color: var(--aw-color-text-muted);
+}
+
+@utility text-heading {
+  color: var(--aw-color-text-heading);
 }
 
 @utility text-accent {
@@ -77,7 +77,7 @@
 }
 
 #header.scroll > div:first-child {
-  @apply bg-header sm:bg-header backdrop-blur-md;
+  @apply bg-page sm:bg-[#EAE7DC]/50 sm:backdrop-blur-sm;
   box-shadow: 0 0.375rem 1.5rem 0 rgb(140 152 164 / 13%);
 }
 .dark #header.scroll > div:first-child,

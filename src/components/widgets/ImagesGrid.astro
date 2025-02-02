@@ -16,12 +16,12 @@ const images = content.images;
 const callToAction = content.callToAction;
 ---
 
-<h1 class="mb-2 font-bold text-3xl tracking-tight text-default dark:text-white"><div set:text={title} /></h1>
+<h1 class="mb-2 font-bold text-3xl tracking-tight text-heading dark:text-white"><div set:text={title} /></h1>
 <h2 class="mb-2 font-bold text-lg tracking-tight text-accent dark:text-white"><div set:text={subTitle} /></h2>
 
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1 sm:gap-2 mt-4 mb-10">
     {images.map((image) => (
-        <div class="h-auto max-w-full rounded-lg">
+        <div class="h-auto max-w-full">
         {
           <Image
               width={image.src.width}
@@ -34,5 +34,5 @@ const callToAction = content.callToAction;
       ))}
 </div>
 <h3 class="my-4 w-full font-normal text-muted dark:text-gray-200"><div set:text={text} /></h3>
-<Button variant="primary" {...callToAction} />
+<Button variant="secondary" {...callToAction} />
 <hr class="my-12 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-slate-50 to-transparent opacity-50 dark:via-neutral-400" />
