@@ -4,7 +4,7 @@ import typographyPlugin from '@tailwindcss/typography';
 
 
 export default {
-  content: ['./src/**/*.{astro,html,js,jsx,json,md,mdx,svelte,ts,tsx,vue}', './node_modules/flowbite/**/*.js'],
+  content: ['./src/**/*.{astro,html,js,jsx,json,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
       colors: {
@@ -33,7 +33,6 @@ export default {
     },
   },
   plugins: [
-    require('flowbite/plugin'),
     typographyPlugin,
     plugin(({ addVariant }) => {
       addVariant('intersect', '&:not([no-intersect])');

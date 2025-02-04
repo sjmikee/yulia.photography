@@ -197,7 +197,7 @@ export interface SliderCardType {
   images?: Array<ImageMetadata, string>;
 }
 
-export interface ContentType {
+export interface ContentType extends Omit<Headline, 'classes'>, Widget {
   title?: string;
   subTitle?: string;
   text?: string;
