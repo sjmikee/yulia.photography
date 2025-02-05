@@ -202,7 +202,7 @@ export interface ContentType extends Omit<Headline, 'classes'>, Widget {
   subTitle?: string;
   text?: string;
   callToAction?: CallToAction;
-  images?: Array<ImageMetadata, string>;
+  images?: Array<ImageMetadata>;
 }
 
 export interface ItemGrid {
