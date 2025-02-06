@@ -185,6 +185,7 @@ import { UI } from 'astrowind:config';
         if (element.classList.contains('intersect-full')) return 0.99;
         if (element.classList.contains('intersect-half')) return 0.5;
         if (element.classList.contains('intersect-quarter')) return 0.25;
+        if (element.classList.contains('intersect-five')) return 0.05;
         return 0;
       };
 
@@ -251,5 +252,38 @@ import { UI } from 'astrowind:config';
 
   document.addEventListener('astro:after-swap', () => {
     Observer.start();
+  });
+</script>
+
+<script is:inline>
+  const scrollToTopButton = document.getElementById("scrollToTop");
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+    } else {
+      scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+    }
+  });
+
+  scrollToTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>
+
+<script is:inline>
+  const whatsappButton = document.getElementById("whatsapp");
+  const phoneNumber = "0521234567";
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+    } else {
+      whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+    }
+  });
+
+  whatsappButton.addEventListener("click", () => {
+    window.open(`https://wa.me/${phoneNumber}`, "_blank");
   });
 </script>
