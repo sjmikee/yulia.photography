@@ -44,7 +44,25 @@ export const headerData = {
 };
 
 export const footerData = {
-  links: [],
+  links: [
+    {
+      title: 'גלריה',
+      links: [
+        { text: 'משפחה', href: '#' },
+        { text: 'הנקה', href: '#' },
+        { text: 'גיל שנה', href: '#' },
+        { text: 'הריון', href: '#' },
+        { text: 'עירום', href: '#' },
+      ],
+    },
+    {
+      links: [
+        { text: 'מחירון', href: 'pricing' },
+        { text: 'טיפים חשובים', href: 'blog' },
+        { text: 'מי אני', href: 'about' },
+      ],
+    },
+  ],
   secondaryLinks: [
     { text: 'הצהרת נגישות', href: getPermalink('/terms') },
   ],

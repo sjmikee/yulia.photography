@@ -258,6 +258,7 @@ import { UI } from 'astrowind:config';
 <script is:inline>
   const whatsappButton = document.getElementById("whatsapp");
   const scrollToTopButton = document.getElementById("scrollToTop");
+  const FooterScrollToTopButton = document.getElementById("scrollToTopFooter");
   const phoneNumber = "0521234567";
   const footerElement = document.querySelector("#footer");
   const bottomCallToActionElement = document.querySelector("#bottomCallToAction");
@@ -267,6 +268,14 @@ import { UI } from 'astrowind:config';
       whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
     } else {
       whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+    }
+  }
+
+  function toggleScrollToTopButton() {
+    if (window.scrollY < 300 || scrollToTopButton.dataset.hidden === "true") {
+      scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+    } else {
+      scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
     }
   }
 
@@ -283,13 +292,10 @@ import { UI } from 'astrowind:config';
 
   const scrollTopObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-      } else {
-        scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
-      }
+      scrollToTopButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
+      toggleScrollToTopButton();
     });
-  }, { threshold: 0.8 });
+  }, { threshold: 0.6 });
 
   if (footerElement) {
     scrollTopObserver.observe(footerElement);
@@ -297,15 +303,14 @@ import { UI } from 'astrowind:config';
 
   window.addEventListener("scroll", () => {
     toggleWhatsAppButton();
-
-    if (window.scrollY > 300) {
-      scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
-    } else {
-      scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-    }
+    toggleScrollToTopButton();
   });
 
   scrollToTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  FooterScrollToTopButton.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
