@@ -256,9 +256,48 @@ import { UI } from 'astrowind:config';
 </script>
 
 <script is:inline>
+  const whatsappButton = document.getElementById("whatsapp");
   const scrollToTopButton = document.getElementById("scrollToTop");
+  const phoneNumber = "0521234567";
+  const footerElement = document.querySelector("#footer");
+  const bottomCallToActionElement = document.querySelector("#bottomCallToAction");
+
+  function toggleWhatsAppButton() {
+    if (window.scrollY < 300 || whatsappButton.dataset.hidden === "true") {
+      whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+    } else {
+      whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+    }
+  }
+
+  const whatsappObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      whatsappButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
+      toggleWhatsAppButton();
+    });
+  }, { threshold: 0.8 });
+
+  if (bottomCallToActionElement) {
+    whatsappObserver.observe(bottomCallToActionElement);
+  }
+
+  const scrollTopObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+      } else {
+        scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+      }
+    });
+  }, { threshold: 0.8 });
+
+  if (footerElement) {
+    scrollTopObserver.observe(footerElement);
+  }
 
   window.addEventListener("scroll", () => {
+    toggleWhatsAppButton();
+
     if (window.scrollY > 300) {
       scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
     } else {
@@ -268,19 +307,6 @@ import { UI } from 'astrowind:config';
 
   scrollToTopButton.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-</script>
-
-<script is:inline>
-  const whatsappButton = document.getElementById("whatsapp");
-  const phoneNumber = "0521234567";
-
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-      whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
-    } else {
-      whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-    }
   });
 
   whatsappButton.addEventListener("click", () => {
