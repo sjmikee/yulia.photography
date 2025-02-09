@@ -1,22 +1,22 @@
 site:
-  name: YK
-  site: 'https://astrowind.vercel.app'
+  name: Yulia-Photography
+  site: 'https://yulia.photography'
   base: '/'
   trailingSlash: false
 
-  googleSiteVerificationId: orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M
+  googleSiteVerificationId: 2oxqWrAppd4777x9FGU3D49eLEKoo3s1tc8e_LzPpgE
 
 # Default SEO metadata
 metadata:
   title:
-    default: YK
-    template: '%s — AstroWind'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    default: Yulia-Photography
+    template: '%s — Photography'
+  description: "צילומי משפחה, הריון, גיל שנה והנקה – בסטודיו מקצועי או בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית"
   robots:
-    index: true
+    index: false
     follow: true
   openGraph:
-    site_name: YK
+    site_name: Yulia-photography
     images:
       - url: '~/assets/images/default.png'
         width: 1200
@@ -40,19 +40,19 @@ apps:
       isEnabled: true
       permalink: '/%slug%' # Variables: %slug%, %year%, %month%, %day%, %hour%, %minute%, %second%, %category%
       robots:
-        index: true
+        index: false
 
     list:
       isEnabled: true
       pathname: 'blog' # Blog main path, you can change this to "articles" (/articles)
       robots:
-        index: true
+        index: false
 
     category:
       isEnabled: true
       pathname: 'category' # Category main path /category/some-category, you can change this to "group" (/group/some-category)
       robots:
-        index: true
+        index: false
 
     tag:
       isEnabled: true
