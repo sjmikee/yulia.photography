@@ -256,65 +256,76 @@ import { UI } from 'astrowind:config';
 </script>
 
 <script is:inline>
-  const whatsappButton = document.getElementById("whatsapp");
-  const scrollToTopButton = document.getElementById("scrollToTop");
-  const FooterScrollToTopButton = document.getElementById("scrollToTopFooter");
-  const phoneNumber = "0521234567";
-  const footerElement = document.querySelector("#footer");
-  const bottomCallToActionElement = document.querySelector("#bottomCallToAction");
+  const ButtonsObserver = {
 
-  function toggleWhatsAppButton() {
-    if (window.scrollY < 300 || whatsappButton.dataset.hidden === "true") {
-      whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-    } else {
-      whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+    start() {
+      const whatsappButton = document.getElementById("whatsapp");
+      const scrollToTopButton = document.getElementById("scrollToTop");
+      const FooterScrollToTopButton = document.getElementById("scrollToTopFooter");
+      const phoneNumber = "0521234567";
+      const footerElement = document.querySelector("#footer");
+      const bottomCallToActionElement = document.querySelector("#bottomCallToAction");
+
+      function toggleWhatsAppButton() {
+        if (window.scrollY < 300 || whatsappButton.dataset.hidden === "true") {
+          whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+        } else {
+          whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+        }
+      }
+
+      function toggleScrollToTopButton() {
+        if (window.scrollY < 300 || scrollToTopButton.dataset.hidden === "true") {
+          scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+        } else {
+          scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+        }
+      }
+
+      const whatsappObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          whatsappButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
+          toggleWhatsAppButton();
+        });
+      }, { threshold: 0.8 });
+
+      if (bottomCallToActionElement) {
+        whatsappObserver.observe(bottomCallToActionElement);
+      }
+
+      const scrollTopObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          scrollToTopButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
+          toggleScrollToTopButton();
+        });
+      }, { threshold: 0.6 });
+
+      if (footerElement) {
+        scrollTopObserver.observe(footerElement);
+      }
+
+      window.addEventListener("scroll", () => {
+        toggleWhatsAppButton();
+        toggleScrollToTopButton();
+      });
+
+      scrollToTopButton.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      FooterScrollToTopButton.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      whatsappButton.addEventListener("click", () => {
+        window.open(`https://wa.me/${phoneNumber}`, "_blank");
+      });
     }
-  }
+  };
 
-  function toggleScrollToTopButton() {
-    if (window.scrollY < 300 || scrollToTopButton.dataset.hidden === "true") {
-      scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-    } else {
-      scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
-    }
-  }
+  ButtonsObserver.start();
 
-  const whatsappObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      whatsappButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
-      toggleWhatsAppButton();
-    });
-  }, { threshold: 0.8 });
-
-  if (bottomCallToActionElement) {
-    whatsappObserver.observe(bottomCallToActionElement);
-  }
-
-  const scrollTopObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      scrollToTopButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
-      toggleScrollToTopButton();
-    });
-  }, { threshold: 0.6 });
-
-  if (footerElement) {
-    scrollTopObserver.observe(footerElement);
-  }
-
-  window.addEventListener("scroll", () => {
-    toggleWhatsAppButton();
-    toggleScrollToTopButton();
-  });
-
-  scrollToTopButton.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  FooterScrollToTopButton.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  whatsappButton.addEventListener("click", () => {
-    window.open(`https://wa.me/${phoneNumber}`, "_blank");
+  document.addEventListener('astro:after-swap', () => {
+    ButtonsObserver.start();
   });
 </script>
