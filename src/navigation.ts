@@ -65,6 +65,7 @@ export const footerData = {
   ],
   secondaryLinks: [
     { text: 'הצהרת נגישות', href: getPermalink('/terms') },
+    { text: 'פרטיות', href: getPermalink('/privacy') },
   ],
   socialLinks: [
     { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
