@@ -1,2 +1,56 @@
 ---
+import Layout from '~/layouts/PageLayout.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import GalleryGrid from '~/components/widgets/GalleryGrid.astro';
+import type { ImageMetadata } from 'astro';
+
+const metadata = {
+  title: 'Yulia-Photogpraphy',
+  ignoreTitleTemplate: true,
+};
+
+const title = "צילומי משפחה";
+const subTitle = "";
+const text = "";
+
+const familyImagesPaths =  import.meta.glob<{ default: ImageMetadata}>("~/assets/images/family_gallery/*.jpg", { eager: true, import: "default" });
+const familyImagesArray = Object.entries(familyImagesPaths).map(([path, image]) => {
+  const filename = path.split("/").pop()?.replace(".jpg", "") ?? "Image";
+  return { src: image, alt: filename};
+});
 ---
+
+<Layout metadata={metadata}>
+
+    <GalleryGrid title={title} subTitle={subTitle}  text={text} images={familyImagesArray} >
+
+        <Fragment slot="bg">
+            <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+        </Fragment>
+    </GalleryGrid>
+    <!-- CallToAction Widget *********** -->
+
+    <CallToAction
+        id="bottomCallToAction"
+        actions={[
+            {
+            variant: 'primary',
+            text: 'ווטסאפ',
+            href: 'https://wa.me/0521234567',
+            target: '_blank',
+            icon: 'tabler:brand-whatsapp',
+            },
+        ]}
+        >
+        <Fragment slot="title">
+            אשמח לדבר
+        </Fragment>
+
+        <Fragment slot="subtitle">
+            מוזמנים לפנות אלי לכל התייעצות או שאלה :)
+        </Fragment>
+        <Fragment slot="bg">
+            <div class="absolute inset-0 bg-page dark:bg-indigo-950"></div>
+        </Fragment>
+    </CallToAction>
+</Layout>

@@ -7,7 +7,7 @@ export const headerData = {
       links: [
         {
           text: 'משפחה',
-          href: getPermalink('/#features'),
+          href: getPermalink('/gallery/family'),
         },
         {
           text: 'הנקה',
@@ -32,7 +32,7 @@ export const headerData = {
       href: getPermalink('/pricing'),
     },
     {
-      text: 'טיפים חשובים',
+      text: 'בלוג',
       href: getPermalink('/blog'),
     },
     {
@@ -48,7 +48,7 @@ export const footerData = {
     {
       title: 'גלריה',
       links: [
-        { text: 'משפחה', href: '#' },
+        { text: 'משפחה', href: 'gallery/family' },
         { text: 'הנקה', href: '#' },
         { text: 'גיל שנה', href: '#' },
         { text: 'הריון', href: '#' },

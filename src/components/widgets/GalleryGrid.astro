@@ -1,0 +1,50 @@
+---
+import type { ContentType as Props } from '~/types';
+import Image from '~/components/common/Image.astro';
+import WidgetWrapper from '../ui/WidgetWrapper.astro';
+
+
+const { 
+  title,
+  subTitle,
+  text,
+  images = [],
+
+  id,
+  isDark,
+  classes,
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+---
+
+<WidgetWrapper
+  id={id}
+  isDark={isDark}
+  containerClass={`text-center max-w-7xl mx-auto ${classes?.container ?? ''}`}
+  bg={bg}
+>
+    <h1 class="mb-2 font-bold text-5xl tracking-tight text-heading dark:text-white"><div set:text={title} /></h1>
+    <h2 class="mb-2 font-bold text-lg tracking-tight text-accent dark:text-white"><div set:text={subTitle} /></h2>
+
+    
+    <div class="columns-2 md:columns-4 gap-4 space-y-4">
+        {images.map((image) => (
+            <div>
+            {
+            <Image
+                class="w-full rounded-lg shadow"
+                width={image.src.width}
+                height={image.src.height}
+
+                {...image}
+            />
+            }
+            </div>
+        ))}
+    </div>
+
+    <h3 class="my-4 w-full font-normal text-muted dark:text-gray-200"><div set:text={text} /></h3>
+    
+    <hr class="mt-10 sm:mt-20 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-accent to-transparent opacity-50 dark:via-neutral-400" />
+</WidgetWrapper>
