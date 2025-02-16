@@ -36,7 +36,7 @@ export const headerData = {
       href: getPermalink('/blog'),
     },
     {
-      text: 'מי אני',
+      text: 'קצת עלי',
       href: getPermalink('/about'),
     },
   ],
