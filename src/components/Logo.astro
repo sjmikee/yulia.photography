@@ -1,7 +1,20 @@
 ---
-import { SITE } from 'astrowind:config';
+import light_logo from '~/assets/images/yk_logo_light.png'
+import dark_logo from '~/assets/images/yk_logo_dark.png'
+import Image from 'astro/components/Image.astro';
 ---
 
 <span class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-default whitespace-nowrap dark:text-white">
-   {SITE?.name}
+   <Image
+      class="object-scale-down max-h-9 max-w-9 dark:hidden"
+      alt="Yulia photography light logo"
+      src={light_logo}
+      loading="eager"
+   />
+   <Image
+      class="object-scale-down max-h-9 max-w-9 hidden dark:block"
+      alt="Yulia photography dark logo"
+      src={dark_logo}
+      loading="eager"
+   />
 </span>
