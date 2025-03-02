@@ -36,9 +36,9 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 					<Image
 						src={image}
 						alt={altText}
-                        loading="eager"
+                        loading="lazy"
 						class={
-							"object-cover w-full intersect-once intersect-five intercept-no-queue motion-safe:opacity-0 motion-safe:intersect:animate-fade"
+							"object-cover w-full"
 						}
 					/>
 				</a>
