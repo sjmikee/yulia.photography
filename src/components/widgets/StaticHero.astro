@@ -9,30 +9,3 @@ import staticHero from '~/assets/images/img8.jpg'
     id="staticHero"
     loading={'eager'}
 />
-
-<script is:inline>
-    // Update margin dynamically
-    function updateMargin() {
-        requestAnimationFrame(() => {
-            const headerComponent = document.querySelector('#header');
-            const staticHeroComponent = document.querySelector('#staticHero');
-            let height = 0;
-
-            if(null != headerComponent && null != staticHeroComponent)
-            {
-                height = headerComponent.offsetHeight;         
-
-                staticHeroComponent.style.marginTop = `${height}px`;
-            }
-        });
-    }
-
-    // Call on load and resize
-    window.addEventListener('load', updateMargin);
-    window.addEventListener('resize', updateMargin);
-    window.addEventListener('pageshow', updateMargin);
-
-    if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        updateMargin();
-    }
-</script>
