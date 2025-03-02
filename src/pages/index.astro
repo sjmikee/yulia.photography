@@ -6,32 +6,12 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
 import StaticHero from '~/components/widgets/StaticHero.astro';
 import ContentGrid from '~/components/widgets/ContentGrid.astro';
-import type { ImageMetadata } from 'astro';
 
 
 const metadata = {
   title: 'Yulia-Photogpraphy',
   ignoreTitleTemplate: true,
 };
-
-const familyImagesPaths =  import.meta.glob<{ default: ImageMetadata}>("~/assets/images/family_index/*.jpg", { eager: true, import: "default" });
-const familyImagesArray = Object.entries(familyImagesPaths).map(([path, image]) => {
-  const filename = path.split("/").pop()?.replace(".jpg", "") ?? "Image";
-  return { src: image, alt: filename};
-});
-
-const materImagesPaths =  import.meta.glob<{ default: ImageMetadata}>("~/assets/images/mater_index/*.jpg", { eager: true, import: "default" });
-const materImagesArray = Object.entries(materImagesPaths).map(([path, image]) => {
-  const filename = path.split("/").pop()?.replace(".jpg", "") ?? "Image";
-  return { src: image, alt: filename};
-});
-
-const lacImagesPaths =  import.meta.glob<{ default: ImageMetadata}>("~/assets/images/lac_index/*.jpg", { eager: true, import: "default" });
-const lacImagesArray = Object.entries(lacImagesPaths).map(([path, image]) => {
-  const filename = path.split("/").pop()?.replace(".jpg", "") ?? "Image";
-  return { src: image, alt: filename};
-});
-
 ---
 
 <Layout metadata={metadata}>
@@ -71,7 +51,7 @@ const lacImagesArray = Object.entries(lacImagesPaths).map(([path, image]) => {
     contentArray= {
       [
         {
-          images: familyImagesArray,
+          imagesFolder: "family_index",
           title: "צילומי משפחה",
           subTitle: "זיכרונות מרגשים שנשארים לנצח",
           text:
@@ -79,7 +59,7 @@ const lacImagesArray = Object.entries(lacImagesPaths).map(([path, image]) => {
           callToAction: { text: "גלריה", href: "/gallery/family", icon: "tabler:library-photo" }
         },
         {
-          images: materImagesArray,
+          imagesFolder: "mater_index",
           title: "צילומי הריון",
           subTitle: "לתעד את הפלא המרגש של החיים",
           text:
@@ -87,7 +67,7 @@ const lacImagesArray = Object.entries(lacImagesPaths).map(([path, image]) => {
           callToAction: { text: "גלריה", href: "/", icon: "tabler:library-photo" }
         },
         {
-          images: lacImagesArray,
+          imagesFolder: "lac_index",
           title: "צילומי הנקה",
           subTitle: "חיבור טבעי ואהבה ללא תנאים",
           text: 
@@ -120,7 +100,7 @@ const lacImagesArray = Object.entries(lacImagesPaths).map(([path, image]) => {
     title="שאלות נפוצות"
     subtitle="אני זמינה בשמחה לכל שאלה אחרת שתעלה לכם, מוזמנים לדבר איתי"
     tagline="אם יש ספק אין ספק"
-    classes={{ container: 'max-w-6xl' }}
+    classes={{ container: 'max-w-5xl' }}
     items={[
       {
         title: 'איזה סוגי צילום את מציעה?',

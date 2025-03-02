@@ -11,11 +11,11 @@ export const headerData = {
         },
         {
           text: 'הנקה',
-          href: getPermalink('/services'),
+          href: getPermalink('/gallery/lactation'),
         },
         {
           text: 'הריון',
-          href: getPermalink('/pricing'),
+          href: getPermalink('/gallery/mater'),
         },
         {
           text: 'גיל שנה',
@@ -36,7 +36,7 @@ export const headerData = {
       href: getPermalink('/blog'),
     },
     {
-      text: 'מי אני',
+      text: 'קצת עלי',
       href: getPermalink('/about'),
     },
   ],
@@ -48,18 +48,18 @@ export const footerData = {
     {
       title: 'גלריה',
       links: [
-        { text: 'משפחה', href: 'gallery/family' },
-        { text: 'הנקה', href: '#' },
+        { text: 'משפחה', href: '/gallery/family' },
+        { text: 'הנקה', href: '/gallery/lactation' },
+        { text: 'הריון', href: '/gallery/mater' },
         { text: 'גיל שנה', href: '#' },
-        { text: 'הריון', href: '#' },
         { text: 'עירום', href: '#' },
       ],
     },
     {
       links: [
-        { text: 'מחירון', href: 'pricing' },
-        { text: 'טיפים חשובים', href: 'blog' },
-        { text: 'מי אני', href: 'about' },
+        { text: 'מחירון', href: '/pricing' },
+        { text: 'בלוג', href: '/blog' },
+        { text: 'קצת עלי', href: '/about' },
       ],
     },
   ],

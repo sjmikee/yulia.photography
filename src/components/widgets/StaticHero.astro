@@ -18,7 +18,7 @@ import staticHero from '~/assets/images/img8.jpg'
             const staticHeroComponent = document.querySelector('#staticHero');
             let height = 0;
 
-            if(null != headerComponent)
+            if(null != headerComponent && null != staticHeroComponent)
             {
                 height = headerComponent.offsetHeight;         
 
@@ -28,6 +28,7 @@ import staticHero from '~/assets/images/img8.jpg'
     }
 
     // Call on load and resize
+    document.addEventListener('astro:page-load', updateMargin);
     window.addEventListener('load', updateMargin);
     window.addEventListener('resize', updateMargin);
     window.addEventListener('pageshow', updateMargin);

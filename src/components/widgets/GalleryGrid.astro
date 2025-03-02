@@ -2,7 +2,7 @@
 import type { ContentType as Props } from '~/types';
 import Image from '~/components/common/Image.astro';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
-
+import SlideModal from '~/components/widgets/SlideModal.astro';
 
 const { 
   title,
@@ -29,8 +29,8 @@ const {
 
     
     <div class="columns-2 md:columns-4 gap-4 space-y-4">
-        {images.map((image) => (
-            <div>
+        {images.map((image, index) => (
+            <div onclick={`openModal();currentSlide(${index + 1})`}>
             {
             <Image
                 class="w-full rounded-lg shadow"
@@ -48,3 +48,5 @@ const {
     
     <hr class="mt-10 sm:mt-20 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-accent to-transparent opacity-50 dark:via-neutral-400" />
 </WidgetWrapper>
+
+<SlideModal images={images} />

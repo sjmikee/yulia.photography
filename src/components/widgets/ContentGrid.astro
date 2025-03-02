@@ -1,5 +1,5 @@
 ---
-import ImagesGrid from './ImagesGrid.astro';
+import Content from './Content.astro';
 import type { ContentGridType as Props } from '~/types';
 
 const {
@@ -13,7 +13,7 @@ const {
   contentArray && (
     <div class="text-center items-center">
       {contentArray.map((content) => 
-        <ImagesGrid title={content.title} subTitle={content.subTitle}  text={content.text} callToAction={content.callToAction} images={content.images} bg={bg}/>
+        <Content title={content.title} subTitle={content.subTitle}  text={content.text} callToAction={content.callToAction} imagesFolder={content.imagesFolder} bg={bg}/>
       )}
     </div>
   )

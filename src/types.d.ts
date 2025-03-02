@@ -202,6 +202,10 @@ export interface ContentType extends Omit<Headline, 'classes'>, Widget {
   subTitle?: string;
   text?: string;
   callToAction?: CallToAction;
+  imagesFolder?: string;
+}
+
+export interface SlideModalType extends Omit<Headline, 'classes'>, Widget {
   images?: Array<ImageMetadata>;
 }
 

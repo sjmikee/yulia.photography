@@ -71,7 +71,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     ]}
   >
     <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
-      <a class="flex items-center" href={getHomePermalink()}>
+      <a class="flex items-center rounded-md focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200" href={getHomePermalink()}>
         <Logo />
       </a>
       <div class="flex items-center md:hidden">
@@ -92,17 +92,17 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                 <>
                   <button
                     type="button"
-                    class="hover:text-link md:hover:bg-white/50 dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap rounded-t-lg"
+                    class="hover:text-white md:hover:bg-primary dark:text-slate-300 dark:hover:bg-slate-600 px-4 mr-1 py-2 mt-2 mb-2 flex items-center whitespace-nowrap rounded-t-lg focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
                   >
                     {text}{' '}
                     <Icon name="tabler:chevron-down" class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline" />
                   </button>
-                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-[#030621e6]/50 rounded-sm md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-[#F5F5F5]/50 md:min-w-[200px] drop-shadow-xl">
+                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-[#030621e6]/50 rounded-sm md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-[#F5F5F5]/50 md:min-w-[200px] drop-shadow-xl transition ease-in duration-200">
                     {links.map(({ text: text2, href: href2 }) => (
                       <li>
                         <a
                           class:list={[
-                            'first:rounded-t last:rounded-b hover:bg-white/50 hover:text-link dark:hover:text-white dark:hover:bg-gray-400/50 py-2 px-15 md:px-5 block whitespace-no-wrap',
+                            'first:rounded-t last:rounded-b hover:bg-primary hover:text-white dark:text-slate-300 dark:hover:bg-slate-400/50 py-2 px-15 md:px-5 block whitespace-no-wrap focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200',
                             { 'aw-link-active': href2 === currentPath },
                           ]}
                           href={href2}
@@ -116,7 +116,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               ) : (
                 <a
                   class:list={[
-                    'hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap hover:bg-white/50 rounded-lg',
+                    'hover:text-white dark:text-slate-300 dark:hover:bg-slate-600 px-4 ml-1 py-2 mt-2 mb-2 flex items-center whitespace-nowrap hover:bg-primary rounded-lg focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200',
                     { 'aw-link-active': href === currentPath },
                   ]}
                   href={href}
@@ -141,7 +141,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           {
             showRssFeed && (
               <a
-                class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+                class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
                 aria-label="RSS Feed"
                 href={getAsset('/rss.xml')}
               >

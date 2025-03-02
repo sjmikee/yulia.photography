@@ -6,7 +6,7 @@ export interface Props {
 
 const {
   label = 'Toggle Menu',
-  class: className = 'flex flex-col h-12 w-12 rounded-sm justify-center items-center cursor-pointer group',
+  class: className = 'flex flex-col h-12 w-12 rounded-sm justify-center items-center cursor-pointer group focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200',
 } = Astro.props;
 ---
 

@@ -1,92 +1,37 @@
 ---
-import type { Content as Props } from '~/types';
-import Headline from '../ui/Headline.astro';
-import WidgetWrapper from '../ui/WidgetWrapper.astro';
-import SliderCard from './SliderCard.astro';
+import type { ContentType as Props } from '~/types';
 import Button from '~/components/ui/Button.astro';
-import ItemGrid from '../ui/ItemGrid.astro';
+import WidgetWrapper from '../ui/WidgetWrapper.astro';
+import PhotoGallery from './PhotoGallery.astro';
 
-const {
-  title = await Astro.slots.render('title'),
-  subtitle = await Astro.slots.render('subtitle'),
-  tagline,
-  content = await Astro.slots.render('content'),
+
+const { 
+  title,
+  subTitle,
+  text,
   callToAction,
-  items = [],
-  columns,
-  images = [],
-  isReversed = false,
-  isAfterContent = false,
+  imagesFolder = "",
 
   id,
-  isDark = false,
-  classes = {},
+  isDark,
+  classes,
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-const sliderCard = {
-  title: title,
-  images: images,
-  items: items,
-}
 ---
 
 <WidgetWrapper
   id={id}
   isDark={isDark}
-  containerClass={`max-w-7xl mx-auto ${isAfterContent ? 'pt-0 md:pt-0 lg:pt-0' : ''} ${classes?.container ?? ''}`}
+  containerClass={`max-w-5xl mx-auto ${classes?.container ?? ''}`}
   bg={bg}
 >
-  <Headline
-    title={title}
-    subtitle={subtitle}
-    tagline={tagline}
-    classes={{
-      container: 'max-w-xl sm:mx-auto lg:max-w-2xl',
-      title: 'text-4xl md:text-5xl font-bold tracking-tighter mb-4 font-heading',
-      subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
-    }}
-  />
-  <div class="mx-auto w-full justify-center p-4 md:px-8 space-y-4">
-    <div class={`flex flex-col lg:flex-row ${isReversed ? 'flex-col-reverse lg:flex-row-reverse' : ''} gap-0  justify-center items-center`}>
-      <div class="bg-transparent rounded-xs h-full w-full lg:w-2/3">
-        <div class="p-4 border border-gray-200 rounded-md shadow-md">
-          {content && <div class="mb-12 text-lg dark:text-slate-400" set:html={content} />}
+  <h1 class="mb-2 font-bold text-5xl tracking-tight text-heading dark:text-white"><div set:text={title} /></h1>
+  <h2 class="mb-2 font-bold text-lg tracking-tight text-accent dark:text-white"><div set:text={subTitle} /></h2>
 
-          {
-            callToAction && (
-              <div class="mt-[-40px] mb-8 text-primary">
-                <Button variant="link" {...callToAction} />
-              </div>
-            )
-          }
+  <PhotoGallery imagesFolder={imagesFolder} />
 
-          <ItemGrid
-            items={items}
-            columns={columns}
-            classes={{
-              container: `gap-y-4 md:gap-y-8`,
-              panel: 'max-w-none',
-              title: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
-              description: 'text-muted dark:text-slate-400 ml-2 rtl:ml-0 rtl:mr-2',
-              action: 'text-lg font-medium leading-6 dark:text-white ml-2 rtl:ml-0 rtl:mr-2',
-            }}
-          />
-        </div>
-      </div>
-      <div aria-hidden="true" class="h-full w-full lg:w-2/3">
-        {
-          images && (
-            <div class="max-w-3xl object-scale-down">
-              {typeof images === 'string' ? (
-                <Fragment set:html={images} />
-              ) : (
-                <SliderCard sliderCard={sliderCard}/>
-              )}
-            </div>
-          )
-        }
-      </div>
-    </div>
-  </div>
+  <h3 class="my-4 w-full font-normal text-muted dark:text-gray-200"><div set:text={text} /></h3>
+  <Button variant="secondary" {...callToAction} />
+  <hr class="mt-10 sm:mt-20 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-accent to-transparent opacity-50 dark:via-neutral-400" />
 </WidgetWrapper>
