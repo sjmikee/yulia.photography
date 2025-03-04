@@ -22,7 +22,7 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
             let altText = imagePath.split("/").pop()?.replace(".jpg", "") ?? "Image";
 			let optimizedImage = await getImage({
 				src: image,
-				width: 1920,
+				widths: [400, 768, 1024, 2040],
 			});
 
 			return (
@@ -35,11 +35,13 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 				>
 					<Image
 						src={image}
+						sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
 						alt={altText}
                         loading="lazy"
 						class={
 							"object-cover w-full"
 						}
+						width={400}
 					/>
 				</a>
 			);

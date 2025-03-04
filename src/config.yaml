@@ -1,5 +1,5 @@
 site:
-  name: Yulia-Photography
+  name: "יוליה - צילום משפחה, הריון, הנקה, זוגות בטבע או בסטודיו"
   site: 'https://yulia.photography'
   base: '/'
   trailingSlash: false
@@ -9,22 +9,22 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: Yulia-Photography
-    template: '%s — Photography'
+    default: "יוליה - צילום משפחה, הריון, הנקה, זוגות בטבע או בסטודיו"
+    template: '%s — צילום'
   description: "צילומי משפחה, הריון, גיל שנה והנקה – בסטודיו מקצועי או בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית"
   robots:
     index: false
     follow: true
   openGraph:
-    site_name: Yulia-photography
+    site_name: "יוליה - צילום משפחה, הריון, הנקה, זוגות בטבע או בסטודיו"
     images:
       - url: '~/assets/images/default.png'
         width: 1200
         height: 628
     type: website
   twitter:
-    handle: '@onwidget'
-    site: '@onwidget'
+    handle: ''
+    site: ''
     cardType: summary_large_image
 
 i18n:
