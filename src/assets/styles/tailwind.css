@@ -128,17 +128,3 @@
 .dd *:first-child {
   margin-top: 0;
 }
-
-#staticHero {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-}
-
-#hero {
-  margin-top: 100vh;
-}

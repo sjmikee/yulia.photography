@@ -1,11 +1,90 @@
 ---
 import Image from '~/components/common/Image.astro';
-import staticHero from '~/assets/images/img8.jpg'
+import staticHero from '~/assets/images/static_hero.jpg'
+import staticHeroM from '~/assets/images/static_hero_v.jpg'
+import { Icon } from 'astro-icon/components';
 ---
+<section class="relative w-full h-[100vh] z-[-1]">
+    <div class="fixed top-0 left-0 w-full h-[100vh]">
+        <Image
+            class="object-cover h-full"
+            src={ staticHero }
+            alt="Static Hero Image"
+            id="staticHeroDesktop"
+            widths={[400, 768, 1024, 2040]}
+            sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+            loading={'eager'}
+        />
+        <Image
+            class="object-cover h-full"
+            src={ staticHeroM }
+            alt="Static Hero Image"
+            id="staticHeroMobile"
+            widths={[400, 768, 1024, 2040]}
+            sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+            loading={'eager'}
+        />
+    </div>
+    <div class="absolute bottom-30 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <Icon name={"tabler:arrow-down-dashed"} class="w-10 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block text-white drop-shadow-lg" />
+    </div>
+</section>
 
-<Image
-    src={ staticHero }
-    alt="Static Hero Image"
-    id="staticHero"
-    loading={'eager'}
-/>
+<style>
+    #staticHeroDesktop {
+        scale: 1.2;
+        display: block;
+    }
+  
+    #staticHeroMobile {
+        display: none;
+    }
+  
+    @media (max-width: 768px) {
+        #staticHeroDesktop {
+            display: none;
+        }
+    
+        #staticHeroMobile {
+            scale: 1.2;
+            display: block;
+        }
+    }
+</style>
+
+<script is:inline>
+    function setupParallax() {
+      const mobileHero = document.getElementById("staticHeroMobile");
+      const desktopHero = document.getElementById("staticHeroDesktop");
+  
+      if (!mobileHero || !desktopHero) return;
+  
+      let ticking = false; // Prevents excessive updates
+  
+      function updateScale() {
+        const scrollTop = window.scrollY;
+        const scaleValue = Math.max(1, 1.2 - scrollTop * 0.0002);
+        
+        mobileHero.style.transform = `scale(${scaleValue})`;
+        desktopHero.style.transform = `scale(${scaleValue})`;
+  
+        ticking = false; // Reset for next frame
+      }
+  
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(updateScale);
+          ticking = true;
+        }
+      }
+  
+      window.addEventListener("scroll", onScroll);
+  
+      // Run the scale update once at the beginning
+      updateScale();
+    }
+  
+    document.addEventListener("DOMContentLoaded", setupParallax);
+    document.addEventListener('astro:after-swap', setupParallax);
+  </script>
+
