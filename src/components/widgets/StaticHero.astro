@@ -4,7 +4,7 @@ import staticHero from '~/assets/images/static_hero.jpg'
 import staticHeroM from '~/assets/images/static_hero_v.jpg'
 import { Icon } from 'astro-icon/components';
 ---
-<section class="relative w-full h-[100vh] z-[-1]">
+<section class="relative w-full h-[100vh] z-[-1] overflow-hidden">
     <div class="fixed top-0 left-0 w-full h-[100vh]">
         <Image
             class="object-cover h-full"
@@ -30,61 +30,20 @@ import { Icon } from 'astro-icon/components';
     </div>
 </section>
 
-<style>
-    #staticHeroDesktop {
-        scale: 1.2;
-        display: block;
-    }
-  
-    #staticHeroMobile {
-        display: none;
-    }
-  
-    @media (max-width: 768px) {
-        #staticHeroDesktop {
-            display: none;
-        }
-    
-        #staticHeroMobile {
-            scale: 1.2;
-            display: block;
-        }
-    }
-</style>
-
 <script is:inline>
-    function setupParallax() {
-      const mobileHero = document.getElementById("staticHeroMobile");
-      const desktopHero = document.getElementById("staticHeroDesktop");
-  
-      if (!mobileHero || !desktopHero) return;
-  
-      let ticking = false; // Prevents excessive updates
-  
-      function updateScale() {
-        const scrollTop = window.scrollY;
-        const scaleValue = Math.max(1, 1.2 - scrollTop * 0.0002);
-        
-        mobileHero.style.transform = `scale(${scaleValue})`;
-        desktopHero.style.transform = `scale(${scaleValue})`;
-  
-        ticking = false; // Reset for next frame
-      }
-  
-      function onScroll() {
-        if (!ticking) {
-          requestAnimationFrame(updateScale);
-          ticking = true;
+    document.addEventListener("scroll", function () {
+        const mobileHero = document.getElementById("staticHeroMobile");
+        const desktopHero = document.getElementById("staticHeroDesktop");
+        if (!mobileHero || !desktopHero) return;
+
+        const scrollPosition = window.scrollY;
+        const scaleFactor = 1.2 - scrollPosition * 0.0002; // Adjust shrinking speed
+
+        // Prevent it from shrinking too much
+        if (scaleFactor > 1) {
+            mobileHero.style.transform = `scale(${scaleFactor})`;
+            desktopHero.style.transform = `scale(${scaleFactor})`;
         }
-      }
-  
-      window.addEventListener("scroll", onScroll);
-  
-      // Run the scale update once at the beginning
-      updateScale();
-    }
-  
-    document.addEventListener("DOMContentLoaded", setupParallax);
-    document.addEventListener('astro:after-swap', setupParallax);
-  </script>
+    });
+</script>
 

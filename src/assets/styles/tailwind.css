@@ -128,3 +128,37 @@
 .dd *:first-child {
   margin-top: 0;
 }
+
+#staticHeroDesktop {
+  position: absolute; /* Fixed won't work well with scale */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.2); /* Start slightly scaled */
+  will-change: transform;
+  display: block;
+}
+
+#staticHeroMobile {
+  position: absolute; /* Fixed won't work well with scale */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.2); /* Start slightly scaled */
+  will-change: transform;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #staticHeroDesktop {
+      display: none;
+  }
+
+  #staticHeroMobile {
+      display: block;
+  }
+}
