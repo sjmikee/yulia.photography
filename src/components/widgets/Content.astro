@@ -28,10 +28,11 @@ const {
 >
   <h1 class="mb-2 font-bold text-5xl tracking-tight text-heading dark:text-white"><div set:text={title} /></h1>
   <h2 class="mb-2 font-bold text-lg tracking-tight text-accent dark:text-white"><div set:text={subTitle} /></h2>
-
+  
   <PhotoGallery imagesFolder={imagesFolder} />
-
-  <h3 class="my-4 w-full font-normal text-muted dark:text-gray-200"><div set:text={text} /></h3>
-  <Button variant="secondary" {...callToAction} />
-  <hr class="mt-10 sm:mt-20 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-accent to-transparent opacity-50 dark:via-neutral-400" />
+  <div class="mx-auto px-6 sm:px-6 prose prose-md lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 mt-8 prose-headings:scroll-mt-[80px]">
+    <h3 class="my-4 w-full font-normal text-muted dark:text-gray-200"><div set:text={text} /></h3>
+    <Button variant="secondary" {...callToAction} />
+    <hr class="mt-10 sm:mt-20 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-accent to-transparent opacity-50 dark:via-neutral-400" />
+  </div>
 </WidgetWrapper>
