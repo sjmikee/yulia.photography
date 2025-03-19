@@ -1,7 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
-import ContactUs from '~/components/widgets/Contact.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 
 const metadata = {
@@ -12,67 +11,57 @@ const metadata = {
 <Layout metadata={metadata}>
   <!-- HeroText Widget ******************* -->
 
-  <HeroText tagline="Contact" title="Let's Connect!" />
-
-  <ContactUs
-    id="form"
-    title="Drop us a message today!"
-    subtitle="For quicker answers, explore our FAQs section. You may find the solution you're looking  for right there! If not, our support team is delighted to help you."
-    inputs={[
-      {
-        type: 'text',
-        name: 'name',
-        label: 'Name',
-      },
-      {
-        type: 'email',
-        name: 'email',
-        label: 'Email',
-      },
-    ]}
-    textarea={{
-      label: 'Message',
-    }}
-    disclaimer={{
-      label:
-        'By submitting this contact form, you acknowledge and agree to the collection of your personal information.',
-    }}
-    description="Our support team typically responds within 24 business hours."
-  />
+  <HeroText tagline="אני לא נושכת (רק מצלמת)" title="בואו נדבר" />
 
   <!-- Features2 Widget ************** -->
 
   <Features2
-    title="We are here to help!"
+    title="דרכים אפשריות ליצירת קשר"
     items={[
       {
-        title: 'General support',
-        description: `Chat with us for inquiries related to account management, website navigation, payment issues, accessing purchased templates or general questions about the website's functionality.`,
+        title: 'טלפון',
+        icon: 'tabler:phone',
+        callToAction: {
+          text: '0521234567',
+          href: 'tel:0521234567'
+        }
       },
       {
-        title: 'Contact sales',
-        description:
-          'Chat with us for questions about purchases, customization options, licensing for commercial use, inquiries about specific template, etc.',
+        title: 'ווטסאפ',
+        icon: 'tabler:brand-whatsapp',
+        callToAction: {
+          text: '0521234567',
+          href: 'https://wa.me/0521234567'
+        }
       },
       {
-        title: 'Technical support',
-        description:
-          'Chat with us when facing issues like template installation, problems editing difficulties, compatibility issues with software or download errors, or other technical challenges related to using the templates.',
+        title: 'פייסבוק',
+        icon: 'tabler:brand-facebook',
+        callToAction: {
+          text: '@yulia.photography',
+          href: 'https://facebook.com/'
+        }
       },
       {
-        title: 'Phone',
-        description: '+1 (234) 567-890',
-        icon: 'tabler:headset',
+        title: 'אינסטגרם',
+        icon: 'tabler:brand-instagram',
+        callToAction: {
+          text: '@yulia.photography',
+          href: 'https://instagram.com/'
+        }
       },
       {
-        title: 'Email',
-        description: 'contact@support.com',
+        title: 'מייל',
         icon: 'tabler:mail',
+        callToAction: {
+          text: 'yulia.photography@gmail.com',
+          href: 'mailto:yulia.photography@gmail.com'
+        }
       },
       {
-        title: 'Location',
-        description: '1234 Lorem Ipsum St, 12345, Miami, EEUU',
-        icon: 'tabler:map-pin',
+        title: 'דואר יונים',
+        description: 'כרגע לא פעיל, אבל עובדים על זה ;)',
+        icon: 'tabler:send',
       },
     ]}
   />

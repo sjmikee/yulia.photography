@@ -3,7 +3,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import StaticHero from '~/components/widgets/StaticHero.astro';
 import ContentGrid from '~/components/widgets/ContentGrid.astro';
 
@@ -30,7 +30,7 @@ const metadata = {
       },
       { text: 'מחירון', href: '/pricing' },
     ]}
-    image={{ src: '~/assets/images/hero.jpg', alt: 'X צלמת' }}
+    image={{ src: '~/assets/images/hero.jpg', alt: 'צילומי משפחה צילומי זוגות צילומי הריון צילומי הנקה צילומי בסטודיו או בטבע' }}
   >
     <Fragment slot="title">
       היי!
@@ -140,27 +140,5 @@ const metadata = {
 
   <!-- CallToAction Widget *********** -->
 
-  <CallToAction
-    id="bottomCallToAction"
-    actions={[
-      {
-        variant: 'primary',
-        text: 'ווטסאפ',
-        href: 'https://wa.me/0521234567',
-        target: '_blank',
-        icon: 'tabler:brand-whatsapp',
-      },
-    ]}
-  >
-    <Fragment slot="title">
-      אשמח לדבר
-    </Fragment>
-
-    <Fragment slot="subtitle">
-      מוזמנים לפנות אלי לכל התייעצות או שאלה :)
-    </Fragment>
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
-    </Fragment>
-  </CallToAction>
+  <WhatssapCallToAction />
 </Layout>

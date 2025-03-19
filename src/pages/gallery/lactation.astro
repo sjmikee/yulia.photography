@@ -1,8 +1,8 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
 import PhotoGallery from '~/components/widgets/PhotoGallery.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 
 const metadata = {
   title: 'צילומי הנקה',
@@ -23,27 +23,5 @@ const title = "צילומי הנקה";
 
     <!-- CallToAction Widget *********** -->
 
-    <CallToAction
-        id="bottomCallToAction"
-        actions={[
-            {
-            variant: 'primary',
-            text: 'ווטסאפ',
-            href: 'https://wa.me/0521234567',
-            target: '_blank',
-            icon: 'tabler:brand-whatsapp',
-            },
-        ]}
-        >
-        <Fragment slot="title">
-            אשמח לדבר
-        </Fragment>
-
-        <Fragment slot="subtitle">
-            מוזמנים לפנות אלי לכל התייעצות או שאלה :)
-        </Fragment>
-        <Fragment slot="bg">
-            <div class="absolute inset-0 bg-page"></div>
-        </Fragment>
-    </CallToAction>
+    <WhatssapCallToAction />
 </Layout>

@@ -39,6 +39,10 @@ export const headerData = {
       text: 'קצת עלי',
       href: getPermalink('/about'),
     },
+    {
+      text: 'צור קשר',
+      href: getPermalink('/contact'),
+    },
   ],
   actions: [{ text: 'דברו איתי', href: 'tel:0521234567', target: '_blank', icon: 'tabler:phone' }],
 };
@@ -60,6 +64,7 @@ export const footerData = {
         { text: 'מחירון', href: '/pricing' },
         { text: 'בלוג', href: '/blog' },
         { text: 'קצת עלי', href: '/about' },
+        { text: 'צור קשר', href: '/contact' },
       ],
     },
   ],
