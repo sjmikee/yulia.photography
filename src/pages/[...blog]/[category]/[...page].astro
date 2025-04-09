@@ -6,6 +6,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
 import Pagination from '~/components/blog/Pagination.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 
 export const prerender = true;
 
@@ -34,4 +35,5 @@ const metadata = {
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>
+  <WhatssapCallToAction />
 </Layout>

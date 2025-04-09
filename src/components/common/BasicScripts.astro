@@ -267,10 +267,13 @@ import { UI } from 'astrowind:config';
       const bottomCallToActionElement = document.querySelector("#bottomCallToAction");
 
       function toggleWhatsAppButton() {
-        if (window.scrollY < 300 || whatsappButton.dataset.hidden === "true") {
-          whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-        } else {
-          whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+        if (whatsappButton)
+        {
+          if (window.scrollY < 300 || whatsappButton.dataset.hidden === "true") {
+            whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
+          } else {
+            whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
+          }
         }
       }
 
@@ -298,7 +301,7 @@ import { UI } from 'astrowind:config';
           scrollToTopButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
           toggleScrollToTopButton();
         });
-      }, { threshold: 0.6 });
+      }, { threshold: 0.4 });
 
       if (footerElement) {
         scrollTopObserver.observe(footerElement);
@@ -317,9 +320,12 @@ import { UI } from 'astrowind:config';
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
-      whatsappButton.addEventListener("click", () => {
+      if(whatsappButton)
+      {
+        whatsappButton.addEventListener("click", () => {
         window.open(`https://wa.me/${phoneNumber}`, "_blank");
       });
+      }
     }
   };
 

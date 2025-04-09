@@ -14,6 +14,8 @@ export interface Props {
 }
 
 const { metadata } = Astro.props;
+const { pathname } = new URL(Astro.request.url);
+const isContactPage = pathname === '/contact';
 ---
 
 <Layout metadata={metadata}>
@@ -27,5 +29,10 @@ const { metadata } = Astro.props;
     <Footer {...footerData} />
   </slot>
   <ScrollToTopButton />
-  <WhatsAppButton />
+  {
+    !isContactPage && (
+      <WhatsAppButton />
+    )
+  }
+  
 </Layout>
