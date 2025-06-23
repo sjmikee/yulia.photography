@@ -5,7 +5,7 @@ import Prices from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import Features3 from '~/components/widgets/Features3.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 
 const metadata = {
   title: 'מחירון',
@@ -17,7 +17,7 @@ const metadata = {
 
   <HeroText
     tagline="מחירון"
-    title="Stellar Pricing for Every Journey"
+    title="מחירון"
     subtitle="Choose the perfect plan that aligns with your cosmic goals."
   />
 
@@ -154,36 +154,36 @@ const metadata = {
   <!-- Steps Widget ****************** -->
 
   <Steps
-    title="A guided journey from plans to creativity"
-    tagline="simplified process"
+    title="תהליך העבודה"
+    tagline="איך הכל יראה"
     isReversed={true}
     items={[
       {
-        title: 'Explore plans',
+        title: 'שיחה ראשונית',
         icon: 'tabler:number-1',
       },
       {
-        title: 'Select a plan',
+        title: 'סגירת חבילה ותאריך',
         icon: 'tabler:number-2',
       },
       {
-        title: 'Sign Up / Log In',
+        title: 'תשלום מקדמה',
         icon: 'tabler:number-3',
       },
       {
-        title: 'Review order',
+        title: 'יום הצילום',
         icon: 'tabler:number-4',
       },
       {
-        title: 'Enter payment details',
+        title: 'עריכת התמונות (עד 14 ימי עסקים)',
         icon: 'tabler:number-5',
       },
       {
-        title: 'Confirmation',
+        title: 'קבלת קישור לגלריה דיגיטלית להורדה',
         icon: 'tabler:number-6',
       },
       {
-        title: 'Download and start using the template(s)',
+        title: 'נהנים מתמונות איכותיות ומרגשות 😊',
         icon: 'tabler:number-7',
       },
     ]}
@@ -196,7 +196,7 @@ const metadata = {
   <!-- FAQs Widget ******************* -->
 
   <FAQs
-    title="Pricing FAQs"
+    title="שאלות נפוצות בקשר למחירון"
     subtitle="Choosing the right plan is important, and we're here to answer your questions. If you have queries about our pricing options, you're in the right place."
     columns={1}
     items={[
@@ -230,15 +230,5 @@ const metadata = {
 
   <!-- CallToAction Widget *********** -->
 
-  <CallToAction
-    title="Ready to boost your projects?"
-    subtitle="Join our community of satisfied customers who have transformed their work with our templates."
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Get started now',
-        href: '/',
-      },
-    ]}
-  />
+  <WhatssapCallToAction />
 </Layout>
