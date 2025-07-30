@@ -4,106 +4,119 @@ import HeroText from '~/components/widgets/HeroText.astro';
 import Prices from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
-import Features3 from '~/components/widgets/Features3.astro';
+// import Features3 from '~/components/widgets/Features3.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 
 const metadata = {
   title: 'מחירון',
 };
+
+// const stepsImage = import.meta.glob<{ default: ImageMetadata }>("~/assets/images/static_hero_v.jpg", { eager: true });
+// const stepsImageSrc = stepsImage["/src/assets/images/static_hero_v.jpg"]?.default;
+// const source = stepsImageSrc.src;
 ---
 
 <Layout metadata={metadata}>
   <!-- HeroText Widget ******************* -->
 
   <HeroText
-    tagline="מחירון"
+    tagline="רגעים שתאהבו להיזכר בהם – עם חבילה שמדויקת לכם"
     title="מחירון"
-    subtitle="Choose the perfect plan that aligns with your cosmic goals."
+    subtitle="כל סשן הוא חוויה אישית ומיוחדת – כי התמונות הכי יפות נוצרות כשנעים, כשבטוח וכשכיף."
   />
 
   <!-- Pricing Widget ******************* -->
 
   <Prices
-    title="Our prices"
-    subtitle="Only pay for what you need"
+    title="החבילות שלי"
+    subtitle="הבחירה שלכם"
     prices={[
       {
-        title: 'basic',
-        subtitle: 'Optimal choice for personal use',
-        price: 29,
-        period: 'per month',
+        title: 'חבילה קצרה',
+        subtitle: 'רגע אחד',
+        price: 500,
+        period: 'מתאים לצילומי סולו, זוגי קצר או מתנה מתוקה',
         items: [
           {
-            description: 'Etiam in libero, et volutpat',
+            description: 'כשעה של צילומים',
           },
           {
-            description: 'Aenean ac nunc dolor tristique',
+            description: '10 - 20 תמונות ערוכות',
           },
           {
-            description: 'Cras scelerisque accumsan lib',
+            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
           },
           {
-            description: 'In hac habitasse',
+            description: 'קפה עם הצלמת - איתי ☺️',
           },
         ],
         callToAction: {
           target: '_blank',
-          text: 'Get started',
+          text: 'לקביעת תאריך',
           href: '#',
         },
       },
       {
-        title: 'standard',
-        subtitle: 'Optimal choice for small teams',
-        price: 69,
-        period: 'Per Month',
+        title: 'החבילה הכי משתלמת',
+        subtitle: 'חוויה שלמה',
+        price: 700,
+        period: 'מושלם לצילומי משפחה, זוגות ולייף סטייל בטבע',
         items: [
           {
-            description: 'Proin vel laoreet',
+            description: 'כשעתיים של צילומים',
           },
           {
-            description: 'Ut efficitur habitasse egestas',
+            description: '40 - 50 תמונות ערוכות',
           },
           {
-            description: 'Volutpat hac curabitur',
+            description: 'הכוונה מלאה לפני הצילום + טיפים',
           },
           {
-            description: 'Pellentesque blandit ut nibh',
+            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
           },
           {
-            description: 'Donec fringilla sem',
+            description: 'קפה עם הצלמת - איתי ☺️',
           },
         ],
         callToAction: {
           target: '_blank',
-          text: 'Get started',
+          text: 'לקביעת תאריך',
           href: '#',
         },
         hasRibbon: true,
-        ribbonTitle: 'popular',
+        ribbonTitle: 'הכי נפוץ',
       },
       {
-        title: 'premium',
-        subtitle: 'Optimal choice for companies',
-        price: 199,
-        period: 'Per Month',
+        title: 'חבילת פרימיום',
+        subtitle: 'סיפור של אהבה',
+        price: 1200,
+        period: 'מתאים במיוחד לצילומי משפחות עם ילדים קטנים, או כמתנה זוגית מושקעת',
         items: [
           {
-            description: 'Curabitur suscipit risus',
+            description: 'שעתיים עד 3 של צילומים',
           },
           {
-            description: 'Aliquam habitasse malesuada',
+            description: 'עד 2 תלבושות, הפסקות לפי הצורך',
           },
           {
-            description: 'Suspendisse sit amet blandit',
+            description: 'כ - 60 תמונות ערוכות',
           },
           {
-            description: 'Suspendisse auctor blandit dui',
+            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
+          },
+          {
+            description: 'אלבום מודפס קטן במתנה',
+          },
+          {
+            description: 'הכוונה מלאה לפני הצילום + טיפים',
+          },
+          {
+            description: 'קפה עם הצלמת - איתי ☺️',
           },
         ],
         callToAction: {
           target: '_blank',
-          text: 'Get started',
+          text: 'לקביעת תאריך',
           href: '#',
         },
       },
@@ -112,18 +125,18 @@ const metadata = {
 
   <!-- Features3 Widget ************** -->
 
-  <Features3
-    title="Price-related features"
-    subtitle="Discover the advantages of choosing our plans"
+  <!-- <Features3
+    title="תוספות שאפשר להזמין בנפרד"
+    subtitle="שדרגו את החוויה שלכם"
     columns={2}
     items={[
       {
-        title: 'Tiered Pricing Plans',
-        description: 'Choose from a range of pricing plans designed to accommodate different budgets and requirements.',
-        icon: 'tabler:stairs',
+        title: 'אלבום מודפס – “רגעים בידיים”',
+        description: 'אלבום בגודל A5 / A4 עם כריכה קשה ועיצוב אישי \nמודפס באיכות גבוהה על נייר מט עבה \nכולל את התמונות שנבחרו מהסשן',
+        icon: 'tabler:album',
       },
       {
-        title: 'Transparent Pricing',
+        title: 'הגדלות על עץ / קנבס',
         description: 'Clearly displayed pricing details for each plan, with no hidden costs or unexpected charges.',
         icon: 'tabler:flip-vertical',
       },
@@ -149,7 +162,7 @@ const metadata = {
       },
     ]}
     classes={{ container: 'max-w-5xl' }}
-  />
+  /> -->
 
   <!-- Steps Widget ****************** -->
 
@@ -187,43 +200,40 @@ const metadata = {
         icon: 'tabler:number-7',
       },
     ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1536816579748-4ecb3f03d72a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80',
-      alt: 'Steps image',
-    }}
+    image={{ src: '~/assets/images/static_hero_v.jpg', alt: 'צילומי משפחה צילומי זוגות צילומי בוק אישי צילומים בטבע' }}
   />
 
   <!-- FAQs Widget ******************* -->
 
   <FAQs
-    title="שאלות נפוצות בקשר למחירון"
-    subtitle="Choosing the right plan is important, and we're here to answer your questions. If you have queries about our pricing options, you're in the right place."
+    title="שאלות נפוצות"
+    subtitle="אשמח לענות על כל שאלה אחרת שיש לכם ולא מצאתם תשובה"
     columns={1}
     items={[
       {
-        title: 'Do the plans come with customer support?',
+        title: 'מתי כדאי לסגור תאריך?',
         description:
-          'Absolutely, all plans include access to our dedicated customer support to assist you with any queries or concerns.',
+          'כדאי לסגור תאריך כמה שיותר מראש – במיוחד בעונות המבוקשות. אני מצלמת בעיקר בשעות הזהב (לפני שקיעה)',
       },
       {
-        title: 'Is there a trial period for the different plans?',
+        title: 'את עוזרת עם בגדים / צבעים?',
         description:
-          "Unfortunately, we don't offer trial periods for the plans. However, you can check out our demo section to preview the quality of our templates.",
+          "בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.",
       },
       {
-        title: 'Can I switch between plans?',
+        title: 'מה קורה אם יורד גשם או אחד הילדים חולה?',
         description:
-          'Certainly! You can easily upgrade or downgrade your plan, at any time, to find the one that best suits your evolving requirements.',
+          'תמיד אפשר לתאם מועד חלופי – החיים קורים, ואני לגמרי מבינה. עדכנו אותי בהקדם, ונמצא מועד חדש שמתאים לשני הצדדים.',
       },
       {
-        title: 'What payment methods do you accept?',
+        title: 'איפה מתקיימים הצילומים?',
         description:
-          'We accept major credit cards and online payment methods to ensure a convenient and secure transaction process.',
+          'אני מצלמת בטבע, בעיקר באיזור המרכז (השרון, שפלה, שפלת החוף). אחרי שנבחר חבילה, אני אציע לך כמה לוקיישנים קסומים שמתאימים לעונה ולסגנון שלך.',
       },
       {
-        title: 'Are there any hidden fees beyond the displayed cost?',
+        title: 'צריך לשלם מקדמה?',
         description:
-          'No, the subscription cost covers all the features and templates listed under each plan. There are no hidden fees or extra charges.',
+          'כן. כדי לשמור את התאריך ביומן, יש לשלם מקדמה של ₪100 בעת ההזמנה. המקדמה אינה ניתנת להחזר, אך אם תודיעו מספיק זמן מראש – נוכל למצוא יחד מועד חלופי.',
       },
     ]}
   />

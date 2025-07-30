@@ -6,24 +6,12 @@ export const headerData = {
       text: 'גלריה',
       links: [
         {
-          text: 'משפחה',
+          text: 'משפחה וזוגות',
           href: getPermalink('/gallery/family'),
         },
         {
-          text: 'הנקה',
-          href: getPermalink('/gallery/lactation'),
-        },
-        {
-          text: 'הריון',
-          href: getPermalink('/gallery/mater'),
-        },
-        {
-          text: 'גיל שנה',
-          href: getPermalink('/about'),
-        },
-        {
-          text: 'עירום',
-          href: getPermalink('/contact'),
+          text: 'סולו',
+          href: getPermalink('/gallery/solo'),
         },
       ],
     },
@@ -32,7 +20,7 @@ export const headerData = {
       href: getPermalink('/pricing'),
     },
     {
-      text: 'בלוג',
+      text: 'טיפים',
       href: getPermalink('/blog'),
     },
     {
@@ -44,7 +32,7 @@ export const headerData = {
       href: getPermalink('/contact'),
     },
   ],
-  actions: [{ text: 'דברו איתי', href: 'tel:0521234567', target: '_blank', icon: 'tabler:phone' }],
+  actions: [{ text: 'דברו איתי', href: 'tel:0525836940', target: '_blank', icon: 'tabler:phone' }],
 };
 
 export const footerData = {
@@ -53,16 +41,13 @@ export const footerData = {
       title: 'גלריה',
       links: [
         { text: 'משפחה', href: '/gallery/family' },
-        { text: 'הנקה', href: '/gallery/lactation' },
-        { text: 'הריון', href: '/gallery/mater' },
-        { text: 'גיל שנה', href: '#' },
-        { text: 'עירום', href: '#' },
+        { text: 'סולו', href: '/gallery/solo' },
       ],
     },
     {
       links: [
         { text: 'מחירון', href: '/pricing' },
-        { text: 'בלוג', href: '/blog' },
+        { text: 'טיפים', href: '/blog' },
         { text: 'קצת עלי', href: '/about' },
         { text: 'צור קשר', href: '/contact' },
       ],
@@ -73,11 +58,9 @@ export const footerData = {
     { text: 'פרטיות', href: getPermalink('/privacy') },
   ],
   socialLinks: [
-    { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: '#' },
-    { ariaLabel: 'Facebook', icon: 'tabler:brand-facebook', href: '#' },
-    { ariaLabel: 'TikTok', icon: 'tabler:brand-tiktok', href: '#' },
+    { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: 'https://www.instagram.com/koren_yulia/' },
   ],
   footNote: `
-    יוליה · כל הזכויות שמורות
+    יוליה קורן · כל הזכויות שמורות
   `,
 };

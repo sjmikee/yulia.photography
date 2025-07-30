@@ -1,0 +1,27 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import PhotoGallery from '~/components/widgets/PhotoGallery.astro';
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+
+const metadata = {
+  title: 'צילומי סולו',
+  ignoreTitleTemplate: true,
+};
+
+const title = "צילומי סולו";
+---
+
+<Layout metadata={metadata}>
+    <div class="text-center py-5">
+    <h1 class="mb-2 font-bold text-4xl tracking-tight text-heading dark:text-slate-300"><div set:text={title} /></h1>
+    </div>
+
+    <WidgetWrapper>
+        <PhotoGallery imagesFolder="solo_gallery" />
+    </WidgetWrapper>
+
+    <!-- CallToAction Widget *********** -->
+
+    <WhatssapCallToAction />
+</Layout>
