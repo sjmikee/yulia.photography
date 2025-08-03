@@ -40,16 +40,16 @@ export const footerData = {
     {
       title: 'גלריה',
       links: [
-        { text: 'משפחה', href: '/gallery/family' },
-        { text: 'סולו', href: '/gallery/solo' },
+        { text: 'משפחה', href: getPermalink('/gallery/family') },
+        { text: 'סולו', href: getPermalink('/gallery/solo') },
       ],
     },
     {
       links: [
-        { text: 'מחירון', href: '/pricing' },
-        { text: 'טיפים', href: '/blog' },
-        { text: 'קצת עלי', href: '/about' },
-        { text: 'צור קשר', href: '/contact' },
+        { text: 'מחירון', href: getPermalink('/pricing') },
+        { text: 'טיפים', href: getPermalink('/blog') },
+        { text: 'קצת עלי', href: getPermalink('/about') },
+        { text: 'צור קשר', href: getPermalink('/contact') },
       ],
     },
   ],

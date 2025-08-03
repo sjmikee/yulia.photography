@@ -6,7 +6,7 @@ import ToggleMenu from '~/components/common/ToggleMenu.astro';
 import Button from '~/components/ui/Button.astro';
 
 import { getHomePermalink } from '~/utils/permalinks';
-import { trimSlash, getAsset } from '~/utils/permalinks';
+import { trimSlash } from '~/utils/permalinks';
 import type { CallToAction } from '~/types';
 
 interface Link {
@@ -28,7 +28,7 @@ export interface Props {
   isDark?: boolean;
   isFullWidth?: boolean;
   showToggleTheme?: boolean;
-  showRssFeed?: boolean;
+  showInstagramLink?: boolean;
   position?: string;
 }
 
@@ -40,7 +40,7 @@ const {
   isDark = false,
   isFullWidth = false,
   showToggleTheme = false,
-  showRssFeed = false,
+  showInstagramLink = false,
   position = 'center',
 } = Astro.props;
 
@@ -139,13 +139,14 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         <div class="flex">
           {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
           {
-            showRssFeed && (
+            showInstagramLink && (
               <a
-                class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-gray-200 dark:focus-visible:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
-                aria-label="RSS Feed"
-                href={getAsset('/rss.xml')}
+                class="text-muted dark:text-slate-300 hover:bg-primary hover:text-white dark:hover:bg-slate-600 focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200 rounded-lg text-sm p-2.5 inline-flex items-center"
+                aria-label="Instagram Link"
+                href="https://www.instagram.com/koren_yulia/"
+                target="_blank"
               >
-                <Icon name="tabler:rss" class="w-5 h-5" />
+                <Icon name="tabler:brand-instagram" class="w-6 h-6" />
               </a>
             )
           }
