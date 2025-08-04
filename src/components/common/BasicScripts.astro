@@ -1,5 +1,24 @@
 ---
 import { UI } from 'astrowind:config';
+import defaultImage from '~/assets/images/default.png'
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Yulia Photography",
+  "image": `https://www.yulia.photography${defaultImage.src}`,
+  "url": "https://www.yulia.photography",
+  "telephone": "+972-52-583-6940",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "IL"
+  },
+  "description": "צילומי משפחה, צילומי זוגיות, צילומי סולו – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
+  "priceRange": "$$",
+  "sameAs": [
+    "https://www.instagram.com/koren_yulia/"
+  ]
+};
 ---
 
 <script is:inline define:vars={{ defaultTheme: UI.theme }}>
@@ -335,3 +354,5 @@ import { UI } from 'astrowind:config';
     ButtonsObserver.start();
   });
 </script>
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
