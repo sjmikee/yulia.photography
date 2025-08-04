@@ -1,5 +1,5 @@
 site:
-  name: "יוליה - צילום סולו, משפחה, זוגות בטבע"
+  name: "יוליה - צילום סולו, משפחה, זוגיות במרכז"
   site: 'https://yulia.photography'
   base: '/'
   trailingSlash: false
@@ -9,14 +9,14 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: "יוליה - צילום סולו, משפחה, זוגות בטבע"
+    default: "יוליה - צילום סולו, משפחה, זוגיות במרכז"
     template: '%s — צילום'
   description: "צילומי משפחה, צילומי זוגיות, צילומי סולו – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית"
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: "יוליה - צילום סולו, משפחה, זוגות בטבע או בסטודיו"
+    site_name: "יוליה - צילום סולו, משפחה, זוגיות במרכז"
     images:
       - url: '~/assets/images/default.png'
         width: 1200
@@ -40,7 +40,7 @@ apps:
       isEnabled: true
       permalink: '/%slug%' # Variables: %slug%, %year%, %month%, %day%, %hour%, %minute%, %second%, %category%
       robots:
-        index: false
+        index: true
 
     list:
       isEnabled: true
