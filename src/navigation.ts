@@ -6,11 +6,11 @@ export const headerData = {
       text: 'גלריה',
       links: [
         {
-          text: 'משפחה וזוגות',
+          text: 'משפחה וזוגיות',
           href: getPermalink('/gallery/family'),
         },
         {
-          text: 'סולו',
+          text: 'צילומים אישיים',
           href: getPermalink('/gallery/solo'),
         },
       ],
@@ -40,8 +40,8 @@ export const footerData = {
     {
       title: 'גלריה',
       links: [
-        { text: 'משפחה', href: getPermalink('/gallery/family') },
-        { text: 'סולו', href: getPermalink('/gallery/solo') },
+        { text: 'משפחה וזוגיות', href: getPermalink('/gallery/family') },
+        { text: 'צילומים אישיים', href: getPermalink('/gallery/solo') },
       ],
     },
     {
