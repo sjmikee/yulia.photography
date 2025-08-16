@@ -26,8 +26,8 @@ const {
   containerClass={`max-w-5xl mx-auto ${classes?.container ?? ''}`}
   bg={bg}
 >
-  <h1 class="mb-2 font-bold text-5xl tracking-tight text-heading dark:text-white"><div set:text={title} /></h1>
-  <h2 class="mb-2 font-bold text-lg tracking-tight text-accent dark:text-white"><div set:text={subTitle} /></h2>
+  <h2 class="mb-2 font-bold text-5xl tracking-tight text-heading dark:text-white"><div set:text={title} /></h2>
+  <h3 class="mb-2 font-bold text-lg tracking-tight text-accent dark:text-white"><div set:text={subTitle} /></h3>
   
   <PhotoGallery imagesFolder={imagesFolder} />
   <div class="mx-auto px-6 sm:px-6 prose prose-md lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 mt-8 prose-headings:scroll-mt-[80px]">

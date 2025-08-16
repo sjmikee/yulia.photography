@@ -1,0 +1,32 @@
+---
+import defaultImage from '~/assets/images/default.png'
+import type { MetaData } from '~/types';
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+const name = metadata?.title;
+const description = metadata?.description;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": {name},
+  "image": `https://yulia.photography${defaultImage.src}`,
+  "url": "https://yulia.photography",
+  "telephone": "+972-52-583-6940",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "IL"
+  },
+  "description": {description},
+  "priceRange": "$$",
+  "sameAs": [
+    "https://www.instagram.com/koren_yulia/"
+  ]
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>

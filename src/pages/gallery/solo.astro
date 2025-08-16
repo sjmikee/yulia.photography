@@ -3,15 +3,22 @@ import Layout from '~/layouts/PageLayout.astro';
 import PhotoGallery from '~/components/widgets/PhotoGallery.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+
+const richMetadata = {
+  title: "יוליה קורן - גלריית צילומי פורטרטים, בוק אישי ותדמית",
+  description: "מחפשים צילומי פורטרט, בוק אישי או תדמית שיראו אתכם במיטבכם? הציצו בגלריה שלי והתרשמו מצילומים מלאי רגש, סגנון ואותנטיות."
+}
 
 const metadata = {
-  title: 'צילומי סולו | בוק אישי | צילומי תדמית'
+  title: 'גלריית צילומי פורטרטים, בוק אישי ותדמית'
 };
 
-const title = "צילומים אישיים | צילומי תדמית";
+const title = "גלריית צילומי פורטרטים, בוק אישי ותדמית";
 ---
 
 <Layout metadata={metadata}>
+    <RichSeo metadata={richMetadata} />
     <div class="text-center py-5">
     <h1 class="mb-2 font-bold text-4xl tracking-tight text-heading dark:text-slate-300"><div set:text={title} /></h1>
     </div>

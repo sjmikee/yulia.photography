@@ -1,0 +1,20 @@
+# יוליה קורן צילומי משפחה, זוגיות, בוק אישי, לייף סטייל
+
+> פורטפוליו מקצועי המציג צילומים טבעיים ומלאי רגש לזוגות, משפחות וצילומים אישיים, האתר מכיל מחירון, בלוג ועוד
+
+## Core Content
+
+- [Home](https://yulia.photography): עמוד ראשי, הפניות לגלריה, מחירון, טיפים ושאלות נפוצות
+- [Gallery/solo](https://yulia.photography/gallery/solo): גלריה, צילומי תדמית, בוק אישי ופורטרטים
+- [Gallery/family](https://yulia.photography/gallery/family): גלריה, צילומי זוגיות, מפשחה וילדים
+- [Blog](https://yulia.photography/blog): כתבות עם טיפים חשובים בבחירת צלמת ומידע שימושי על צילומים כמו בחירת בגדים ועוד
+- [Pricing](https://yulia.photography/pricing): מחירון מדויק שמכיל חבילות מותאמות לצרכים שונים
+- [Contact](https://yulia.photography/contact): עמוד יצירת קשר, מכיל את כל פרטי הקשר האפשריים
+
+## Optional
+
+- [About](https://yulia.photography/about): עמוד מידע על הצלמת, העדפות וסגנונות צילום.
+- [Blog/how-to-choose-family-photographer](https://yulia.photography/how-to-choose-family-photographer): כתבה על בחירת צלמת לצילומי משפחה, טיפים חשובים
+- [Blog/how-to-prepare-kids-to-family-photoshot](https://yulia.photography/how-to-prepare-kids-to-family-photoshot): כתבה על שילוב ילדים בצילומי משפחה - איך לגרום לשתף פעולה ועוד.
+- [Blog/natural-couple-photos](https://yulia.photography/natural-couple-photos): כתבה על צילומי זוגיות, איך לקבל תוצאות טבעיות ומרגשות.
+- [Blog/prepare-to-family-photoshot](https://yulia.photography/prepare-to-family-photoshot): כתבה על איך להתכונן לצילומי משפחה, איך לבחור בגדים, מקומות ועוד.

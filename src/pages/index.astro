@@ -6,7 +6,12 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import StaticHero from '~/components/widgets/StaticHero.astro';
 import ContentGrid from '~/components/widgets/ContentGrid.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
 
+const richMetadata = {
+  title: "יוליה קורן - צילומי משפחה | צילומי זוגיות | בוק אישי | לייף סטייל",
+  description: "צילומי משפחה, צילומי זוגיות, צילומי סולו – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
+}
 
 const metadata = {
   title: 'יוליה קורן | צילומי משפחה | צילומי זוגיות | צילומי ילדים | צילומי תדמית',
@@ -15,6 +20,7 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
+  <RichSeo metadata={richMetadata} />
   <!-- Hero Widget ******************* -->
   <StaticHero />
   
