@@ -30,7 +30,7 @@ const {
       <div class="basis-1/2">
         {
           image && (
-            <div class="w-full h-[100vh] object-cover m-auto max-w-5xl intersect-once intercept-no-queue motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <div class="w-full h-[100vh] object-cover m-auto max-w-5xl">
               {typeof image === 'string' ? (
                 <Fragment set:html={image} />
               ) : (
@@ -41,6 +41,8 @@ const {
                   loading="eager"
                   width={4123}
                   height={6185}
+                  alt="Hero Image"
+                  fetchpriority="high"
                   {...image}
                 />
               )}
