@@ -1,0 +1,36 @@
+---
+import CallToAction from "./CallToAction.astro"
+---
+
+<CallToAction
+    id="bottomCallToAction"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'דברו איתי בווטסאפ',
+        href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אנחנו%20מתעניינים%20בצילומי%20משפחה',
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+      },
+      {
+        variant: 'secondary',
+        text: 'חייגו עכשיו',
+        href: 'tel:+972525836940',
+        target: '_blank',
+        icon: 'tabler:phone',
+      },
+    ]}
+  >
+    <Fragment slot="title">
+      שריינו תאריך עכשיו
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      שיחת ייעוץ חינם לפני הצילום
+      <br />
+מקומות מוגבלים לחודש הקרוב!
+    </Fragment>
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+    </Fragment>
+</CallToAction>

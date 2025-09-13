@@ -1,0 +1,316 @@
+---
+import RichSeo from "~/components/common/RichSeo.astro";
+import Layout from "~/layouts/Layout.astro"
+import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
+import { Image } from "astro:assets";
+import Hero2 from "~/components/widgets/Hero2.astro";
+import image_1 from "~/assets/couples_landing/OLBC0630.jpg"
+import image_2 from "~/assets/couples_landing/Roman&Ira-49.jpg"
+import image_3 from "~/assets/couples_landing/OLBC0570-2.jpg"
+import image_4 from "~/assets/couples_landing/Roman&Ira-13.jpg"
+import image_5 from "~/assets/couples_landing/family_2025-05.jpg"
+import image_6 from "~/assets/couples_landing/OLBC0630.jpg"
+import image_7 from "~/assets/couples_landing/Roman&Ira-06.jpg"
+import image_8 from "~/assets/couples_landing/couple-1.jpg"
+import image_9 from "~/assets/couples_landing/OLBC0733.jpg"
+import image_10 from "~/assets/couples_landing/Roman&Ira-50.jpg"
+import image_11 from "~/assets/couples_landing/family_2025-01.jpg"
+import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+import LandingCallToAction from "~/components/widgets/LandingCallToAction.astro"
+
+const richMetadata = {
+  title: "יוליה קורן - צילומי זוגיות במרכז",
+  description: "צילומי זוגיות – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
+}
+
+const metadata = {
+  title: 'יוליה קורן | צילומי זוגיות במרכז',
+  description: "צילומי זוגיות – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
+  ignoreTitleTemplate: true,
+};
+---
+<Layout metadata={metadata}>
+    <meta name="robots" content="noindex" />
+    <RichSeo metadata={richMetadata} />
+    <ScrollToTopButton />
+
+    
+    <!-- Hero -->
+    <Hero2
+        id='hero'
+        actions={[
+        {
+            variant: 'primary',
+            text: 'דברו איתי בווטסאפ',
+            href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אנחנו%20מתעניינים%20בצילומי%20זוגיות',
+            target: '_blank',
+            icon: 'tabler:brand-whatsapp',
+        },
+        { text: 'חייגו עכשיו', href: 'tel:+972525836940' },
+        ]}
+        image={{ src: '~/assets/images/couples_landing_hero.jpg', alt: 'צילומי זוגיות צילומי זוגות במרכז' }}
+        >
+        <Fragment slot="title">
+            <span class="text-accent dark:text-white highlight">צילומי זוגיות</span>
+            חוויה רומנטית ואינטימית שתישאר לנצח
+        </Fragment>
+
+        <Fragment slot="subtitle">
+            יוליה קורן – צלמת זוגיות במרכז הארץ. מתמחה בצילומי זוגיות רומנטיים וגם אינטימיים, בטבע או בלוקיישן לבחירתכם. חוויה קלילה, טבעית ומלאת אהבה.
+        </Fragment>
+
+        <Fragment slot="content">
+            <p class="mt-5 bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold mx-auto max-w-3xs">
+                קבעו עכשיו סשן צילומי זוגיות – ייעוץ חינם לפונים מהעמוד!
+            </p>
+        </Fragment>
+
+        <Fragment slot="bg">
+            <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+        </Fragment>
+    </Hero2>
+
+    <!-- למה לבחור ביוליה -->
+    <section class="max-w-4xl mx-auto pb-16 px-6 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+        <h2 class="text-3xl font-bold text-center mb-8">למה לבחור בי?</h2>
+        <div class="grid md:grid-cols-2 gap-10 items-center">
+        <Image
+            src={image_1}
+            widths={[400, 768, 1024, 2040]}
+            sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+            alt="יוליה קורן צלמת זוגיות"
+            class="rounded-2xl shadow-lg"
+            loading="eager"
+        />
+        <ul class="space-y-4 text-lg">
+            <li><span class="text-green-600 px-2 text-2xl"><strong>⎷</strong></span> צילום שמבליט את החיבור והכימיה שלכם</li>
+            <li><span class="text-green-600 px-2 text-2xl"><strong>⎷</strong></span> התאמה אישית – רומנטי, טבעי או אינטימי</li>
+            <li><span class="text-green-600 px-2 text-2xl"><strong>⎷</strong></span> דיסקרטיות מלאה בצילומי זוגיות אינטימיים</li>
+            <li><span class="text-green-600 px-2 text-2xl"><strong>⎷</strong></span> גלריה דיגיטלית ערוכה ברמה גבוהה</li>
+            <li><span class="text-green-600 px-2 text-2xl"><strong>⎷</strong></span> ניסיון עם זוגות מכל הסוגים – אווירה נעימה וקלילה</li>
+        </ul>
+        </div>
+    </section>
+
+    <section class="max-w-4xl mx-auto py-16 px-6 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+      <h2 class="text-3xl font-bold text-center mb-8">איך נראה סשן צילומי זוגיות?</h2>
+      <p class="text-lg leading-relaxed mb-6">
+        בצילומי זוגיות אני מתמקדת  <strong>בכם</strong> – בחיבור, במבטים ובחיבוקים הקטנים שהופכים את הקשר <strong>שלכם</strong> לייחודי.
+        אנחנו נתחיל באווירה רגועה, נבחר לוקיישן שמתאים <strong>לכם</strong> – פארק טבעי, רחובות אורבניים או מקום אינטימי ושקט.
+      </p>
+      <p class="text-lg leading-relaxed mb-6">
+        במהלך הסשן אני מדריכה בעדינות, אבל רוב הזמן מאפשרת <strong>לכם</strong> להיות אתם <strong>עצמכם</strong> –
+        כך שהתמונות יוצאות טבעיות, רומנטיות ומרגשות.
+        למי שמעוניין, ניתן לקיים גם <strong>צילומי זוגיות אינטימיים</strong> עם דגש על פרטיות ודיסקרטיות מלאה.
+      </p>
+      <p class="text-lg leading-relaxed">
+        בסיום הסשן תקבלו <strong>גלריה דיגיטלית ערוכה</strong> עם תמונות שתשמרו לכל החיים –
+        זיכרון מצולם של האהבה <strong>שלכם</strong>, בדיוק כמו <strong>שאתם</strong>.
+      </p>
+    </section>
+
+    <!-- המלצות -->
+    <section class="bg-gray-50 py-16 px-6 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+        <h2 class="text-3xl font-bold text-center mb-10">לקוחות מספרים</h2>
+        <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <blockquote class="bg-white p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p>
+            "צלמת מדהימה, כיפית ומצחיקה, נתנה לנו תחושה של נינוחות וקיבלנו תמונות מדהימות, כמו כן חייבת לציין שקיבלנו את התמונות מהר וזה היה נחמד לראות תוצרים כאלה טובים בכזאת זריזות. ממליצה"
+            </p>
+            <footer class="mt-4 font-bold">– כריסטינה, ראשון לציון</footer>
+        </blockquote>
+        <blockquote class="bg-white p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p>"עשיתי צילומים עם יוליה האלופה לצילומי הסינגל הראשון שלי!
+            חייבת לציין שהחוויה הייתה מדהימה
+            מדובר בצלמת רגישה ומהממת שמרגישה את האדם שעומד מולה ונותנת להרגיש הכי בנוח בעולם!
+            תודה על חוויה מדהימה
+            🩷"</p>
+            <footer class="mt-4 font-bold">– טלי, חולון</footer>
+        </blockquote>
+        <blockquote class="bg-white p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p>"אנחנו עם בעלי פשוט בהתלהבות מהצילומים! מהרגע הראשון היה נעים ונוח – הצלמת מקסימה, יודעת להרגיע, לכוון איך לעמוד, מה לעשות עם הידיים ולאן להסתכל. בלי שום מלאכותיות – רק חיוכים אמיתיים ורגעים עדינים. העריכה עדינה, לא מוגזמת, עם אור וקומפוזיציות בטעם משובח. אלה תמונות שפשוט מתחשק להדפיס ולשמור באלבום המשפחתי. ממליצים מכל הלב! ❤️"</p>
+            <footer class="mt-4 font-bold">– אירה, פתח תקווה</footer>
+        </blockquote>
+        </div>
+    </section>
+
+    <!-- מה מקבלים -->
+    <section class="max-w-6xl mx-auto py-16 px-6">
+        <h2 class="text-3xl font-bold text-center mb-8 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+        מה תקבלו בסשן צילומי זוגיות
+        </h2>
+        <div class="grid md:grid-cols-4 gap-6">
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_2}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="צילומי זוגיות רומנטיים"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <p class="font-semibold text-center">צילומי זוגיות רומנטיים</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_3}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="רגעים אינטימיים ועדינים"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <p class="font-semibold text-center">רגעים אינטימיים ועדינים</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_4}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="תמונות טבעיות ואותנטיות"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <p class="font-semibold text-center">תמונות טבעיות ואותנטיות</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_5}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="חוויית צילום זוגית בלתי נשכחת"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <p class="font-semibold text-center">חוויית צילום זוגית בלתי נשכחת</p>
+        </div>
+        </div>
+        <p class="mt-8 bg-yellow-400 text-black text-center px-4 py-2 rounded-lg font-bold mx-auto max-w-3xs intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            שלחו הודעה כבר עכשיו ונקבע תאריך לחוויה שלכם ❤️
+        </p>
+    </section>
+
+    <!-- גלריה -->
+    <section class="bg-gray-50 py-16 px-6">
+        <h2 class="text-3xl font-bold text-center mb-10">עוד טיפה עבודות</h2>
+        <div class="grid md:grid-cols-3 gap-4 max-w-6xl mx-auto">
+            <Image
+                src={image_6}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על דק ליד המים בגן היפני חולון"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <Image
+                src={image_7}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="שחור לבן זוג עומד בקצה מדרגות צילום מלמטה"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <Image
+                src={image_8}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג מחיך גבר בחולצה לבן ובחורה בשמלה צבעונית"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <Image
+                src={image_9}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב מתחת לעץ יום שמשי"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <Image
+                src={image_10}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג עומד על רקע מבנה עתיק בקיסריה"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <Image
+                src={image_11}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על ספה חומה בבית אוירה נינוחה"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-16 px-6">
+      <h2 class="text-3xl font-bold text-center mb-10">שאלות נפוצות</h2>
+      <div class="max-w-4xl mx-auto space-y-6 text-lg">
+        <details class="p-4 bg-white rounded-lg shadow">
+          <summary class="font-semibold cursor-pointer">כמה עולה סשן צילומי זוגיות במרכז?</summary>
+          <p class="mt-2">
+            מחיר סשן <strong>צילומי זוגיות במרכז</strong> מתחיל מ-500 ₪,
+            וכולל גלריה דיגיטלית עם תמונות ערוכות. ניתן לשדרג לצילומי זוגיות אינטימיים או להוסיף אלבום מודפס.
+          </p>
+        </details>
+        <details class="p-4 bg-white rounded-lg shadow">
+            <summary class="font-semibold cursor-pointer">מה אם אנחנו לא יודעים איך להצטלם?</summary>
+            <p class="mt-2">
+                זה ממש בסדר – רוב הזוגות שמגיעים אליי לא דוגמנים ולא רגילים לעמוד מול מצלמה 😊  
+                אני מדריכה אתכם צעד אחר צעד, עם הכוונה פשוטה ונינוחה, כדי שתדעו בדיוק מה לעשות עם הידיים, המבט והחיבוק.  
+                אחרי כמה דקות האווירה משתחררת לגמרי, ואתם מרגישים טבעיים – וזה מה שהופך את התמונות לכל כך אמיתיות ומרגשות.
+            </p>
+        </details>
+        <details class="p-4 bg-white rounded-lg shadow">
+          <summary class="font-semibold cursor-pointer">אפשר לבחור צילומי זוגיות אינטימיים?</summary>
+          <p class="mt-2">
+            בהחלט! אני מציעה גם <strong>צילומי זוגיות אינטימיים</strong>, עם דיסקרטיות מלאה,
+            באווירה רגועה ובטוחה שתאפשר לכם להרגיש בנוח מול המצלמה.
+          </p>
+        </details>
+        <details class="p-4 bg-white rounded-lg shadow">
+          <summary class="font-semibold cursor-pointer">כמה זמן נמשך הסשן?</summary>
+          <p class="mt-2">
+            סשן סטנדרטי נמשך כשעה עד שעה וחצי. צילומי זוגיות אינטימיים עשויים לקחת מעט יותר זמן,
+            תלוי באווירה ובנוחות שלכם.
+          </p>
+        </details>
+        <details class="p-4 bg-white rounded-lg shadow">
+          <summary class="font-semibold cursor-pointer">מה כדאי ללבוש?</summary>
+          <p class="mt-2">
+            מומלץ לבחור בגדים נוחים בצבעים שמתאימים אחד לשני,
+            בלי הדפסים גדולים שיסיחו את הדעת. חשוב שתאהבו את מה שאתם לובשים ותרגישו בנוח.
+          </p>
+        </details>
+        <details class="p-4 bg-white rounded-lg shadow">
+          <summary class="font-semibold cursor-pointer">מתי מקבלים את התמונות?</summary>
+          <p class="mt-2">
+            הגלריה הדיגיטלית נמסרת עד 14 ימי עסקים – לרוב אפילו מהר יותר,
+            כדי שתוכלו לשתף את הרגעים המיוחדים שלכם כמה שיותר מהר.
+          </p>
+        </details>
+      </div>
+    </section>
+<!-- הצעה מיוחדת -->
+    <LandingCallToAction />
+
+    <!-- Footer -->
+    <footer class="bg-footer text-white py-8 text-center">
+        <button
+            aria-label="Footer Scroll to top" 
+            id="scrollToTopFooter"
+            class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+        >
+            <span class="sr-only">Footer Scroll to top</span> ↑
+        </button>
+
+        <p class="mb-4 font-bold">יוליה קורן | yulia.photography</p>
+        <p>אני כאן כדי לתעד את האהבה שלכם. צרו קשר עכשיו ❤️</p>
+        
+    </footer>
+
+    <!-- Sticky Buttons -->
+    <WhatsAppButton />
+</Layout>
