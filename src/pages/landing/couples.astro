@@ -1,22 +1,23 @@
 ---
 import RichSeo from "~/components/common/RichSeo.astro";
-import Layout from "~/layouts/Layout.astro"
+import Layout from "~/layouts/Layout.astro";
+import LandingHeader from "~/components/widgets/LandingHeader.astro";
 import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
 import { Image } from "astro:assets";
 import Hero2 from "~/components/widgets/Hero2.astro";
-import image_1 from "~/assets/couples_landing/OLBC0630.jpg"
-import image_2 from "~/assets/couples_landing/Roman&Ira-49.jpg"
-import image_3 from "~/assets/couples_landing/OLBC0570-2.jpg"
-import image_4 from "~/assets/couples_landing/Roman&Ira-13.jpg"
-import image_5 from "~/assets/couples_landing/family_2025-05.jpg"
-import image_6 from "~/assets/couples_landing/OLBC0630.jpg"
-import image_7 from "~/assets/couples_landing/Roman&Ira-06.jpg"
-import image_8 from "~/assets/couples_landing/couple-1.jpg"
-import image_9 from "~/assets/couples_landing/OLBC0733.jpg"
-import image_10 from "~/assets/couples_landing/Roman&Ira-50.jpg"
-import image_11 from "~/assets/couples_landing/family_2025-01.jpg"
+import image_1 from "~/assets/couples_landing/OLBC0630.jpg";
+import image_2 from "~/assets/couples_landing/Roman&Ira-49.jpg";
+import image_3 from "~/assets/couples_landing/OLBC0570-2.jpg";
+import image_4 from "~/assets/couples_landing/Roman&Ira-13.jpg";
+import image_5 from "~/assets/couples_landing/family_2025-05.jpg";
+import image_6 from "~/assets/couples_landing/OLBC0630.jpg";
+import image_7 from "~/assets/couples_landing/Roman&Ira-06.jpg";
+import image_8 from "~/assets/couples_landing/couple-1.jpg";
+import image_9 from "~/assets/couples_landing/OLBC0733.jpg";
+import image_10 from "~/assets/couples_landing/Roman&Ira-50.jpg";
+import image_11 from "~/assets/couples_landing/family_2025-01.jpg";
 import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
-import LandingCallToAction from "~/components/widgets/LandingCallToAction.astro"
+import LandingCallToAction from "~/components/widgets/LandingCallToAction.astro";
 
 const richMetadata = {
   title: "יוליה קורן - צילומי זוגיות במרכז",
@@ -32,6 +33,7 @@ const metadata = {
 <Layout metadata={metadata}>
     <meta name="robots" content="noindex" />
     <RichSeo metadata={richMetadata} />
+    <LandingHeader isSticky />
     <ScrollToTopButton />
 
     
