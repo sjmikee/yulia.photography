@@ -24,6 +24,7 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.5.1",
+    "@astrojs/vercel": "^8.2.7",
     "@astrolib/analytics": "^0.6.1",
     "@astrolib/seo": "^1.0.0-beta.8",
     "@fontsource-variable/heebo": "^5.1.1",
@@ -36,7 +37,10 @@
     "flowbite": "^3.0.0",
     "limax": "4.1.0",
     "lodash.merge": "^4.6.2",
+    "pdf-lib": "^1.17.1",
     "photoswipe": "^5.4.4",
+    "resend": "^6.0.3",
+    "signature_pad": "^5.1.0",
     "swiper": "^11.2.1",
     "unpic": "^3.22.0"
   },
