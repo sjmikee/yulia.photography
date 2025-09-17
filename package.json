@@ -30,6 +30,7 @@
     "@fontsource-variable/heebo": "^5.1.1",
     "@fontsource-variable/inter": "^5.1.0",
     "@fontsource-variable/rubik": "^5.1.1",
+    "@pdf-lib/fontkit": "^1.1.1",
     "@tailwindcss/vite": "^4.0.3",
     "astro": "^5.13.5",
     "astro-embed": "^0.9.0",

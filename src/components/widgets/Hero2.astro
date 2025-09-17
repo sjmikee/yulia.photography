@@ -30,12 +30,12 @@ const {
       <div class="basis-1/2">
         {
           image && (
-            <div class="w-full h-[100vh] object-cover m-auto max-w-5xl">
+            <div class="w-full h-[70vh] lg:h-[85vh] object-cover m-auto max-w-5xl">
               {typeof image === 'string' ? (
                 <Fragment set:html={image} />
               ) : (
                 <Image
-                  class="w-full h-[100vh] object-cover"
+                  class="w-full h-[70vh] lg:h-[85vh] object-cover"
                   widths={[400, 768, 1024, 2040, 3840]}
                   sizes="100vw"
                   loading="eager"
@@ -59,7 +59,7 @@ const {
             />
           )
         }
-        <div class="max-w-3xl mx-auto lg:max-w-none">
+        <div class="max-w-3xl mx-auto">
           {
             subtitle && (
               <p
@@ -75,7 +75,7 @@ const {
                 {Array.isArray(actions) ? (
                   actions.map((action) => (
                     <div class="flex w-full sm:w-auto">
-                      <Button {...(action || {})} class="w-full sm:mb-0" />
+                      <Button {...(action || {})} class="w-full sm:mb-0" id="heroCall"/>
                     </div>
                   ))
                 ) : (
