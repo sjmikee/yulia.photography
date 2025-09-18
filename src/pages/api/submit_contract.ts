@@ -1,0 +1,96 @@
+export const prerender = false;
+
+import fontkit from "@pdf-lib/fontkit";
+import { PDFDocument, rgb } from "pdf-lib";
+import { Resend } from "resend";
+import type { APIContext } from "astro";
+import { promises as fs } from "fs";
+import { fileURLToPath } from "url";
+
+
+export async function POST(context: APIContext) {
+  try {
+    // 1) ensure API key is present (fail gracefully)
+    const apiKey = import.meta.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error("RESEND_API_KEY is not set!");
+      return new Response(
+        JSON.stringify({ error: "RESEND_API_KEY is not set on the server" }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // instantiate Resend here (after confirming key)
+    const resend = new Resend(apiKey);
+
+    // 2) parse form fields
+    const form = await context.request.formData();
+    const name = String(form.get("name") ?? "").trim();
+    const email = String(form.get("email") ?? "").trim();
+    const phone = String(form.get("phone") ?? "").trim();
+    const id = String(form.get("id") ?? "").trim();
+    const address = String(form.get("address") ?? "").trim();
+    const signature = String(form.get("signature") ?? "").trim();
+
+    if (!name || !email || !phone || !id || !address || !signature) {
+      return new Response(JSON.stringify({ error: "Missing fields" }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
+
+    // 3) load template PDF from /public (make sure the file exists: public/contract-template.pdf)
+    const templatePath = fileURLToPath(new URL("../../../public/template_contract.pdf", import.meta.url));
+    const templateBytes = await fs.readFile(templatePath);
+
+    const pdfDoc = await PDFDocument.load(templateBytes);
+    pdfDoc.registerFontkit(fontkit);
+
+    const page1 = pdfDoc.getPages()[0];
+    const page2 = pdfDoc.getPages()[1];
+
+    // Load Hebrew-capable font
+    const fontPath = fileURLToPath(new URL("../../../public/fonts/NotoSansHebrew-Regular.ttf", import.meta.url));
+    const fontBytes = await fs.readFile(fontPath);
+    const hebrewFont = await pdfDoc.embedFont(fontBytes);
+
+    // 4) draw form data (adjust coordinates to fit your template)
+    // For Hebrew fields, reverse the string to display RTL
+    page1.drawText(`${name}`, { x: 425, y: 617, size: 12, color: rgb(0, 0, 0), font: hebrewFont });
+    page1.drawText(`${id}`, { x: 320, y: 617, size: 12, font: hebrewFont });
+    page1.drawText(`${address}`, { x: 180, y: 617, size: 12, font: hebrewFont });
+    page1.drawText(`${phone}`, { x: 440, y: 597, size: 12, font: hebrewFont });
+    
+    
+
+    // 5) handle signature: strip data URL and convert to bytes
+    let sigBytes: Uint8Array;
+    if (signature.startsWith("data:")) {
+      const base64 = signature.split(",")[1];
+      sigBytes = Buffer.from(base64, "base64");
+    } else {
+      sigBytes = Buffer.from(signature, "base64");
+    }
+
+    const pngImage = await pdfDoc.embedPng(sigBytes);
+    page2.drawImage(pngImage, { x: 50, y: 55, width: 150, height: 60 });
+
+    const pdfBytes = await pdfDoc.save();
+
+    // 6) send email with attachment (base64)
+    await resend.emails.send({
+      from: "send@yulia.photography", // must be verified in Resend
+      to: [email, "sjmikee@gmail.com"],
+      subject: "Signed Photography Contract",
+      text: "Attached is your signed contract.",
+      attachments: [
+        {
+          filename: "contract.pdf",
+          content: Buffer.from(pdfBytes).toString("base64"),
+        },
+      ],
+    });
+
+    return new Response(JSON.stringify({ success: true }), { status: 200, headers: { "Content-Type": "application/json" } });
+  } catch (err) {
+    console.error("submit_contract error:", err);
+    return new Response(JSON.stringify({ error: String(err) }), { status: 500, headers: { "Content-Type": "application/json" } });
+  }
+}

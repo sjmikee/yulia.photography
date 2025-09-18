@@ -1,3 +1,4 @@
+import vercel from '@astrojs/vercel';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -6,7 +7,6 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite'
 import mdx from '@astrojs/mdx';
-import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
 import type { AstroIntegration } from 'astro';
@@ -22,7 +22,8 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
   hasExternalScripts ? (Array.isArray(items) ? items.map((item) => item()) : [items()]) : [];
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
+  adapter: vercel({}),
 
   integrations: [
     sitemap(),
@@ -42,10 +43,6 @@ export default defineConfig({
           'database',
         ],
       },
-    }),
-
-    partytown({
-        config: { forward: ['dataLayer.push'] },
     }),
 
     compress({
