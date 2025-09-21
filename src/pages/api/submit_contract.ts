@@ -36,9 +36,16 @@ export async function POST(context: APIContext) {
       return new Response(JSON.stringify({ error: "Missing fields" }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
-    // 3) load template PDF from /public (make sure the file exists: public/contract-template.pdf)
-    const templatePath = fileURLToPath(new URL("../../../public/template_contract.pdf", import.meta.url));
-    const templateBytes = await fs.readFile(templatePath);
+    // 3) load template PDF and font via URL fetching
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:4321"; // Astro dev
+
+    const templateRes = await fetch(`${baseUrl}/template_contract.pdf`);
+    const templateBytes = new Uint8Array(await templateRes.arrayBuffer());
+
+    const fontRes = await fetch(`${baseUrl}/fonts/NotoSansHebrew-Regular.ttf`);
+    const fontBytes = new Uint8Array(await fontRes.arrayBuffer());
 
     const pdfDoc = await PDFDocument.load(templateBytes);
     pdfDoc.registerFontkit(fontkit);
@@ -47,8 +54,6 @@ export async function POST(context: APIContext) {
     const page2 = pdfDoc.getPages()[1];
 
     // Load Hebrew-capable font
-    const fontPath = fileURLToPath(new URL("../../../public/fonts/NotoSansHebrew-Regular.ttf", import.meta.url));
-    const fontBytes = await fs.readFile(fontPath);
     const hebrewFont = await pdfDoc.embedFont(fontBytes);
 
     // 4) draw form data (adjust coordinates to fit your template)
