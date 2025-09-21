@@ -51,9 +51,9 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 
 <script>
 	import PhotoSwipeLightbox from "photoswipe/lightbox";
-	import "photoswipe/style.css";
 
-	function InitLightbox () {
+	async function InitLightbox () {
+		await import("photoswipe/style.css");
         const lightbox = new PhotoSwipeLightbox({
             gallery: "#gallery",
             children: "a",
