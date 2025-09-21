@@ -49,7 +49,7 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 	}
 </div>
 
-<script type="module" defer>
+<script>
 	async function InitLightbox() {
 		await import('photoswipe/style.css');
 		const { default: PhotoSwipeLightbox } = await import('photoswipe/lightbox');
