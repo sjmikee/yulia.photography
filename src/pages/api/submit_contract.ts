@@ -37,14 +37,18 @@ export async function POST(context: APIContext) {
     }
 
     // 3) load template PDF and font via URL fetching
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:4321"; // Astro dev
+    const baseUrl = `${context.url.protocol}//${context.url.host}`;
 
     const templateRes = await fetch(`${baseUrl}/template_contract.pdf`);
+    if (!templateRes.ok) {
+      throw new Error(`Failed to fetch PDF: ${templateRes.status} ${templateRes.statusText}`);
+    }
     const templateBytes = new Uint8Array(await templateRes.arrayBuffer());
 
     const fontRes = await fetch(`${baseUrl}/fonts/NotoSansHebrew-Regular.ttf`);
+    if (!fontRes.ok) {
+      throw new Error(`Failed to fetch font: ${fontRes.status} ${fontRes.statusText}`);
+    }
     const fontBytes = new Uint8Array(await fontRes.arrayBuffer());
 
     const pdfDoc = await PDFDocument.load(templateBytes);
