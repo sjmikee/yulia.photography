@@ -50,19 +50,19 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 </div>
 
 <script>
-	import PhotoSwipeLightbox from "photoswipe/lightbox";
+	async function InitLightbox() {
+		await import('photoswipe/style.css');
+		const { default: PhotoSwipeLightbox } = await import('photoswipe/lightbox');
 
-	async function InitLightbox () {
-		await import("photoswipe/style.css");
-        const lightbox = new PhotoSwipeLightbox({
-            gallery: "#gallery",
-            children: "a",
-            pswpModule: () => import("photoswipe"),
-        });
+		const lightbox = new PhotoSwipeLightbox({
+			gallery: '#gallery',
+			children: 'a',
+			pswpModule: () => import('photoswipe'),
+		});
 
-        lightbox.init();
+		lightbox.init();
 	}
 
-    document.addEventListener('astro:page-load', InitLightbox);
+	document.addEventListener('astro:page-load', InitLightbox);
 	document.addEventListener('astro:after-swap', InitLightbox);
 </script>
