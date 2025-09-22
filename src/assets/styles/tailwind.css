@@ -20,6 +20,12 @@
   }
 }
 
+@theme inline {
+    --font-sans: var(--font-heebo);
+    --font-serif: var(--font-heebo);
+    --font-heading: var(--font-heebo);
+}
+
 @utility bg-page {
   background-color: var(--aw-color-bg-page);
 }

@@ -12,6 +12,7 @@ import SiteVerification from '~/components/common/SiteVerification.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
 import GtmHead from '~/components/common/GTMHead.astro';
 import GtmBody from '~/components/common/GTMBody.astro';
+import { Font } from 'astro:assets';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -32,6 +33,7 @@ const { language, textDirection } = I18N;
     <GtmHead />
     <CommonMeta />
     <Favicons />
+    <Font cssVariable="--font-heebo" preload />
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} />
