@@ -15,7 +15,7 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 
 <link
   rel="preload"
-  href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css"
+  href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
 />
@@ -63,14 +63,14 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 </div>
 
 <script type="module">
-	import PhotoSwipeLightbox from "https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js";
+	import PhotoSwipeLightbox from "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js";
 
 	async function InitLightbox() {
 		const lightbox = new PhotoSwipeLightbox({
 		gallery: "#gallery",
 		children: "a",
 		pswpModule: () =>
-			import("https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js"),
+			import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js"),
 		});
 
 		lightbox.init();
