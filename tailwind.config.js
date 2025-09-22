@@ -1,6 +1,4 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
 import plugin from 'tailwindcss/plugin';
-import typographyPlugin from '@tailwindcss/typography';
 
 
 export default {
@@ -13,11 +11,6 @@ export default {
         accent: 'var(--aw-color-accent)',
         default: 'var(--aw-color-text-default)',
         muted: 'var(--aw-color-text-muted)',
-      },
-      fontFamily: {
-        sans: ['var(--aw-font-sans, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
-        serif: ['var(--aw-font-serif, ui-serif)', ...defaultTheme.fontFamily.serif],
-        heading: ['var(--aw-font-heading, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
       },
 
       animation: {
@@ -33,7 +26,6 @@ export default {
     },
   },
   plugins: [
-    typographyPlugin,
     plugin(({ addVariant }) => {
       addVariant('intersect', '&:not([no-intersect])');
     }),
