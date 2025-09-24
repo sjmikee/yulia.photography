@@ -34,7 +34,6 @@ const metadata = {
   <!-- PDF Viewer -->
   <section class="max-w-5xl mx-auto py-12 px-6">
     <h2 class="text-2xl font-bold text-center mb-6">מסמך החוזה</h2>
-    <!-- <iframe src="/template_contract.pdf" class="w-full h-[600px] border rounded-lg shadow"></iframe> -->
     <iframe
       src={`https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent("https://yulia.photography/template_contract.pdf")}`}
       class="w-full h-[600px] border rounded-lg shadow"
@@ -56,8 +55,8 @@ const metadata = {
       <button type="button" id="clear-signature" class="btn-secondary">נקה חתימה</button>
       <input type="hidden" name="signature" id="signature-input"/>
 
-      <button type="submit" class="btn-primary">
-        חתום ושלח
+      <button type="submit" id="submit" class="btn-primary">
+        שלח
       </button>
     </form>
   </section>
@@ -85,6 +84,7 @@ const metadata = {
       const canvas = document.getElementById("signature");
       const clearButton = document.getElementById("clear-signature");
       const signatureInput = document.getElementById("signature-input");
+      const submitButton = document.getElementById("submit") as HTMLButtonElement;
       const form = document.querySelector("form");
       let signaturePad;
 
@@ -119,6 +119,9 @@ const metadata = {
           alert("יש לחתום לפני השליחה");
           return;
         }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "שולח...";
         signatureInput.value = signaturePad.toDataURL();
       });
     });

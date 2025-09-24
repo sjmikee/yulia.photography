@@ -1,0 +1,49 @@
+---
+import RichSeo from "~/components/common/RichSeo.astro";
+import Layout from "~/layouts/Layout.astro";
+import LandingHeader from "~/components/widgets/LandingHeader.astro";
+import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
+import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+
+const richMetadata = {
+  title: "יוליה קורן - חוזה צילום",
+  description: "חתימה על חוזה צילומים עם יוליה קורן – פשוט, מאובטח ונוח אונליין",
+};
+
+const metadata = {
+  title: "יוליה קורן | חוזה צילום",
+  description: "חתימה על חוזה צילומים עם יוליה קורן – פשוט, מאובטח ונוח אונליין",
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <meta name="robots" content="noindex" />
+  <RichSeo metadata={richMetadata} />
+  <LandingHeader isSticky />
+  <ScrollToTopButton />
+
+  <!-- Hero -->
+  <section class="bg-gray-50 py-16 px-6 text-center">
+    <h1 class="text-3xl font-bold mb-4">תודה רבה!</h1>
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+        החוזה נשלח בהצלחה
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-footer text-white py-8 text-center w-full absolute bottom-0">
+    <button
+        aria-label="Footer Scroll to top" 
+        id="scrollToTopFooter"
+        class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+    >
+        <span class="sr-only">Footer Scroll to top</span> ↑
+    </button>
+    <p class="mb-4 font-bold">יוליה קורן | yulia.photography</p>
+    <p>חוזה דיגיטלי ❤️</p>
+  </footer>
+
+  <!-- Sticky WhatsApp -->
+  <WhatsAppButton />
+</Layout>

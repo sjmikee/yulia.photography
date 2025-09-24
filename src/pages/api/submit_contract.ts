@@ -7,6 +7,14 @@ import type { APIContext } from "astro";
 import { promises as fs } from "fs";
 import { fileURLToPath } from "url";
 
+export async function GET() {
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: "/thank_you",
+    },
+  });
+}
 
 export async function POST(context: APIContext) {
   try {
@@ -62,10 +70,10 @@ export async function POST(context: APIContext) {
 
     // 4) draw form data (adjust coordinates to fit your template)
     // For Hebrew fields, reverse the string to display RTL
-    page1.drawText(`${name}`, { x: 425, y: 617, size: 12, color: rgb(0, 0, 0), font: hebrewFont });
-    page1.drawText(`${id}`, { x: 320, y: 617, size: 12, font: hebrewFont });
-    page1.drawText(`${address}`, { x: 180, y: 617, size: 12, font: hebrewFont });
-    page1.drawText(`${phone}`, { x: 440, y: 597, size: 12, font: hebrewFont });
+    page1.drawText(`${name}`, { x: 423, y: 616, size: 12, color: rgb(0, 0, 0), font: hebrewFont });
+    page1.drawText(`${id}`, { x: 310, y: 616, size: 12, font: hebrewFont });
+    page1.drawText(`${address}`, { x: 160, y: 616, size: 12, font: hebrewFont });
+    page1.drawText(`${phone}`, { x: 442, y: 598, size: 12, font: hebrewFont });
     
     
 
