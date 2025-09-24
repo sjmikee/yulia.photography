@@ -71,8 +71,8 @@ export async function POST(context: APIContext) {
     // 4) draw form data (adjust coordinates to fit your template)
     // For Hebrew fields, reverse the string to display RTL
     page1.drawText(`${name}`, { x: 423, y: 616, size: 12, color: rgb(0, 0, 0), font: hebrewFont });
-    page1.drawText(`${id}`, { x: 310, y: 616, size: 12, font: hebrewFont });
-    page1.drawText(`${address}`, { x: 160, y: 616, size: 12, font: hebrewFont });
+    page1.drawText(`${id}`, { x: 292, y: 616, size: 12, font: hebrewFont });
+    page1.drawText(`${address}`, { x: 120, y: 616, size: 12, font: hebrewFont });
     page1.drawText(`${phone}`, { x: 442, y: 598, size: 12, font: hebrewFont });
     
     
