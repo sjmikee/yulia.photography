@@ -7,6 +7,7 @@ import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astr
 import StaticHero from '~/components/widgets/StaticHero.astro';
 import ContentGrid from '~/components/widgets/ContentGrid.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import Reviews from '~/components/widgets/reviews.astro';
 
 const richMetadata = {
   title: "יוליה קורן - צילומי משפחה | צילומי זוגיות | בוק אישי | לייף סטייל",
@@ -48,6 +49,15 @@ const metadata = {
       בעולם של היום, צילום ותיעוד הם חלק בלתי נפרד מהחיים שלנו – אבל תמונה טובה היא הרבה יותר מרק רגע קפוא בזמן. היא סיפור וזיכרון חי שנשאר לתמיד
     </Fragment>
 
+    <!-- <Fragment slot="content">
+      <p class="mt-5 bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold mx-auto max-w-3xs">
+                קבלו עכשיו הצעת מחיר לצילומי זוגיות – ייעוץ חינם לפונים מהעמוד!
+      </p>
+      <div class="whitespace-nowrap w-full overflow-hidden bg-yellow-400 text-black py-2 mt-5">
+        <span class="px-8">קבלו עכשיו הצעת מחיר</span>
+      </div>
+    </Fragment> -->
+
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
     </Fragment>
@@ -81,6 +91,9 @@ const metadata = {
       <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
     </Fragment>
   </ContentGrid>
+
+  <!-- Reviews section -->
+  <Reviews />
 
   <!-- HighlightedPosts Widget ******* -->
 

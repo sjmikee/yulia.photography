@@ -95,11 +95,11 @@ export async function POST(context: APIContext) {
     await resend.emails.send({
       from: "send@yulia.photography", // must be verified in Resend
       to: [email, "sjmikee@gmail.com"],
-      subject: "Signed Photography Contract",
-      text: "Attached is your signed contract.",
+      subject: "חוזה צילום חתום",
+      text: "מצורף החוזה החתום, לכל שאלה אני תמיד זמינה 😊",
       attachments: [
         {
-          filename: "contract.pdf",
+          filename: "חוזה-צילום-יוליה.pdf",
           content: Buffer.from(pdfBytes).toString("base64"),
         },
       ],

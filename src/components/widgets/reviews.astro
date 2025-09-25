@@ -1,0 +1,54 @@
+---
+import { Image } from "astro:assets";
+
+import tali_review from "~/assets/reviewers/tali_review.jpg";
+import ira_review from "~/assets/reviewers/ira_review.jpg";
+import cristina_review from "~/assets/reviewers/cristina_review.jpg";
+import WidgetWrapper from "../ui/WidgetWrapper.astro";
+---
+
+<!-- המלצות -->
+<section class="bg-gray-50 dark:bg-slate-900 py-16 px-6" id="reviews">
+    <WidgetWrapper>
+        <h2 class="text-3xl font-bold text-center mb-10 dark:text-white">לקוחות מפרגנים</h2>
+        <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <blockquote class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p class="dark:text-gray-200">
+                <span class="text-yellow-400 text-lg">★★★★★</span>
+                <br />
+            "צלמת מדהימה, כיפית ומצחיקה, נתנה לנו תחושה של נינוחות וקיבלנו תמונות מדהימות, כמו כן <strong>חייבת לציין שקיבלנו את התמונות מהר</strong> וזה היה נחמד לראות תוצרים כאלה טובים בכזאת זריזות. ממליצה"
+            </p>
+            <footer class="mt-4 font-bold flex items-center">
+                <Image src={cristina_review} alt="Reviewer photo" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
+                <span class="mx-2 dark:text-gray-200"> – כריסטינה, ראשון לציון</span>
+            </footer>
+            </blockquote>
+            <blockquote class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p class="dark:text-gray-200">
+                <span class="text-yellow-400 text-lg">★★★★★</span>
+                <br />
+                "אנחנו עם בעלי פשוט בהתלהבות מהצילומים! מהרגע הראשון היה נעים ונוח – הצלמת מקסימה, יודעת להרגיע, לכוון איך לעמוד, מה לעשות עם הידיים ולאן להסתכל. <strong>בלי שום מלאכותיות</strong> – רק חיוכים אמיתיים ורגעים עדינים. העריכה עדינה, לא מוגזמת, עם אור וקומפוזיציות בטעם משובח. <strong>אלה תמונות שפשוט מתחשק להדפיס ולשמור באלבום המשפחתי</strong>. ממליצים מכל הלב! ❤️"
+            </p>
+            <footer class="mt-4 font-bold flex items-center">
+                <Image src={ira_review} alt="Reviewer photo" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
+                <span class="mx-2 dark:text-gray-200"> – אירה, פתח תקווה</span>
+            </footer>
+            </blockquote>
+            <blockquote class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p class="dark:text-gray-200">
+                <span class="text-yellow-400 text-lg">★★★★★</span>
+                <br />
+                "עשיתי צילומים עם יוליה האלופה לצילומי הסינגל הראשון שלי!
+            חייבת לציין שהחוויה הייתה מדהימה
+            <strong>מדובר בצלמת רגישה ומהממת שמרגישה את האדם שעומד מולה ונותנת להרגיש הכי בנוח בעולם!</strong>
+            תודה על חוויה מדהימה
+            🩷"
+            </p>
+            <footer class="mt-4 font-bold flex items-center">
+                <Image src={tali_review} alt="Reviewer photo" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
+                <span class="mx-2 dark:text-gray-200"> – טלי, חולון</span>
+            </footer>
+            </blockquote>
+        </div>
+    </WidgetWrapper>
+</section>
