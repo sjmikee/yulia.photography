@@ -1,4 +1,6 @@
 import plugin from 'tailwindcss/plugin';
+import typography from '@tailwindcss/typography';
+
 
 
 export default {
@@ -29,6 +31,7 @@ export default {
     plugin(({ addVariant }) => {
       addVariant('intersect', '&:not([no-intersect])');
     }),
+    typography,
   ],
   darkMode: 'class',
 };
