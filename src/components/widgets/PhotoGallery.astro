@@ -79,20 +79,3 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 	document.addEventListener('astro:page-load', InitLightbox);
 	document.addEventListener('astro:after-swap', InitLightbox);
 </script>
-<!-- <script>
-	async function InitLightbox() {
-		await import('photoswipe/style.css');
-		const { default: PhotoSwipeLightbox } = await import('photoswipe/lightbox');
-
-		const lightbox = new PhotoSwipeLightbox({
-			gallery: '#gallery',
-			children: 'a',
-			pswpModule: () => import('photoswipe'),
-		});
-
-		lightbox.init();
-	}
-
-	document.addEventListener('astro:page-load', InitLightbox);
-	document.addEventListener('astro:after-swap', InitLightbox);
-</script> -->
