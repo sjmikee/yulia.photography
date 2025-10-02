@@ -4,8 +4,6 @@ import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb } from "pdf-lib";
 import { Resend } from "resend";
 import type { APIContext } from "astro";
-import { promises as fs } from "fs";
-import { fileURLToPath } from "url";
 
 export async function GET() {
   return new Response(null, {
