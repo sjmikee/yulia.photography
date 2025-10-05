@@ -35,7 +35,7 @@ const metadata = {
   <section class="max-w-5xl mx-auto py-12 px-6">
     <h2 class="text-2xl font-bold text-center mb-6">מסמך החוזה</h2>
     <iframe
-      src={`https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent("https://yulia.photography/template_contract.pdf")}`}
+      src={`https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent("https://yulia.photography/contract_template_fillable.pdf")}`}
       class="w-full h-[600px] border rounded-lg shadow"
     ></iframe>
   </section>
@@ -43,12 +43,14 @@ const metadata = {
   <!-- Contract Form -->
   <section class="max-w-4xl mx-auto py-12 px-6">
     <h2 class="text-2xl font-bold text-center mb-6">מלאו את הפרטים וחתמו</h2>
-    <form method="POST" action="/api/submit_contract" class="space-y-4 bg-white p-6 rounded-xl shadow">
+    <form method="POST" action="/api/submit_contract" accept-charset="UTF-8" class="space-y-4 bg-white p-6 rounded-xl shadow">
       <input type="text" name="name" placeholder="שם מלא" required class="border p-2 w-full"/>
       <input type="text" name="address" placeholder="כתובת" required class="border p-2 w-full"/>
       <input type="email" name="email" placeholder="מייל" required class="border p-2 w-full"/>
-      <input type="tel" name="phone" placeholder="מספר טלפון" required class="border p-2 w-full"/>
+      <input type="tel" name="phone" id="phone-input" placeholder="מספר טלפון" required class="border p-2 w-full bg-gray-100" readonly />
       <input type="text" name="id" placeholder="תעודת זהות" required class="border p-2 w-full"/>
+      <label class="block">מחיר:</label>
+      <input type="text" name="price" id="price-input" placeholder="מחיר" class="border p-2 w-full bg-gray-100" disabled />
 
       <label class="block">חתימה:</label>
       <canvas id="signature" class="border w-full max-w-md h-40"></canvas>
@@ -86,7 +88,28 @@ const metadata = {
       const signatureInput = document.getElementById("signature-input");
       const submitButton = document.getElementById("submit") as HTMLButtonElement;
       const form = document.querySelector("form");
+      const urlParams = new URLSearchParams(window.location.search);
+      const phone = urlParams.get("phone");
+      const priceInput = document.getElementById("price-input");
+      const phoneInput = document.getElementById("phone-input");
       let signaturePad;
+
+      if (!phone) return;
+
+      phoneInput.value = phone;
+
+      (async () => {
+        try {
+          // Call your API to fetch the price for this phone
+          const res = await fetch(`/api/get_price?phone=${encodeURIComponent(phone)}`);
+          if (!res.ok) throw new Error("מחיר לא נמצא");
+          const data = await res.json();
+          priceInput.value = data.price || "";
+        } catch (err) {
+          console.error(err);
+          priceInput.value = "מחיר לא זמין";
+        }
+      })();
 
       function resizeCanvas() {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -100,7 +123,7 @@ const metadata = {
         ctx.scale(ratio, ratio);
         if (signaturePad) signaturePad.clear();
       }
-
+      
       resizeCanvas();
       signaturePad = new window.SignaturePad(canvas);
 
