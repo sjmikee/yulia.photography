@@ -34,43 +34,89 @@ const metadata = {
   <!-- PDF Viewer -->
   <section class="max-w-5xl mx-auto py-12 px-6">
     <h2 class="text-2xl font-bold text-center mb-6">מסמך החוזה</h2>
-    <iframe
-      src={`https://docs.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent("https://yulia.photography/contract_template_fillable.pdf")}`}
-      class="w-full h-[600px] border rounded-lg shadow"
-    ></iframe>
+    <div
+      id="pdf-container"
+      class="w-full h-[600px] border rounded-lg shadow overflow-auto"
+    >
+      <p class="text-center text-gray-500 py-8">טוען PDF...</p>
+    </div>
   </section>
 
   <!-- Contract Form -->
   <section class="max-w-4xl mx-auto py-12 px-6">
     <h2 class="text-2xl font-bold text-center mb-6">מלאו את הפרטים וחתמו</h2>
-    <form method="POST" action="/api/submit_contract" accept-charset="UTF-8" class="space-y-4 bg-white p-6 rounded-xl shadow">
-      <input type="text" name="name" placeholder="שם מלא" required class="border p-2 w-full"/>
-      <input type="text" name="address" placeholder="כתובת" required class="border p-2 w-full"/>
-      <input type="email" name="email" placeholder="מייל" required class="border p-2 w-full"/>
-      <input type="tel" name="phone" id="phone-input" placeholder="מספר טלפון" required class="border p-2 w-full bg-gray-100" readonly />
-      <input type="text" name="id" placeholder="תעודת זהות" required class="border p-2 w-full"/>
+    <form
+      method="POST"
+      action="/api/submit_contract"
+      accept-charset="UTF-8"
+      class="space-y-4 bg-white p-6 rounded-xl shadow"
+    >
+      <input
+        type="text"
+        name="name"
+        placeholder="שם מלא"
+        required
+        class="border p-2 w-full"
+      />
+      <input
+        type="text"
+        name="address"
+        placeholder="כתובת"
+        required
+        class="border p-2 w-full"
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="מייל"
+        required
+        class="border p-2 w-full"
+      />
+      <input
+        type="tel"
+        name="phone"
+        id="phone-input"
+        placeholder="מספר טלפון"
+        required
+        class="border p-2 w-full bg-gray-100"
+        readonly
+      />
+      <input
+        type="text"
+        name="id"
+        placeholder="תעודת זהות"
+        required
+        class="border p-2 w-full"
+      />
       <label class="block">מחיר:</label>
-      <input type="text" name="price" id="price-input" placeholder="מחיר" class="border p-2 w-full bg-gray-100" disabled />
+      <input
+        type="text"
+        name="price"
+        id="price-input"
+        placeholder="מחיר"
+        class="border p-2 w-full bg-gray-100"
+        disabled
+      />
 
       <label class="block">חתימה:</label>
       <canvas id="signature" class="border w-full max-w-md h-40"></canvas>
-      <button type="button" id="clear-signature" class="btn-secondary">נקה חתימה</button>
-      <input type="hidden" name="signature" id="signature-input"/>
-
-      <button type="submit" id="submit" class="btn-primary">
-        שלח
+      <button type="button" id="clear-signature" class="btn-secondary">
+        נקה חתימה
       </button>
+      <input type="hidden" name="signature" id="signature-input" />
+
+      <button type="submit" id="submit" class="btn-primary"> שלח </button>
     </form>
   </section>
 
   <!-- Footer -->
   <footer class="bg-footer text-white py-8 text-center">
     <button
-        aria-label="Footer Scroll to top" 
-        id="scrollToTopFooter"
-        class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+      aria-label="Footer Scroll to top"
+      id="scrollToTopFooter"
+      class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
     >
-        <span class="sr-only">Footer Scroll to top</span> ↑
+      <span class="sr-only">Footer Scroll to top</span> ↑
     </button>
     <p class="mb-4 font-bold">יוליה קורן | yulia.photography</p>
     <p>חוזה דיגיטלי ❤️</p>
@@ -79,14 +125,80 @@ const metadata = {
   <!-- Sticky WhatsApp -->
   <WhatsAppButton />
 
-  <!-- SignaturePad Script -->
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>
-  <script>
+  <!-- SignaturePad Script and PDF.js -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"
+    is:inline
+  ></script>
+  <script type="module" is:inline>
+    // PDF.js imports and setup from CDN
+    import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.min.mjs";
+
+    // Set the path to the worker script from the CDN
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.worker.min.mjs";
+
     window.addEventListener("DOMContentLoaded", () => {
+      const pdfUrl = "https://yulia.photography/contract_template_fillable.pdf";
+      const pdfContainer = document.getElementById("pdf-container");
+
+      async function renderPage(pdf, pageNum) {
+        const page = await pdf.getPage(pageNum);
+        
+        const ratio = window.devicePixelRatio || 1;
+
+        const unscaledViewport = page.getViewport({ scale: 1 });
+        
+        const scale = (pdfContainer.clientWidth - 40) / unscaledViewport.width;
+        
+        const viewport = page.getViewport({ scale: scale * ratio });
+
+        const canvas = document.createElement("canvas");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        canvas.style.display = "block";
+        
+        // Add a margin to visually separate the pages
+        canvas.style.margin = "0 auto 20px auto"; 
+        
+        canvas.style.width = viewport.width / ratio + "px";
+        canvas.style.height = viewport.height / ratio + "px";
+
+        const context = canvas.getContext("2d");
+
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport,
+        };
+
+        await page.render(renderContext).promise;
+        pdfContainer.appendChild(canvas);
+      }
+
+      async function renderPdf() {
+        try {
+          const loadingTask = pdfjsLib.getDocument(pdfUrl);
+          const pdf = await loadingTask.promise;
+          pdfContainer.innerHTML = "";
+
+          const renderPromises = [];
+          for (let i = 1; i <= pdf.numPages; i++) {
+            renderPromises.push(renderPage(pdf, i));
+          }
+          await Promise.all(renderPromises);
+        } catch (err) {
+          pdfContainer.innerHTML =
+            "<p class='text-red-600 text-center py-8'>לא ניתן לטעון את מסמך ה-PDF.</p>";
+          console.error(err);
+        }
+      }
+      renderPdf();
+
+      // (The rest of your SignaturePad and form logic remains unchanged)
       const canvas = document.getElementById("signature");
       const clearButton = document.getElementById("clear-signature");
       const signatureInput = document.getElementById("signature-input");
-      const submitButton = document.getElementById("submit") as HTMLButtonElement;
+      const submitButton = document.getElementById("submit");
       const form = document.querySelector("form");
       const urlParams = new URLSearchParams(window.location.search);
       const phone = urlParams.get("phone");
@@ -94,22 +206,23 @@ const metadata = {
       const phoneInput = document.getElementById("phone-input");
       let signaturePad;
 
-      if (!phone) return;
+      if (phone) {
+        phoneInput.value = phone;
 
-      phoneInput.value = phone;
-
-      (async () => {
-        try {
-          // Call your API to fetch the price for this phone
-          const res = await fetch(`/api/get_price?phone=${encodeURIComponent(phone)}`);
-          if (!res.ok) throw new Error("מחיר לא נמצא");
-          const data = await res.json();
-          priceInput.value = data.price || "";
-        } catch (err) {
-          console.error(err);
-          priceInput.value = "מחיר לא זמין";
-        }
-      })();
+        (async () => {
+          try {
+            const res = await fetch(
+              `/api/get_price?phone=${encodeURIComponent(phone)}`
+            );
+            if (!res.ok) throw new Error("מחיר לא נמצא");
+            const data = await res.json();
+            priceInput.value = data.price || "";
+          } catch (err) {
+            console.error(err);
+            priceInput.value = "מחיר לא זמין";
+          }
+        })();
+      }
 
       function resizeCanvas() {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -123,7 +236,7 @@ const metadata = {
         ctx.scale(ratio, ratio);
         if (signaturePad) signaturePad.clear();
       }
-      
+
       resizeCanvas();
       signaturePad = new window.SignaturePad(canvas);
 
