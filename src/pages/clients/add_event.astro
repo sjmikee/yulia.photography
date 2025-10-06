@@ -42,8 +42,8 @@ const metadata = {
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="text" id="date" placeholder="בחר תאריך" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
-        <input type="text" id="time" placeholder="בחר שעה" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+        <input type="date" id="date" placeholder="בחר תאריך" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+        <input type="time" id="time" placeholder="בחר שעה" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -69,16 +69,26 @@ const metadata = {
     </form>
   </section>
 
-  <!-- Footer -->
+  <!-- Footer & WhatsApp -->
+
   <footer class="bg-footer text-white py-8 text-center">
+    <button
+        aria-label="Footer Scroll to top" 
+        id="scrollToTopFooter"
+        class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+    >
+        <span class="sr-only">Footer Scroll to top</span> ↑
+    </button>
     <p class="mb-4 font-bold">יוליה קורן | yulia.photography</p>
-    <p>הוספת אירוע ❤️</p>
+    <p>הוספת אירוע ליומן ❤️</p>
   </footer>
 
   <WhatsAppButton />
 
+  <WhatsAppButton />
+
   <!-- Scripts -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <script>
@@ -86,9 +96,7 @@ const metadata = {
       flatpickr("#date", { dateFormat: "d-m-Y" });
       flatpickr("#time", { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true });
     });
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </script> -->
 
   <script>
     const phoneInput = document.getElementById("phone");
@@ -169,21 +177,10 @@ const metadata = {
       const url = `${base}&text=${text}&details=${details}&dates=${dates}`;
 
       window.open(url, "_blank");
-
-      Swal.fire({
-        icon: "success",
-        title: "📅 האירוע מוכן להוספה ביומן",
-        timer: 2000,
-        showConfirmButton: false,
-        position: "bottom",
-        toast: true,
-        background: "#4caf50",
-        color: "white",
-      });
     });
   </script>
 
-  <style>
+  <!-- <style>
     input, select, textarea {
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -212,5 +209,5 @@ const metadata = {
     input[type='date'], input[type='time'] {
       color-scheme: light;
     }
-  </style>
+  </style> -->
 </Layout>
