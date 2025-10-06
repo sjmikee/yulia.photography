@@ -27,7 +27,7 @@ const metadata = {
 
   <!-- Hero Section -->
   <section class="bg-gray-50 py-16 px-6 text-center">
-    <h1 class="text-3xl font-bold mb-4">הוספת אירוע ללקוח</h1>
+    <h1 class="text-3xl font-bold mb-4">הוספת לקוח ליומן</h1>
     <p class="text-lg text-gray-700 max-w-2xl mx-auto">
       קובעים צילומים בקליק אחד 🎯
     </p>
@@ -38,19 +38,12 @@ const metadata = {
     <form id="calendarForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input type="tel" id="phone" placeholder="טלפון לקוח" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
-        <input type="text" id="clientName" placeholder="" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
-        <input type="text" id="clientEmail" placeholder="" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block">תאריך:</label>
-          <input type="date" id="date" placeholder="בחר תאריך" required class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
-        </div>
-        <div>
-          <label class="block">שעה:</label>
-          <input type="time" id="time" placeholder="בחר שעה" required class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
-        </div>
+        <input type="text" id="clientName" placeholder="שם" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+        <input type="text" id="clientEmail" placeholder="מייל" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+        <label class="block">תאריך:</label>
+        <input type="date" id="date" placeholder="בחר תאריך" required class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+        <label class="block">שעה:</label>
+        <input type="time" id="time" placeholder="בחר שעה" required class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -64,6 +57,7 @@ const metadata = {
 
         <select id="duration" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
           <option value="" disabled selected>בחר משך</option>
+          <option value="1">1 שעות</option>
           <option value="2">2 שעות</option>
           <option value="3">3 שעות</option>
           <option value="4">4 שעות</option>
@@ -71,7 +65,7 @@ const metadata = {
       </div>
 
       <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
-        הוסף אירוע ליומן
+        הוספה
       </button>
     </form>
   </section>
@@ -95,15 +89,6 @@ const metadata = {
   <WhatsAppButton />
 
   <!-- Scripts -->
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-  <script>
-    window.addEventListener("load", () => {
-      flatpickr("#date", { dateFormat: "d-m-Y" });
-      flatpickr("#time", { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true });
-    });
-  </script> -->
 
   <script>
     const phoneInput = document.getElementById("phone");
@@ -167,6 +152,7 @@ const metadata = {
       const phone = phoneInput.value.replace(/\D/g, "");
       const name = nameField.value.trim();
       const email = clientEmail;
+      const MKemail = "sjmikee@gmail.com";
       const date = document.getElementById("date").value;
       const time = document.getElementById("time").value;
       const sessionType = document.getElementById("sessionType").value;
@@ -193,48 +179,17 @@ const metadata = {
       const text = encodeURIComponent(`${sessionType} - ${name}`);
       const details = encodeURIComponent(`לקוח: ${name}\nטלפון: ${phone}\nסוג צילומים: ${sessionType}\nמשך: ${duration} שעות`);
       const dates = `${startStr}/${endStr}`;
-      const url = `${base}&text=${text}&details=${details}&dates=${dates}&add=${encodeURIComponent(email)}`;
+      const url = `${base}&text=${text}&details=${details}&dates=${dates}&add=${encodeURIComponent(email)},${encodeURIComponent(MKemail)}`;
 
       window.open(url, "_blank");
     });
   </script>
 
-  <style>
+  <!-- <style>
     input[type="date"]::-webkit-inner-spin-button,
     input[type="time"]::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
-    }
-  </style>
-
-  <!-- <style>
-    input, select, textarea {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      border-radius: 0.5rem;
-      border: 1px solid #d1d5db;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      width: 100%;
-      background-color: white;
-      color: #111827;
-      transition: all 0.2s ease-in-out;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--color-primary, #3b82f6);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-    }
-    select {
-      background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /></svg>");
-      background-repeat: no-repeat;
-      background-position: right 0.75rem center;
-      background-size: 1.25rem;
-      padding-right: 2.5rem;
-    }
-    input[type='date'], input[type='time'] {
-      color-scheme: light;
     }
   </style> -->
 </Layout>
