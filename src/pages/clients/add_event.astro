@@ -39,6 +39,7 @@ const metadata = {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input type="tel" id="phone" placeholder="טלפון לקוח" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
         <input type="text" id="clientName" placeholder="" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+        <input type="text" id="clientEmail" placeholder="" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -111,6 +112,7 @@ const metadata = {
 
     let lastFetchedPhone = "";
     let lookupTimeout;
+    let clientEmail = "";
 
     // Auto-format and lookup
     phoneInput.addEventListener("input", (e) => {
@@ -121,7 +123,11 @@ const metadata = {
 
       clearTimeout(lookupTimeout);
       if (digits.length >= 9) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
-      else nameField.value = "";
+      else {
+        nameField.value = "";
+        document.getElementById("clientEmail").value = "";
+        clientEmail = "";
+      }
     });
 
     async function lookupClient(phoneDigits) {
@@ -139,13 +145,19 @@ const metadata = {
         if (!res.ok) {
           nameField.value = "לא נמצא לקוח";
           nameField.classList.add("text-gray-400");
+          document.getElementById("clientEmail").value = "";
+          clientEmail = "";
         } else {
           nameField.value = data.name;
+          document.getElementById("clientEmail").value = data.email || "";
           nameField.classList.remove("text-gray-400");
+          clientEmail = data.email || "";
         }
       } catch {
         nameField.value = "שגיאה בחיפוש";
         nameField.classList.add("text-gray-400");
+        document.getElementById("clientEmail").value = "";
+        clientEmail = "";
       }
     }
 
@@ -154,6 +166,7 @@ const metadata = {
 
       const phone = phoneInput.value.replace(/\D/g, "");
       const name = nameField.value.trim();
+      const email = clientEmail;
       const date = document.getElementById("date").value;
       const time = document.getElementById("time").value;
       const sessionType = document.getElementById("sessionType").value;
@@ -180,7 +193,7 @@ const metadata = {
       const text = encodeURIComponent(`${sessionType} - ${name}`);
       const details = encodeURIComponent(`לקוח: ${name}\nטלפון: ${phone}\nסוג צילומים: ${sessionType}\nמשך: ${duration} שעות`);
       const dates = `${startStr}/${endStr}`;
-      const url = `${base}&text=${text}&details=${details}&dates=${dates}`;
+      const url = `${base}&text=${text}&details=${details}&dates=${dates}&add=${encodeURIComponent(email)}`;
 
       window.open(url, "_blank");
     });
