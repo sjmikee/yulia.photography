@@ -86,8 +86,6 @@ const metadata = {
 
   <WhatsAppButton />
 
-  <WhatsAppButton />
-
   <!-- Scripts -->
 
   <script>
@@ -100,8 +98,8 @@ const metadata = {
     let clientEmail = "";
 
     // Auto-format and lookup
-    phoneInput.addEventListener("input", (e) => {
-      const digits = e.target.value.replace(/\D/g, "");
+    phoneInput?.addEventListener("input", (e) => {
+      const digits = e.target?.value.replace(/\D/g, "");
       let formatted = digits;
       if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
       e.target.value = formatted;
@@ -184,12 +182,4 @@ const metadata = {
       window.open(url, "_blank");
     });
   </script>
-
-  <!-- <style>
-    input[type="date"]::-webkit-inner-spin-button,
-    input[type="time"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-  </style> -->
 </Layout>

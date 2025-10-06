@@ -1,0 +1,78 @@
+---
+
+import Layout from "~/layouts/Layout.astro";
+import RichSeo from "~/components/common/RichSeo.astro";
+import LandingHeader from "~/components/widgets/LandingHeader.astro";
+import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
+import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+
+const richMetadata = {
+  title: "שליחת חוזה ללקוח - יוליה קורן",
+  description: "הזיני מספר טלפון של הלקוח כדי לשלוח קישור לחוזה בוואטסאפ",
+};
+
+const metadata = {
+  title: "שליחת חוזה ללקוח | יוליה קורן",
+  description: "הזיני מספר טלפון של הלקוח כדי לשלוח קישור לחוזה בוואטסאפ",
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <meta name="robots" content="noindex" />
+  <RichSeo metadata={richMetadata} />
+  <LandingHeader isSticky />
+  <ScrollToTopButton />
+
+  <!-- Hero Section -->
+  <section class="bg-gray-50 py-16 px-6 text-center">
+    <h1 class="text-3xl font-bold mb-4">שליחת חוזה ללקוח</h1>
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+      הזיני מספר טלפון של הלקוח כדי לשלוח קישור לחוזה בוואטסאפ
+    </p>
+  </section>
+
+  <!-- Form Section -->
+  <section class="max-w-md mx-auto py-12 px-6">
+    <form id="whatsappForm" class="flex flex-col gap-4">
+      <input type="tel" id="phone" placeholder="הכניסי מספר טלפון" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-primary focus:outline-none" />
+      <button type="submit" class="btn-primary py-3 rounded-lg text-lg font-semibold">שליחת חוזה</button>
+    </form>
+  </section>
+
+  <script>
+    document.getElementById('whatsappForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const rawPhone = document.getElementById('phone').value.trim(); // keep as entered
+      if (!rawPhone) return alert('אנא הזיני מספר טלפון');
+
+      // Create international format for WhatsApp
+      let waPhone = rawPhone.replace(/\D/g, ''); // remove non-digits
+      if (waPhone.startsWith('0')) {
+        waPhone = '972' + waPhone.slice(1);
+      }
+
+      // Contract link uses the raw phone
+      const messageLink = encodeURIComponent(`https://yulia.photography/contract?phone=${rawPhone}`);
+      const waUrl = `https://wa.me/${waPhone}?text=${messageLink}`;
+
+      window.open(waUrl, '_blank');
+    });
+  </script>
+
+  <!-- Footer & WhatsApp -->
+
+  <footer class="bg-footer text-white py-8 text-center">
+    <button
+        aria-label="Footer Scroll to top" 
+        id="scrollToTopFooter"
+        class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+    >
+        <span class="sr-only">Footer Scroll to top</span> ↑
+    </button>
+    <p class="mb-4 font-bold">יוליה קורן | yulia.photography</p>
+    <p>שליחת חוזה ❤️</p>
+  </footer>
+
+  <WhatsAppButton />
+</Layout>
