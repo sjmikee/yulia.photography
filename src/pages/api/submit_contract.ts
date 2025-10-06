@@ -151,7 +151,7 @@ export async function POST(context: APIContext) {
 
     // 6) send email with attachment (base64)
     await resend.emails.send({
-      from: "send@yulia.photography", // must be verified in Resend
+      from: "יוליה <send@yulia.photography>", // must be verified in Resend
       to: [email, "sjmikee@gmail.com"],
       subject: "חוזה צילום חתום",
       text: "מצורף החוזה החתום, לכל שאלה אני תמיד זמינה 😊",

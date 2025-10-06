@@ -1,0 +1,216 @@
+---
+export const prerender = false;
+
+import Layout from "~/layouts/Layout.astro";
+import RichSeo from "~/components/common/RichSeo.astro";
+import LandingHeader from "~/components/widgets/LandingHeader.astro";
+import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
+import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+
+const richMetadata = {
+  title: "יוליה קורן - הוספת אירוע ליומן",
+  description: "הוספת אירוע חדש בגוגל קלנדר ללקוח קיים",
+};
+
+const metadata = {
+  title: "יוליה קורן | הוספת אירוע ליומן",
+  description: "הוספת אירוע חדש בגוגל קלנדר ללקוח קיים",
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <meta name="robots" content="noindex" />
+  <RichSeo metadata={richMetadata} />
+  <LandingHeader isSticky />
+  <ScrollToTopButton />
+
+  <!-- Hero Section -->
+  <section class="bg-gray-50 py-16 px-6 text-center">
+    <h1 class="text-3xl font-bold mb-4">הוספת אירוע ללקוח</h1>
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto">
+      קובעים צילומים בקליק אחד 🎯
+    </p>
+  </section>
+
+  <!-- Add Event Form -->
+  <section class="max-w-4xl mx-auto py-12 px-6">
+    <form id="calendarForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="tel" id="phone" placeholder="טלפון לקוח" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+        <input type="text" id="clientName" placeholder="" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="text" id="date" placeholder="בחר תאריך" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+        <input type="text" id="time" placeholder="בחר שעה" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <select id="sessionType" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+          <option value="" disabled selected>בחר סוג צילומים</option>
+          <option value="צילומים אישיים">צילומים אישיים</option>
+          <option value="צילומי זוגיות">צילומי זוגיות</option>
+          <option value="צילומי משפחה">צילומי משפחה</option>
+          <option value="צילומי ילדים">צילומי ילדים</option>
+        </select>
+
+        <select id="duration" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+          <option value="" disabled selected>בחר משך</option>
+          <option value="2">2 שעות</option>
+          <option value="3">3 שעות</option>
+          <option value="4">4 שעות</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
+        הוסף אירוע ליומן
+      </button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-footer text-white py-8 text-center">
+    <p class="mb-4 font-bold">יוליה קורן | yulia.photography</p>
+    <p>הוספת אירוע ❤️</p>
+  </footer>
+
+  <WhatsAppButton />
+
+  <!-- Scripts -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <script>
+    window.addEventListener("load", () => {
+      flatpickr("#date", { dateFormat: "d-m-Y" });
+      flatpickr("#time", { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true });
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    const phoneInput = document.getElementById("phone");
+    const nameField = document.getElementById("clientName");
+    const form = document.getElementById("calendarForm");
+
+    let lastFetchedPhone = "";
+    let lookupTimeout;
+
+    // Auto-format and lookup
+    phoneInput.addEventListener("input", (e) => {
+      const digits = e.target.value.replace(/\D/g, "");
+      let formatted = digits;
+      if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
+      e.target.value = formatted;
+
+      clearTimeout(lookupTimeout);
+      if (digits.length >= 9) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
+      else nameField.value = "";
+    });
+
+    async function lookupClient(phoneDigits) {
+      if (phoneDigits === lastFetchedPhone) return;
+      lastFetchedPhone = phoneDigits;
+
+      nameField.value = "מחפש...";
+      try {
+        const res = await fetch("/api/get_client_by_phone", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone: phoneDigits }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          nameField.value = "לא נמצא לקוח";
+          nameField.classList.add("text-gray-400");
+        } else {
+          nameField.value = data.name;
+          nameField.classList.remove("text-gray-400");
+        }
+      } catch {
+        nameField.value = "שגיאה בחיפוש";
+        nameField.classList.add("text-gray-400");
+      }
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const phone = phoneInput.value.replace(/\D/g, "");
+      const name = nameField.value.trim();
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+      const sessionType = document.getElementById("sessionType").value;
+      const duration = parseInt(document.getElementById("duration").value);
+
+      if (!phone || !name || !date || !time || !sessionType || !duration) {
+        Swal.fire({ icon: "warning", title: "נא למלא את כל השדות", timer: 1500, showConfirmButton: false });
+        return;
+      }
+
+      if (["לא נמצא לקוח", "שגיאה בחיפוש", "מחפש..."].includes(name)) {
+        Swal.fire({ icon: "error", title: "לא נמצא לקוח עבור מספר זה", timer: 1500, showConfirmButton: false });
+        return;
+      }
+
+      const startDate = new Date(`${date}T${time}:00`);
+      const endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000);
+      const formatDate = (d) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+      const startStr = formatDate(startDate);
+      const endStr = formatDate(endDate);
+
+      const base = "https://calendar.google.com/calendar/render?action=TEMPLATE";
+      const text = encodeURIComponent(`${sessionType} - ${name}`);
+      const details = encodeURIComponent(`לקוח: ${name}\nטלפון: ${phone}\nסוג צילומים: ${sessionType}\nמשך: ${duration} שעות`);
+      const dates = `${startStr}/${endStr}`;
+      const url = `${base}&text=${text}&details=${details}&dates=${dates}`;
+
+      window.open(url, "_blank");
+
+      Swal.fire({
+        icon: "success",
+        title: "📅 האירוע מוכן להוספה ביומן",
+        timer: 2000,
+        showConfirmButton: false,
+        position: "bottom",
+        toast: true,
+        background: "#4caf50",
+        color: "white",
+      });
+    });
+  </script>
+
+  <style>
+    input, select, textarea {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      width: 100%;
+      background-color: white;
+      color: #111827;
+      transition: all 0.2s ease-in-out;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--color-primary, #3b82f6);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+    select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1.25rem;
+      padding-right: 2.5rem;
+    }
+    input[type='date'], input[type='time'] {
+      color-scheme: light;
+    }
+  </style>
+</Layout>
