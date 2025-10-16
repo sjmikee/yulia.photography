@@ -1,32 +1,21 @@
-import type { MiddlewareHandler } from "astro";
+import { defineMiddleware } from "astro:middleware";
+import { verifySessionCookie } from "~/lib/session";
 
-const ADMIN_USER = import.meta.env.USERNAME;
-const ADMIN_PASS = import.meta.env.PASSWORD;
+export const onRequest = defineMiddleware(async (context, next) => {
+  const url = new URL(context.request.url);
+  const pathname = url.pathname;
 
-export const onRequest: MiddlewareHandler = async (context, next) => {
-  if (
-    context.url.pathname.startsWith("/clients/add") ||
-    context.url.pathname.startsWith("/api/add-client")
-  ) {
-    const authHeader = context.request.headers.get("authorization");
+  const unprotected = ["/clients/login", "/api/login", "/api/logout"];
+  if (unprotected.some((path) => pathname.startsWith(path))) return next();
 
-    if (!authHeader?.startsWith("Basic ")) {
-      return new Response("Authentication required", {
-        status: 401,
-        headers: {
-          "WWW-Authenticate": 'Basic realm="Restricted Area"',
-        },
-      });
-    }
-
-    const base64Credentials = authHeader.split(" ")[1];
-    const decoded = Buffer.from(base64Credentials, "base64").toString("utf-8");
-    const [user, pass] = decoded.split(":").map((s) => s.trim());
-
-    if (user !== ADMIN_USER || pass !== ADMIN_PASS) {
-      return new Response("Unauthorized", { status: 401 });
+  if (pathname.startsWith("/clients")) {
+    const token = context.cookies.get("session")?.value;
+    const validUser = await verifySessionCookie(token || "");
+    if (!validUser) {
+      context.cookies.delete("session", { path: "/" });
+      return context.redirect("/clients/login");
     }
   }
 
   return next();
-};
+});
