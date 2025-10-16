@@ -8,13 +8,13 @@ import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
 import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
 
 const richMetadata = {
-  title: "יוליה קורן - שליחת חוזה ללקוח",
-  description: "שליחת חוזה ללקוח קיים דרך WhatsApp",
+  title: "יוליה קורן - שליחת קישור לביקורת גוגל",
+  description: "שליחת קישור לכתיבת ביקורת גוגל ללקוח קיים דרך WhatsApp",
 };
 
 const metadata = {
-  title: "יוליה קורן | שליחת חוזה ללקוח",
-  description: "שליחת חוזה ללקוח קיים דרך WhatsApp",
+  title: "יוליה קורן | שליחת ביקורת גוגל",
+  description: "שליחת קישור לכתיבת ביקורת גוגל ללקוח קיים דרך WhatsApp",
   ignoreTitleTemplate: true,
 };
 ---
@@ -28,9 +28,9 @@ const metadata = {
   <ScrollToTopButton />
 
   <section class="bg-gray-50 py-16 px-6 text-center">
-    <h1 class="text-3xl font-bold mb-4">שליחת חוזה ללקוח</h1>
+    <h1 class="text-3xl font-bold mb-4">שליחת ביקורת גוגל</h1>
     <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-      שולחים חוזה בלחיצה אחת דרך וואטסאפ 📄
+      שולחים קישור לכתיבת ביקורת גוגל דרך וואטסאפ 🌟
     </p>
   </section>
 
@@ -42,13 +42,10 @@ const metadata = {
 
         <input type="text" id="clientName" placeholder="שם הלקוח" readonly
                class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
-
-        <input type="text" id="clientEmail" placeholder="מייל הלקוח" readonly
-               class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
       </div>
 
       <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
-        שליחת חוזה
+        שליחת קישור לביקורת
       </button>
     </form>
   </section>
@@ -63,16 +60,15 @@ const metadata = {
         <span class="sr-only">Footer Scroll to top</span> ↑
     </button>
     <p class="mb-4 font-bold">יוליה קורן | yulia.photography</p>
-    <p>שליחת חוזה ❤️</p>
+    <p>שליחת קישור לביקורת ❤️</p>
   </footer>
-</div>
+  </div>
 
   <WhatsAppButton />
 
   <script>
     const phoneInput = document.getElementById("phone");
     const nameField = document.getElementById("clientName");
-    const emailField = document.getElementById("clientEmail");
     const form = document.getElementById("whatsappForm");
 
     let lastFetchedPhone = "";
@@ -88,7 +84,6 @@ const metadata = {
       if (digits.length >= 9) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
         nameField.value = "";
-        emailField.value = "";
       }
     });
 
@@ -106,14 +101,11 @@ const metadata = {
         const data = await res.json();
         if (!res.ok) {
           nameField.value = "לא נמצא לקוח";
-          emailField.value = "";
         } else {
           nameField.value = data.name;
-          emailField.value = data.email || "";
         }
       } catch {
         nameField.value = "שגיאה בחיפוש";
-        emailField.value = "";
       }
     }
 
@@ -126,8 +118,8 @@ const metadata = {
       let waPhone = rawPhone;
       if (waPhone.startsWith("0")) waPhone = "972" + waPhone.slice(1);
 
-      const contractLink = `https://yulia.photography/contract?phone=${rawPhone}`;
-      const message = encodeURIComponent(contractLink);
+      const reviewLink = "https://g.page/r/CfFq0GZG4TgjEBE/review";
+      const message = encodeURIComponent(`אשמח אם תכתבו לי ביקורת ❤️\n${reviewLink}`);
       const waUrl = `https://wa.me/${waPhone}?text=${message}`;
 
       window.open(waUrl, "_blank");
