@@ -68,24 +68,28 @@ const metadata = {
 </div>
 
   <WhatsAppButton />
+</Layout>
 
-  <script>
+<script>
+  function initSendContract() {
     const phoneInput = document.getElementById("phone");
     const nameField = document.getElementById("clientName");
     const emailField = document.getElementById("clientEmail");
     const form = document.getElementById("whatsappForm");
 
+    if (!form || !phoneInput) return;
+
     let lastFetchedPhone = "";
     let lookupTimeout;
 
-    phoneInput?.addEventListener("input", (e) => {
+    phoneInput.addEventListener("input", (e) => {
       const digits = e.target.value.replace(/\D/g, "");
       let formatted = digits;
       if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
       e.target.value = formatted;
 
       clearTimeout(lookupTimeout);
-      if (digits.length >= 9) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
+      if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
         nameField.value = "";
         emailField.value = "";
@@ -132,5 +136,11 @@ const metadata = {
 
       window.open(waUrl, "_blank");
     });
-  </script>
-</Layout>
+  }
+
+  // Run immediately on first page load
+  initSendContract();
+
+  // Re-run when Astro view transitions load this page again
+  document.addEventListener("astro:page-load", initSendContract);
+</script>

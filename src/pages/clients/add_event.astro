@@ -85,10 +85,11 @@ const metadata = {
   </footer>
 
   <WhatsAppButton />
+</Layout>
+<!-- Scripts -->
 
-  <!-- Scripts -->
-
-  <script>
+<script>
+  function initAddEvent() {
     const phoneInput = document.getElementById("phone");
     const nameField = document.getElementById("clientName");
     const form = document.getElementById("calendarForm");
@@ -105,7 +106,7 @@ const metadata = {
       e.target.value = formatted;
 
       clearTimeout(lookupTimeout);
-      if (digits.length >= 9) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
+      if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
         nameField.value = "";
         document.getElementById("clientEmail").value = "";
@@ -181,5 +182,7 @@ const metadata = {
 
       window.open(url, "_blank");
     });
-  </script>
-</Layout>
+  }
+  initAddEvent();
+  document.addEventListener("astro:page-load", initAddEvent);
+</script>
