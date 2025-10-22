@@ -55,6 +55,15 @@ const success = url.searchParams.get("success") === "1";
         <input type="number" name="price" placeholder="מחיר" required step="0.01" class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"/>
       </div>
 
+      <div>
+        <select name="duration" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+          <option value="" disabled selected>סוג חבילה</option>
+          <option value="1">חבילה קצרה</option>
+          <option value="2">חבילה בינונית</option>
+          <option value="3">חבילה ארוכה</option>
+        </select>
+      </div>
+
       <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
         הוסף לקוח
       </button>

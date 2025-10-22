@@ -59,7 +59,7 @@ export async function POST(context: APIContext) {
     }
     const fontBytes = new Uint8Array(await fontRes.arrayBuffer());
 
-    const result = await sql`SELECT price FROM clients WHERE phone = ${phone} LIMIT 1;`;
+    const result = await sql`SELECT price, duration FROM clients WHERE phone = ${phone} LIMIT 1;`;
 
     if (result.length === 0) {
       return new Response(
@@ -69,11 +69,20 @@ export async function POST(context: APIContext) {
     }
 
     const price = result[0].price?.toString() ?? "לא נמצא";
+    const duration = result[0].duration ?? 0;
+    const contractType =
+      duration === 1
+      ? "שעה עד שעתיים"
+      : duration === 2
+      ? "שעתיים עד שלוש"
+      : duration === 3
+      ? "שלוש שעות"
+      : "";
 
     // Update the email in the database for this client
     await sql`
       UPDATE clients
-      SET email = ${email}
+      SET email = ${email}, signed = TRUE
       WHERE phone = ${phone};
     `;
 
@@ -94,6 +103,7 @@ export async function POST(context: APIContext) {
       "client_address",
       "client_phone",
       "date_1",
+      "type",
       "price",
       "date_2",
     ];
@@ -119,6 +129,7 @@ export async function POST(context: APIContext) {
           case "client_phone": return phone;
           case "date_1": return new Date().toLocaleDateString("he-IL");
           case "price": return price;
+          case "type": return contractType;
           case "date_2": return new Date().toLocaleDateString("he-IL");
           default: return "";
         }

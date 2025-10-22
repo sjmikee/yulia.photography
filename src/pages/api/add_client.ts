@@ -9,14 +9,15 @@ export const POST: APIRoute = async ({ request }) => {
   const phone = formData.get("phone") as string;
   const email = formData.get("email") as string | null;
   const price = parseFloat(formData.get("price") as string);
+  const duration = parseInt(formData.get("duration") as string);
 
-  if (!name || !phone || isNaN(price)) {
+  if (!name || !phone || isNaN(price) || isNaN(duration)) {
     return new Response("Invalid input", { status: 400 });
   }
 
   await sql`
-    INSERT INTO clients (name, phone, email, price)
-    VALUES (${name}, ${phone}, ${email}, ${price})
+    INSERT INTO clients (name, phone, email, price, duration)
+    VALUES (${name}, ${phone}, ${email}, ${price}, ${duration})
   `;
 
   // After adding, redirect back to form or to a "clients list" page
