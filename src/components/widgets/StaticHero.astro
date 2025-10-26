@@ -29,20 +29,3 @@ import { Icon } from 'astro-icon/components';
         <Icon name={"tabler:arrow-down-dashed"} class="w-10 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block text-white drop-shadow-lg" />
     </div>
 </section>
-
-<script is:inline>
-    document.addEventListener("scroll", function () {
-        const mobileHero = document.getElementById("staticHeroMobile");
-        const desktopHero = document.getElementById("staticHeroDesktop");
-        if (!mobileHero || !desktopHero) return;
-
-        const scrollPosition = window.scrollY;
-        const scaleFactor = 1.2 - scrollPosition * 0.0002; // Adjust shrinking speed
-
-        // Prevent it from shrinking too much
-        if (scaleFactor > 1) {
-            mobileHero.style.transform = `scale(${scaleFactor})`;
-            desktopHero.style.transform = `scale(${scaleFactor})`;
-        }
-    });
-</script>
