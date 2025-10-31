@@ -48,7 +48,7 @@ export async function POST(context: APIContext) {
     // 3) load template PDF and font via URL fetching
     const baseUrl = `${context.url.protocol}//${context.url.host}`;
     let templateRes;
-    
+
     if(conf == "1")
     {
       templateRes = await fetch(`${baseUrl}/contract_template_fillable.pdf`);
@@ -92,7 +92,7 @@ export async function POST(context: APIContext) {
     // Update the email in the database for this client
     await sql`
       UPDATE clients
-      SET email = ${email}, signed = TRUE
+      SET name = ${name}, email = ${email}, signed = TRUE
       WHERE phone = ${phone};
     `;
 
