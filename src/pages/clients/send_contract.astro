@@ -45,6 +45,12 @@ const metadata = {
 
         <input type="text" id="clientEmail" placeholder="מייל הלקוח" readonly
                class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+        
+        <select id="conf" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+          <option value="" disabled selected>אישור פרסום</option>
+          <option value="1">כן</option>
+          <option value="0">לא</option>
+        </select>
       </div>
 
       <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
@@ -75,6 +81,7 @@ const metadata = {
     const phoneInput = document.getElementById("phone");
     const nameField = document.getElementById("clientName");
     const emailField = document.getElementById("clientEmail");
+    const conf = document.getElementById("conf");
     const form = document.getElementById("whatsappForm");
 
     if (!form || !phoneInput) return;
@@ -130,7 +137,7 @@ const metadata = {
       let waPhone = rawPhone;
       if (waPhone.startsWith("0")) waPhone = "972" + waPhone.slice(1);
 
-      const contractLink = `https://yulia.photography/contract?phone=${rawPhone}`;
+      const contractLink = `https://yulia.photography/contract?phone=${rawPhone}&conf=${conf.value}`;
       const message = encodeURIComponent(contractLink);
       const waUrl = `https://wa.me/${waPhone}?text=${message}`;
 

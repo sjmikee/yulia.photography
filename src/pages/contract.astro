@@ -97,6 +97,12 @@ const metadata = {
         class="border p-2 w-full bg-gray-100"
         disabled
       />
+      <input 
+        type="text"
+        name="conf"
+        id="conf"
+        hidden
+      />
 
       <label class="block">חתימה:</label>
       <canvas id="signature" class="border w-full max-w-md h-40"></canvas>
@@ -139,7 +145,18 @@ const metadata = {
       "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.worker.min.mjs";
 
     window.addEventListener("DOMContentLoaded", () => {
-      const pdfUrl = "https://yulia.photography/contract_template_fillable.pdf";
+      const urlParams = new URLSearchParams(window.location.search);
+      const conf = urlParams.get("conf");
+      let pdfUrl = "";
+      if(conf == 1)
+      {
+        pdfUrl = "https://yulia.photography/contract_template_fillable.pdf";
+      }
+      else
+      {
+        pdfUrl = "https://yulia.photography/contract_template_conf_fillable.pdf";
+      }
+
       const pdfContainer = document.getElementById("pdf-container");
 
       async function renderPage(pdf, pageNum) {
@@ -200,7 +217,7 @@ const metadata = {
       const signatureInput = document.getElementById("signature-input");
       const submitButton = document.getElementById("submit");
       const form = document.querySelector("form");
-      const urlParams = new URLSearchParams(window.location.search);
+      const confInput = document.getElementById("conf");
       const phone = urlParams.get("phone");
       const priceInput = document.getElementById("price-input");
       const phoneInput = document.getElementById("phone-input");
@@ -209,6 +226,15 @@ const metadata = {
       if (phone) {
         phoneInput.value = phone;
 
+        if(conf == 1)
+        {
+          confInput.value = "1"
+        }
+        else
+        {
+          confInput.value = "0"
+        }
+        
         (async () => {
           try {
             const res = await fetch(
