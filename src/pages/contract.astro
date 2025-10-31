@@ -88,12 +88,21 @@ const metadata = {
         required
         class="border p-2 w-full"
       />
-      <label class="block">מחיר:</label>
+      <label class="block">תמורה כוללת:</label>
       <input
         type="text"
         name="price"
         id="price-input"
         placeholder="מחיר"
+        class="border p-2 w-full bg-gray-100"
+        disabled
+      />
+      <label class="block">משך הצילומים:</label>
+      <input
+        type="text"
+        name="duration"
+        id="duration-input"
+        placeholder="משך הצילומים"
         class="border p-2 w-full bg-gray-100"
         disabled
       />
@@ -220,6 +229,7 @@ const metadata = {
       const confInput = document.getElementById("conf");
       const phone = urlParams.get("phone");
       const priceInput = document.getElementById("price-input");
+      const durationInput = document.getElementById("duration-input");
       const phoneInput = document.getElementById("phone-input");
       let signaturePad;
 
@@ -243,6 +253,20 @@ const metadata = {
             if (!res.ok) throw new Error("מחיר לא נמצא");
             const data = await res.json();
             priceInput.value = data.price || "";
+
+            if(data.duration == 1)
+            {
+              durationInput.value = "שעה עד שעתיים";
+            }
+            else if(data.duration == 2)
+            {
+              durationInput.value = "שעתיים עד שלוש"
+            }
+            else if(data.duration == 3)
+            {
+              durationInput.value = "שלוש שעות"
+            }
+
           } catch (err) {
             console.error(err);
             priceInput.value = "מחיר לא זמין";

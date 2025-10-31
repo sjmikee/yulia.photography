@@ -10,13 +10,13 @@ export async function GET(context: APIContext) {
     return new Response(JSON.stringify({ error: "Missing phone parameter" }), { status: 400 });
   }
 
-  const result = await sql`SELECT price FROM clients WHERE phone = ${phone} LIMIT 1;`;
+  const result = await sql`SELECT price,duration FROM clients WHERE phone = ${phone} LIMIT 1;`;
 
   if (result.length === 0) {
     return new Response(JSON.stringify({ error: "No booking found" }), { status: 404 });
   }
 
-  return new Response(JSON.stringify({ price: result[0].price.toString() }), {
+  return new Response(JSON.stringify({ price: result[0].price.toString(), duration: result[0].duration.toString() }), {
     headers: { "Content-Type": "application/json" },
   });
 }
