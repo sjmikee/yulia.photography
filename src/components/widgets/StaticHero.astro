@@ -4,7 +4,7 @@ import staticHero from '~/assets/images/static_hero.jpg'
 import staticHeroM from '~/assets/images/static_hero_v.jpg'
 import { Icon } from 'astro-icon/components';
 ---
-<section class="relative w-full h-[100vh] z-[-1] overflow-hidden">
+<section class="relative w-full z-[-1] overflow-hidden" style="height: calc(var(--vh) * 100)">
     <div class="fixed top-0 left-0 w-full h-[100vh]">
         <Image
             class="object-cover h-full"
@@ -29,3 +29,10 @@ import { Icon } from 'astro-icon/components';
         <Icon name={"tabler:arrow-down-dashed"} class="w-10 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block text-white drop-shadow-lg" />
     </div>
 </section>
+<script is:inline>
+  const setVH = () => {
+    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+  };
+  setVH();
+  window.addEventListener('resize', setVH);
+</script>
