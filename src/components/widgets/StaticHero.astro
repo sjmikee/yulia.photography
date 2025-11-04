@@ -4,8 +4,8 @@ import staticHero from '~/assets/images/static_hero.jpg'
 import staticHeroM from '~/assets/images/static_hero_v.jpg'
 import { Icon } from 'astro-icon/components';
 ---
-<section class="relative w-full z-[-1] overflow-hidden" style="height: calc(var(--vh) * 100)">
-    <div class="fixed top-0 left-0 w-full h-[100vh]">
+<section class="relative w-full z-[-1] overflow-hidden" style="height: calc(var(--vh, 1vh) * 100)">
+    <div class="fixed top-0 left-0 w-full h-full" style="height: calc(var(--vh, 1vh) * 100)">
         <Image
             class="object-cover h-full"
             src={ staticHero }
@@ -30,9 +30,6 @@ import { Icon } from 'astro-icon/components';
     </div>
 </section>
 <script is:inline>
-  const setVH = () => {
-    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-  };
-  setVH();
-  window.addEventListener('resize', setVH);
+  const stableVH = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${stableVH}px`);
 </script>
