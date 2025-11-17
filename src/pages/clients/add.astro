@@ -20,6 +20,7 @@ const metadata = {
 
 const url = new URL(Astro.url);
 const success = url.searchParams.get("success") === "1";
+const error = url.searchParams.get("error");
 ---
 
 <Layout metadata={metadata}>
@@ -39,6 +40,12 @@ const success = url.searchParams.get("success") === "1";
   {success && (
     <section class="max-w-xs mx-auto py-4 px-6 mb-6 bg-green-600 text-white rounded-lg text-center font-semibold">
       הלקוח נוסף בהצלחה!
+    </section>
+  )}
+
+  {error && (
+    <section class="max-w-xs mx-auto py-4 px-6 mb-6 bg-red-600 text-white rounded-lg text-center font-semibold">
+      {error}
     </section>
   )}
 
