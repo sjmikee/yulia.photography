@@ -27,12 +27,12 @@ const metadata = {
   <section class="bg-gray-50 py-16 px-6 text-center">
     <h1 class="text-3xl font-bold mb-4">חתימה על חוזה צילום</h1>
     <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-      כאן תוכלו לקרוא את חוזה הצילום ולחתום עליו אונליין בצורה נוחה ובטוחה
+      כאן תוכלו לקרוא את חוזה הצילום ולחתום עליו בצורה נוחה ובטוחה
     </p>
   </section>
 
   <!-- PDF Viewer -->
-  <section class="max-w-5xl mx-auto py-12 px-6">
+  <section class="max-w-6xl mx-auto py-12 px-1">
     <h2 class="text-2xl font-bold text-center mb-6">מסמך החוזה</h2>
     <div
       id="pdf-container"
@@ -61,6 +61,7 @@ const metadata = {
       <input
         type="text"
         name="address"
+        id="address-input"
         placeholder="כתובת"
         required
         class="border p-2 w-full"
@@ -312,4 +313,35 @@ const metadata = {
       });
     });
   </script>
+
+  <script is:inline>
+  window.initAutocomplete = function () {
+    const input = document.getElementById("address-input");
+
+    // Create the first session token
+    let sessionToken = new google.maps.places.AutocompleteSessionToken();
+
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      fields: ["formatted_address", "geometry", "name"],
+      sessionToken,
+    });
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+
+      if (place.formatted_address) {
+        input.value = place.formatted_address;
+      }
+
+      // Reset token for next user typing session
+      sessionToken = new google.maps.places.AutocompleteSessionToken();
+      autocomplete.setOptions({ sessionToken });
+    });
+  };
+</script>
+
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN7CiFeaMo1JYYXYW6kvHAM1xndEEPNTs&libraries=places&loading=async&language=HE&region=IL&callback=initAutocomplete"
+  defer
+></script>
 </Layout>
