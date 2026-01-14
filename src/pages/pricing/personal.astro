@@ -1,0 +1,226 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Prices from '~/components/widgets/Pricing.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+
+const richMetadata = {
+  title: "יוליה קורן - מחירון צילומי בוק אישי",
+  description: "צילומי בוק אישי בהתאמה אישית – לעצמך או כמתנה למישהו שאוהבים. חוויה מעצימה, ליווי מקצועי ותמונות טבעיות ומחמיאות. בדקו חבילות ומחירים."
+}
+
+const metadata = {
+  title: "יוליה קורן - מחירון צילומי בוק אישי",
+  description: "צילומי בוק אישי בהתאמה אישית – לעצמך או כמתנה למישהו שאוהבים. חוויה מעצימה, ליווי מקצועי ותמונות טבעיות ומחמיאות. בדקו חבילות ומחירים."
+};
+---
+
+<Layout metadata={metadata}>
+  <RichSeo metadata={richMetadata} />
+  <!-- HeroText Widget ******************* -->
+
+  <HeroText
+    tagline="רגעים שתאהבו להיזכר בהם – עם חבילה שמדויקת לכם"
+    title="מחירון צילומי בוק אישי"
+    subtitle="בוק אישי לעצמך או כמתנה מרגשת – חוויה אישית עם תמונות טבעיות, מחמיאות ומלאות אופי."
+    content="* אני מאמינה שלכל אחד מגיעה חויה ואפשרות ליצור זיכרונות מהרגעים החשובים כל כך ולכן משתדלת לשמור על מחיר נגיש ללא פשרות באיכות"
+  />
+
+  <!-- Pricing Widget ******************* -->
+
+  <Prices
+    title="הבחירה שלכם"
+    subtitle=""
+    tagline="החבילות שלי"
+    prices={[
+      {
+        title: 'חבילת בסיס',
+        subtitle: 'רגע אחד',
+        price: 600,
+        period: 'מתאים לבוק אישי קצר או מתנה אישית',
+        items: [
+          {
+            description: 'הכוונה מלאה לפני הצילום + טיפים',
+          },
+          {
+            description: '45 דקות של צילומים',
+          },
+          {
+            description: 'לפחות 30 - 40 תמונות בעריכה מוקפדת ומלאה',
+          },
+          {
+            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: 'לקביעת תאריך',
+          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
+        },
+      },
+      {
+        title: 'החבילה הקלאסית',
+        subtitle: 'חוויה שלמה',
+        price: 800,
+        period: 'בוק אישי מלא – חוויה אישית ומעצימה',
+        items: [
+          {
+            description: 'הכוונה מלאה לפני הצילום + טיפים',
+          },
+          {
+            description: 'שעה וחצי של צילומים',
+          },
+          {
+            description: 'לפחות 40 - 50 תמונות בעריכה מוקפדת ומלאה',
+          },
+          {
+            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: 'לקביעת תאריך',
+          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%A9%D7%AA%D7%9C%D7%9E%D7%AA%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
+        },
+        hasRibbon: true,
+        ribbonTitle: 'הכי משתלם',
+      },
+      {
+        title: 'חבילת פרימיום',
+        subtitle: 'סיפור של אהבה',
+        price: 1000,
+        period: 'בוק מושקע וחווייתי למזכרת אישית ומרגשת',
+        items: [
+          {
+            description: 'הכוונה מלאה לפני הצילום + טיפים',
+          },
+          {
+            description: 'כשעתיים של צילומים',
+          },
+          {
+            description: 'עד 2 תלבושות, הפסקות לפי הצורך',
+          },
+          {
+            description: 'לפחות 50 - 70 תמונות בעריכה מוקפדת ומלאה',
+          },
+          {
+            description: 'גלריה דיגיטלית באיכות גובהה להורדה',
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: 'לקביעת תאריך',
+          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A4%D7%A8%D7%99%D7%9E%D7%99%D7%95%D7%9D%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
+        },
+      },
+    ]}
+  />
+
+  <!-- Steps Widget ****************** -->
+
+  <Steps
+    title="תהליך העבודה"
+    tagline="איך הכל יראה"
+    isReversed={true}
+    items={[
+      {
+        title: 'שיחה ראשונית',
+        icon: 'tabler:number-1',
+      },
+      {
+        title: 'סגירת חבילה ותאריך',
+        icon: 'tabler:number-2',
+      },
+      {
+        title: 'תשלום מקדמה',
+        icon: 'tabler:number-3',
+      },
+      {
+        title: 'מצטלמים ונהנים 😊',
+        icon: 'tabler:number-4',
+      },
+      {
+        title: 'עריכת התמונות (עד 14 ימי עסקים)',
+        icon: 'tabler:number-5',
+      },
+      {
+        title: 'קבלת קישור לגלריה דיגיטלית להורדה',
+        icon: 'tabler:number-6',
+      },
+      {
+        title: 'נהנים מתמונות איכותיות ומרגשות 😊',
+        icon: 'tabler:number-7',
+      },
+      {
+        title: 'לא שוכחים לתייג אותי 😉',
+        icon: 'tabler:number-8',
+      },
+    ]}
+    image={{ src: '~/assets/images/pricing/personal_pricing.jpg', alt: 'צילומי בוק אישי מחירון' }}
+  />
+
+  <!-- FAQs Widget ******************* -->
+
+  <FAQs
+    title="שאלות נפוצות"
+    subtitle="אשמח לענות על כל שאלה אחרת שיש לכם ולא מצאתם תשובה"
+    columns={1}
+    items={[
+      {
+        title: 'למי מתאימים צילומי בוק אישי?',
+        description:
+          'צילומי בוק אישי מתאימים לכל מי שרוצה לעצמו חוויה אישית מול המצלמה, או להעניק מתנה מיוחדת ומרגשת לאדם אהוב.',
+      },
+      {
+        title: 'איפה מתקיימים הצילומים?',
+        description:
+          'אני מצלמת בטבע, בעיקר באיזור המרכז. אחרי שנבחר חבילה, אני אציע לך כמה לוקיישנים קסומים שמתאימים לעונה ולסגנון שלך.',
+      },
+      {
+        title: 'את עוזרת עם בגדים / צבעים?',
+        description:
+          "בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.",
+      },
+      {
+        title: 'מה קורה אם יורד גשם או מישהו חולה?',
+        description:
+          'תמיד אפשר לתאם מועד חלופי – החיים קורים, ואני לגמרי מבינה. עדכנו אותי בהקדם, ונמצא מועד חדש שמתאים לשני הצדדים.',
+      },
+      {
+        title: 'מתי כדאי לסגור תאריך?',
+        description:
+          'כדאי לסגור תאריך כמה שיותר מראש – במיוחד בעונות המבוקשות.',
+      },
+      {
+        title: 'צריך לשלם מקדמה?',
+        description:
+          'כן. כדי לשמור את התאריך ביומן, יש לשלם מקדמה של ₪100 בעת ההזמנה. (המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד), במקרה של דחיה אם תודיעו מספיק זמן מראש – נוכל למצוא יחד מועד חלופי.',
+      },
+    ]}
+  />
+
+  <!-- Gift Card CTA ******************* -->
+
+  <section class="my-16 text-center">
+    <h2 class="text-3xl font-semibold mb-4">
+      מחפשים מתנה עם משמעות?
+    </h2>
+    <p class="text-lg mb-6 max-w-2xl mx-auto">
+      שובר מתנה לצילומי בוק אישי הוא חוויה מרגשת, מעצימה ובלתי נשכחת – מתנה שנשארת להרבה אחרי היום עצמו.
+    </p>
+    <a
+      href="https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A9%D7%95%D7%91%D7%A8%20%D7%9E%D7%AA%D7%A0%D7%94%20%D7%9C%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99"
+      target="_blank"
+      class="inline-block bg-primary text-white px-8 py-4 rounded-xl text-lg font-medium hover:opacity-90 transition"
+    >
+      לרכישת שובר מתנה
+    </a>
+  </section>
+
+  <!-- CallToAction Widget *********** -->
+
+  <WhatssapCallToAction />
+</Layout>

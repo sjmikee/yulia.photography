@@ -10,13 +10,13 @@ import RichSeo from '~/components/common/RichSeo.astro';
 import Reviews from '~/components/widgets/reviews.astro';
 
 const richMetadata = {
-  title: "יוליה קורן - צילומי משפחה | צילומי זוגיות | בוק אישי | לייף סטייל",
-  description: "צילומי משפחה, צילומי זוגיות, צילומי סולו – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
+  title: "יוליה קורן - צילומי זוגיות | צילומי נשיות | צילומי ילדים | צילומי הריון ",
+  description: "צילומי משפחה, צילומי זוגיות, צילומי נשיות, צילומי גיל שנה, צילומי הריון וצילומי בוק אישי – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
 }
 
 const metadata = {
-  title: 'יוליה קורן | צילומי משפחה | צילומי זוגיות | צילומי ילדים | צילומי תדמית',
-  description: "צילומי משפחה, צילומי זוגיות, צילומי סולו – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
+  title: 'יוליה קורן | צילומי זוגיות | צילומי נשיות | צילומי ילדים | צילומי הריון',
+  description: "צילומי משפחה, צילומי זוגיות, צילומי נשיות, צילומי גיל שנה, צילומי הריון וצילומי בוק אישי – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
   ignoreTitleTemplate: true,
 };
 ---
@@ -36,7 +36,7 @@ const metadata = {
         target: '_blank',
         icon: 'tabler:phone',
       },
-      { text: 'מחירון', href: '/pricing' },
+      { text: 'המלצות', href: '#reviews' },
     ]}
     image={{ src: '~/assets/images/hero.jpg', alt: 'צילומי משפחה צילומי זוגיות צילומי בוק אישי צילומים בטבע' }}
   >
@@ -48,17 +48,6 @@ const metadata = {
     <Fragment slot="subtitle">
       כולם מצלמים. כל הזמן. אבל תמונה אמיתית? זו אחת שתגרום לכם לעצור, לחייך ולהגיד "וואו". פה זה מה שאני עושה.
     </Fragment>
-
-    <!-- <Fragment slot="content">
-      <p class="mt-5 bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold mx-auto max-w-3xs">
-                קבלו עכשיו הצעת מחיר לצילומי זוגיות – ייעוץ חינם לפונים מהעמוד!
-      </p>
-  -->
-    <!-- <Fragment slot="content">
-        <div class="whitespace-nowrap max-w-3xs mx-auto font-bold rounded-lg overflow-hidden bg-yellow-400 text-black py-2 mt-5">
-          <span class="px-8"></span>
-        </div>
-    </Fragment> -->
 
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
@@ -95,8 +84,9 @@ const metadata = {
   </ContentGrid>
 
   <!-- Reviews section -->
-  <Reviews />
-
+  <div id="reviews">
+    <Reviews />
+  </div>
   <!-- HighlightedPosts Widget ******* -->
 
   <BlogLatestPosts

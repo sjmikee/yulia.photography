@@ -17,7 +17,28 @@ export const headerData = {
     },
     {
       text: 'מחירון',
-      href: getPermalink('/pricing'),
+      links: [
+        {
+          text: 'זוגיות',
+          href: getPermalink('/pricing/couples'),
+        },
+        {
+          text: 'זוגיות אינטימי',
+          href: getPermalink('/pricing/couples_intimate'),
+        },
+        {
+          text: 'נשיות',
+          href: getPermalink('/pricing/feminine'),
+        },
+        {
+          text: 'בוק אישי',
+          href: getPermalink('/pricing/personal'),
+        },
+        {
+          text: 'גיל שנה',
+          href: getPermalink('/pricing/first_year'),
+        },
+      ],
     },
     {
       text: 'טיפים',
