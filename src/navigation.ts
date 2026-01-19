@@ -31,6 +31,10 @@ export const headerData = {
           href: getPermalink('/pricing/feminine'),
         },
         {
+          text: 'הריון',
+          href: getPermalink('/pricing/pregnancy'),
+        },
+        {
           text: 'בוק אישי',
           href: getPermalink('/pricing/personal'),
         },
