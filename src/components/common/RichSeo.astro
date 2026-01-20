@@ -1,5 +1,4 @@
 ---
-import defaultImage from '~/assets/images/default.png'
 import type { MetaData } from '~/types';
 
 export interface Props {
@@ -12,22 +11,28 @@ const description = metadata?.description;
 
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": `${name}`,
-  "image": `https://yulia.photography${defaultImage.src}`,
+  "@type": ["LocalBusiness", "Photographer"],
+  "name": name,
+  "image": `https://yulia.photography/images/structured/yulia-photographer.png`,
   "url": "https://yulia.photography",
   "telephone": "+972-52-583-6940",
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "IL"
-  },
-  "description": {description},
+  "description": description,
   "priceRange": "$$",
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "חולון"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "מרכז הארץ, ישראל"
+    }
+  ],
   "sameAs": [
     "https://www.instagram.com/koren_yulia/",
     "https://www.facebook.com/profile.php?id=61577756080400",
-    "https://www.google.com/maps?cid=2538026082512169713",
-  ]
+  ],
+  "hasMap": "https://www.google.com/maps?cid=2538026082512169713"
 };
 ---
 
