@@ -70,8 +70,18 @@ export const footerData = {
       ],
     },
     {
+      title: 'מחירון',
       links: [
-        { text: 'מחירון', href: getPermalink('/pricing') },
+        { text: 'זוגיות', href: getPermalink('/pricing/couples') },
+        { text: 'זוגיות אינטימי', href: getPermalink('/pricing/couples_intimate') },
+        { text: 'נשיות', href: getPermalink('/pricing/feminine') },
+        { text: 'הריון', href: getPermalink('/pricing/pregnancy') },
+        { text: 'בוק אישי', href: getPermalink('/pricing/personal') },
+        { text: 'גיל שנה', href: getPermalink('/pricing/first_year') },
+      ],
+    },
+    {
+      links: [
         { text: 'טיפים', href: getPermalink('/blog') },
         { text: 'קצת עלי', href: getPermalink('/about') },
         { text: 'צור קשר', href: getPermalink('/contact') },
