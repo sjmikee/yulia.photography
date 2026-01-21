@@ -96,6 +96,6 @@ export const footerData = {
     { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: 'https://www.instagram.com/koren_yulia/' },
   ],
   footNote: `
-    יוליה קורן · כל הזכויות שמורות
+    יוליה קורנסקי · כל הזכויות שמורות
   `,
 };
