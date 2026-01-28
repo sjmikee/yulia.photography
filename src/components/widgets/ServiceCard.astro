@@ -14,23 +14,26 @@ const {
 <article class="group not-prose border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition">
   {
           image && (
-            <div class="w-full h-[70vh] lg:h-[85vh] object-cover m-auto max-w-5xl">
+            <a
+              href={href}
+              class="block w-full h-64 md:h-72 lg:h-80 object-cover m-auto max-w-5xl"
+              aria-label={typeof title === 'string' ? `מעבר לשירות ${title}` : 'מעבר לשירות'}
+            >
               {typeof image === 'string' ? (
                 <Fragment set:html={image} />
               ) : (
                 <Image
-                  class="w-full h-[70vh] lg:h-[85vh] object-cover"
+                  class="w-full h-64 md:h-72 lg:h-80 object-cover"
                   widths={[400, 768, 1024, 2040, 3840]}
                   sizes="100vw"
                   loading="eager"
                   width={4123}
                   height={6185}
-                  alt="Hero Image"
                   fetchpriority="high"
                   {...image}
                 />
               )}
-            </div>
+            </a>
           )
         }
 

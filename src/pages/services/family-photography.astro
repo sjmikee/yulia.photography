@@ -1,0 +1,145 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+
+const richMetadata = {
+  title: "צילומי משפחה בטבע, בים ובחורף | יוליה קורנסקי",
+  description:
+    "צילומי משפחה טבעיים ומרגשים בטבע, בים, ביער ובחורף. חוויה רגועה לילדים ולהורים, כולל מידע על מחירים וחבילות צילום."
+};
+
+const metadata = {
+  title: "צילומי משפחה | יוליה קורנסקי",
+  description:
+    "צילומי משפחה בטבע, בים ובכל עונה. סשן רגוע, מותאם לילדים, עם תמונות אמיתיות שנשארות לשנים.",
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <RichSeo metadata={richMetadata} />
+
+  <!-- HERO -->
+  <Hero2
+    id="hero"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'דברו איתי בווטסאפ',
+        href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אנחנו%20מתעניינים%20בצילומי%20משפחה',
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+        id: 'heroWhatsapp'
+      },
+      {
+        text: 'או בשיחת טלפון',
+        href: 'tel:+972525836940',
+        id: 'heroCall'
+      }
+    ]}
+    image={{
+      src: '~/assets/images/family/family-hero.jpg',
+      alt: 'צילומי משפחה בטבע ובים'
+    }}
+  >
+    <Fragment slot="title">
+      <span class="text-accent dark:text-white highlight">צילומי משפחה</span>
+      רגעים אמיתיים שנשארים לתמיד
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      יוליה קורנסקי – צלמת משפחה במרכז הארץ.  
+      מתמחה בצילומי משפחה בטבע, בים, ביער ובכל עונה – כולל חורף.  
+      סשן רגוע, זורם ומותאם לילדים, בלי פוזות מאולצות ובלי לחץ.
+      <br /><br />
+      <strong>חבילות צילום החל מ־600₪</strong>
+    </Fragment>
+  </Hero2>
+
+  <!-- WHAT YOU GET -->
+  <section class="max-w-6xl mx-auto px-4 py-20">
+    <h2 class="text-center mb-12">מה תקבלו בסשן צילומי משפחה</h2>
+
+    <div class="grid md:grid-cols-4 gap-8 text-center">
+      <div>
+        <h3>רגעים אמיתיים</h3>
+        <p>בלי לבקש מהילדים "לחייך למצלמה"</p>
+      </div>
+      <div>
+        <h3>חוויה רגועה</h3>
+        <p>מותאם לילדים ולהורים, בקצב שלכם</p>
+      </div>
+      <div>
+        <h3>לוקיישן מושלם</h3>
+        <p>טבע, ים, יער או חורף – נבחר יחד</p>
+      </div>
+      <div>
+        <h3>עריכה טבעית</h3>
+        <p>צבעים רכים ומראה על-זמני</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SESSION EXPLANATION -->
+  <section class="max-w-5xl mx-auto px-4 py-16 space-y-6">
+    <h2>איך נראה סשן צילומי משפחה?</h2>
+    <p>
+      בצילומי משפחה אין צורך "לדעת להצטלם".  
+      הילדים משחקים, זזים וצוחקים – ואני שם כדי לתפוס את הרגעים האמיתיים.
+    </p>
+    <p>
+      ניתן לבחור בין צילומי משפחה בטבע, בים, ביער או גם צילומי משפחה בחורף
+      עם אור רך וצבעים עמוקים. אני מדריכה בעדינות כשצריך,
+      אבל נותנת לרגעים לקרות מעצמם.
+    </p>
+  </section>
+
+  <!-- PREGNANCY -->
+  <section class="max-w-5xl mx-auto px-4 py-16 space-y-4">
+    <h2>צילומי משפחה והריון</h2>
+    <p>
+      ניתן לשלב גם צילומי משפחה והריון – סשן שמספר סיפור של משפחה שגדלה.
+      חוויה רגישה, מחוברת וטבעית, שמתאימה גם לילדים שמתרגשים ממה שבדרך.
+    </p>
+  </section>
+
+  <!-- PRICING BRIDGE -->
+  <section class="max-w-4xl mx-auto px-4 py-16 text-center">
+    <h2>צילומי משפחה – מחיר</h2>
+    <p>
+      מחיר צילומי משפחה משתנה לפי אורך הסשן, הלוקיישן וכמות התמונות.
+      כל החבילות והמחירים מופיעים בעמוד המחירון.
+    </p>
+    <a href="/pricing/family" class="underline font-medium mt-4 inline-block">
+      לצפייה במחירון צילומי משפחה
+    </a>
+  </section>
+
+  <!-- FAQ -->
+  <FAQs
+    title="שאלות נפוצות על צילומי משפחה"
+    columns={1}
+    items={[
+      {
+        title: 'איפה עושים צילומי משפחה בטבע?',
+        description:
+          'בים, ביער, בשדות פתוחים או בלוקיישן מותאם אישית – נבחר יחד מה הכי מתאים לכם.'
+      },
+      {
+        title: 'אפשר לעשות צילומי משפחה בחורף?',
+        description:
+          'בהחלט. צילומי משפחה בחורף יוצרים אווירה מיוחדת עם אור רך וצבעים עמוקים.'
+      },
+      {
+        title: 'כמה עולה סשן צילומי משפחה?',
+        description:
+          'מחיר צילומי משפחה מתחיל מ־600₪ ומשתנה בהתאם לחבילה וללוקיישן.'
+      }
+    ]}
+  />
+
+  <WhatssapCallToAction />
+</Layout>
