@@ -1,0 +1,45 @@
+---
+/**
+ * Breadcrumbs component
+ * Props:
+ * - items: Array<{ label: string; href?: string }>
+ */
+
+const { items = [] } = Astro.props;
+
+// Build JSON-LD schema
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": items.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.label,
+    ...(item.href
+      ? { item: new URL(item.href, Astro.site).href }
+      : {})
+  }))
+};
+---
+
+<nav aria-label="Breadcrumb" class="max-w-5xl mx-auto px-4 mt-6 mb-4 text-sm text-gray-500">
+  <ol class="flex flex-wrap gap-2 mx-5">
+    {items.map((item, index) => (
+      <li class="flex items-center gap-2">
+        {item.href ? (
+          <a href={item.href} class="hover:underline text-gray-600">
+            {item.label}
+          </a>
+        ) : (
+          <span class="text-accent">{item.label}</span>
+        )}
+
+        {index < items.length - 1 && <span>&gt;</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script type="application/ld+json">
+  {JSON.stringify(breadcrumbSchema)}
+</script>

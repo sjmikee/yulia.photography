@@ -3,6 +3,16 @@ import { getPermalink } from './utils/permalinks';
 export const headerData = {
   links: [
     {
+      text: 'סוגי צילומים',
+      href: getPermalink('/services'),
+      links: [
+        {
+          text: 'הריון',
+          href: getPermalink('/services/pregnancy-photography'),
+        },
+      ],
+    },
+    {
       text: 'גלריה',
       links: [
         {
@@ -62,6 +72,15 @@ export const headerData = {
 
 export const footerData = {
   links: [
+    {
+      title: 'סוגי הצילומים',
+      links: [
+        {
+          text: 'הריון',
+          href: getPermalink('/services/pregnancy-photography'),
+        },
+      ],
+    },
     {
       title: 'גלריה',
       links: [

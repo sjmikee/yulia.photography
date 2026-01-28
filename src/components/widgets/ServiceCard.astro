@@ -1,0 +1,66 @@
+---
+import Image from '~/components/common/Image.astro';
+
+const {
+  href,
+
+  title = await Astro.slots.render('title'),
+  subtitle = await Astro.slots.render('subtitle'),
+  content = await Astro.slots.render('content'),
+  image = await Astro.slots.render('image'),
+} = Astro.props;
+---
+
+<article class="group not-prose border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition">
+  {
+          image && (
+            <div class="w-full h-[70vh] lg:h-[85vh] object-cover m-auto max-w-5xl">
+              {typeof image === 'string' ? (
+                <Fragment set:html={image} />
+              ) : (
+                <Image
+                  class="w-full h-[70vh] lg:h-[85vh] object-cover"
+                  widths={[400, 768, 1024, 2040, 3840]}
+                  sizes="100vw"
+                  loading="eager"
+                  width={4123}
+                  height={6185}
+                  alt="Hero Image"
+                  fetchpriority="high"
+                  {...image}
+                />
+              )}
+            </div>
+          )
+        }
+
+  <div class="p-6">
+    {title && (
+      <h2 class="text-xl font-semibold mb-2">
+        <a href={href} class="hover:underline">
+          <Fragment set:html={title} />
+        </a>
+      </h2>
+    )}
+
+    {subtitle && (
+      <p class="text-gray-600 mb-4 leading-relaxed">
+        <Fragment set:html={subtitle} />
+      </p>
+    )}
+
+    {content && (
+      <div class="mb-4">
+        <Fragment set:html={content} />
+      </div>
+    )}
+
+    <a
+      href={href}
+      class="inline-block text-sm font-medium text-gray-800 hover:underline"
+      aria-label={typeof title === 'string' ? `מידע נוסף על ${title}` : 'מידע נוסף'}
+    >
+      למידע נוסף →
+    </a>
+  </div>
+</article>

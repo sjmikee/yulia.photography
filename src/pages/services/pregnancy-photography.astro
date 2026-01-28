@@ -1,0 +1,369 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import CallToAction from "~/components/widgets/CallToAction.astro"
+import RichSeo from '~/components/common/RichSeo.astro';
+import { Image } from "astro:assets";
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import image_1 from "~/assets/images/services/pregnancy-1.jpg";
+import image_2 from "~/assets/images/services/pregnancy-2.jpg";
+import image_3 from "~/assets/images/services/pregnancy-3.jpg";
+import image_4 from "~/assets/images/services/pregnancy-4.jpg";
+import image_5 from "~/assets/images/services/pregnancy-5.jpg";
+import image_6 from "~/assets/images/services/pregnancy-6.jpg";
+import image_7 from "~/assets/images/services/pregnancy-7.jpg";
+import image_8 from "~/assets/images/services/pregnancy-8.jpg";
+import image_9 from "~/assets/images/services/pregnancy-9.jpg";
+import image_10 from "~/assets/images/services/pregnancy-10.jpg";
+import osher_review from "~/assets/reviewers/osher_review.jpg";
+import zehava_review from "~/assets/reviewers/inbal_review.jpg";
+
+const richMetadata = {
+  title: "צילומי הריון בטבע, בים וצילומי הריון צנועים | יוליה קורנסקי",
+  description:
+    "צילומי הריון טבעיים ומרגשים בטבע, בים ובסטייל צנוע. חוויה רגועה לאמא ולבן/בת הזוג, עם מידע מלא על מחירים ואיזה שבוע הכי מתאים לצילומי הריון."
+};
+
+const metadata = {
+  title: "צילומי הריון | יוליה קורנסקי",
+  description:
+    "צילומי הריון בטבע, בים, צילומי הריון צנועים וזוגיים. ליווי מלא, אווירה רגועה ותמונות מרגשות שנשארות לשנים.",
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <RichSeo metadata={richMetadata} />
+
+  <!-- HERO -->
+  <Hero2
+    id="hero"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'דברי איתי בווטסאפ',
+        href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אנחנו%20מתעניינים%20בצילומי%20הריון',
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+        id: 'heroWhatsapp'
+      },
+      {
+        text: 'או בשיחת טלפון',
+        href: 'tel:+972525836940',
+        id: 'heroCall'
+      }
+    ]}
+    image={{
+      src: '~/assets/images/services/pregnancy-hero.jpg',
+      alt: 'צילומי הריון זוגיים בשקיעה '
+    }}
+  >
+    <Fragment slot="title">
+      <span class="text-accent dark:text-white highlight">צילומי הריון</span>
+      רגע עדין של נשיות וחיבור
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      יוליה קורנסקי - צלמת הריון במרכז הארץ.  
+      מתמחה בצילומי הריון בטבע, בים, צילומי הריון צנועים וצילומי הריון זוגיים.  
+      סשן רגוע, מחמיא ומותאם בדיוק לך.
+      <br /><br />
+      <strong>חבילות צילום החל מ־700₪</strong>
+    </Fragment>
+  </Hero2>
+
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'סוגי צילומים', href: '/services' },
+      { label: 'צילומי הריון' }
+    ]}
+  />
+
+  <!-- WHAT YOU GET -->
+  <section class="max-w-5xl mx-auto px-4 py-10">
+    <h2 class="text-center text-2xl md:text-3xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">מה תקבלי בסשן צילומי הריון</h2>
+
+    <div class="grid md:grid-cols-4 gap-8 text-center">
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_1}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="צילומי הריון בטבע"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <h3 class="font-extrabold">ליווי והכוונה</h3>
+            <p>גם אם זו הפעם הראשונה מול מצלמה</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_2}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="צילומי הריון בים"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <h3 class="font-extrabold">אווירה רגועה</h3>
+            <p>בלי לחץ, בקצב שמתאים לך</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_3}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="צילומי הריון בים עם אביזרים"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <h3 class="font-extrabold">בחירת לוקיישן</h3>
+            <p>טבע, ים או סגנון צנוע ואינטימי</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_4}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="צילומי הריון בשקיעה"
+                class="rounded-lg mb-3"
+                loading="eager"
+            />
+            <h3 class="font-extrabold">עריכה טבעית</h3>
+            <p>מחמיאה, רכה ועל-זמנית</p>
+        </div>
+    </div>
+  </section>
+
+  <!-- המלצות -->
+    <section class="bg-gray-50 py-16 px-6 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter" id="reviews">
+        <h2 class="text-3xl font-bold text-center mb-10">אל תקשיבו לי, תקשיבו להם</h2>
+        <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <blockquote class="bg-white p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p>
+                <span class="text-yellow-400 text-lg">★★★★★</span>
+                <br />
+                "יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!! מדוייקת, פרפקציוניסטית, דייקנית ואלופה אמיתית!! נהננו מאוד והתוצאה יצאה הרבה מעבר למה שציפינו! כל תמונה ברמה! מחכים כבר להיפגש שוב❤️"
+            </p>
+            <footer class="mt-4 font-bold flex items-center">
+              <Image src={osher_review} alt="Reviewer photo" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
+              <span class="mx-2">אושר</span>
+            </footer>
+          </blockquote>
+          <blockquote class="bg-white p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <p>
+                <span class="text-yellow-400 text-lg">★★★★★</span>
+                <br />
+                "וווואוווווו
+                הבחירה הכי טובה שעשינו!!!
+                כבר בשיחת טלפון ידעתי שאותך אני סוגרת!
+                מעבר לתמונות מטורפות החוויה הייתה לא פחות חשובה והייתה מעבר לציפיות!
+                את מוכשרת, זורמת, מלא אנרגיות טובות ואיזה כיף לנו!
+                לא לחשוב פעמיים ולסגור את יוליה!!!!!!!!!!!
+                "
+            </p>
+            <footer class="mt-4 font-bold flex items-center">
+              <Image src={zehava_review} alt="Reviewer photo" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
+              <span class="mx-2">זהבה</span>
+            </footer>
+          </blockquote>
+        </div>
+    </section>
+
+    <CallToAction
+    id="bottomCallToAction"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'ווטסאפ',
+        href: 'https://wa.me/972525836940',
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+      },
+    ]}
+  >
+    <Fragment slot="title">
+      מוכנים לשיחה?
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      תדברו איתי ואעזור לכם לקבל את ההחלטה הנכונה
+    </Fragment>
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+    </Fragment>
+    </CallToAction>
+
+  <section class="max-w-5xl mx-auto px-4 py-10">
+  <div class="grid md:grid-cols-1 gap-8 text-center">
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_5}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על דק ליד המים בגן היפני חולון"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <h2 class="font-extrabold text-accent py-5">איך נראה סשן צילומי הריון?</h2>
+            <p>
+                הרבה נשים מגיעות אלי עם חשש שלא ידעו איך להצטלם - וזה טבעי לגמרי.
+            </p>
+            <p>
+            סשן צילומי הריון הוא זמן לעצור רגע ולהיות פשוט את.
+            בלי לחץ, בלי למהר ובלי צורך לדעת איך “להצטלם”.
+            אני מלווה אותך בעדינות, מראה פוזות מחמיאות,
+            ונותנת מקום לרגעים טבעיים לקרות.
+            </p>
+            <p>
+            הצילום מתבצע בקצב נעים, עם הקשבה למה שנוח לך באותו יום.
+            המטרה היא שתצאי מהסשן עם תחושה טובה - והתמונות כבר יספרו את הסיפור.
+            </p>
+        </div>
+
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_6}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על דק ליד המים בגן היפני חולון"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <h2 class="font-extrabold text-accent py-5">צילומי הריון בטבע ובים - איך בוחרים לוקיישן?</h2>
+            <p>
+            אחת השאלות הראשונות שאני נשאלת היא איפה הכי כדאי לעשות צילומי הריון.
+            צילומי הריון בטבע מתאימים למי שאוהבת מרחב פתוח,
+            צבעים רכים ותחושה שקטה ולא מבוימת.
+            </p>
+            <p>
+            צילומי הריון בים יוצרים אווירה קלילה ומשוחררת יותר,
+            במיוחד בשעות השקיעה כשהאור רך ומחמיא.
+            נבחר יחד את המקום לפי העונה, מזג האוויר והאופי שלך.
+            </p>
+        </div>
+
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_7}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על דק ליד המים בגן היפני חולון"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <h2 class="font-extrabold text-accent py-5">צילומי הריון - באיזה שבוע הכי כדאי?</h2>
+            <p>
+            בדרך כלל הזמן המומלץ לצילומי הריון הוא בין שבוע 28 לשבוע 34 -
+            שלב שבו הבטן כבר בולטת ויפה, אבל הגוף עדיין מרגיש נוח יחסית.
+            עם זאת, כל הריון שונה, ולכן ההחלטה תמיד מותאמת אלייך.
+            </p>
+        </div>
+
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_9}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על דק ליד המים בגן היפני חולון"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <h2 class="font-extrabold text-accent py-5">איך מתכוננים לצילומי הריון?</h2>
+            <p>
+            אין צורך בהכנות מיוחדות או ניסיון קודם.
+            אחרי קביעת הסשן אשלח לך הנחיות ברורות לגבי לבוש,
+            צבעים ומה כדאי להביא - בצורה פשוטה ולא מלחיצה.
+            </p>
+            <p>
+            לרוב מומלץ לבחור בגדים נוחים ובדים רכים,
+            כאלה שגורמים לך להרגיש טוב עם עצמך.
+            ההכנה משתנה לפי סוג הצילומים - צילומי הריון בטבע,
+            צילומי הריון זוגיים או צילומי הריון צנועים.
+            </p>
+        </div>
+
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_8}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על דק ליד המים בגן היפני חולון"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <h2 class="font-extrabold text-accent py-5">צילומי הריון זוגיים</h2>
+            <p>
+            צילומי הריון זוגיים מתאימים למי שרוצה לשלב גם את בן או בת הזוג,
+            בלי להפוך את הסשן למבויים או מאולץ.
+            הצילום מתמקד בקשר, במגע הקטן ובתחושת הציפייה המשותפת.
+            </p>
+        </div>
+
+        <div class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter">
+            <Image
+                src={image_10}
+                widths={[400, 768, 1024, 2040]}
+                sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+                alt="זוג יושב על דק ליד המים בגן היפני חולון"
+                class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
+                loading="eager"
+            />
+            <h2 class="font-extrabold text-accent py-5">צילומי הריון צנועים - למי זה מתאים?</h2>
+            <p>
+            צילומי הריון צנועים מתאימים לנשים שמעדיפות להצטלם בלבוש מלא,
+            באווירה רגועה ומכבדת, בלי חשיפה ובלי צורך לצאת מאזור הנוחות.
+            </p>
+            <p>
+            הסשן יכול להתקיים בטבע או בלוקיישן שקט,
+            תוך התאמה מלאה לסגנון האישי ולתחושה שלך.
+            </p>
+        </div>
+    </div>
+    </section>
+
+  <!-- PRICING BRIDGE -->
+  <section class="max-w-4xl mx-auto px-4 py-16 text-center">
+    <h2><strong>צילומי הריון - מחיר</strong></h2>
+    <p>
+      מחירי צילומי הריון משתנים בהתאם לאורך הסשן, כמות התמונות שאת רוצה לקבל
+      והאם מדובר בצילומי הריון זוגיים או צילומי הריון עם ילדים.
+    </p>
+    <a href="/pricing/pregnancy" class="underline font-medium mt-4 inline-block">
+      לצפייה במחירון צילומי הריון
+    </a>
+  </section>
+
+  <!-- FAQ -->
+  <FAQs
+    title="שאלות נפוצות על צילומי הריון"
+    columns={1}
+    items={[
+      {
+        title: 'באיזה שבוע עושים צילומי הריון?',
+        description:
+          'ההמלצה היא בין שבוע 28 ל - 34, אך ניתן להתאים לפי התחושה וההריון.'
+      },
+      {
+        title: 'האם את עושה גם צילומי הריון צנועים?',
+        description:
+          'בוודאי. ניתן לבצע צילומי הריון צנועים בלבוש מלא ובסטייל עדין ומכבד.'
+      },
+      {
+        title: 'איפה עושים צילומי הריון בטבע או בים?',
+        description:
+          'בחופים, שדות פתוחים, יערות או לוקיישן שקט ואינטימי - נבחר יחד.'
+      },
+      {
+        title: 'כמה עולה סשן צילומי הריון?',
+        description:
+          'מחיר צילומי הריון אצלי מתחיל מ - 700₪ ומשתנה בהתאם לחבילה.'
+      }
+    ]}
+  />
+
+  <WhatssapCallToAction />
+</Layout>
