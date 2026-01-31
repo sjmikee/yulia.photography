@@ -1,0 +1,164 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceCard from '~/components/widgets/ServiceCard.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+
+const richMetadata = {
+  title: 'מחירי צילומים - חבילות צילום הריון, משפחה, זוגיות, בוק אישי וילדים - יוליה קורנסקי',
+  description: "ריכוז המחירונים לסוגי הצילומי שאני מציעה, צילומי הריון, משפחה, זוגיות, בוק אישי וילדים - יוליה קורנסקי"
+};
+
+const metadata = {
+  title: 'מחירי צילומים - חבילות צילום הריון, משפחה, זוגיות, בוק אישי וילדים - יוליה קורנסקי',
+  description: "ריכוז המחירונים לסוגי הצילומי שאני מציעה, צילומי הריון, משפחה, זוגיות, בוק אישי וילדים - יוליה קורנסקי",
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <RichSeo metadata={richMetadata} />
+
+  <!-- Hero -->
+  <section class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">
+    <h1 class="text-3xl md:text-4xl font-semibold mb-4">
+      מחירי הצילומים
+    </h1>
+    <p class="text-gray-600 leading-relaxed">
+      מחפשים להבין כמה עולה סשן צילום ומה מתאים לכם?
+      כאן ריכזתי את כל סוגי הצילומים והקישורים לעמודי המחירון של כל אחד - בצורה ברורה ומסודרת.
+    </p>
+  </section>
+
+    <HeroText
+    tagline="צילום זוגי אינטימי, חושני ומלא רגש"
+    title="מחירי הצילומים"
+    subtitle="סשן צילום זוגי באווירה אינטימית ובטוחה, שמאפשרת לכם להתקרב, להרגיש ולהיות אתם - ברכות, בלי לחץ ובלי פוזות."
+    content=" מחפשים להבין כמה עולה סשן צילום ומה מתאים לכם? כאן ריכזתי את כל סוגי הצילומים והקישורים לעמודי המחירון של כל אחד - בצורה ברורה ומסודרת."
+  />
+
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'מחירון' }
+    ]}
+  />
+
+  <!-- Services list -->
+  <section class="max-w-6xl mx-auto px-4 pb-20 py-10">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <ServiceCard 
+            href="/pricing/pregnancy"
+            image={{
+                src: '~/assets/images/pricing/pregnancy_pricing.jpg',
+                alt: 'צילומי הריון צנועים בשקיעה'
+            }}
+        >
+
+        <Fragment slot="title">
+          מחירי צילומי הריון - חבילות צילום הריון מקצועיים
+        </Fragment>
+
+        <Fragment slot="subtitle">
+          מחירים לחבילות צילום הריון - כולל צילומי הריון בטבע, בים, צילומי הריון זוגיים
+          ואפשרות לצילומי הריון צנועים.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard 
+            href="/pricing/couples"
+            image={{
+                src: '~/assets/images/pricing/couples_pricing.jpg',
+                alt: 'צילומי זוגיות אומנותיים בקיסריה'
+            }}
+        >
+
+        <Fragment slot="title">
+          מחירי צילומי זוגיות - חבילות צילום זוגי בטבע
+        </Fragment>
+
+        <Fragment slot="subtitle">
+          מחירי חבילות צילום זוגיות - צילומים בטבע או בים,
+          בהתאמה לאופי הקשר ולחוויה זוגית מחמיאה.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard 
+            href="/pricing/couples_intimate"
+            image={{
+                src: '~/assets/images/pricing/couples_intimate_pricing.jpg',
+                alt: 'צילומי זוגיות אינטימיים וחושניים זוג עומד ליד קיר לבנים בקיסריה'
+            }}
+        >
+
+        <Fragment slot="title">
+          מחירי צילומי זוגיות אינטימיים - חבילות צילום זוגי חושני ואישי
+        </Fragment>
+
+        <Fragment slot="subtitle">
+          חבילות צילום זוגי אינטימי בטבע או בסטודיו - צילום אישי, רגוע ומכבד,
+          עם דגש על חיבור ותחושת נוחות.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard 
+            href="/pricing/feminine"
+            image={{
+                src: '~/assets/images/pricing/feminine_pricing.jpg',
+                alt: 'צילומי נשיות בחורה עומדת בחדר חשוך בקיסריה'
+            }}
+        >
+
+        <Fragment slot="title">
+          מחירי צילומי נשיות - חבילות צילום נשי טבעי ומעצים
+        </Fragment>
+
+        <Fragment slot="subtitle">
+          מחירי חבילות צילום נשיות בטבע או בים - חוויה מחזקת,
+          מחמיאה ומרגשת לנשים.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard 
+            href="/pricing/first_year"
+            image={{
+                src: '~/assets/images/pricing/first_year_pricing.jpg',
+                alt: 'צילומי גיל שנה ילדה עם תפוחים אדומים'
+            }}
+        >
+
+        <Fragment slot="title">
+          מחירי צילומי גיל שנה - חבילות צילום לשלב הראשון
+        </Fragment>
+
+        <Fragment slot="subtitle">
+          חבילות צילום גיל שנה - תיעוד טבעי ומרגש של השלב הראשון והמיוחד
+          בחיי הילד והמשפחה.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard 
+            href="/pricing/personal"
+            image={{
+                src: '~/assets/images/pricing/personal_pricing.jpg',
+                alt: 'צילומי בוק אישי גבר עומד ליד עצים'
+            }}
+        >
+
+        <Fragment slot="title">
+          מחירי צילומי בוק אישי - חבילות צילום אישיות ומקצועיות
+        </Fragment>
+
+        <Fragment slot="subtitle">
+          חבילות צילום בוק אישי - יצירת תמונות מקצועיות וייחודיות,
+          בטבע, באווירה נינוחה ומחמיאה.
+        </Fragment>
+      </ServiceCard>
+    </div>
+  </section>
+
+<WhatssapCallToAction />
+
+</Layout>

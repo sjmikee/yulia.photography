@@ -27,6 +27,7 @@ export const headerData = {
     },
     {
       text: 'מחירון',
+      href: getPermalink('/pricing'),
       links: [
         {
           text: 'זוגיות',

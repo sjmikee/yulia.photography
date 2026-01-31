@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 const richMetadata = {
   title: "מחירון צילומי משפחה | צילום משפחתי לייף סטייל - יוליה קורנסקי",
@@ -27,6 +28,14 @@ const metadata = {
     title="מחירון צילומי משפחה"
     subtitle="צילומי משפחה טבעיים ולייף סטייל, באווירה רגועה וכיפית שמתאימה גם לילדים."
     content="צילומי משפחה נועדו ללכוד חיבור, צחוק ורגעים קטנים של יחד. הסשן מותאם למשפחות עד זוג + שני ילדים, כל ילד נוסף בתוספת של 100 ₪."
+  />
+
+    <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'מחירון', href: '/pricing' },
+      { label: 'מחירון צילומי משפחה'}
+    ]}
   />
 
   <!-- Pricing Widget ******************* -->

@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 const richMetadata = {
   title: "מחירון צילומי גיל שנה - יוליה קורנסקי | First Birthday Photoshoot",
@@ -27,6 +28,14 @@ const metadata = {
     title="מחירון צילומי גיל שנה"
     subtitle="צילומי גיל שנה באווירה שמחה, רגועה ומותאמת לפעוטות - בלי לחץ ועם הרבה סבלנות."
     content="צילומי גיל שנה נועדו להנציח שלב מתוק ומרגש במיוחד. הסשן מותאם לקצב של הילד או הילדה, וכולל רגעים טבעיים, משחק, חיוכים וחיבוקים - ליצירת זיכרונות אמיתיים מהשנה הראשונה."
+  />
+
+    <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'מחירון', href: '/pricing' },
+      { label: 'מחירון צילומי גיל שנה'}
+    ]}
   />
 
   <!-- Pricing Widget ******************* -->

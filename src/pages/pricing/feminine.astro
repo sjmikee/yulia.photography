@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 const richMetadata = {
   title: "מחירון צילומי נשיות מעצימים - יוליה קורנסקי | Feminine Photoshoot",
@@ -29,6 +30,13 @@ const metadata = {
     content="צילומי נשיות הם חוויה אישית ומעצימה, המשלבת רגש, נוכחות ואסתטיקה אומנותית. הסשן מתקיים באווירה רגועה ומכילה, בקצב שלך, עם הכוונה עדינה שמדגישה יופי טבעי, עוצמה ורוך."
   />
 
+    <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'מחירון', href: '/pricing' },
+      { label: 'מחירון צילומי נשיות'}
+    ]}
+  />
   <!-- Pricing Widget ******************* -->
 
   <Prices

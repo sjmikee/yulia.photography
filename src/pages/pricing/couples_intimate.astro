@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 const richMetadata = {
   title: "מחירון צילומי זוגיות אינטימיים לייף סטייל - יוליה קורנסקי",
@@ -27,6 +28,14 @@ const metadata = {
     title="מחירון צילומי זוגיות אינטימיים"
     subtitle="סשן צילום זוגי באווירה אינטימית ובטוחה, שמאפשרת לכם להתקרב, להרגיש ולהיות אתם - ברכות, בלי לחץ ובלי פוזות."
     content="צילומי זוגיות אינטימיים נועדו ללכוד מבטים, מגעים ורגעים קטנים של קרבה. הסשן מתקיים בקצב שלכם, בלוקיישן שנעים לכם - בטבע, במקום אורבני או במרחב פרטי לבחירתכם - ויוצר חוויה זוגית עמוקה ותמונות שמרגישות אמיתיות."
+  />
+
+    <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'מחירון', href: '/pricing' },
+      { label: 'מחירון צילומי זוגיות אינטימיים'}
+    ]}
   />
 
   <!-- Pricing Widget ******************* -->

@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 const richMetadata = {
   title: "מחירון צילומי בוק אישי - יוליה קורנסקי ",
@@ -27,6 +28,14 @@ const metadata = {
     title="מחירון צילומי בוק אישי"
     subtitle="בוק אישי לעצמך או כמתנה מרגשת - חוויה אישית עם תמונות טבעיות, מחמיאות ומלאות אופי."
     content="* אני מאמינה שלכל אחד מגיעה חויה ואפשרות ליצור זיכרונות מהרגעים החשובים כל כך ולכן משתדלת לשמור על מחיר נגיש ללא פשרות באיכות"
+  />
+
+    <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'מחירון', href: '/pricing' },
+      { label: 'מחירון בוק אישי'}
+    ]}
   />
 
   <!-- Pricing Widget ******************* -->

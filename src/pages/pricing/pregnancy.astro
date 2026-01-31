@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 const richMetadata = {
   title: "מחירון צילומי הריון | יוליה קורנסקי",
@@ -28,6 +29,14 @@ const metadata = {
     title="מחירון צילומי הריון"
     subtitle="צילומי הריון באווירה רגועה ומכילה, שמאפשרת לך להרגיש יפה, מחוברת ובטוחה."
     content="צילומי הריון נועדו להנציח תקופה חד-פעמית ומרגשת. הסשן מתקיים בקצב שמתאים לך, בצילומי חוץ או בסטודיו (בתוספת תשלום), עם ליווי והכוונה עדינה ליצירת תמונות נשיות, רכות ומלאות רגש."
+  />
+
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'מחירון', href: '/pricing' },
+      { label: 'מחירון צילומי הריון'}
+    ]}
   />
 
   <!-- Pricing Widget ******************* -->
