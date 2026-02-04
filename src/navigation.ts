@@ -10,6 +10,10 @@ export const headerData = {
           text: 'הריון',
           href: getPermalink('/services/pregnancy-photography'),
         },
+        {
+          text: 'בוק אישי',
+          href: getPermalink('/services/personal-photography'),
+        },
       ],
     },
     {
@@ -79,6 +83,10 @@ export const footerData = {
         {
           text: 'הריון',
           href: getPermalink('/services/pregnancy-photography'),
+        },
+        {
+          text: 'בוק אישי',
+          href: getPermalink('/services/personal-photography'),
         },
       ],
     },
