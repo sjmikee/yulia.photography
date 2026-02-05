@@ -15,14 +15,14 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 
 <link
   rel="preload"
-  href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css"
+  href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
 />
 <noscript>
   <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css"
+    href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.min.css"
   />
 </noscript>
 
@@ -42,6 +42,7 @@ const imagePaths = Object.keys(images).filter((imagePath) => {
 				<a
 					href={optimizedImage.src}
 					rel="nofollow"
+					aria-label="Open image in gallery"
 					data-pswp-width={optimizedImage.attributes.width}
 					data-pswp-height={optimizedImage.attributes.height}
 					target="_blank"

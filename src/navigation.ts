@@ -61,7 +61,7 @@ export const headerData = {
     },
     {
       text: 'טיפים',
-      href: getPermalink('/blog'),
+      href: getPermalink('/articles'),
     },
     {
       text: 'קצת עלי',
@@ -110,7 +110,7 @@ export const footerData = {
     },
     {
       links: [
-        { text: 'טיפים', href: getPermalink('/blog') },
+        { text: 'טיפים', href: getPermalink('/articles') },
         { text: 'קצת עלי', href: getPermalink('/about') },
         { text: 'צור קשר', href: getPermalink('/contact') },
       ],
