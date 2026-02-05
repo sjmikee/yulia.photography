@@ -11,7 +11,7 @@ metadata:
   title:
     default: "יוליה קורנסקי | צילומי זוגיות | צילומי נשיות | צילומי ילדים | צילומי הריון"
     template: '%s — יוליה קורנסקי'
-  description: "צילומי משפחה, צילומי זוגיות, צילומי הריון, בוק אישי – בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית"
+  description: "צילומי משפחה, צילומי זוגיות, צילומי הריון, בוק אישי - בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית"
   robots:
     index: true
     follow: true
@@ -46,19 +46,19 @@ apps:
       isEnabled: true
       pathname: 'blog' # Blog main path, you can change this to "articles" (/articles)
       robots:
-        index: false
+        index: true
 
     category:
       isEnabled: true
       pathname: 'category' # Category main path /category/some-category, you can change this to "group" (/group/some-category)
       robots:
-        index: false
+        index: true
 
     tag:
       isEnabled: true
       pathname: 'tag' # Tag main path /tag/some-tag, you can change this to "topics" (/topics/some-category)
       robots:
-        index: false
+        index: true
 
     isRelatedPostsEnabled: true
     relatedPostsCount: 4

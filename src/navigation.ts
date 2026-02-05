@@ -39,7 +39,7 @@ export const headerData = {
         },
         {
           text: 'זוגיות אינטימי',
-          href: getPermalink('/pricing/couples_intimate'),
+          href: getPermalink('/pricing/couples-intimate'),
         },
         {
           text: 'נשיות',
@@ -55,7 +55,7 @@ export const headerData = {
         },
         {
           text: 'גיל שנה',
-          href: getPermalink('/pricing/first_year'),
+          href: getPermalink('/pricing/first-year'),
         },
       ],
     },
@@ -101,11 +101,11 @@ export const footerData = {
       title: 'מחירון',
       links: [
         { text: 'זוגיות', href: getPermalink('/pricing/couples') },
-        { text: 'זוגיות אינטימי', href: getPermalink('/pricing/couples_intimate') },
+        { text: 'זוגיות אינטימי', href: getPermalink('/pricing/couples-intimate') },
         { text: 'נשיות', href: getPermalink('/pricing/feminine') },
         { text: 'הריון', href: getPermalink('/pricing/pregnancy') },
         { text: 'בוק אישי', href: getPermalink('/pricing/personal') },
-        { text: 'גיל שנה', href: getPermalink('/pricing/first_year') },
+        { text: 'גיל שנה', href: getPermalink('/pricing/first-year') },
       ],
     },
     {

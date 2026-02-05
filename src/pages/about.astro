@@ -3,15 +3,16 @@ import Hero from '~/components/widgets/Hero.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
 
 const richMetadata = {
-  title: "יוליה קורנסקי - קצת עלי | צילומי זוגיות | צילומי נשיות | צילומי ילדים | צילומי הריון",
+  title: "קצת עלי | צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
   description: "מחפשים צלמת שמביאה שילוב של מקצועיות וחוויה אישית? בואו להכיר אותי ואת הדרך שלי לצילומי משפחה, זוגיות ופורטרטים אישיים. יחד ניצור זיכרון מיוחד רק בשבילכם",
   ignoreTitleTemplate: true,
 }
 
 const metadata = {
-  title: "יוליה קורנסקי - קצת עלי | צילומי זוגיות | צילומי נשיות | צילומי ילדים | צילומי הריון",
+  title: "קצת עלי | צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
   description: "מחפשים צלמת שמביאה שילוב של מקצועיות וחוויה אישית? בואו להכיר אותי ואת הדרך שלי לצילומי משפחה, זוגיות ופורטרטים אישיים. יחד ניצור זיכרון מיוחד רק בשבילכם",
   ignoreTitleTemplate: true,
 };
@@ -20,6 +21,8 @@ const metadata = {
 <Layout metadata={metadata}>
   <RichSeo metadata={richMetadata} />
   <!-- Hero Widget ******************* -->
+
+  <HeroText title="בואו נשבור דיסטנס" />
 
   <Hero
     tagline="We do sh*t differently here"
