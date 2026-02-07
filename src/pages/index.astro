@@ -6,14 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import StaticHero from '~/components/widgets/StaticHero.astro';
 import ContentGrid from '~/components/widgets/ContentGrid.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
 import Reviews from '~/components/widgets/reviews.astro';
-
-const richMetadata = {
-  title: "צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
-  description: "צילומי משפחה, צילומי זוגיות, צילומי נשיות, צילומי גיל שנה, צילומי הריון וצילומי בוק אישי - בטבע קסום. חוויית צילום טבעית ומרגשת שתשאיר זיכרונות לכל החיים. צרו קשר לקביעת סשן צילום מותאם אישית",
-  ignoreTitleTemplate: true,
-}
 
 const metadata = {
   title: "צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
@@ -22,8 +15,7 @@ const metadata = {
 };
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata}>
   <!-- Hero Widget ******************* -->
   <StaticHero />
   

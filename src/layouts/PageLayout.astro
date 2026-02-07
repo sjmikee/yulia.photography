@@ -7,18 +7,20 @@ import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
 import { headerData, footerData } from '~/navigation';
 
-import type { MetaData } from '~/types';
+import type { MetaData, BreadcrumbType } from '~/types';
 
 export interface Props {
   metadata?: MetaData;
+  richMetadata?: MetaData;
+  breadcrumbs?: BreadcrumbType[];
 }
 
-const { metadata } = Astro.props;
+const { metadata, richMetadata, breadcrumbs } = Astro.props;
 const { pathname } = new URL(Astro.request.url);
 const isContactPage = pathname === '/contact';
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} richMetadata={richMetadata} breadcrumbs={breadcrumbs}>
   <slot name="header">
     <Header {...headerData} isSticky showToggleTheme showInstagramLink />
   </slot>

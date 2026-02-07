@@ -1,15 +1,8 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import ServiceCard from '~/components/widgets/ServiceCard.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
-const richMetadata = {
-  title: "סוגי הצילומים שאני עושה - הריון|משפחה|זוגיות|נשיות | יוליה קורנסקי",
-  description:
-    "צילומי הריון בטבע, בים, או צילומי הריון צנועים וזוגיים. ליווי מלא, אווירה רגועה ותמונות מרגשות שנשארות לשנים.",
-    ignoreTitleTemplate: true,
-};
 
 const metadata = {
   title: "סוגי הצילומים שאני עושה - הריון|משפחה|זוגיות|נשיות | יוליה קורנסקי",
@@ -17,10 +10,13 @@ const metadata = {
     "צילומי הריון בטבע, בים, או צילומי הריון צנועים וזוגיים. ליווי מלא, אווירה רגועה ותמונות מרגשות שנשארות לשנים.",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/services", name: "סוגי צילומים"},
+];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
 
   <!-- Hero -->
   <section class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">

@@ -2,27 +2,30 @@
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import Features2 from '~/components/widgets/Features2.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
-const richMetadata = {
-  title: "צור קשר | צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
-  description: "מעוניינים בצילומי זוגיות, משפחה או פורטרט אישי? צרו קשר עוד היום ותזמינו חוויית צילום מקצועית ומרגשת. זמינות גבוהה ויחס אישי לכל זוג או משפחה.",
-  ignoreTitleTemplate: true,
-}
 
 const metadata = {
   title: "צור קשר | צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
   description: "מעוניינים בצילומי זוגיות, משפחה או פורטרט אישי? צרו קשר עוד היום ותזמינו חוויית צילום מקצועית ומרגשת. זמינות גבוהה ויחס אישי לכל זוג או משפחה.",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/contact", name: "צור קשר"}
+  ];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
   <!-- HeroText Widget ******************* -->
 
   <HeroText tagline="אני לא נושכת (רק מצלמת)" title="בואו נדבר" />
-
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'צור קשר' },
+    ]}
+  />
   <!-- Features2 Widget ************** -->
 
   <Features2

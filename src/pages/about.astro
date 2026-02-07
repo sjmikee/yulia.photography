@@ -2,27 +2,31 @@
 import Hero from '~/components/widgets/Hero.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
-const richMetadata = {
-  title: "קצת עלי | צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
-  description: "מחפשים צלמת שמביאה שילוב של מקצועיות וחוויה אישית? בואו להכיר אותי ואת הדרך שלי לצילומי משפחה, זוגיות ופורטרטים אישיים. יחד ניצור זיכרון מיוחד רק בשבילכם",
-  ignoreTitleTemplate: true,
-}
 
 const metadata = {
   title: "קצת עלי | צילומי משפחה | זוגיות | נשיות | ילדים | הריון - יוליה קורנסקי",
   description: "מחפשים צלמת שמביאה שילוב של מקצועיות וחוויה אישית? בואו להכיר אותי ואת הדרך שלי לצילומי משפחה, זוגיות ופורטרטים אישיים. יחד ניצור זיכרון מיוחד רק בשבילכם",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/about", name: "קצת עלי"}
+  ];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
   <!-- Hero Widget ******************* -->
 
   <HeroText title="בואו נשבור דיסטנס" />
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'קצת עלי' },
+    ]}
+  />
 
   <Hero
     tagline="We do sh*t differently here"

@@ -1,15 +1,9 @@
 ---
-import RichSeo from "~/components/common/RichSeo.astro";
 import Layout from "~/layouts/Layout.astro";
 import LandingHeader from "~/components/widgets/LandingHeader.astro";
 import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
 import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
 
-const richMetadata = {
-  title: "יוליה קורנסקי - חוזה צילום",
-  description: "חתימה על חוזה צילומים עם יוליה קורנסקי - פשוט, מאובטח ונוח אונליין",
-  ignoreTitleTemplate: true,
-};
 
 const metadata = {
   title: "יוליה קורנסקי | חוזה צילום",
@@ -18,9 +12,8 @@ const metadata = {
 };
 ---
 
-<Layout metadata={metadata}>
+<Layout metadata={metadata} richMetadata={metadata}>
   <meta name="robots" content="noindex" />
-  <RichSeo metadata={richMetadata} />
   <LandingHeader isSticky />
   <ScrollToTopButton />
 

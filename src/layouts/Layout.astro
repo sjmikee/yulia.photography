@@ -8,6 +8,7 @@ import Favicons from '~/components/Favicons.astro';
 import CustomStyles from '~/components/CustomStyles.astro';
 import ApplyColorMode from '~/components/common/ApplyColorMode.astro';
 import Metadata from '~/components/common/Metadata.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
 import GtmHead from '~/components/common/GTMHead.astro';
@@ -17,13 +18,15 @@ import { Font } from 'astro:assets';
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
 
-import type { MetaData as MetaDataType } from '~/types';
+import type { MetaData, MetaData as MetaDataType, BreadcrumbType } from '~/types';
 
 export interface Props {
   metadata?: MetaDataType;
+  richMetadata?: MetaData;
+  breadcrumbs?: BreadcrumbType[];
 }
 
-const { metadata = {} } = Astro.props;
+const { metadata = {}, richMetadata = {}, breadcrumbs = [] } = Astro.props;
 const { language, textDirection } = I18N;
 ---
 
@@ -37,6 +40,7 @@ const { language, textDirection } = I18N;
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} />
+    <RichSeo metadata={richMetadata} breadcrumbs={breadcrumbs} />
     <SiteVerification />
 
     <!-- Comment the line below to disable View Transitions -->

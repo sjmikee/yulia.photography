@@ -4,7 +4,6 @@ import Hero2 from '~/components/widgets/Hero2.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import CallToAction from "~/components/widgets/CallToAction.astro"
-import RichSeo from '~/components/common/RichSeo.astro';
 import { Image } from "astro:assets";
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import image_1 from "~/assets/images/services/pregnancy-1.jpg";
@@ -20,21 +19,20 @@ import image_10 from "~/assets/images/services/pregnancy-10.jpg";
 import osher_review from "~/assets/reviewers/osher_review.jpg";
 import zehava_review from "~/assets/reviewers/inbal_review.jpg";
 
-const richMetadata = {
-  title: "צילומי הריון בטבע, בים וצילומי הריון צנועים | יוליה קורנסקי",
-  description: "צילומי הריון בטבע, בים, צילומי הריון צנועים וזוגיים. ליווי מלא, אווירה רגועה ותמונות מרגשות שנשארות לשנים.",
-    ignoreTitleTemplate: true,
-};
 
 const metadata = {
   title: "צילומי הריון בטבע, בים וצילומי הריון צנועים | יוליה קורנסקי",
   description: "צילומי הריון בטבע, בים, צילומי הריון צנועים וזוגיים. ליווי מלא, אווירה רגועה ותמונות מרגשות שנשארות לשנים.",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/services", name: "סוגי צילומים"},
+    { url: "/services/pregnancy-photography", name: "צילומי הריון"},
+];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
 
   <!-- HERO -->
   <Hero2

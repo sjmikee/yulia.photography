@@ -4,7 +4,6 @@ import Hero2 from '~/components/widgets/Hero2.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import CallToAction from "~/components/widgets/CallToAction.astro"
-import RichSeo from '~/components/common/RichSeo.astro';
 import { Image } from "astro:assets";
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import image_1 from "~/assets/images/services/personal-1.jpg";
@@ -20,21 +19,20 @@ import image_10 from "~/assets/images/services/personal-10.jpg";
 import osher_review from "~/assets/reviewers/osher_review.jpg";
 import zehava_review from "~/assets/reviewers/inbal_review.jpg";
 
-const richMetadata = {
-  title: "צילום אישי מקצועי, בוק אישי ופורטרטים | יוליה קורנסקי",
-  description: "צילום אישי מקצועי, בוק אישי ופורטרטים לנשים וגברים. סשן רגוע, מחמיא ומותאם אישית בסטודיו או בלוקיישן חוץ.",
-  ignoreTitleTemplate: true,
-};
 
 const metadata = {
   title: "צילום אישי מקצועי, בוק אישי ופורטרטים | יוליה קורנסקי",
   description: "צילום אישי מקצועי, בוק אישי ופורטרטים לנשים וגברים. סשן רגוע, מחמיא ומותאם אישית בסטודיו או בלוקיישן חוץ.",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/services", name: "סוגי צילומים"},
+    { url: "/services/personal-photography", name: "בוק אישי"},
+];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
 
   <!-- HERO -->
   <Hero2

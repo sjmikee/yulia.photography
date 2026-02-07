@@ -49,6 +49,11 @@ export interface Taxonomy {
   title: string;
 }
 
+export interface BreadcrumbType {
+  url: string;
+  name: string;
+}
+
 export interface MetaData {
   title?: string;
   ignoreTitleTemplate?: boolean;
