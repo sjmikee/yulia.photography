@@ -11,5 +11,17 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/pricing/first_year",
+      "destination": "/pricing/first-year",
+      "permanent": true
+    },
+    {
+      "source": "/pricing/couples_intimate",
+      "destination": "/pricing/couples-intimate",
+      "permanent": true
+    }
   ]
 }
