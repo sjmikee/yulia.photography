@@ -1,26 +1,23 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import ServiceCard from '~/components/widgets/ServiceCard.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 
-const richMetadata = {
-  title: 'מחירי צילומים - חבילות צילום הריון, משפחה, זוגיות, בוק אישי וילדים',
-  description: "ריכוז המחירונים לסוגי הצילומי שאני מציעה, צילומי הריון, משפחה, זוגיות, בוק אישי וילדים - יוליה קורנסקי",
-  ignoreTitleTemplate: true,
-};
 
 const metadata = {
   title: 'מחירי צילומים - חבילות צילום הריון, משפחה, זוגיות, בוק אישי וילדים',
   description: "ריכוז המחירונים לסוגי הצילומי שאני מציעה, צילומי הריון, משפחה, זוגיות, בוק אישי וילדים - יוליה קורנסקי",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/pricing", name: "מחירון"},
+];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
 
     <HeroText
     tagline="ריכוז של כל עמודי המחירונים לסוגי הצילום השונים"

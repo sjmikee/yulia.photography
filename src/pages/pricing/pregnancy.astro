@@ -5,24 +5,22 @@ import Prices from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
-const richMetadata = {
-  title: "מחירון צילומי הריון | יוליה קורנסקי",
-  description: "מחירון צילומי הריון ולייף סטייל. חבילות צילום הריון באווירה רגועה ומחמיאה, עם דגש על נשיות, רוך וחיבור לעצמך.",
-  ignoreTitleTemplate: true,
-}
 
 const metadata = {
   title: "מחירון צילומי הריון | יוליה קורנסקי",
   description: "מחירון צילומי הריון ולייף סטייל. חבילות צילום הריון באווירה רגועה ומחמיאה, עם דגש על נשיות, רוך וחיבור לעצמך.",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/pricing", name: "מחירון"},
+    { url: "/pricing/pregnancy", name: "מחירון צילומי הריון"},
+];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
   <!-- HeroText Widget ******************* -->
 
   <HeroText
@@ -43,7 +41,7 @@ const metadata = {
   <!-- Pricing Widget ******************* -->
 
   <Prices
-    title="חבילות צילום הריון"
+    title="הבחירה שלכן"
     subtitle=""
     tagline="החבילות שלי"
     prices={[

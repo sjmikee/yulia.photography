@@ -3,14 +3,8 @@ import Layout from '~/layouts/PageLayout.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
+import BreadCrumbs from '~/components/common/Breadcrumbs.astro';
 
-const richMetadata = {
-  title: "צילומי משפחה בטבע, בים ובחורף | יוליה קורנסקי",
-  description:
-    "צילומי משפחה טבעיים ומרגשים בטבע, בים, ביער ובחורף. חוויה רגועה לילדים ולהורים, כולל מידע על מחירים וחבילות צילום.",
-    ignoreTitleTemplate: true,
-};
 
 const metadata = {
   title: "צילומי משפחה | יוליה קורנסקי",
@@ -18,10 +12,14 @@ const metadata = {
     "צילומי משפחה בטבע, בים ובכל עונה. סשן רגוע, מותאם לילדים, עם תמונות אמיתיות שנשארות לשנים.",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/services", name: "סוגי צילומים"},
+    { url: "/services/family-photography", name: "צילומי משפחה"},
+];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
 
   <!-- HERO -->
   <Hero2
@@ -52,13 +50,21 @@ const metadata = {
     </Fragment>
 
     <Fragment slot="subtitle">
-      יוליה קורנסקי – צלמת משפחה במרכז הארץ.  
-      מתמחה בצילומי משפחה בטבע, בים, ביער ובכל עונה – כולל חורף.  
+      יוליה קורנסקי - צלמת משפחה במרכז הארץ.  
+      מתמחה בצילומי משפחה בטבע, בים, ביער ובכל עונה - כולל חורף.  
       סשן רגוע, זורם ומותאם לילדים, בלי פוזות מאולצות ובלי לחץ.
       <br /><br />
       <strong>חבילות צילום החל מ־600₪</strong>
     </Fragment>
   </Hero2>
+
+  <BreadCrumbs
+    items={[
+        { label: 'דף הבית', href: '/' },
+        { label: 'סוגי צילומים', href: '/services' },
+        { label: 'צילומי משפחה' }
+      ]}
+  />
 
   <!-- WHAT YOU GET -->
   <section class="max-w-6xl mx-auto px-4 py-20">
@@ -75,7 +81,7 @@ const metadata = {
       </div>
       <div>
         <h3>לוקיישן מושלם</h3>
-        <p>טבע, ים, יער או חורף – נבחר יחד</p>
+        <p>טבע, ים, יער או חורף - נבחר יחד</p>
       </div>
       <div>
         <h3>עריכה טבעית</h3>
@@ -89,7 +95,7 @@ const metadata = {
     <h2>איך נראה סשן צילומי משפחה?</h2>
     <p>
       בצילומי משפחה אין צורך "לדעת להצטלם".  
-      הילדים משחקים, זזים וצוחקים – ואני שם כדי לתפוס את הרגעים האמיתיים.
+      הילדים משחקים, זזים וצוחקים - ואני שם כדי לתפוס את הרגעים האמיתיים.
     </p>
     <p>
       ניתן לבחור בין צילומי משפחה בטבע, בים, ביער או גם צילומי משפחה בחורף
@@ -102,7 +108,7 @@ const metadata = {
   <section class="max-w-5xl mx-auto px-4 py-16 space-y-4">
     <h2>צילומי משפחה והריון</h2>
     <p>
-      ניתן לשלב גם צילומי משפחה והריון – סשן שמספר סיפור של משפחה שגדלה.
+      ניתן לשלב גם צילומי משפחה והריון - סשן שמספר סיפור של משפחה שגדלה.
       חוויה רגישה, מחוברת וטבעית, שמתאימה גם לילדים שמתרגשים ממה שבדרך.
     </p>
   </section>
@@ -127,7 +133,7 @@ const metadata = {
       {
         title: 'איפה עושים צילומי משפחה בטבע?',
         description:
-          'בים, ביער, בשדות פתוחים או בלוקיישן מותאם אישית – נבחר יחד מה הכי מתאים לכם.'
+          'בים, ביער, בשדות פתוחים או בלוקיישן מותאם אישית - נבחר יחד מה הכי מתאים לכם.'
       },
       {
         title: 'אפשר לעשות צילומי משפחה בחורף?',

@@ -5,24 +5,22 @@ import Prices from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
-const richMetadata = {
-  title: "מחירון צילומי זוגיות לייף סטייל - יוליה קורנסקי",
-  description: "חבילות צילומי זוגיות מותאמות אישית. תיהנו מחוויית צילום כיפית ותמונות מקצועיות שישמרו את הסיפור שלכם. בדקו את המחירון והזמינו סשן עכשיו",
-  ignoreTitleTemplate: true,
-}
 
 const metadata = {
-  title: "מחירון צילומי זוגיות לייף סטייל - יוליה קורנסקי",
+  title: "מחירון צילומי זוגיות ולייף סטייל - יוליה קורנסקי",
   description: "חבילות צילומי זוגיות מותאמות אישית. תיהנו מחוויית צילום כיפית ותמונות מקצועיות שישמרו את הסיפור שלכם. בדקו את המחירון והזמינו סשן עכשיו",
   ignoreTitleTemplate: true,
 };
+
+const breadcrumbs = [
+    { url: "/pricing", name: "מחירון"},
+    { url: "/pricing/couples", name: "מחירון צילומי זוגיות"},
+];
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
   <!-- HeroText Widget ******************* -->
 
   <HeroText
