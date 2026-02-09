@@ -24,6 +24,7 @@ const {
               ) : (
                 <Image
                   class="w-full h-64 md:h-72 lg:h-80 object-cover"
+                  style={image?.position ? `object-position: ${image.position};` : undefined}
                   widths={[400, 768, 1024, 2040, 3840]}
                   sizes="100vw"
                   loading="eager"
