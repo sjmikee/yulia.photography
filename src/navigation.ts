@@ -42,7 +42,7 @@ export const headerData = {
           href: getPermalink('/pricing/couples-intimate'),
         },
         {
-          text: 'נשיות',
+          text: 'נשיות ובודואר',
           href: getPermalink('/pricing/feminine'),
         },
         {
@@ -102,7 +102,7 @@ export const footerData = {
       links: [
         { text: 'זוגיות', href: getPermalink('/pricing/couples') },
         { text: 'זוגיות אינטימי', href: getPermalink('/pricing/couples-intimate') },
-        { text: 'נשיות', href: getPermalink('/pricing/feminine') },
+        { text: 'נשיות ובודואר', href: getPermalink('/pricing/feminine') },
         { text: 'הריון', href: getPermalink('/pricing/pregnancy') },
         { text: 'בוק אישי', href: getPermalink('/pricing/personal') },
         { text: 'גיל שנה', href: getPermalink('/pricing/first-year') },
