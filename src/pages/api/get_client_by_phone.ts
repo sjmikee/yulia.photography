@@ -7,7 +7,7 @@ export async function POST({ request }: { request: Request }) {
   if (!phone) return new Response(JSON.stringify({ error: "Missing phone" }), { status: 400 });
 
   try {
-    const result = await sql`SELECT name, email FROM clients WHERE phone = ${phone} LIMIT 1;`;
+    const result = await sql`SELECT name, email FROM clients WHERE phone = ${phone} ORDER BY id DESC LIMIT 1;`;
     if (result.length === 0) return new Response(JSON.stringify({ error: "Client not found" }), { status: 404 });
     return new Response(JSON.stringify({ name: result[0].name, email: result[0].email }), { status: 200 });
   } catch (err) {

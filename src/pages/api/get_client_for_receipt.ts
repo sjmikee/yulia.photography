@@ -15,7 +15,7 @@ export async function POST({ request }: { request: Request }) {
     const normalized = phone.replace(/\D/g, "");
 
     const result =
-      await sql`SELECT name, email, phone, id FROM clients WHERE phone = ${normalized} LIMIT 1;`;
+      await sql`SELECT name, email, phone, id FROM clients WHERE phone = ${normalized} ORDER BY id DESC LIMIT 1;`;
 
     if (result.length === 0)
       return new Response(
