@@ -69,7 +69,7 @@ export async function POST(context: APIContext) {
     }
     const fontBytes = new Uint8Array(await fontRes.arrayBuffer());
 
-    const result = await sql`SELECT price, duration FROM clients WHERE phone = ${phone} LIMIT 1;`;
+    const result = await sql`SELECT price, duration FROM clients WHERE phone = ${phone} ORDER BY id DESC LIMIT 1;`;
 
     if (result.length === 0) {
       return new Response(
