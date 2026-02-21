@@ -69,7 +69,14 @@ export async function POST(context: APIContext) {
     }
     const fontBytes = new Uint8Array(await fontRes.arrayBuffer());
 
-    const result = await sql`SELECT price, duration FROM clients WHERE phone = ${phone} ORDER BY id DESC LIMIT 1;`;
+    const result = await sql`
+    SELECT s.id, s.session_price, s.package_type
+    FROM clients c
+    JOIN sessions s ON s.client_id = c.id
+    WHERE c.phone = ${phone}
+    ORDER BY s.id DESC
+    LIMIT 1;
+  `;
 
     if (result.length === 0) {
       return new Response(
@@ -78,8 +85,9 @@ export async function POST(context: APIContext) {
       );
     }
 
-    const price = result[0].price?.toString() ?? "לא נמצא";
-    const duration = result[0].duration ?? 0;
+    const sessionId = result[0].id;
+    const price = result[0].session_price?.toString() ?? "לא נמצא";
+    const duration = result[0].package_type ?? 0;
     const contractType =
       duration === 1
       ? "שעה עד שעתיים"
@@ -89,11 +97,18 @@ export async function POST(context: APIContext) {
       ? "שלוש שעות"
       : "";
 
-    // Update the email in the database for this client
+    // Update client details
     await sql`
       UPDATE clients
-      SET name = ${name}, email = ${email}, signed = TRUE
+      SET name = ${name}, email = ${email}, tz = ${id}
       WHERE phone = ${phone};
+    `;
+
+    // Mark latest session contract as signed
+    await sql`
+      UPDATE sessions
+      SET contract_signed = TRUE
+      WHERE id = ${sessionId};
     `;
 
     const pdfDoc = await PDFDocument.load(templateBytes);

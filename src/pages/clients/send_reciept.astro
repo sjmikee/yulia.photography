@@ -200,5 +200,25 @@ const metadata = {
 
   }
 
-  document.addEventListener("astro:page-load", initReceiptForm);
+  // Bulletproof init: runs on first load and every Astro navigation, without double-binding
+  function runInitOncePerSwap() {
+      if (window.__ADD_EVENT_INIT_DONE__) return;
+      window.__ADD_EVENT_INIT_DONE__ = true;
+      initReceiptForm();
+  }
+
+  // Reset flag before Astro swaps the page
+  document.addEventListener("astro:before-swap", () => {
+      window.__ADD_EVENT_INIT_DONE__ = false;
+  });
+
+  // Run after navigation or first load
+  document.addEventListener("astro:page-load", runInitOncePerSwap);
+
+  // Also run if this script executes on a full reload without Astro navigation
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+      runInitOncePerSwap();
+  } else {
+      document.addEventListener("DOMContentLoaded", runInitOncePerSwap, { once: true });
+  }
 </script>

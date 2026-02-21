@@ -1,5 +1,7 @@
 export const prerender = false;
 
+import { sql } from "../../lib/db.ts";
+
 export async function POST({ request }: { request: Request }) {
   try {
     const {
@@ -104,6 +106,26 @@ export async function POST({ request }: { request: Request }) {
     if (!response.ok) {
       console.error("GreenInvoice API error:", data);
       return new Response(JSON.stringify({ error: data }), { status: 400 });
+    }
+
+    // --- Update session remaining balance (to_pay = to_pay - amount) ---
+    try {
+      await sql`
+        UPDATE sessions s
+        SET to_pay = GREATEST(s.to_pay - ${amount}, 0)
+        FROM clients c
+        WHERE s.client_id = c.id
+          AND c.phone = ${phone}
+          AND s.id = (
+            SELECT s2.id
+            FROM sessions s2
+            WHERE s2.client_id = c.id
+            ORDER BY s2.id DESC
+            LIMIT 1
+          );
+      `;
+    } catch (dbErr) {
+      console.error("Session balance update error:", dbErr);
     }
 
     // --- TinyURL Shortening ---

@@ -10,9 +10,6 @@ export const POST: APIRoute = async ({ request }) => {
   const phoneRaw = formData.get("phone") as string;
   const email = formData.get("email") as string | null;
 
-  const price = parseFloat(formData.get("price") as string);
-  const duration = parseInt(formData.get("duration") as string);
-
   // Clean non‑digit characters
   let phone = phoneRaw ? phoneRaw.replace(/\D/g, "") : "";
 
@@ -22,7 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   // Basic input validation
-  if (!name || !phone || isNaN(price) || isNaN(duration)) {
+  if (!name || !phone) {
     const msg = encodeURIComponent("נתונים לא תקינים");
     return new Response(null, {
       status: 303,
@@ -40,12 +37,12 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   await sql`
-    INSERT INTO clients (name, phone, email, price, duration)
-    VALUES (${name}, ${phone}, ${email}, ${price}, ${duration})
+    INSERT INTO clients (name, phone, email)
+    VALUES (${name}, ${phone}, ${email})
   `;
 
   return new Response(null, {
     status: 303,
-    headers: { Location: "/clients/add?success=1" },
+    headers: { Location: `/clients/add?success=1&phone=${phone}` },
   });
 };

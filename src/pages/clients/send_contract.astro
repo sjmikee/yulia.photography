@@ -17,6 +17,9 @@ const metadata = {
   description: "שליחת חוזה ללקוח קיים דרך WhatsApp",
   ignoreTitleTemplate: true,
 };
+
+const url = new URL(Astro.url);
+const phoneParam = url.searchParams.get("phone");
 ---
 
 <Layout metadata={metadata}>
@@ -76,7 +79,7 @@ const metadata = {
   <WhatsAppButton />
 </Layout>
 
-<script>
+<script is:inline define:vars={{ PHONE: phoneParam }}>
   function initSendContract() {
     const phoneInput = document.getElementById("phone");
     const nameField = document.getElementById("clientName");
@@ -88,6 +91,16 @@ const metadata = {
 
     let lastFetchedPhone = "";
     let lookupTimeout;
+
+    // Auto-fill phone from URL and lock field
+    if (PHONE) {
+      const digits = PHONE.replace(/\D/g, "");
+      let formatted = digits;
+      if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
+      phoneInput.value = formatted;
+      phoneInput.readOnly = true;
+      lookupClient(digits);
+    }
 
     phoneInput.addEventListener("input", (e) => {
       const digits = e.target.value.replace(/\D/g, "");
@@ -145,9 +158,25 @@ const metadata = {
     });
   }
 
-  // Run immediately on first page load
-  initSendContract();
+  // Bulletproof init: runs on first load and every Astro navigation, without double-binding
+  function runInitOncePerSwap() {
+      if (window.__ADD_EVENT_INIT_DONE__) return;
+      window.__ADD_EVENT_INIT_DONE__ = true;
+      initSendContract();
+  }
 
-  // Re-run when Astro view transitions load this page again
-  document.addEventListener("astro:page-load", initSendContract);
+  // Reset flag before Astro swaps the page
+  document.addEventListener("astro:before-swap", () => {
+      window.__ADD_EVENT_INIT_DONE__ = false;
+  });
+
+  // Run after navigation or first load
+  document.addEventListener("astro:page-load", runInitOncePerSwap);
+
+  // Also run if this script executes on a full reload without Astro navigation
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+      runInitOncePerSwap();
+  } else {
+      document.addEventListener("DOMContentLoaded", runInitOncePerSwap, { once: true });
+  }
 </script>
