@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
 
 
 const metadata = {
@@ -18,6 +19,8 @@ const breadcrumbs = [
     { url: "/pricing", name: "מחירון"},
     { url: "/pricing/pregnancy", name: "מחירון צילומי הריון"},
 ];
+
+const session_type = "הריון";
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
@@ -72,7 +75,7 @@ const breadcrumbs = [
       {
         title: 'חבילת בסיס',
         subtitle: 'סשן הריון קצר ועדין',
-        price: 700,
+        price: PRICES[session_type][1],
         period: 'מתאים לצילומי הריון קצרים ונעימים',
         items: [
           {
@@ -100,7 +103,7 @@ const breadcrumbs = [
       {
         title: 'החבילה הקלאסית',
         subtitle: 'חוויה מלאה ונשית',
-        price: 900,
+        price: PRICES[session_type][2],
         period: 'מושלם לצילומי הריון עם זמן, רוגע ומגוון פריימים',
         items: [
           {
@@ -130,7 +133,7 @@ const breadcrumbs = [
       {
         title: 'חבילת פרימיום',
         subtitle: 'חוויה אישית ומעמיקה',
-        price: 1200,
+        price: PRICES[session_type][3],
         period: 'סשן הריון עם מקום לביטוי אישי, רוך ונוכחות',
         items: [
           {

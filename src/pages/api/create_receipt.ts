@@ -163,7 +163,7 @@ export async function POST({ request }: { request: Request }) {
       { status: 200 }
     );
 
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
     return new Response(
       JSON.stringify({ error: "Server error", details: err.message }),

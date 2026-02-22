@@ -18,6 +18,7 @@ import image_9 from "~/assets/images/services/pregnancy-9.jpg";
 import image_10 from "~/assets/images/services/pregnancy-10.jpg";
 import osher_review from "~/assets/reviewers/osher_review.jpg";
 import zehava_review from "~/assets/reviewers/inbal_review.jpg";
+import { PRICES } from '~/lib/pricing';
 
 
 const metadata = {
@@ -30,6 +31,8 @@ const breadcrumbs = [
     { url: "/services", name: "סוגי צילומים"},
     { url: "/services/pregnancy-photography", name: "צילומי הריון"},
 ];
+
+const session_type = "הריון";
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
@@ -67,7 +70,7 @@ const breadcrumbs = [
       מתמחה בצילומי הריון בטבע, בים, צילומי הריון צנועים וצילומי הריון זוגיים.  
       סשן רגוע, מחמיא ומותאם בדיוק לך.
       <br /><br />
-      <strong>חבילות צילום החל מ־700₪</strong>
+      <strong>חבילות צילום החל מ־{PRICES[session_type][1]}₪</strong>
     </Fragment>
   </Hero2>
 
@@ -374,7 +377,7 @@ const breadcrumbs = [
       {
         title: 'כמה עולה סשן צילומי הריון?',
         description:
-          'מחיר צילומי הריון אצלי מתחיל מ - 700₪ ומשתנה בהתאם לחבילה.'
+        `מחיר צילומי הריון אצלי מתחיל מ -${PRICES[session_type][1]}₪ ומשתנה בהתאם לחבילה.`
       }
     ]}
   />

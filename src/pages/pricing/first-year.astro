@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
 
 
 const metadata = {
@@ -17,6 +18,8 @@ const breadcrumbs = [
     { url: "/pricing", name: "מחירון"},
     { url: "/pricing/first-year", name: "מחירון צילומי גיל שנה"},
 ];
+
+const session_type = "שנה";
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
@@ -47,7 +50,7 @@ const breadcrumbs = [
       {
         title: 'חבילת בסיס',
         subtitle: 'סשן גיל שנה קצר ומתוק',
-        price: 700,
+        price: PRICES[session_type][1],
         period: 'מתאים לצילומי גיל שנה פשוטים וקצרים',
         items: [
           {
@@ -72,7 +75,7 @@ const breadcrumbs = [
       {
         title: 'החבילה הקלאסית',
         subtitle: 'חוויה מלאה לגיל שנה',
-        price: 900,
+        price: PRICES[session_type][2],
         period: 'מושלם לצילומי גיל שנה עם זמן, משחק ומגוון פריימים',
         items: [
           {
@@ -99,7 +102,7 @@ const breadcrumbs = [
       {
         title: 'חבילת פרימיום',
         subtitle: 'חוויה חגיגית ומרגשת',
-        price: 1200,
+        price: PRICES[session_type][3],
         period: 'סשן גיל שנה מורחב, עם מקום לרגעים משפחתיים וחגיגה קטנה',
         items: [
           {

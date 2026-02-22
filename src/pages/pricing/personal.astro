@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
 
 
 const metadata = {
@@ -17,6 +18,8 @@ const breadcrumbs = [
     { url: "/pricing", name: "מחירון"},
     { url: "/pricing/personal", name: "מחירון בוק אישי"},
 ];
+
+const session_type = "בוק-אישי";
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
@@ -47,7 +50,7 @@ const breadcrumbs = [
       {
         title: 'חבילת בסיס',
         subtitle: 'רגע אחד',
-        price: 600,
+        price: PRICES[session_type][1],
         period: 'מתאים לבוק אישי קצר או מתנה אישית',
         items: [
           {
@@ -72,7 +75,7 @@ const breadcrumbs = [
       {
         title: 'החבילה הקלאסית',
         subtitle: 'חוויה שלמה',
-        price: 800,
+        price: PRICES[session_type][2],
         period: 'בוק אישי מלא – חוויה אישית ומעצימה',
         items: [
           {
@@ -99,7 +102,7 @@ const breadcrumbs = [
       {
         title: 'חבילת פרימיום',
         subtitle: 'סיפור של אהבה',
-        price: 1000,
+        price: PRICES[session_type][3],
         period: 'בוק מושקע וחווייתי למזכרת אישית ומרגשת',
         items: [
           {
