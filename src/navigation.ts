@@ -14,6 +14,10 @@ export const headerData = {
           text: 'בוק אישי',
           href: getPermalink('/services/personal-photography'),
         },
+        {
+          text: 'זוגיות',
+          href: getPermalink('/services/couples-photography'),
+        },
       ],
     },
     {
@@ -87,6 +91,10 @@ export const footerData = {
         {
           text: 'בוק אישי',
           href: getPermalink('/services/personal-photography'),
+        },
+        {
+          text: 'זוגיות',
+          href: getPermalink('/services/couples-photography'),
         },
       ],
     },
