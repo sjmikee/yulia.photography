@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 
 import { defineConfig, fontProviders } from 'astro/config';
 
+import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite'
 import mdx from '@astrojs/mdx';
@@ -25,15 +26,13 @@ export default defineConfig({
   output: 'static',
   adapter: vercel({}),
 
-  experimental: {
-      fonts: [{
+  fonts: [{
           provider: fontProviders.google(),
           name: "Heebo",
           weights: [400, 500, "bold"],
           subsets: ["hebrew", "latin"],
           cssVariable: "--font-heebo"
-      }]
-  },
+  }],
 
   integrations: [
     sitemap(),
@@ -74,13 +73,18 @@ export default defineConfig({
   ],
 
   image: {
-    domains: ['cdn.pixabay.com'],
+    domains: ['cdn.pixabay.com','yulia.photography'],
   },
 
   markdown: {
-    remarkPlugins: [readingTimeRemarkPlugin],
-    rehypePlugins: [responsiveTablesRehypePlugin, lazyImagesRehypePlugin],
+    processor: unified({
+      remarkPlugins: [readingTimeRemarkPlugin],
+      rehypePlugins: [responsiveTablesRehypePlugin, lazyImagesRehypePlugin],
+    }),
   },
+  //   remarkPlugins: [readingTimeRemarkPlugin],
+  //   rehypePlugins: [responsiveTablesRehypePlugin, lazyImagesRehypePlugin],
+  // },
 
   vite: {
     plugins: [
