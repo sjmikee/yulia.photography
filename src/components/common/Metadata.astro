@@ -1,8 +1,5 @@
 ---
 import merge from 'lodash.merge';
-import { AstroSeo } from '@astrolib/seo';
-
-import type { Props as AstroSeoProps } from '@astrolib/seo';
 
 import { SITE, METADATA, I18N } from 'astrowind:config';
 import type { MetaData } from '~/types';
@@ -24,7 +21,7 @@ const {
   twitter = {},
 } = Astro.props;
 
-const seoProps: AstroSeoProps = merge(
+const seoProps = merge(
   {
     title: '',
     titleTemplate: '%s',
@@ -63,6 +60,60 @@ const seoProps: AstroSeoProps = merge(
     twitter: twitter,
   }
 );
+
+const resolvedOpenGraph = await adaptOpenGraphImages(seoProps?.openGraph, Astro.site);
 ---
 
-<AstroSeo {...{ ...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site) }} />
+{/* Title with optional template */}
+<title>{seoProps.titleTemplate && seoProps.title ? seoProps.titleTemplate.replace('%s', seoProps.title) : seoProps.title}</title>
+
+{seoProps.description && <meta name="description" content={seoProps.description} />}
+{seoProps.canonical && <link rel="canonical" href={seoProps.canonical} />}
+
+<meta
+  name="robots"
+  content={`${seoProps.noindex ? 'noindex' : 'index'},${seoProps.nofollow ? 'nofollow' : 'follow'}`}
+/>
+
+{seoProps.title && <meta property="og:title" content={seoProps.title} />}
+{seoProps.description && <meta property="og:description" content={seoProps.description} />}
+{resolvedOpenGraph?.url && <meta property="og:url" content={resolvedOpenGraph.url} />}
+{resolvedOpenGraph?.site_name && <meta property="og:site_name" content={resolvedOpenGraph.site_name} />}
+{resolvedOpenGraph?.type && <meta property="og:type" content={resolvedOpenGraph.type} />}
+{resolvedOpenGraph?.locale && <meta property="og:locale" content={resolvedOpenGraph.locale} />}
+
+{resolvedOpenGraph?.images?.map((image: any) => {
+  let url = typeof image === 'string' ? image : image.url;
+
+  if (typeof url === 'string' && url.includes('/_image?')) {
+    try {
+      const parsed = new URL(url);
+      const href = parsed.searchParams.get('href');
+      if (href) {
+        url = href;
+      }
+    } catch {
+      // Keep the original URL if parsing fails.
+    }
+  }
+
+  const width = typeof image === 'object' ? image.width : undefined;
+  const height = typeof image === 'object' ? image.height : undefined;
+  const alt = typeof image === 'object' ? image.alt : undefined;
+
+  return (
+    <>
+      <meta property="og:image" content={url} />
+      {width && <meta property="og:image:width" content={String(width)} />}
+      {height && <meta property="og:image:height" content={String(height)} />}
+      {alt && <meta property="og:image:alt" content={alt} />}
+      <meta name="twitter:image" content={url} />
+    </>
+  );
+})}
+
+{seoProps.twitter?.cardType && <meta name="twitter:card" content={seoProps.twitter.cardType} />}
+{seoProps.twitter?.site && <meta name="twitter:site" content={seoProps.twitter.site} />}
+{seoProps.twitter?.handle && <meta name="twitter:creator" content={seoProps.twitter.handle} />}
+{seoProps.title && <meta name="twitter:title" content={seoProps.title} />}
+{seoProps.description && <meta name="twitter:description" content={seoProps.description} />}
