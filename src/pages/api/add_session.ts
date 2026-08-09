@@ -11,12 +11,14 @@ export const POST: APIRoute = async ({ request }) => {
   const sessionType = formData.get("session_type") as string;
   const packageTypeRaw = formData.get("package_type");
   const phone = formData.get("phone") as string;
+  const additionalPriceRaw = formData.get("additional_price");
 
   const client_id = Number(clientIdRaw);
   const package_type = Number(packageTypeRaw);
+  const additional_price = Number(additionalPriceRaw ?? 0);
 
   // Basic validation
-  if (!client_id || !sessionType || !package_type) {
+  if (!client_id || !sessionType || !package_type || !Number.isFinite(additional_price) || additional_price < 0) {
     const msg = encodeURIComponent("נתונים לא תקינים");
     return new Response(null, {
       status: 303,
@@ -36,7 +38,8 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 
-  const to_pay = session_price; // rule you defined
+  const total_price = session_price + additional_price;
+  const to_pay = total_price;
 
   await sql`
     INSERT INTO sessions (
@@ -50,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
       ${client_id},
       ${sessionType},
       ${package_type},
-      ${session_price},
+      ${total_price},
       ${to_pay}
     )
   `;
