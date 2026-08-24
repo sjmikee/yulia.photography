@@ -4,23 +4,26 @@ import HeroText from '~/components/widgets/HeroText.astro';
 import Prices from '~/components/widgets/Pricing.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Image from '~/components/common/Image.astro';
+import osher_review from '~/assets/reviewers/osher_review.jpg';
+import zehava_review from '~/assets/reviewers/inbal_review.jpg';
 import { PRICES } from '~/lib/pricing';
 
-
 const metadata = {
-  title: "מחירון צילומי זוגיות אינטימיים ולייף סטייל - יוליה קורנסקי",
-  description: "חבילות צילומי זוגיות אינטימיים מותאמות אישית. תיהנו מחוויית צילום כיפית ותמונות מקצועיות שישמרו את הסיפור שלכם. בדקו את המחירון והזמינו סשן עכשיו",
+  title: 'מחירון צילומי זוגיות אינטימיים ולייף סטייל - יוליה קורנסקי',
+  description:
+    'חבילות צילומי זוגיות אינטימיים מותאמות אישית. תיהנו מחוויית צילום כיפית ותמונות מקצועיות שישמרו את הסיפור שלכם. בדקו את המחירון והזמינו סשן עכשיו',
   ignoreTitleTemplate: true,
 };
 
 const breadcrumbs = [
-    { url: "/pricing", name: "מחירון"},
-    { url: "/pricing/couples-intimate", name: "מחירון צילומי זוגיות אינטימיים"},
+  { url: '/pricing', name: 'מחירון' },
+  { url: '/pricing/couples-intimate', name: 'מחירון צילומי זוגיות אינטימיים' },
 ];
 
-const session_type = "זוגיות-אינטימי";
+const session_type = 'זוגיות-אינטימי';
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
@@ -29,24 +32,55 @@ const session_type = "זוגיות-אינטימי";
   <HeroText
     tagline="צילום זוגי אינטימי, חושני ומלא רגש"
     title="מחירון צילומי זוגיות אינטימיים"
-    subtitle="סשן צילום זוגי באווירה אינטימית ובטוחה, שמאפשרת לכם להתקרב, להרגיש ולהיות אתם - ברכות, בלי לחץ ובלי פוזות."
-    content="צילומי זוגיות אינטימיים נועדו ללכוד מבטים, מגעים ורגעים קטנים של קרבה. הסשן מתקיים בקצב שלכם, בלוקיישן שנעים לכם - בטבע, במקום אורבני או במרחב פרטי לבחירתכם - ויוצר חוויה זוגית עמוקה ותמונות שמרגישות אמיתיות."
+    subtitle="סשן צילום זוגי באווירה אינטימית ובטוחה, שמאפשרת לכם להתקרב, להרגיש ולהיות אתם — ברוך, בלי לחץ ובלי פוזות."
+    content="צילומי זוגיות אינטימיים נועדו ללכוד מבטים, מגעים ורגעים קטנים של קרבה. הסשן מתקיים בקצב שלכם, בלוקיישן שנעים לכם - בטבע, במקום אורבני או במרחב פרטי לבחירתכם - ויוצר חוויה זוגית עמוקה ותמונות ששומרות את האהבה שלכם כמו שהיא."
+    callToAction={{
+      variant: 'primary',
+      text: 'לשיחת ייעוץ בווטסאפ ללא התחייבות',
+      href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%AA%D7%A2%D7%A0%D7%99%D7%99%D7%9F%2F%D7%AA%20%D7%91%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA%20%D7%90%D7%99%D7%A0%D7%98%D7%99%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
+      target: '_blank',
+      icon: 'tabler:brand-whatsapp',
+      'data-lead-source': 'intimate-hero',
+    }}
   />
 
-    <Breadcrumbs
+  <Breadcrumbs
     items={[
       { label: 'דף הבית', href: '/' },
       { label: 'מחירון', href: '/pricing' },
-      { label: 'מחירון צילומי זוגיות אינטימיים'}
+      { label: 'מחירון צילומי זוגיות אינטימיים' },
     ]}
   />
+
+  <section class="max-w-5xl mx-auto px-4 pb-10 md:pb-16">
+    <div class="grid md:grid-cols-2 overflow-hidden rounded-2xl bg-gray-50 shadow-sm">
+      <Image
+        src="~/assets/images/pricing/couples_intimate_pricing.jpg"
+        alt="זוג בצילומי זוגיות אינטימיים באווירה טבעית"
+        widths={[400, 768, 1024, 1536]}
+        sizes="(max-width: 767px) 100vw, 50vw"
+        class="h-72 w-full object-cover md:h-full"
+        loading="eager"
+      />
+      <div class="p-7 md:p-10 text-right">
+        <p class="font-bold text-secondary mb-2">לפני הכול - אתם בשליטה</p>
+        <h2 class="text-2xl font-bold mb-4">חוויה אינטימית, לפי הגבולות שלכם</h2>
+        <ul class="space-y-3 text-gray-700">
+          <li>• אין חובה לעירום או לכל דבר שלא מרגיש לכם נכון.</li>
+          <li>• בוחרים יחד את רמת הקרבה, הלוקיישן והאווירה.</li>
+          <li>• התמונות נמסרות בגלריה דיגיטלית פרטית, רק לכם.</li>
+        </ul>
+        <p class="mt-5 text-sm text-gray-600">אפשר לשאול הכול בווטסאפ - בלי התחייבות לקבוע סשן.</p>
+      </div>
+    </div>
+  </section>
 
   <!-- Pricing Widget ******************* -->
 
   <Prices
-    title="הבחירה שלכם"
-    subtitle=""
-    tagline="החבילות שלי"
+    title="בחרו את החוויה שמתאימה לכם"
+    subtitle="כל החבילות כוללות הכנה אישית, ליווי עדין לאורך הסשן וגלריה פרטית."
+    tagline="חבילות החל מ־700 ₪"
     prices={[
       {
         title: 'חבילת פרימיום',
@@ -67,20 +101,21 @@ const session_type = "זוגיות-אינטימי";
             description: 'לפחות 35 - 50 תמונות בעריכה מוקפדת ומלאה',
           },
           {
-            description: 'גלריה דיגיטלית פרטית באיכות גובהה להורדה',
+            description: 'גלריה דיגיטלית פרטית באיכות גבוהה להורדה',
           },
         ],
         callToAction: {
           target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA%20%D7%90%D7%99%D7%A0%D7%98%D7%99%D7%9E%D7%99%D7%99%D7%9D.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A4%D7%A8%D7%99%D7%9E%D7%99%D7%95%D7%9D%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A'
+          text: 'לבדיקת התאמה בוואטסאפ',
+          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%95%D7%A8%D7%97%D7%91%D7%AA%20%D7%9E%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%AA%20%D7%90%D7%95%D7%AA%D7%99.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
+          'data-lead-source': 'intimate-package-premium',
         },
       },
       {
         title: 'החבילה הקלאסית',
-        subtitle: 'חוויה זוגית אינטימית וקרובה',
+        subtitle: 'החוויה המאוזנת',
         price: PRICES[session_type][2],
-        period: 'מושלם לצילומי זוגיות אינטימיים בלוקיישן לבחירתכם – טבע, אורבני או מקום פרטי',
+        period: 'מספיק זמן להירגע, להתחבר וליצור מגוון טבעי בלוקיישן שנוח לכם',
         items: [
           {
             description: 'הכוונה מלאה לפני הצילום + טיפים',
@@ -97,11 +132,12 @@ const session_type = "זוגיות-אינטימי";
         ],
         callToAction: {
           target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA%20%D7%90%D7%99%D7%A0%D7%98%D7%99%D7%9E%D7%99%D7%99%D7%9D.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%A9%D7%AA%D7%9C%D7%9E%D7%AA%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A'
+          text: 'לבדיקת התאמה בוואטסאפ',
+          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA%20%D7%9E%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%AA%20%D7%90%D7%95%D7%AA%D7%99.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
+          'data-lead-source': 'intimate-package-classic',
         },
         hasRibbon: true,
-        ribbonTitle: 'הכי משתלם',
+        ribbonTitle: 'מומלצת',
       },
       {
         title: 'חבילת בסיס',
@@ -124,12 +160,40 @@ const session_type = "זוגיות-אינטימי";
         ],
         callToAction: {
           target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA%20%D7%90%D7%99%D7%A0%D7%98%D7%99%D7%9E%D7%99%D7%99%D7%9D.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A.'
+          text: 'לבדיקת התאמה בוואטסאפ',
+          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%9E%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%AA%20%D7%90%D7%95%D7%AA%D7%99.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
+          'data-lead-source': 'intimate-package-basic',
         },
-      }
+      },
     ]}
   />
+
+  <section class="bg-gray-50 py-14 px-6" id="reviews">
+    <h2 class="text-3xl font-bold text-center mb-3">מה זוגות מספרים על החוויה</h2>
+    <p class="text-center text-gray-600 mb-9">גם אם אתם חוששים ממצלמה, המטרה היא שתרגישו בנוח להיות פשוט אתם.</p>
+    <div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+      <blockquote class="bg-white p-6 rounded-2xl shadow">
+        <p>
+          <span class="text-yellow-400 text-lg">★★★★★</span><br />"יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו
+          באווירה ממש כיפית וחווייתית והתוצרים הם ליגה ורמה אחרת!! ... נהננו מאוד והתוצאה יצאה הרבה מעבר למה שציפינו!"
+        </p>
+        <footer class="mt-4 font-bold flex items-center">
+          <Image src={osher_review} alt="אושר" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
+          <span class="mx-2">אושר</span>
+        </footer>
+      </blockquote>
+      <blockquote class="bg-white p-6 rounded-2xl shadow">
+        <p>
+          <span class="text-yellow-400 text-lg">★★★★★</span><br />"כבר בשיחת טלפון ידעתי שאותך אני סוגרת! מעבר לתמונות
+          מטורפות החוויה הייתה לא פחות חשובה והייתה מעבר לציפיות! את מוכשרת, זורמת, מלאת אנרגיות טובות."
+        </p>
+        <footer class="mt-4 font-bold flex items-center">
+          <Image src={zehava_review} alt="זהבה" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
+          <span class="mx-2">זהבה</span>
+        </footer>
+      </blockquote>
+    </div>
+  </section>
 
   <!-- Steps Widget ****************** -->
 
@@ -139,11 +203,11 @@ const session_type = "זוגיות-אינטימי";
     isReversed={true}
     items={[
       {
-        title: 'שיחה ראשונית',
+        title: 'שיחת הכירות והתאמה',
         icon: 'tabler:number-1',
       },
       {
-        title: 'סגירת חבילה ותאריך',
+        title: 'סגירת חבילה, תאריך ותיאום ציפיות',
         icon: 'tabler:number-2',
       },
       {
@@ -166,12 +230,11 @@ const session_type = "זוגיות-אינטימי";
         title: 'נהנים מתמונות איכותיות ומרגשות 😊',
         icon: 'tabler:number-7',
       },
-      {
-        title: 'לא שוכחים לתייג אותי 😉',
-        icon: 'tabler:number-8',
-      },
     ]}
-    image={{ src: '~/assets/images/pricing/couples_intimate_pricing.jpg', alt: 'צילומי זוגיות אינטימיים צילומי זוגיות מחירון' }}
+    image={{
+      src: '~/assets/images/pricing/couples_intimate_pricing_2.jpg',
+      alt: 'צילומי זוגיות אינטימיים צילומי זוגיות מחירון',
+    }}
   />
 
   <!-- FAQs Widget ******************* -->
@@ -184,17 +247,15 @@ const session_type = "זוגיות-אינטימי";
       {
         title: 'האם צילומי זוגיות אינטימיים כוללים עירום?',
         description:
-          'רמת האינטימיות בצילומים נבחרת תמיד לפי הרצון, הגבולות והנוחות שלכם. אין חובה לעירום כלל - הכל נעשה בהקשבה מלאה, בכבוד וברגישות, ומתוך מטרה ליצור חוויה נעימה ובטוחה שמתאימה לכם.'
+          'רמת האינטימיות בצילומים נבחרת תמיד לפי הרצון, הגבולות והנוחות שלכם. אין חובה לעירום כלל - הכל נעשה בהקשבה מלאה, בכבוד וברגישות, ומתוך מטרה ליצור חוויה נעימה ובטוחה שמתאימה לכם.',
       },
       {
         title: 'מתי כדאי לסגור תאריך?',
-        description:
-          'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות.',
+        description: 'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות.',
       },
       {
         title: 'את עוזרת עם בגדים / צבעים?',
-        description:
-          "בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.",
+        description: 'בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.',
       },
       {
         title: 'מה קורה אם יורד גשם או מישהו חולה?',
@@ -216,5 +277,33 @@ const session_type = "זוגיות-אינטימי";
 
   <!-- CallToAction Widget *********** -->
 
-  <WhatssapCallToAction />
+  <CallToAction
+    id="bottomCallToAction"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'לשאלות ובדיקת תאריך בוואטסאפ',
+        href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%90%D7%95%D7%9C%20%D7%9B%D7%9E%D7%94%20%D7%A9%D7%90%D7%9C%D7%95%D7%AA%20%D7%A2%D7%9C%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA%20%D7%90%D7%99%D7%A0%D7%98%D7%99%D7%9E%D7%99%D7%99%D7%9D.',
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+        'data-lead-source': 'intimate-bottom-cta',
+      },
+    ]}
+  >
+    <Fragment slot="title">יש לכם שאלות לפני שמחליטים?</Fragment>
+    <Fragment slot="subtitle">כתבו לי בפרטיות. אשמח לעזור לכם להבין אם הסשן מתאים לכם - בלי התחייבות.</Fragment>
+  </CallToAction>
+
+  <script is:inline>
+    document.querySelectorAll('[data-lead-source]').forEach((element) => {
+      element.addEventListener('click', () => {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'generate_lead',
+          lead_source: element.dataset.leadSource,
+          service: 'couples_intimate',
+        });
+      });
+    });
+  </script>
 </Layout>
