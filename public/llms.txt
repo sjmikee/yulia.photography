@@ -6,7 +6,7 @@
 
 - [Home](https://yulia.photography): עמוד ראשי, הפניות לגלריה, מחירון, טיפים ושאלות נפוצות
 - [Gallery/solo](https://yulia.photography/gallery/solo): גלריה, צילומי תדמית, בוק אישי ופורטרטים
-- [Gallery/family](https://yulia.photography/gallery/family): גלריה, צילומי זוגיות, מפשחה וילדים
+- [Gallery/couples](https://yulia.photography/gallery/couples): גלריית צילומי זוגיות טבעיים ומרגשים
 - [Blog](https://yulia.photography/blog): כתבות עם טיפים חשובים בבחירת צלמת ומידע שימושי על צילומים כמו בחירת בגדים ועוד
 - [Pricing](https://yulia.photography/pricing): מחירון מדויק שמכיל חבילות מותאמות לצרכים שונים
 - [Contact](https://yulia.photography/contact): עמוד יצירת קשר, מכיל את כל פרטי הקשר האפשריים

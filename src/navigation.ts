@@ -28,8 +28,8 @@ export const headerData = {
           href: getPermalink('/gallery/pregnancy'),
         },
         {
-          text: 'משפחה וזוגיות',
-          href: getPermalink('/gallery/family'),
+          text: 'צילומי זוגיות',
+          href: getPermalink('/gallery/couples'),
         },
         {
           text: 'צילומים אישיים',
@@ -106,7 +106,7 @@ export const footerData = {
       title: 'גלריה',
       links: [
         { text: 'צילומי הריון', href: getPermalink('/gallery/pregnancy') },
-        { text: 'משפחה וזוגיות', href: getPermalink('/gallery/family') },
+        { text: 'צילומי זוגיות', href: getPermalink('/gallery/couples') },
         { text: 'צילומים אישיים', href: getPermalink('/gallery/solo') },
       ],
     },
