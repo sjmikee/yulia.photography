@@ -95,6 +95,12 @@ export async function POST(context: APIContext) {
       ? "שעתיים עד שלוש"
       : duration === 3
       ? "שלוש שעות"
+      : duration === 4
+      ? "עד שלוש שעות"
+      : duration === 5
+      ? "עד שש שעות"
+      : duration === 6
+      ? "עד תשע שעות"
       : "";
 
     // Update client details
