@@ -70,7 +70,7 @@ const phone = url.searchParams.get("phone");
         <input type="email" name="email" placeholder="מייל" class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"/>
       </div>
 
-      <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
+      <button type="submit" id="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
         הוסף לקוח
       </button>
     </form>
@@ -91,4 +91,14 @@ const phone = url.searchParams.get("phone");
   </footer>
 
   <WhatsAppButton />
+
+<script is:inline>
+  const form = document.querySelector("form");
+  const submitButton = document.getElementById("submit");
+
+  form.addEventListener("submit", () => {
+        submitButton.disabled = true;
+        submitButton.textContent = "מוסיף...";
+      });
+</script>
 </Layout>

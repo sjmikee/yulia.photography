@@ -103,7 +103,7 @@ const phoneParam = url.searchParams.get("phone");
       
       <input type="hidden" name="client_id" id="client_id" />
 
-      <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
+      <button type="submit" id="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
         הוסף סשן
       </button>
     </form>
@@ -133,6 +133,7 @@ const phoneParam = url.searchParams.get("phone");
         const packageTypeEl = document.getElementById("package_type");
         const priceEl = document.getElementById("price");
         const additionalPriceEl = document.getElementById("additional_price");
+        const submitButton = document.getElementById("submit");
 
         let lastFetchedPhone = "";
         let lookupTimeout;
@@ -217,6 +218,9 @@ const phoneParam = url.searchParams.get("phone");
             alert("נא לבחור סוג סשן וחבילה");
             return;
           }
+
+          submitButton.disabled = true;
+          submitButton.textContent = "מוסיף...";
         });
     }
 
