@@ -30,7 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
   const session_price =
     PRICES?.[sessionType]?.[package_type] ?? null;
 
-  if (!session_price) {
+  if (!Number.isInteger(session_price) || session_price < 0) {
     const msg = encodeURIComponent("מחיר לא נמצא");
     return new Response(null, {
       status: 303,

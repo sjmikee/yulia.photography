@@ -79,6 +79,7 @@ const phoneParam = url.searchParams.get("phone");
           <option value="בוק-אישי">בוק-אישי</option>
           <option value="נשיות">נשיות</option>
           <option value="אירוע">אירוע</option>
+          <option value="ללא-מחיר">ללא מחיר</option>
         </select>
       </div>
 
@@ -196,7 +197,7 @@ const phoneParam = url.searchParams.get("phone");
         if (PRICING[sessionType] && PRICING[sessionType][packageType]) {
             priceEl.value = Number(PRICING[sessionType][packageType]) + additionalPrice;
         } else {
-            priceEl.value = "";
+            priceEl.value = "0";
         }
         }
 
