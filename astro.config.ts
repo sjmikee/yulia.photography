@@ -22,6 +22,20 @@ const hasExternalScripts = false;
 const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroIntegration)[] = []) =>
   hasExternalScripts ? (Array.isArray(items) ? items.map((item) => item()) : [items()]) : [];
 
+// Keep URLs marked noindex out of the XML sitemap. A sitemap should contain
+// only canonical URLs that we want search engines to crawl and index.
+const sitemapExcludedPaths = new Set(['/articles', '/contract', '/thank_you', '/landing/couples']);
+const isIndexableSitemapPage = (page: string) => {
+  const pathname = new URL(page).pathname.replace(/\/$/, '') || '/';
+
+  return !(
+    sitemapExcludedPaths.has(pathname) ||
+    pathname.startsWith('/clients') ||
+    pathname.startsWith('/category/') ||
+    pathname.startsWith('/tag/')
+  );
+};
+
 export default defineConfig({
   output: 'static',
   adapter: vercel({}),
@@ -35,7 +49,7 @@ export default defineConfig({
   }],
 
   integrations: [
-    sitemap(),
+    sitemap({ filter: isIndexableSitemapPage }),
     mdx(),
     icon({
       include: {
