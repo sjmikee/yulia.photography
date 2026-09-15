@@ -18,6 +18,10 @@ export const headerData = {
           text: 'זוגיות',
           href: getPermalink('/services/couples-photography'),
         },
+        {
+          text: 'משפחה',
+          href: getPermalink('/services/family-photography'),
+        },
       ],
     },
     {
@@ -65,6 +69,10 @@ export const headerData = {
           text: 'גיל שנה',
           href: getPermalink('/pricing/first-year'),
         },
+        {
+          text: 'משפחה',
+          href: getPermalink('/pricing/family'),
+        },
       ],
     },
     {
@@ -100,6 +108,10 @@ export const footerData = {
           text: 'זוגיות',
           href: getPermalink('/services/couples-photography'),
         },
+        {
+          text: 'משפחה',
+          href: getPermalink('/services/family-photography'),
+        },
       ],
     },
     {
@@ -119,6 +131,7 @@ export const footerData = {
         { text: 'הריון', href: getPermalink('/pricing/pregnancy') },
         { text: 'בוק אישי', href: getPermalink('/pricing/personal') },
         { text: 'גיל שנה', href: getPermalink('/pricing/first-year') },
+        { text: 'משפחה', href: getPermalink('/pricing/family') },
       ],
     },
     {
