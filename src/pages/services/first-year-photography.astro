@@ -1,0 +1,95 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
+import { Image } from 'astro:assets';
+import image_1 from '~/assets/family_gallery/ילד_ולידה_יושבים_מחובקים_ביער_צילומי_משפחה.jpg';
+import image_2 from '~/assets/family_gallery/צילומי_משפחה_בטבע.jpg';
+import image_3 from '~/assets/family_gallery/צילומי_משפחה_במרכז_בטבע.jpg';
+import image_4 from '~/assets/couples_landing/family_2025-05.jpg';
+import image_5 from '~/assets/couples_landing/family_2025-01.jpg';
+import image_6 from '~/assets/images/blog/צילומי-משפחה-אבא-ובן-מחייכים.jpg';
+import image_7 from '~/assets/images/blog/צילומי-משפחה-אמא-ובת.jpg';
+import osher_review from '~/assets/reviewers/osher_review.jpg';
+import inbal_review from '~/assets/reviewers/inbal_review.jpg';
+
+const metadata = {
+  title: 'צילומי גיל שנה ויום הולדת ראשון | יוליה קורנסקי',
+  description:
+    'צילומי גיל שנה טבעיים ומשפחתיים, עם סבלנות לפעוטות, משחק ורגעים אמיתיים. אפשר לשלב הורים ואחים ולחגוג את השנה הראשונה כמו שהיא.',
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [
+  { url: '/services', name: 'סוגי צילומים' },
+  { url: '/services/first-year-photography', name: 'צילומי גיל שנה' },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <Hero2
+    id="hero"
+    actions={[
+      { variant: 'primary', text: 'דברו איתי בווטסאפ', href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אנחנו%20מתעניינים%20בצילומי%20גיל%20שנה', target: '_blank', icon: 'tabler:brand-whatsapp' },
+      { text: 'או בשיחת טלפון', href: 'tel:+972525836940' },
+    ]}
+    image={{ src: '~/assets/images/pricing/first_year_pricing.jpg', alt: 'צילומי גיל שנה טבעיים ומשפחתיים' }}
+  >
+    <Fragment slot="title"><span class="text-accent dark:text-white highlight">צילומי גיל שנה</span> חוגגים שנה ראשונה, כמו שהיא באמת</Fragment>
+    <Fragment slot="subtitle">סשן רגוע, שמח ומותאם לקצב של הקטנטנים — עם משחק, חיבוקים ורגעים משפחתיים שלא חוזרים.<br /><br /><strong>חבילות צילום החל מ־{PRICES['שנה'][1]}₪</strong></Fragment>
+  </Hero2>
+
+  <Breadcrumbs items={[{ label: 'דף הבית', href: '/' }, { label: 'סוגי צילומים', href: '/services' }, { label: 'צילומי גיל שנה' }]} />
+
+  <section class="max-w-5xl mx-auto px-4 py-16 space-y-6"><h2>לא צריך לביים יום הולדת ראשון</h2><p>בגיל שנה הילדים סקרנים, זזים, צוחקים, לפעמים גם צריכים הפסקה — וזה בדיוק מה שהופך את התמונות לאמיתיות. הסשן נבנה סביב הקצב של הילד או הילדה, עם זמן למשחק, לחיבוק ולרגעים קטנים ביניכם.</p><p>אפשר ליצור תמונות של ילד יום ההולדת, לשלב הורים ואחים, ולבחור יחד אם לצלם בטבע או בסטודיו. אני מכינה אתכם מראש עם טיפים לבגדים ולצבעים, וביום הצילום נותנת לדברים לקרות בלי לחץ.</p></section>
+
+  <section class="max-w-6xl mx-auto px-4 py-10">
+    <h2 class="text-center mb-10">מה מחכה לכם בסשן</h2>
+    <div class="grid md:grid-cols-4 gap-8 text-center">
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_1} alt="ילדים יושבים יחד בטבע בצילומי משפחה" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">קצב של פעוטות</h3>
+        <p>הפסקות, משחק וגמישות כדי לשמור על חוויה נעימה.</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_2} alt="משפחה בצילומים בטבע" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">חגיגה משפחתית</h3>
+        <p>אפשר לשלב הורים ואחים בתמונות ובזיכרון.</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_3} alt="צילומי משפחה טבעיים במרכז" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">משחק וחיבוקים</h3>
+        <p>מקום לזוז, לגלות ולהיות יחד בלי לחץ.</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_4} alt="רגע משפחתי טבעי בצילום חוץ" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">תמונות טבעיות</h3>
+        <p>פחות "חיוך למצלמה", יותר הרגעים שלכם כמו שהם.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-10"><div class="grid gap-8 text-center">
+    <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_5} alt="משפחה בצילום חוץ טבעי" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">איך נראה סשן צילומי גיל שנה?</h2><p>הסשן מותאם לקצב של הילד או הילדה, בלי למהר ובלי לדרוש חיוך למצלמה. משחקים, מטיילים, עוצרים כשצריך ונותנים לרגעים הטבעיים לקרות.</p><p>המטרה היא שכולם ייהנו מהחוויה — גם ההורים וגם הקטנטנים.</p></article>
+    <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_6} alt="אב ובן בצילומי משפחה" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">אפשר לשלב הורים ואחים?</h2><p>בהחלט. צילומי גיל שנה הם הזדמנות לתעד גם את החיבוקים, המשחק והקשר המשפחתי של השנה הראשונה. אפשר לשלב תמונות של ילד או ילדת יום ההולדת לצד רגעים של כל המשפחה.</p></article>
+    <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_7} alt="אם ובת בצילומי משפחה בטבע" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">איך מתכוננים לצילומי יום הולדת שנה?</h2><p>אחרי קביעת הצילומים תקבלו טיפים פשוטים לבגדים, צבעים ומה כדאי להביא. אין צורך בהפקה מורכבת: משהו קטן שהילד אוהב, בגדים נוחים וזמן רגוע מספיקים לגמרי.</p></article>
+  </div></section>
+
+  <section class="max-w-4xl mx-auto px-4 py-16 text-center"><h2>מחיר צילומי גיל שנה</h2><p>כל החבילות, מה שכלול בהן ואפשרויות הצילום נמצאות במחירון המלא.</p><a href="/pricing/first-year" class="underline font-medium mt-4 inline-block">למחירון צילומי גיל שנה</a></section>
+
+  <section class="bg-gray-50 py-16 px-6" id="reviews"><h2 class="text-3xl font-bold text-center mb-10">אל תקשיבו לי, תקשיבו להם</h2><div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto"><blockquote class="bg-white p-6 rounded-2xl shadow"><p><span class="text-yellow-400 text-lg">★★★★★</span><br />"יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!"</p><footer class="mt-4 font-bold flex items-center"><Image src={osher_review} alt="אושר" class="w-10 h-10 rounded-full mr-3" width={40} height={40} /><span class="mx-2">אושר</span></footer></blockquote><blockquote class="bg-white p-6 rounded-2xl shadow"><p><span class="text-yellow-400 text-lg">★★★★★</span><br />"מעבר לתמונות מטורפות החוויה הייתה לא פחות חשובה והייתה מעבר לציפיות! את מוכשרת, זורמת, מלאת אנרגיות טובות."</p><footer class="mt-4 font-bold flex items-center"><Image src={inbal_review} alt="ענבל" class="w-10 h-10 rounded-full mr-3" width={40} height={40} /><span class="mx-2">ענבל</span></footer></blockquote></div></section>
+
+  <CallToAction id="bottomCallToAction" actions={[{ variant: 'primary', text: 'ווטסאפ', href: 'https://wa.me/972525836940', target: '_blank', icon: 'tabler:brand-whatsapp' }]}><Fragment slot="title">מוכנים לחגוג שנה?</Fragment><Fragment slot="subtitle">נדבר ונבנה יחד סשן נעים שמתאים למשפחה שלכם</Fragment><Fragment slot="bg"><div class="absolute inset-0 bg-page dark:bg-slate-900"></div></Fragment></CallToAction>
+
+  <FAQs title="שאלות נפוצות על צילומי גיל שנה" columns={1} items={[
+    { title: 'מה קורה אם הילד לא משתף פעולה?', description: 'זה טבעי לגמרי. נותנים זמן, משחקים, עושים הפסקות ומתקדמים לפי הקצב שלו או שלה.' },
+    { title: 'אפשר לשלב הורים ואחים?', description: 'בהחלט. אפשר לתכנן סשן שמשלב גם רגעים משפחתיים וחיבוקים לצד תמונות של ילד או ילדת יום ההולדת.' },
+    { title: 'איפה מתקיימים הצילומים?', description: 'בטבע או בסטודיו בתיאום מראש, בהתאם לאופי הסשן ולמה שנוח לילד או לילדה.' },
+  ]} />
+
+  <WhatssapCallToAction />
+</Layout>

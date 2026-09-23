@@ -1,0 +1,109 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
+import { Image } from 'astro:assets';
+import image_1 from '~/assets/couples_landing/Roman&Ira-06.jpg';
+import image_2 from '~/assets/couples_landing/Roman&Ira-07.jpg';
+import image_3 from '~/assets/couples_landing/Roman&Ira-13.jpg';
+import image_4 from '~/assets/couples_landing/Roman&Ira-48.jpg';
+import image_5 from '~/assets/couples_landing/Roman&Ira-49.jpg';
+import image_6 from '~/assets/couples_landing/Roman&Ira-50.jpg';
+import image_7 from '~/assets/couples_landing/OLBC0733.jpg';
+import osher_review from '~/assets/reviewers/osher_review.jpg';
+import inbal_review from '~/assets/reviewers/inbal_review.jpg';
+
+const metadata = {
+  title: 'צילומי זוגיות אינטימיים וחושניים | יוליה קורנסקי',
+  description:
+    'צילומי זוגיות אינטימיים באווירה בטוחה, רגועה ודיסקרטית. סשן זוגי מלא קרבה, רגש והכוונה עדינה, לפי הקצב והגבולות שלכם.',
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [
+  { url: '/services', name: 'סוגי צילומים' },
+  { url: '/services/intimate-couples-photography', name: 'צילומי זוגיות אינטימיים' },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <Hero2
+    id="hero"
+    actions={[
+      {
+        variant: 'primary', text: 'דברו איתי בווטסאפ',
+        href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אנחנו%20מתעניינים%20בצילומי%20זוגיות%20אינטימיים',
+        target: '_blank', icon: 'tabler:brand-whatsapp',
+      },
+      { text: 'או בשיחת טלפון', href: 'tel:+972525836940' },
+    ]}
+    image={{ src: '~/assets/images/pricing/couples_intimate_pricing_2.jpg', alt: 'צילומי זוגיות אינטימיים וחושניים' }}
+  >
+    <Fragment slot="title"><span class="text-accent dark:text-white highlight">צילומי זוגיות אינטימיים</span> קרובים, עדינים ומלאי רגש</Fragment>
+    <Fragment slot="subtitle">זמן איכות שהוא רק שלכם — עם מרחב בטוח, דיסקרטיות מלאה והכוונה טבעית בלי פוזות.<br /><br /><strong>חבילות צילום החל מ־{PRICES['זוגיות-אינטימי'][1]}₪</strong></Fragment>
+  </Hero2>
+
+  <Breadcrumbs items={[{ label: 'דף הבית', href: '/' }, { label: 'סוגי צילומים', href: '/services' }, { label: 'צילומי זוגיות אינטימיים' }]} />
+
+  <section class="max-w-5xl mx-auto px-4 py-16 space-y-6">
+    <h2>סשן זוגי בקצב שלכם</h2>
+    <p>צילומי זוגיות אינטימיים נולדים מהדברים הקטנים: מבט, מגע, צחוק ורגע של קרבה. לא צריך לדעת להצטלם ולא צריך לשחק תפקיד — פשוט לבחור יחד את האווירה שנכונה לכם.</p>
+    <p>לפני הצילום מתאמים ציפיות, לוקיישן ולבוש, ומגדירים בבירור את הגבולות שלכם. הסשן יכול להיות עדין ורומנטי, חושני או אמנותי; הכל נעשה ברגישות, בכבוד ובדיסקרטיות.</p>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 py-10 text-center">
+    <h2 class="text-2xl font-bold mb-4">רוצים לראות עוד דוגמאות?</h2>
+    <p class="mb-4">אפשר לראות את סגנון הצילום הטבעי והרגשי גם בגלריית צילומי הזוגיות.</p>
+    <a href="/gallery/couples" class="font-semibold underline text-accent">לצפייה בגלריית צילומי הזוגיות</a>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-10"><div class="grid gap-8 text-center">
+    <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_5} alt="זוג בצילום קרוב וטבעי" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">איך נראה סשן זוגיות אינטימי?</h2><p>הסשן מרגיש יותר כמו זמן איכות ופחות כמו יום צילום. מתחילים לאט, משאירים מקום לשיחה, צחוק ומגע טבעי, ואני שם כדי להנחות רק כשצריך.</p><p>אין צורך לדעת איך להצטלם או להציג משהו שאינו אתם.</p></article>
+    <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_6} alt="זוג בצילומים רומנטיים" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">פרטיות ודיסקרטיות בצילומים</h2><p>עוד לפני הסשן מגדירים יחד את רמת האינטימיות, המקום ומה ירגיש בטוח ונעים. התמונות נשארות פרטיות, וכל שימוש או פרסום שלהן נעשה רק באישור מפורש שלכם.</p></article>
+    <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_7} alt="זוג בצילום חוץ רומנטי" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">סטודיו, חוץ או מרחב פרטי?</h2><p>אפשר לבחור את הלוקיישן לפי התחושה שתרצו ליצור: סטודיו למראה נקי, חוץ לאווירה טבעית, או מרחב פרטי בתיאום מראש. נבחר את האפשרות שמרגישה הכי שלכם.</p></article>
+  </div></section>
+
+  <section class="max-w-6xl mx-auto px-4 py-10">
+    <h2 class="text-center mb-10">מה מקבלים</h2>
+    <div class="grid md:grid-cols-4 gap-8 text-center">
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_1} alt="זוג בצילום קרוב ואינטימי" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">תיאום אישי</h3>
+        <p>שיחה פתוחה כדי ליצור חוויה שמתאימה לכם.</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_2} alt="זוג ברגע טבעי ורומנטי" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">מרחב בטוח</h3>
+        <p>הקצב, הלבוש ורמת האינטימיות נשארים בידיים שלכם.</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_3} alt="צילומי זוגיות עדינים" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">הכוונה טבעית</h3>
+        <p>לא צריך לדעת איך לעמוד — אני מכוונת בעדינות כשצריך.</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_4} alt="זוג ברגע של קרבה" class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">רגעים אמיתיים</h3>
+        <p>תמונות שמספרות את הקשר שלכם, בלי פוזות מאולצות.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-16 text-center"><h2>מחיר צילומי זוגיות אינטימיים</h2><p>לכל החבילות, מה שכלול בהן ופרטי התהליך, עברו למחירון המלא.</p><a href="/pricing/couples-intimate" class="underline font-medium mt-4 inline-block">למחירון צילומי זוגיות אינטימיים</a></section>
+
+  <section class="bg-gray-50 py-16 px-6" id="reviews"><h2 class="text-3xl font-bold text-center mb-10">אל תקשיבו לי, תקשיבו להם</h2><div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto"><blockquote class="bg-white p-6 rounded-2xl shadow"><p><span class="text-yellow-400 text-lg">★★★★★</span><br />"יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!"</p><footer class="mt-4 font-bold flex items-center"><Image src={osher_review} alt="אושר" class="w-10 h-10 rounded-full mr-3" width={40} height={40} /><span class="mx-2">אושר</span></footer></blockquote><blockquote class="bg-white p-6 rounded-2xl shadow"><p><span class="text-yellow-400 text-lg">★★★★★</span><br />"מעבר לתמונות מטורפות החוויה הייתה לא פחות חשובה והייתה מעבר לציפיות! את מוכשרת, זורמת, מלאת אנרגיות טובות."</p><footer class="mt-4 font-bold flex items-center"><Image src={inbal_review} alt="ענבל" class="w-10 h-10 rounded-full mr-3" width={40} height={40} /><span class="mx-2">ענבל</span></footer></blockquote></div></section>
+
+  <CallToAction id="bottomCallToAction" actions={[{ variant: 'primary', text: 'ווטסאפ', href: 'https://wa.me/972525836940', target: '_blank', icon: 'tabler:brand-whatsapp' }]}><Fragment slot="title">מוכנים לשיחה?</Fragment><Fragment slot="subtitle">נדבר ונבנה יחד סשן שמרגיש בדיוק נכון לכם</Fragment><Fragment slot="bg"><div class="absolute inset-0 bg-page dark:bg-slate-900"></div></Fragment></CallToAction>
+
+  <FAQs title="שאלות נפוצות על צילומי זוגיות אינטימיים" columns={1} items={[
+    { title: 'האם חייבים להצטלם בעירום?', description: 'לא. רמת האינטימיות נבחרת לפי הרצון והנוחות שלכם, ואין חובה לעירום כלל.' },
+    { title: 'איפה מתקיים הסשן?', description: 'בלוקיישן חוץ, בסטודיו או במרחב פרטי שתבחרו יחד מראש, בהתאם לאווירה הרצויה.' },
+    { title: 'האם התמונות נשארות פרטיות?', description: 'כן. פרטיות ודיסקרטיות הן חלק בלתי נפרד מהתהליך; כל שימוש או פרסום בתמונות נעשה רק בהסכמה מפורשת.' },
+  ]} />
+
+  <WhatssapCallToAction />
+</Layout>

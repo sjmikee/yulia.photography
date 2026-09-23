@@ -22,6 +22,18 @@ export const headerData = {
           text: 'משפחה',
           href: getPermalink('/services/family-photography'),
         },
+        {
+          text: 'נשיות ובודואר',
+          href: getPermalink('/services/feminine-photography'),
+        },
+        {
+          text: 'זוגיות אינטימי',
+          href: getPermalink('/services/intimate-couples-photography'),
+        },
+        {
+          text: 'גיל שנה',
+          href: getPermalink('/services/first-year-photography'),
+        },
       ],
     },
     {
@@ -111,6 +123,18 @@ export const footerData = {
         {
           text: 'משפחה',
           href: getPermalink('/services/family-photography'),
+        },
+        {
+          text: 'נשיות ובודואר',
+          href: getPermalink('/services/feminine-photography'),
+        },
+        {
+          text: 'זוגיות אינטימי',
+          href: getPermalink('/services/intimate-couples-photography'),
+        },
+        {
+          text: 'גיל שנה',
+          href: getPermalink('/services/first-year-photography'),
         },
       ],
     },

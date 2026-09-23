@@ -5,9 +5,9 @@ import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 
 const metadata = {
-  title: "סוגי הצילומים שאני עושה - הריון|משפחה|זוגיות|נשיות | יוליה קורנסקי",
+  title: "סוגי צילומים: הריון, משפחה, זוגיות, נשיות ובוק אישי | יוליה קורנסקי",
   description:
-    "צילומי הריון בטבע, בים, או צילומי הריון צנועים וזוגיים. ליווי מלא, אווירה רגועה ותמונות מרגשות שנשארות לשנים.",
+    "צילומי הריון, משפחה, זוגיות, נשיות, בוק אישי וגיל שנה. כל סשן מותאם אישית, באווירה טבעית, רגועה ומלאת אופי.",
   ignoreTitleTemplate: true,
 };
 
@@ -107,6 +107,45 @@ const breadcrumbs = [
 
         <Fragment slot="subtitle">
           צילום זוגיות טבעי, מרגש ולא מבוים לזוגות. סשן זוגי רגוע בסטודיו או בלוקיישן חוץ במרכז הארץ - מתאים לזוגיות, אירוסין ורגעים של יחד.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href="/services/feminine-photography"
+        image={{
+          src: '~/assets/images/pricing/feminine_pricing.jpg',
+          alt: 'צילומי נשיות וצילומי בודואר באווירה אומנותית',
+        }}
+      >
+        <Fragment slot="title">צילומי נשיות ובודואר</Fragment>
+        <Fragment slot="subtitle">
+          סשן אישי, אומנותי ומכבד בקצב שלך — עם מרחב בטוח, הכוונה עדינה ותמונות שמרגישות כמו את.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href="/services/intimate-couples-photography"
+        image={{
+          src: '~/assets/images/pricing/couples_intimate_pricing_2.jpg',
+          alt: 'צילומי זוגיות אינטימיים וחושניים',
+        }}
+      >
+        <Fragment slot="title">צילומי זוגיות אינטימיים</Fragment>
+        <Fragment slot="subtitle">
+          סשן זוגי קרוב, עדין ומלא רגש — עם דיסקרטיות, הקשבה מלאה וללא פוזות מאולצות.
+        </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href="/services/first-year-photography"
+        image={{
+          src: '~/assets/images/pricing/first_year_pricing.jpg',
+          alt: 'צילומי גיל שנה טבעיים ומשפחתיים',
+        }}
+      >
+        <Fragment slot="title">צילומי גיל שנה</Fragment>
+        <Fragment slot="subtitle">
+          חוגגים את השנה הראשונה בקצב של הקטנטנים — עם משחק, סבלנות ורגעים משפחתיים אמיתיים.
         </Fragment>
       </ServiceCard>
     </div>
