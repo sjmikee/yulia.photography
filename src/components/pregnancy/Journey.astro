@@ -1,0 +1,46 @@
+---
+import { pregnancyLinks, pregnancyWhatsApp } from '~/lib/pregnancy';
+import Button from '~/components/ui/Button.astro';
+interface Props {
+  current: keyof typeof pregnancyLinks;
+  cta?: boolean;
+}
+const { current, cta = false } = Astro.props;
+const labels = { service: 'איך נראה הסשן', gallery: 'גלריית צילומי הריון', pricing: 'מחירון וחבילות' };
+---
+
+{
+  cta && (
+    <section class="mx-auto max-w-3xl px-4 py-12 text-center">
+      <h2 class="mb-4 text-3xl font-bold">נתכנן רגע שהוא כולו שלך?</h2>
+      <p class="mb-6 text-lg">
+        כתבי לי באיזה שבוע את, מי מצטרף ואיזה סגנון אהבת. נבחר יחד מקום, חבילה ותאריך. את לא צריכה לדעת מה לעשות עם
+        הידיים — בשביל זה אני כאן.
+      </p>
+      <Button variant="primary" href={pregnancyWhatsApp()} target="_blank" icon="tabler:brand-whatsapp">
+        בואי נבדוק תאריך
+      </Button>
+      <p class="mt-4">
+        <a href="tel:+972525836940" class="underline">
+          מעדיפה לדבר? 052-5836940
+        </a>
+      </p>
+    </section>
+  )
+}
+<nav
+  aria-label="עוד על צילומי הריון"
+  class="mx-auto flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-4 px-4 py-6 text-center"
+>
+  {
+    Object.entries(pregnancyLinks).map(([key, href]) => (
+      <a
+        href={href}
+        aria-current={key === current ? 'page' : undefined}
+        class:list={['underline underline-offset-4', { 'font-bold text-accent': key === current }]}
+      >
+        {labels[key as keyof typeof labels]}
+      </a>
+    ))
+  }
+</nav>

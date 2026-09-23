@@ -61,7 +61,7 @@ const {
                   {typeof callToAction === 'string' ? (
                     <Fragment set:html={callToAction} />
                   ) : (
-                    <Button variant="primary" {...callToAction} />
+                    <Button variant="primary" {...callToAction} class="w-full sm:mb-0" />
                   )}
                 </div>
               )
@@ -72,7 +72,7 @@ const {
                   {typeof callToAction2 === 'string' ? (
                     <Fragment set:html={callToAction2} />
                   ) : (
-                    <Button {...callToAction2} />
+                    <Button {...callToAction2} class="w-full sm:mb-0" />
                   )}
                 </div>
               )

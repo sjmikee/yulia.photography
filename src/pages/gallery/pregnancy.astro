@@ -1,36 +1,70 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PhotoGallery from '~/components/widgets/PhotoGallery.astro';
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
-
-const richMetadata = {
-  title: "יוליה קורנסקי - גלריית צילומי הריון - רגעים אמיתיים של אהבה וחיבור",
-  description: "מחפשים צילומי הריון באווירה טבעית ומרגשת? הציצו בגלריה שלי ותגלו איך הופכים רגעים קטנים לזיכרונות גדולים",
-  ignoreTitleTemplate: true,
-}
-
+import Gallery from '~/components/pregnancy/Gallery.astro';
+import Journey from '~/components/pregnancy/Journey.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Button from '~/components/ui/Button.astro';
+import { pregnancyPackages } from '~/lib/pregnancy';
+import preview from '~/assets/images/services/pregnancy-7.jpg';
 const metadata = {
-  title: "יוליה קורנסקי - גלריית צילומי הריון - רגעים אמיתיים של אהבה וחיבור",
-  description: "מחפשים צילומי הריון באווירה טבעית ומרגשת? הציצו בגלריה שלי ותגלו איך הופכים רגעים קטנים לזיכרונות גדולים",
+  title: 'גלריית צילומי הריון בטבע ובים | יוליה קורנסקי',
+  description:
+    'איך ייראו צילומי ההריון שלך? גלריית צילומים אמיתיים של יוליה קורנסקי: זוגות בשקיעה, רגעים בטבע ודיוקנאות אישיים. מצאי השראה לסשן שלך בחולון ובמרכז.',
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: '~/assets/images/services/pregnancy-7.jpg',
+        width: preview.width,
+        height: preview.height,
+        alt: 'צילום הריון זוגי בטבע',
+      },
+    ],
+  },
 };
-
-const title = "גלריית צילומי הריון - רגעים אמיתיים של אהבה וחיבור";
+const breadcrumbs = [
+  { url: '/services/pregnancy-photography', name: 'צילומי הריון' },
+  { url: '/gallery/pregnancy', name: 'גלריית צילומי הריון' },
+];
 ---
 
-<Layout metadata={metadata}>
-    <RichSeo metadata={richMetadata} />
-    <div class="text-center py-5">
-    <h1 class="mb-2 font-bold text-4xl tracking-tight text-heading dark:text-slate-300"><div set:text={title} /></h1>
-    </div>
-
-    <WidgetWrapper>
-        <PhotoGallery imagesFolder="pregnancy_gallery" />
-    </WidgetWrapper>
-
-    <!-- CallToAction Widget *********** -->
-
-    <WhatssapCallToAction />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <section class="mx-auto max-w-4xl px-4 pt-12 pb-6 text-center">
+    <p class="mb-3 font-semibold text-accent">יוליה קורנסקי · רגעים מתוך הסשנים שלי</p>
+    <h1 class="mb-5 text-4xl font-bold md:text-5xl">גלריית צילומי הריון בטבע ובים</h1>
+    <p class="mb-5 text-xl leading-relaxed">
+      יש כאן חיבוקים מול השקיעה, רגעים שקטים בין העצים וקצת רוח בשיער. כל סשן נראה אחרת, כי כל אישה וכל זוג מביאים משהו
+      משלהם.
+    </p>
+    <p class="mb-6">
+      חפשי את האור, הלבוש והאווירה שמדברים אלייך. לא צריך לשחזר תמונה — מספיק למצוא כיוון שנעים לך איתו.
+    </p>
+    <Button href="/pricing/pregnancy">לחבילות הצילום — החל מ־{pregnancyPackages[0].price} ש״ח</Button>
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'צילומי הריון', href: '/services/pregnancy-photography' },
+      { label: 'גלריה' },
+    ]}
+  />
+  <Journey current="gallery" />
+  <section class="mx-auto max-w-6xl px-4 py-8" aria-label="תמונות מסשנים של צילומי הריון">
+    <p class="mb-5 text-center text-sm">לחצי על תמונה להגדלה ולדפדוף בגלריה.</p>
+    <Gallery />
+  </section>
+  <section class="mx-auto max-w-3xl space-y-4 px-4 py-10">
+    <h2 class="text-2xl font-bold">מצאת תמונה שעצרה אותך?</h2>
+    <p>
+      שלחי לי אותה וספרי מה אהבת: הצבעים, החיבוק, הלבוש או האור. נתכנן את הסשן שלך לפי הסגנון והנוחות שלך, ונבחר יחד
+      לוקיישן בחולון או במרכז.
+    </p>
+    <p>
+      אפשר להצטלם לבד או בזוג, וגם בלבוש מלא. <a
+        href="/services/pregnancy-photography#preparation"
+        class="font-semibold underline">כאן תמצאי עצות לתזמון הצילומים ולבחירת בגדים</a
+      >.
+    </p>
+  </section>
+  <Journey current="gallery" cta />
 </Layout>

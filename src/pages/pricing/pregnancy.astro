@@ -1,10 +1,13 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
-import Prices from '~/components/widgets/Pricing.astro';
+import Button from '~/components/ui/Button.astro';
+import Journey from '~/components/pregnancy/Journey.astro';
+import ServiceSchema from '~/components/pregnancy/ServiceSchema.astro';
+import { pregnancyPackages, pregnancyWhatsApp, pregnancyChildSupplement } from '~/lib/pregnancy';
+import preview from '~/assets/images/pricing/pregnancy_pricing.jpg';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import { PRICES } from '~/lib/pricing';
 
@@ -13,6 +16,16 @@ const metadata = {
   title: `צילומי הריון מחיר: החל מ־${PRICES[session_type][1]}₪ | יוליה קורנסקי`,
   description: `כמה עולים צילומי הריון? חבילות ב־${PRICES[session_type][1]}, ${PRICES[session_type][2]} ו־${PRICES[session_type][3]} ש״ח בחולון ובמרכז. השוו זמן צילום, תמונות ערוכות ותוספות. סטודיו בתוספת תשלום.`,
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: '~/assets/images/pricing/pregnancy_pricing.jpg',
+        width: preview.width,
+        height: preview.height,
+        alt: 'צילומי הריון של יוליה קורנסקי',
+      },
+    ],
+  },
 };
 
 const breadcrumbs = [
@@ -22,7 +35,7 @@ const breadcrumbs = [
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <!-- HeroText Widget ******************* -->
+  <ServiceSchema />
 
   <HeroText
     tagline="יוליה קורנסקי · חולון ומרכז הארץ"
@@ -30,7 +43,7 @@ const breadcrumbs = [
     subtitle={`חבילות צילום החל מ־${PRICES[session_type][1]} ש״ח. צילומי הריון בחולון ובמרכז, עם הכוונה אישית וקצב שנוח לך.`}
     content="כל החבילות כוללות הכוונה לפני הצילום, תמונות בעריכה מלאה וגלריה דיגיטלית להורדה. צילום בסטודיו בתוספת תשלום ובתיאום מראש."
     callToAction={{ text: 'להשוואת החבילות', href: '#packages' }}
-    callToAction2={{ text: 'לבדיקת תאריך פנוי', href: 'https://wa.me/972525836940', target: '_blank' }}
+    callToAction2={{ text: 'לבדיקת תאריך פנוי', href: pregnancyWhatsApp(), target: '_blank' }}
   />
 
   <Breadcrumbs
@@ -63,105 +76,79 @@ const breadcrumbs = [
     </p>
   </section>
 
-  <!-- Pricing Widget ******************* -->
+  <Journey current="pricing" />
 
-  <Prices
-    id="packages"
-    title="חבילות צילומי הריון: מה כלול במחיר?"
-    subtitle=""
-    tagline="החבילות שלי"
-    prices={[
+  <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+    <h2 class="mb-4 text-center text-3xl font-bold">החבילה שמתאימה לך, במבט אחד</h2>
+    <p class="mb-8 text-center">כל המחירים לצילומי חוץ. בכל חבילה: הכוונה לפני הצילום, עריכה מלאה וגלריה דיגיטלית.</p>
+    <p class="mb-3 text-sm md:hidden">אפשר לגלול את הטבלה לצדדים כדי לראות את כל הפרטים.</p>
+    <div
+      class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700"
+      tabindex="0"
+      role="region"
+      aria-label="השוואת חבילות צילומי הריון"
+    >
+      <table class="w-full min-w-[560px] text-right">
+        <caption class="sr-only">השוואת מחיר, משך צילום וכמות תמונות בחבילות ההריון</caption>
+        <thead class="bg-gray-50 dark:bg-slate-800"
+          ><tr
+            ><th scope="col" class="p-4">החבילה</th><th scope="col" class="p-4">מחיר</th><th scope="col" class="p-4"
+              >זמן צילום</th
+            ><th scope="col" class="p-4">תמונות בעריכה מלאה</th></tr
+          ></thead
+        >
+        <tbody
+          >{
+            pregnancyPackages.map((p) => (
+              <tr class="border-t border-gray-200 dark:border-gray-700">
+                <th scope="row" class="p-4">
+                  <a href={`#${p.id}`} class="underline">
+                    {p.title}
+                  </a>
+                </th>
+                <td class="p-4 whitespace-nowrap">{p.price} ש״ח</td>
+                <td class="p-4">{p.duration}</td>
+                <td class="p-4">{p.photos}</td>
+              </tr>
+            ))
+          }</tbody
+        >
+      </table>
+    </div>
+    <div class="mt-8 grid gap-6 md:grid-cols-3">
       {
-        title: 'חבילת פרימיום',
-        subtitle: 'חוויה אישית ומעמיקה',
-        price: PRICES[session_type][3],
-        period: 'סשן הריון עם מקום לביטוי אישי, רוך ונוכחות',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'כשעתיים של צילומים',
-          },
-          {
-            description: 'עד 2 תלבושות, הפסקות לפי הצורך',
-          },
-          {
-            description: 'לפחות 50 - 70 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-          {
-            description: 'כל ילד בתוספת 100₪',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%94%D7%A8%D7%99%D7%95%D7%9F.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A4%D7%A8%D7%99%D7%9E%D7%99%D7%95%D7%9D%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A.',
-        },
-      },
-      {
-        title: 'החבילה הקלאסית',
-        subtitle: 'חוויה מלאה ונשית',
-        price: PRICES[session_type][2],
-        period: 'מושלם לצילומי הריון עם זמן, רוגע ומגוון פריימים',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'שעה וחצי של צילומים',
-          },
-          {
-            description: 'לפחות 40 - 50 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-          {
-            description: 'כל ילד בתוספת 100₪',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%94%D7%A8%D7%99%D7%95%D7%9F.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%A9%D7%AA%D7%9C%D7%9E%D7%AA%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A.',
-        },
-        hasRibbon: true,
-        ribbonTitle: 'הכי משתלם',
-      },
-      {
-        title: 'חבילת בסיס',
-        subtitle: 'סשן הריון קצר ועדין',
-        price: PRICES[session_type][1],
-        period: 'מתאים לצילומי הריון קצרים ונעימים',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: '45 דקות של צילומי הריון באווירה רגועה',
-          },
-          {
-            description: 'לפחות 30 - 40 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-          {
-            description: 'כל ילד בתוספת 100₪',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%94%D7%A8%D7%99%D7%95%D7%9F.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A.',
-        },
-      },
-    ]}
-  />
+        pregnancyPackages.map((p) => (
+          <article
+            id={p.id}
+            class="flex scroll-mt-24 flex-col rounded-2xl border border-gray-200 p-6 dark:border-gray-700"
+          >
+            <h3 class="mb-2 text-2xl font-bold">{p.title}</h3>
+            <p class="mb-4">{p.fit}</p>
+            <p class="mb-4 text-3xl font-bold">
+              {p.price} <span class="text-lg">ש״ח</span>
+            </p>
+            <ul class="mb-6 list-disc space-y-3 ps-5">
+              <li>{p.duration} צילום</li>
+              <li>{p.photos} תמונות בעריכה מלאה</li>
+
+              <li>הכוונה לפני הצילום וטיפים ללבוש</li>
+              <li>גלריה דיגיטלית באיכות גבוהה להורדה</li>
+
+              {p.extra && <li>{p.extra}</li>}
+              <li>כל ילד בתוספת {pregnancyChildSupplement} ש״ח</li>
+            </ul>
+            <Button
+              class="mt-auto"
+              href={pregnancyWhatsApp(`היי יוליה, אשמח לפרטים ולבדיקת תאריך לצילומי הריון — ${p.title}. אני בשבוע __.`)}
+              target="_blank"
+            >
+              לבדיקת תאריך — {p.title}
+            </Button>
+          </article>
+        ))
+      }
+    </div>
+  </section>
 
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-right">
     <h2 class="text-2xl font-bold">איך לבחור חבילת צילומי הריון?</h2>
@@ -178,12 +165,12 @@ const breadcrumbs = [
       היא 100 ש״ח לכל ילד.
     </p>
     <p>
-      למשל, חבילת הבסיס בצילומי חוץ עם ילד אחד עולה {PRICES[session_type][1] + 100} ש״ח. כך תוכלי להשוות לפי הסכום שמתאים
-      להרכב שלך, ולא רק לפי המחיר ההתחלתי.
+      למשל, חבילת הבסיס בצילומי חוץ עם ילד אחד עולה {PRICES[session_type][1] + pregnancyChildSupplement} ש״ח. כך תוכלי להשוות
+      לפי הסכום שמתאים להרכב שלך, ולא רק לפי המחיר ההתחלתי.
     </p>
     <h2 class="text-2xl font-bold">צילומי הריון בחולון ובמרכז — בטבע או בסטודיו?</h2>
     <p>
-      צילום בחוץ מתאים למי שאוהבת אור טבעי ומרחב פתוח. בגלריה שלי אפשר לראות גם צילומים מהגן היפני בחולון ולקבל תחושה של
+      צילום בחוץ מתאים למי שאוהבת אור טבעי ומרחב פתוח. בגלריה שלי אפשר לראות צילומים בים ובין העצים ולקבל תחושה של
       הסגנון. נבחר יחד לוקיישן לפי העונה, הנוחות שלך והאווירה שאת מחפשת. אם את מעדיפה סטודיו, נתאם אותו ואת העלות הנוספת
       לפני קביעת הסשן.
     </p>
@@ -229,7 +216,7 @@ const breadcrumbs = [
         icon: 'tabler:number-7',
       },
       {
-        title: 'לא שוכחים לתייג אותי 😉',
+        title: 'בוחרים את התמונה האהובה. מותר יותר מאחת.',
         icon: 'tabler:number-8',
       },
     ]}
@@ -255,7 +242,7 @@ const breadcrumbs = [
       {
         title: 'באיזה שבועות מומלץ לעשות צילומי הריון?',
         description:
-          'הזמן המומלץ לצילומי הריון הוא בין שבוע 28 לשבוע 34, כשהבטן כבר עגולה ויפה אבל עדיין נוח לזוז ולהצטלם. כמובן שכל גוף הוא שונה, ונוכל להתאים את התזמון לפי ההרגשה והנוחות שלך.',
+          'שבועות 28–34 הם נקודת התחלה לתכנון הצילום, ולא חלון קשיח. נבחר מועד לפי ההרגשה שלך והאופן שבו תרצי לתעד את ההריון.',
       },
       {
         title: 'איפה מתקיימים הצילומים?',
@@ -269,7 +256,7 @@ const breadcrumbs = [
       {
         title: 'מה קורה אם יורד גשם או מישהו חולה?',
         description:
-          'תמיד אפשר לתאם מועד חלופי - החיים קורים, ואני לגמרי מבינה. עדכנו אותי בהקדם, ונמצא מועד חדש שמתאים לשני הצדדים.',
+          'עדכני אותי בהקדם כדי שנתאם את ההמשך. דחיית סשן למועד חלופי אפשרית בהודעה עד 24 שעות מראש. תנאי החזר המקדמה מופיעים בהמשך.',
       },
       {
         title: 'מתי כדאי לסגור תאריך?',
@@ -291,5 +278,5 @@ const breadcrumbs = [
 
   <!-- CallToAction Widget *********** -->
 
-  <WhatssapCallToAction />
+  <Journey current="pricing" cta />
 </Layout>

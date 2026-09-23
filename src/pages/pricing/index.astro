@@ -1,5 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
+import { PRICES } from '~/lib/pricing';
 import ServiceCard from '~/components/widgets/ServiceCard.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
@@ -45,12 +46,11 @@ const breadcrumbs = [
         >
 
         <Fragment slot="title">
-          מחירי צילומי הריון - חבילות צילום הריון מקצועיים
+          מחירון צילומי הריון
         </Fragment>
 
         <Fragment slot="subtitle">
-          מחירים לחבילות צילום הריון - כולל צילומי הריון בטבע, בים, צילומי הריון זוגיים
-          ואפשרות לצילומי הריון צנועים.
+          חבילות צילומי חוץ החל מ־{PRICES["הריון"][1]} ש״ח. השווי זמן צילום, תמונות בעריכה מלאה ותוספות, ובחרי את הסשן שמתאים לך.
         </Fragment>
       </ServiceCard>
 

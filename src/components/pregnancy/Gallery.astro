@@ -1,0 +1,68 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import 'photoswipe/style.css';
+import { pregnancyImageDescriptions } from '~/lib/pregnancy-gallery';
+const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/pregnancy_gallery/*.jpg', { eager: true });
+const photos = await Promise.all(
+  Object.entries(files).map(async ([path, module]) => ({
+    image: module.default,
+    alt: pregnancyImageDescriptions[path.split('/').pop()!],
+    full: await getImage({ src: module.default, width: Math.min(1800, module.default.width) }),
+  }))
+);
+---
+
+<pregnancy-gallery class="block columns-2 gap-4 space-y-4 md:columns-3">
+  {
+    photos.map(({ image, alt, full }) => (
+      <a
+        href={full.src}
+        data-pswp-width={full.attributes.width}
+        data-pswp-height={full.attributes.height}
+        aria-label={`הגדלת תמונה: ${alt}`}
+        class="block break-inside-avoid overflow-hidden rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+      >
+        <Image
+          src={image}
+          alt={alt}
+          widths={[240, 400, 640, 800]}
+          sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw"
+          loading="lazy"
+          class="h-auto w-full transition duration-300 hover:scale-[1.02] motion-reduce:transition-none"
+        />
+      </a>
+    ))
+  }
+</pregnancy-gallery>
+<script>
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+  class PregnancyGallery extends HTMLElement {
+    lightbox?: PhotoSwipeLightbox;
+    connectedCallback() {
+      if (this.lightbox) return;
+      this.lightbox = new PhotoSwipeLightbox({
+        gallery: this,
+        children: 'a',
+        pswpModule: () => import('photoswipe'),
+        closeTitle: 'סגירה',
+        zoomTitle: 'הגדלה',
+        arrowPrevTitle: 'התמונה הקודמת',
+        arrowNextTitle: 'התמונה הבאה',
+        errorMsg: 'לא ניתן לטעון את התמונה כרגע.',
+      });
+      this.lightbox.init();
+    }
+    disconnectedCallback() {
+      this.lightbox?.destroy();
+      this.lightbox = undefined;
+    }
+  }
+  if (!customElements.get('pregnancy-gallery')) customElements.define('pregnancy-gallery', PregnancyGallery);
+</script>
+
+<style>
+  :global(.pswp__counter) {
+    direction: ltr;
+  }
+</style>
