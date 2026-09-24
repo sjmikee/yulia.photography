@@ -44,7 +44,7 @@ const breadcrumbs = [
       </h1>
       <p class="mb-5 text-xl leading-relaxed">
         לא צריך לדעת להצטלם. גם לא להגיע עם חיוך מוכן. נצא לאוויר הפתוח, נמצא אור יפה וניתן לך רגע להיות בדיוק כמו שאת —
-        עם הכוונה שלי וקצת מקום לצחוק.
+        עם הכוונה שלי והרבה מקום לצחוק.
       </p>
       <p class="mb-6">
         לבד, עם בן או בת הזוג, בלבוש מלא או בסגנון אחר שנוח לך. <strong
@@ -52,10 +52,10 @@ const breadcrumbs = [
         >
       </p>
       <div class="flex flex-wrap gap-3">
-        <Button variant="primary" href={pregnancyWhatsApp()} target="_blank" icon="tabler:brand-whatsapp"
+        <Button variant="primary" class="w-full" href={pregnancyWhatsApp()} target="_blank" icon="tabler:brand-whatsapp"
           >בואי נבדוק תאריך</Button
         >
-        <Button href="/gallery/pregnancy">לראות את התמונות</Button>
+        <Button class="w-full" href="/gallery/pregnancy">לראות את התמונות</Button>
       </div>
       <p class="mt-5">
         <a href="/pricing/pregnancy" class="underline underline-offset-4">למחירון ולכל מה שכלול בחבילות</a>
@@ -93,8 +93,8 @@ const breadcrumbs = [
       </div>
       <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
         <h3 class="mb-3 text-xl font-bold">ואחר כך, התמונות שלך</h3><p>
-          תקבלי תמונות בעריכה מלאה בגלריה דיגיטלית להורדה, עד 14 ימי עסקים מיום הצילום. משך הסשן וכמות התמונות תלויים
-          בחבילה שתבחרי.
+          תקבלי תמונות בעריכה מלאה בגלריה דיגיטלית להורדה, עד 14 ימי עסקים מיום הצילום. כמות התמונות נקבעת לפי החבילה
+          שתבחרי; משך הצילום שמופיע במחירון הוא הערכה לתכנון הסשן.
         </p>
       </div>
     </div>
@@ -103,15 +103,15 @@ const breadcrumbs = [
 
   <section class="mx-auto grid max-w-5xl items-center gap-8 px-4 py-12 md:grid-cols-2">
     <Image
-      src={beach}
-      alt="אישה בהריון בשמלה לבנה בתנועה על סלעים ליד הים"
+      src={couple}
+      alt="זוג מחובק בצילומי הריון לצד קיר אבן וצמחייה"
       widths={[400, 640, 900]}
       sizes="(min-width: 768px) 45vw, 100vw"
       loading="lazy"
       class="w-full rounded-2xl"
     />
     <div class="space-y-4">
-      <h2 class="text-3xl font-bold">בטבע או בים: איזה רקע מרגיש לך נכון?</h2>
+      <h2 class="text-3xl font-bold">בטבע, בים או בעיר: איזה רקע מרגיש לך נכון?</h2>
       <p>
         <strong>צילומי הריון בטבע</strong> מתאימים למי שאוהבת ירוק, עצים ואור שעובר בין העלים. <strong
           >צילומי הריון בים</strong
@@ -122,16 +122,28 @@ const breadcrumbs = [
         יפה צריך קודם כול להתאים לך.
       </p>
       <p>מעדיפה סטודיו? אפשר לתאם צילום בסטודיו בתוספת תשלום. את המקום והעלות נסכם מראש.</p>
-      <a href="/gallery/pregnancy" class="inline-block font-semibold underline">לגלריה: צילומים בים ובין העצים</a>
+      <a href="/gallery/pregnancy" class="inline-block font-semibold underline">לגלריה: צילומים בים וביער</a>
     </div>
   </section>
 
   <section class="mx-auto grid max-w-5xl items-center gap-8 px-4 py-12 md:grid-cols-2">
     <div class="space-y-4">
-      <h2 class="text-3xl font-bold">לבד, בזוג או עם האחים שבדרך</h2>
+      <h2 class="text-3xl font-bold">לבד, בזוג או עם הילדים</h2>
+      <h3 class="text-xl font-bold">כשאת מגיעה לבד, כל הסיפור הוא שלך</h3>
       <p>
-        אפשר לתת את הבמה רק לך, ואפשר לשלב בן או בת זוג. בצילומי הריון זוגיים יש מקום לחיבוק, למבט ולבדיחה שרק שניכם
-        מבינים.
+        סשן אישי הוא הזדמנות לתת מקום לך ולתקופה שאת עוברת: לא רק לבטן, אלא גם למבט, לחיוך ולאופי שלך. אפשר ליצור
+        דיוקנאות קרובים ועדינים, להכניס תנועה ולשחק עם הבגד והרוח, או לבחור רגעים שקטים בין העצים. לא צריך להגיע עם מצב
+        רוח מסוים — יש מקום גם להתרגשות וגם לביישנות.
+      </p>
+      <p>
+        נבחר יחד לבוש ואווירה שמרגישים לך טבעיים. לאורך הצילום אני איתך, מכוונת בעדינות ועוזרת למצוא תנוחות שנוחות לך.
+        את לא צריכה להמציא פוזות; את יכולה פשוט לנשום, לזוז קצת ולתת לעצמך להיות במרכז. ניצור אוסף
+        אישי שתוכלי לחזור אליו ולהיזכר איך הרגע הזה הרגיש לך.
+      </p>
+      <h3 class="text-xl font-bold">ואם מתחשק לך לחלוק את הפריים</h3>
+      <p>
+        אפשר לשלב בן או בת זוג. בצילומי הריון זוגיים יש מקום לחיבוק, למבט ולבדיחה שרק שניכם מבינים, וגם לצילומים שלך לבד
+        בתוך הסשן המשותף.
       </p>
       <p>
         ילדים מצטרפים? ספרי לי מראש כדי שנוכל לתכנן גם רגעים משפחתיים וגם זמן בשבילך. השתתפות ילדים היא בתוספת 100 ש״ח
@@ -144,8 +156,8 @@ const breadcrumbs = [
       </p>
     </div>
     <Image
-      src={couple}
-      alt="זוג מחובק בצילומי הריון לצד קיר אבן וצמחייה"
+      src={beach}
+      alt="אישה בהריון בשמלה לבנה בתנועה על סלעים ליד הים"
       widths={[400, 640, 900]}
       sizes="(min-width: 768px) 45vw, 100vw"
       loading="lazy"
@@ -220,8 +232,10 @@ const breadcrumbs = [
   <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
     <h2 class="text-3xl font-bold">כמה עולה לתעד את הרגע הזה?</h2>
     <p>
-      חבילות צילומי החוץ נעות בין {pregnancyPackages[0].price} ל־{pregnancyPackages[2].price} ש״ח, מ־45 דקות ועד כשעתיים.
-      כולן כוללות הכוונה, עריכה מלאה וגלריה דיגיטלית. ילדים וסטודיו בתוספת תשלום.
+      חבילות צילומי החוץ נעות בין {pregnancyPackages[0].price} ל־{pregnancyPackages[2].price} ש״ח. ההבדל המרכזי הוא כמות התמונות
+      בעריכה מלאה: {pregnancyPackages[0].photos} בבסיס, {pregnancyPackages[1].photos} בקלאסית ו־{
+        pregnancyPackages[2].photos
+      } בפרימיום. כולן כוללות הכוונה וגלריה דיגיטלית. זמני הצילום במחירון הם הערכה לתכנון הסשן. ילדים וסטודיו בתוספת תשלום.
     </p>
     <Button href="/pricing/pregnancy">להשוואת החבילות והמחירים</Button>
   </section>

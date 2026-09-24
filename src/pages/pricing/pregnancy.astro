@@ -2,6 +2,7 @@
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import Button from '~/components/ui/Button.astro';
+import { Icon } from 'astro-icon/components';
 import Journey from '~/components/pregnancy/Journey.astro';
 import ServiceSchema from '~/components/pregnancy/ServiceSchema.astro';
 import { pregnancyPackages, pregnancyWhatsApp, pregnancyChildSupplement } from '~/lib/pregnancy';
@@ -12,9 +13,10 @@ import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import { PRICES } from '~/lib/pricing';
 
 const session_type = 'הריון';
+const displayedPackages = [...pregnancyPackages].sort((a, b) => b.price - a.price);
 const metadata = {
   title: `צילומי הריון מחיר: החל מ־${PRICES[session_type][1]}₪ | יוליה קורנסקי`,
-  description: `כמה עולים צילומי הריון? חבילות ב־${PRICES[session_type][1]}, ${PRICES[session_type][2]} ו־${PRICES[session_type][3]} ש״ח בחולון ובמרכז. השוו זמן צילום, תמונות ערוכות ותוספות. סטודיו בתוספת תשלום.`,
+  description: `כמה עולים צילומי הריון? חבילות ב־${PRICES[session_type][1]}, ${PRICES[session_type][2]} ו־${PRICES[session_type][3]} ש״ח בחולון ובמרכז. השוו חבילות לפי כמות התמונות הערוכות והתוספות. סטודיו בתוספת תשלום.`,
   ignoreTitleTemplate: true,
   openGraph: {
     images: [
@@ -52,10 +54,12 @@ const breadcrumbs = [
   <section class="mx-auto max-w-4xl px-4 py-8 text-right">
     <h2 class="mb-4 text-2xl font-bold">כמה עולים צילומי הריון?</h2>
     <p class="mb-4">
-      <strong>מחיר צילומי הריון אצלי נע בין {PRICES[session_type][1]} ל־{PRICES[session_type][3]} ש״ח.</strong> חבילת הבסיס
-      עולה {PRICES[session_type][1]} ש״ח וכוללת 45 דקות צילום; החבילה הקלאסית עולה {PRICES[session_type][2]} ש״ח וכוללת שעה
-      וחצי; חבילת הפרימיום עולה {PRICES[session_type][3]} ש״ח וכוללת כשעתיים. ההבדלים בכמות התמונות ובתכולת החבילות מפורטים
-      בהמשך.
+      <strong>מחיר צילומי הריון אצלי נע בין {PRICES[session_type][1]} ל־{PRICES[session_type][3]} ש״ח.</strong> ההבדל המרכזי
+      בין החבילות הוא כמות התמונות שתקבלי בעריכה מלאה: בחבילת הבסיס {pregnancyPackages[0].photos} תמונות ב־{
+        pregnancyPackages[0].price
+      } ש״ח, בקלאסית {pregnancyPackages[1].photos} תמונות ב־{pregnancyPackages[1].price} ש״ח, ובפרימיום {
+        pregnancyPackages[2].photos
+      } תמונות ב־{pregnancyPackages[2].price} ש״ח.
     </p>
     <p class="mb-4">
       המחירים מתייחסים לצילומי חוץ. סטודיו אפשרי בתוספת תשלום ובתיאום מראש; השתתפות ילדים בצילומי ההריון היא בתוספת 100
@@ -63,9 +67,8 @@ const breadcrumbs = [
     </p>
 
     <p class="mb-4">
-      אם את רוצה מזכרת ממוקדת מההריון, חבילת הבסיס מאפשרת סשן קצר עם הכוונה לאורך הדרך. החבילות הארוכות מתאימות כשחשוב
-      לך יותר זמן להתרגל למצלמה, לגוון בתמונות או לשלב רגעים זוגיים ומשפחתיים. לא צריך ניסיון בדוגמנות — אני מלווה אותך
-      בבחירת הלבוש ובמהלך הצילום.
+      בחרי לפי האוסף שתרצי לקחת איתך: מזכרת ממוקדת או יותר תמונות ומגוון של רגעים אישיים, זוגיים ומשפחתיים. משך הצילום
+      הוא הערכה לתכנון היום, ולא המדד לבחירת החבילה. בכל חבילה אני מכוונת אותך לאורך הסשן, בקצב שנוח לך.
     </p>
     <p>
       לפני הבחירה, תוכלי להתרשם <a href="/gallery/pregnancy" class="font-semibold underline"
@@ -81,6 +84,7 @@ const breadcrumbs = [
   <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
     <h2 class="mb-4 text-center text-3xl font-bold">החבילה שמתאימה לך, במבט אחד</h2>
     <p class="mb-8 text-center">כל המחירים לצילומי חוץ. בכל חבילה: הכוונה לפני הצילום, עריכה מלאה וגלריה דיגיטלית.</p>
+    <p class="mb-4 text-center text-sm">הזמנים בטבלה הם הערכה לתכנון הסשן. בחרי לפי כמות התמונות והאוסף שתרצי לקבל.</p>
     <p class="mb-3 text-sm md:hidden">אפשר לגלול את הטבלה לצדדים כדי לראות את כל הפרטים.</p>
     <div
       class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700"
@@ -89,26 +93,27 @@ const breadcrumbs = [
       aria-label="השוואת חבילות צילומי הריון"
     >
       <table class="w-full min-w-[560px] text-right">
-        <caption class="sr-only">השוואת מחיר, משך צילום וכמות תמונות בחבילות ההריון</caption>
-        <thead class="bg-gray-50 dark:bg-slate-800"
-          ><tr
-            ><th scope="col" class="p-4">החבילה</th><th scope="col" class="p-4">מחיר</th><th scope="col" class="p-4"
-              >זמן צילום</th
-            ><th scope="col" class="p-4">תמונות בעריכה מלאה</th></tr
-          ></thead
-        >
+        <caption class="sr-only">השוואת כמות תמונות, מחיר ומשך צילום משוער בחבילות ההריון</caption>
+        <thead class="bg-gray-50 dark:bg-slate-800">
+          <tr>
+            <th scope="col" class="p-4">החבילה</th>
+            <th scope="col" class="p-4">תמונות בעריכה מלאה</th>
+            <th scope="col" class="p-4">מחיר</th>
+            <th scope="col" class="p-4">משך צילום משוער</th>
+          </tr>
+        </thead>
         <tbody
           >{
-            pregnancyPackages.map((p) => (
+            displayedPackages.map((p) => (
               <tr class="border-t border-gray-200 dark:border-gray-700">
                 <th scope="row" class="p-4">
                   <a href={`#${p.id}`} class="underline">
                     {p.title}
                   </a>
                 </th>
+                <td class="p-4 font-bold text-accent">{p.photos}</td>
                 <td class="p-4 whitespace-nowrap">{p.price} ש״ח</td>
-                <td class="p-4">{p.duration}</td>
-                <td class="p-4">{p.photos}</td>
+                <td class="p-4 text-sm">{p.duration}</td>
               </tr>
             ))
           }</tbody
@@ -117,28 +122,48 @@ const breadcrumbs = [
     </div>
     <div class="mt-8 grid gap-6 md:grid-cols-3">
       {
-        pregnancyPackages.map((p) => (
+        displayedPackages.map((p) => (
           <article
             id={p.id}
-            class="flex scroll-mt-24 flex-col rounded-2xl border border-gray-200 p-6 dark:border-gray-700"
+            class="relative mx-auto flex w-full max-w-sm scroll-mt-24 flex-col rounded-lg border border-gray-200 bg-white px-6 py-8 text-center shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-slate-900"
           >
-            <h3 class="mb-2 text-2xl font-bold">{p.title}</h3>
-            <p class="mb-4">{p.fit}</p>
-            <p class="mb-4 text-3xl font-bold">
+            {p.id === 'classic' && (
+              <div
+                class="pointer-events-none absolute -left-2 -top-2 z-10 h-[100px] w-[100px] overflow-hidden"
+                aria-label="הכי משתלם"
+              >
+                <span class="absolute -left-[21px] top-[19px] block w-full -rotate-45 bg-green-700 text-center text-[10px] font-bold leading-5 text-white shadow-md">
+                  הכי משתלם
+                </span>
+              </div>
+            )}
+            <h3 class="mb-2 text-xl font-semibold leading-6 tracking-wider">{p.title}</h3>
+            <p class="mb-3 text-2xl font-bold text-accent">{p.photos} תמונות בעריכה מלאה</p>
+            <p class="mb-4 font-light text-gray-600 sm:text-lg dark:text-slate-400">{p.fit}</p>
+            <p class="my-8 text-4xl font-extrabold">
               {p.price} <span class="text-lg">ש״ח</span>
             </p>
-            <ul class="mb-6 list-disc space-y-3 ps-5">
-              <li>{p.duration} צילום</li>
-              <li>{p.photos} תמונות בעריכה מלאה</li>
-
-              <li>הכוונה לפני הצילום וטיפים ללבוש</li>
-              <li>גלריה דיגיטלית באיכות גבוהה להורדה</li>
-
-              {p.extra && <li>{p.extra}</li>}
-              <li>כל ילד בתוספת {pregnancyChildSupplement} ש״ח</li>
+            <ul class="mb-8 space-y-2 text-right">
+              {[
+                `משך צילום משוער: ${p.duration}`,
+                'הכוונה לפני הצילום וטיפים ללבוש',
+                'גלריה דיגיטלית באיכות גבוהה להורדה',
+                p.extra,
+                `כל ילד בתוספת ${pregnancyChildSupplement} ש״ח`,
+              ]
+                .filter(Boolean)
+                .map((description, index) => (
+                  <li class:list={['flex items-start gap-3 leading-7', { 'text-sm': index === 0 }]}>
+                    <span class="mt-1 shrink-0 rounded-full bg-green-700" aria-hidden="true">
+                      <Icon name="tabler:check" class="h-5 w-5 p-1 font-bold text-white" />
+                    </span>
+                    <span>{description}</span>
+                  </li>
+                ))}
             </ul>
             <Button
               class="mt-auto"
+              {...(p.id === 'classic' ? { variant: 'primary' as const } : {})}
               href={pregnancyWhatsApp(`היי יוליה, אשמח לפרטים ולבדיקת תאריך לצילומי הריון — ${p.title}. אני בשבוע __.`)}
               target="_blank"
             >
@@ -153,16 +178,19 @@ const breadcrumbs = [
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-right">
     <h2 class="text-2xl font-bold">איך לבחור חבילת צילומי הריון?</h2>
     <p>
-      <strong>בסיס:</strong> מתאימה אם את מעדיפה 45 דקות ממוקדות ורוצה מזכרת מהתקופה בלי לפנות זמן לסשן ארוך. <strong
-        >קלאסית:</strong
-      > שעה וחצי שמאפשרת להתרגל למצלמה וליצור מגוון רחב יותר של תמונות. <strong>פרימיום:</strong> כשעתיים, עד שתי תלבושות
-      והפסקות לפי הצורך, למי שרוצה יותר זמן וביטוי אישי.
+      <strong>בסיס:</strong>
+      {pregnancyPackages[0].photos} תמונות בעריכה מלאה — אוסף ממוקד של הרגעים שלך.
+      <strong>קלאסית:</strong>
+      {pregnancyPackages[1].photos} תמונות — למי שרוצה אוסף עשיר יותר של הבעות, תנועה ורגעים יחד.
+      <strong>פרימיום:</strong>
+      {pregnancyPackages[2].photos} תמונות — האוסף הרחב ביותר, עם עד שתי תלבושות. זמני הצילום המשוערים מופיעים בטבלה כדי לעזור
+      לך לתכנן את היום; מספר התמונות הוא ההבדל המרכזי בין החבילות.
     </p>
     <h2 class="text-2xl font-bold">מה כלול ומה בתוספת תשלום?</h2>
     <p>
-      בכל חבילה תקבלי הכוונה לפני הצילום, טיפים ללבוש, תמונות בעריכה מלאה וקישור לגלריה דיגיטלית באיכות גבוהה. העריכה
-      אורכת עד 14 ימי עסקים. הסטודיו אינו כלול במחיר החבילה; את התוספת נברר מראש לפי הסשן. אם תרצי לשלב ילדים, התוספת
-      היא 100 ש״ח לכל ילד.
+      בכל חבילה תקבלי הכוונה לפני הצילום, המלצות ללבוש (אם צריך נעשה שיחת וידיאו ונעבור ביחד על הארון), תמונות בעריכה
+      מלאה וקישור לגלריה דיגיטלית באיכות גבוהה. העריכה אורכת עד 14 ימי עסקים. הסטודיו אינו כלול במחיר החבילה; את התוספת
+      נברר מראש לפי הסשן. אם תרצי לשלב ילדים, התוספת היא 100 ש״ח לכל ילד.
     </p>
     <p>
       למשל, חבילת הבסיס בצילומי חוץ עם ילד אחד עולה {PRICES[session_type][1] + pregnancyChildSupplement} ש״ח. כך תוכלי להשוות
@@ -216,7 +244,7 @@ const breadcrumbs = [
         icon: 'tabler:number-7',
       },
       {
-        title: 'בוחרים את התמונה האהובה. מותר יותר מאחת.',
+        title: 'ממליצים לחברים',
         icon: 'tabler:number-8',
       },
     ]}
@@ -232,7 +260,7 @@ const breadcrumbs = [
     items={[
       {
         title: 'כמה עולה חבילת צילומי הריון בסיסית?',
-        description: `חבילת הבסיס עולה ${PRICES[session_type][1]} ש״ח וכוללת 45 דקות צילום, הכוונה לפני הצילום, לפחות 30–40 תמונות בעריכה מלאה וגלריה דיגיטלית. צילום בסטודיו בתוספת תשלום ובתיאום מראש.`,
+        description: `חבילת הבסיס עולה ${PRICES[session_type][1]} ש״ח וכוללת ${pregnancyPackages[0].photos} תמונות בעריכה מלאה, הכוונה לפני הצילום וגלריה דיגיטלית. משך הצילום המשוער הוא ${pregnancyPackages[0].duration}; הזמן הוא הערכה לתכנון הסשן. צילום בסטודיו בתוספת תשלום ובתיאום מראש.`,
       },
       {
         title: 'מתי ואיך מקבלים את התמונות?',
@@ -251,7 +279,8 @@ const breadcrumbs = [
       },
       {
         title: 'את עוזרת עם בגדים / צבעים?',
-        description: 'בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.',
+        description:
+          'בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב. אם צריך נעבור ביחד על ארון הבגדים',
       },
       {
         title: 'מה קורה אם יורד גשם או מישהו חולה?',
@@ -260,7 +289,7 @@ const breadcrumbs = [
       },
       {
         title: 'מתי כדאי לסגור תאריך?',
-        description: 'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות.',
+        description: 'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות (מאי עד אוקטובר)',
       },
       {
         title: 'צריך לשלם מקדמה?',

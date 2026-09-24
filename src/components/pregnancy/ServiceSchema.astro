@@ -15,7 +15,7 @@ const schema = {
     name: p.title,
     price: p.price,
     priceCurrency: 'ILS',
-    description: `${p.duration} צילום חוץ, ${p.photos} תמונות בעריכה מלאה וגלריה דיגיטלית. ילדים וסטודיו בתוספת תשלום.`,
+    description: `${p.photos} תמונות בעריכה מלאה וגלריה דיגיטלית בצילומי חוץ. משך צילום משוער: ${p.duration}. ילדים וסטודיו בתוספת תשלום.`,
     url: new URL(`${pregnancyLinks.pricing}#${p.id}`, site).href,
   })),
 };

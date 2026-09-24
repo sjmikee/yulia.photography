@@ -58,6 +58,10 @@ export const headerData = {
       href: getPermalink('/pricing'),
       links: [
         {
+          text: 'הריון',
+          href: getPermalink('/pricing/pregnancy'),
+        },
+        {
           text: 'זוגיות',
           href: getPermalink('/pricing/couples'),
         },
@@ -68,10 +72,6 @@ export const headerData = {
         {
           text: 'נשיות ובודואר',
           href: getPermalink('/pricing/feminine'),
-        },
-        {
-          text: 'הריון',
-          href: getPermalink('/pricing/pregnancy'),
         },
         {
           text: 'בוק אישי',
@@ -149,10 +149,10 @@ export const footerData = {
     {
       title: 'מחירון',
       links: [
+        { text: 'הריון', href: getPermalink('/pricing/pregnancy') },
         { text: 'זוגיות', href: getPermalink('/pricing/couples') },
         { text: 'זוגיות אינטימי', href: getPermalink('/pricing/couples-intimate') },
         { text: 'נשיות ובודואר', href: getPermalink('/pricing/feminine') },
-        { text: 'הריון', href: getPermalink('/pricing/pregnancy') },
         { text: 'בוק אישי', href: getPermalink('/pricing/personal') },
         { text: 'גיל שנה', href: getPermalink('/pricing/first-year') },
         { text: 'משפחה', href: getPermalink('/pricing/family') },
