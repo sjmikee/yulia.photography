@@ -3,9 +3,10 @@ import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import 'photoswipe/style.css';
 interface Props {
+  layout?: 'masonry' | 'grid';
   images: Array<{ image: ImageMetadata; alt: string }>;
 }
-const { images } = Astro.props;
+const { images, layout = 'masonry' } = Astro.props;
 const photos = await Promise.all(
   images.map(async ({ image, alt }) => ({
     image,
@@ -15,7 +16,11 @@ const photos = await Promise.all(
 );
 ---
 
-<photoshoot-gallery class="block columns-2 gap-4 space-y-4 md:columns-3">
+<photoshoot-gallery
+  class:list={[
+    layout === 'grid' ? 'grid grid-cols-2 gap-4 md:grid-cols-4' : 'block columns-2 gap-4 space-y-4 md:columns-3',
+  ]}
+>
   {
     photos.map(({ image, alt, full }) => (
       <a
@@ -29,9 +34,16 @@ const photos = await Promise.all(
           src={image}
           alt={alt}
           widths={[240, 400, 640, 800]}
-          sizes="(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw"
+          sizes={
+            layout === 'grid'
+              ? '(min-width: 1024px) 240px, (min-width: 768px) 23vw, 46vw'
+              : '(min-width: 1152px) 360px, (min-width: 768px) 31vw, 46vw'
+          }
           loading="lazy"
-          class="h-auto w-full transition duration-300 hover:scale-[1.02] motion-reduce:transition-none"
+          class:list={[
+            'w-full transition duration-300 hover:scale-[1.02] motion-reduce:transition-none',
+            layout === 'grid' ? 'aspect-[2/3] h-full object-cover' : 'h-auto',
+          ]}
         />
       </a>
     ))

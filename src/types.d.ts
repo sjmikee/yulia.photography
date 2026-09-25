@@ -209,7 +209,10 @@ export interface ContentType extends Omit<Headline, 'classes'>, Widget {
   subTitle?: string;
   text?: string;
   callToAction?: CallToAction;
+  actions?: CallToAction[];
   imagesFolder?: string;
+  galleryImages?: Array<{ image: ImageMetadata; alt: string }>;
+  galleryLayout?: 'masonry' | 'grid';
 }
 
 export interface SlideModalType extends Omit<Headline, 'classes'>, Widget {

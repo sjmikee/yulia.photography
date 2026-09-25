@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import { feminineFeaturedImages } from '~/lib/feminine-gallery';
 import Layout from '~/layouts/PageLayout.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import Journey from '~/components/photoshoots/Journey.astro';
@@ -9,10 +11,21 @@ import PricingCards from '~/components/ui/PricingCards.astro';
 import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import { femininePricingCards } from '~/lib/feminine';
+import preview from '~/assets/feminine_gallery/feminine_pricing.jpg';
 const metadata = {
   title: `צילומי נשיות מחיר: החל מ־${femininePackages[0].price}₪ | יוליה קורנסקי`,
   description: `מחירון צילומי נשיות ובודואר בחולון ובמרכז: ${femininePackages.map((p) => p.price).join(', ')} ש״ח. השוואת תמונות בעריכה מלאה, משך צילום ומה כלול. סטודיו בתוספת תשלום.`,
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: '~/assets/feminine_gallery/feminine_pricing.jpg',
+        width: preview.width,
+        height: preview.height,
+        alt: 'צילום נשיות של יוליה קורנסקי',
+      },
+    ],
+  },
 };
 const breadcrumbs = [
   { url: '/pricing', name: 'מחירון' },
@@ -86,6 +99,31 @@ const breadcrumbs = [
     <p>
       מדברות על הסגנון והגבולות שלך, בוחרות חבילה ולוקיישן וקובעות תאריך עם מקדמה של 100 ש״ח. ביום הצילום אני מכוונת
       אותך צעד־צעד, ואחריו עוברת לעריכת התמונות. לך נשאר לפנות להן מקום בלב. וגם בטלפון.
+    </p>
+  </section>
+  <section class="mx-auto max-w-5xl px-4 py-10">
+    <h2 class="mb-4 text-3xl font-bold">רגעים מהגלריה</h2>
+    <div class="grid gap-5 sm:grid-cols-3">
+      {
+        feminineFeaturedImages.map(({ image, alt }) => (
+          <figure>
+            <Image
+              src={image}
+              alt={alt}
+              widths={[320, 480, 640]}
+              sizes="(min-width: 1024px) 310px, (min-width: 640px) 30vw, 92vw"
+              loading="lazy"
+              class="aspect-[4/5] w-full rounded-2xl object-cover"
+            />
+          </figure>
+        ))
+      }
+    </div>
+    <p class="mt-6">
+      <a class="font-semibold underline" href="/gallery/feminine">לגלריית צילומי הנשיות המלאה</a> · <a
+        class="underline"
+        href="/about">להכיר את יוליה, הצלמת שמאחורי התמונות</a
+      >
     </p>
   </section>
   <FAQs

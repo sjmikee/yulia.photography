@@ -2,19 +2,25 @@
 import Content from './Content.astro';
 import type { ContentGridType as Props } from '~/types';
 
-const {
-  contentArray = [],
-  bg = await Astro.slots.render('bg'),
-} = Astro.props;
+const { contentArray = [], bg = await Astro.slots.render('bg') } = Astro.props;
 ---
-
 
 {
   contentArray && (
     <div class="text-center items-center">
-      {contentArray.map((content) => 
-        <Content title={content.title} subTitle={content.subTitle}  text={content.text} callToAction={content.callToAction} imagesFolder={content.imagesFolder} bg={bg}/>
-      )}
+      {contentArray.map((content) => (
+        <Content
+          title={content.title}
+          subTitle={content.subTitle}
+          text={content.text}
+          callToAction={content.callToAction}
+          actions={content.actions}
+          imagesFolder={content.imagesFolder}
+          galleryImages={content.galleryImages}
+          galleryLayout={content.galleryLayout}
+          bg={bg}
+        />
+      ))}
     </div>
   )
 }

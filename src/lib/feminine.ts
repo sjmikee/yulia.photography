@@ -91,3 +91,13 @@ export const feminineService: PhotoshootService = {
     url: `${feminineLinks.pricing}#${p.id}`,
   })),
 };
+
+export const feminineFacts = [
+  { label: 'מי מצלמת ואיפה?', value: 'יוליה קורנסקי · צילומי נשיות ובודואר בחולון ובמרכז הארץ.' },
+  {
+    label: 'כמה עולה הסשן?',
+    value: `חבילות צילומי חוץ החל מ־${femininePackages[0].price} ש״ח. סטודיו בתוספת תשלום ובתיאום מראש.`,
+  },
+  { label: 'מה מקבלים?', value: 'הכוונה לפני הצילום ובמהלכו, תמונות בעריכה מלאה לפי החבילה וגלריה דיגיטלית להורדה.' },
+  { label: 'מתי התמונות מגיעות?', value: 'עד 14 ימי עסקים מיום הצילום.' },
+];

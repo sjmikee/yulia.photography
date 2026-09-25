@@ -6,6 +6,7 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import StaticHero from '~/components/widgets/StaticHero.astro';
 import ContentGrid from '~/components/widgets/ContentGrid.astro';
+import { feminineHomepageImages } from '~/lib/feminine-gallery';
 import Reviews from '~/components/widgets/reviews.astro';
 
 const metadata = {
@@ -69,7 +70,25 @@ const metadata = {
         text: `צילומי הריון בטבע ובים בחולון ובמרכז, עם הכוונה נעימה וקצת מקום לצחוק.
 לבד או בזוג, בלבוש ובקצב שנוחים לך.
 לא צריך לדעת להצטלם — בשביל זה אני כאן.`,
-        callToAction: { text: 'בואי להכיר את הסשן', href: '/services/pregnancy-photography', icon: 'tabler:camera' },
+        actions: [
+          { text: 'על צילומי הריון', href: '/services/pregnancy-photography', icon: 'tabler:camera' },
+          { text: 'מחירון צילומי הריון', href: '/pricing/pregnancy', icon: 'tabler:currency-shekel' },
+          { text: 'גלריית צילומי הריון', href: '/gallery/pregnancy', icon: 'tabler:library-photo' },
+        ],
+      },
+      {
+        galleryImages: feminineHomepageImages,
+        galleryLayout: 'grid',
+        title: 'צילומי נשיות ובודואר',
+        subTitle: 'את, באור שלך',
+        text: `רגע לעצמך, בלי פוזות מוכנות ובלי לדעת מה לעשות עם הידיים.
+נמצא אור יפה, נבחר את הקצב שלך ונשאיר מקום גם לצחוק.
+צילומי נשיות בחולון ובמרכז — בלבוש ובסגנון שמרגישים לך נכון.`,
+        actions: [
+          { text: 'על צילומי נשיות', href: '/services/feminine-photography', icon: 'tabler:camera' },
+          { text: 'מחירון צילומי נשיות', href: '/pricing/feminine', icon: 'tabler:currency-shekel' },
+          { text: 'גלריית צילומי נשיות', href: '/gallery/feminine', icon: 'tabler:library-photo' },
+        ],
       },
       {
         imagesFolder: 'solo_index',
