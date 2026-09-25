@@ -1,29 +1,20 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
-import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
-import { PRICES } from '~/lib/pricing';
 import { Image } from 'astro:assets';
-import image_1 from '~/assets/solo_gallery/בחורה_יושבת_על_הריצפה_על_רקע_לבן_בסטודיו_צילומי_תדמית.jpg';
-import image_2 from '~/assets/solo_gallery/בחורה_יושבת_על_הרצפה_בתוך_מבנה_נטוש_אור_שמש_נכנס_מהחלון_צילומי_תדמית.jpg';
-import image_3 from '~/assets/solo_gallery/בחורה_בסטודיו_יושבת_על_כיסא_גבוה_עם_תאורה_אדומה_צילומי_תדמית.jpg';
-import image_4 from '~/assets/solo_gallery/בחורה_ליד_מסגרת_עץ_שחור_לבן_פורטר_בוק_אישי_צילום_תדמית.jpg';
-import image_5 from '~/assets/solo_gallery/בחורה_יושבת_ביער_על_ספסל_עץ_אור_שמש_נכנס_בין_העצים_בוק_אישי.jpg';
-import image_6 from '~/assets/solo_gallery/בחורה_על_רקע_שיחים_בשחור_לבן_פורטר_בוק_אישי.jpg';
-import image_7 from '~/assets/solo_gallery/בחורה_יושבת_על_שולחן_צילומי_בוק.jpg';
-import osher_review from '~/assets/reviewers/osher_review.jpg';
-import inbal_review from '~/assets/reviewers/inbal_review.jpg';
-
+import Button from '~/components/ui/Button.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import ImageSection from '~/components/photoshoots/ImageSection.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { feminineJourney, femininePackages, feminineWhatsApp, feminineService } from '~/lib/feminine';
+import { feminineGalleryImages } from '~/lib/feminine-gallery';
+const hero = feminineGalleryImages[4];
 const metadata = {
-  title: 'צילומי נשיות ובודואר מעצימים | יוליה קורנסקי',
-  description:
-    'צילומי נשיות וצילומי בודואר באווירה אישית, בטוחה ואומנותית. הכוונה עדינה, קצב שלך ותמונות שמדגישות רוך, עוצמה וביטוי אישי.',
+  title: 'צילומי נשיות ובודואר בחולון ובמרכז | יוליה קורנסקי',
+  description: `צילומי נשיות ובודואר עם יוליה קורנסקי: הכוונה אישית, לבוש וגבולות לבחירתך, בחוץ או בסטודיו בתיאום. חבילות החל מ־${femininePackages[0].price} ש״ח. הכירי את החוויה והגלריה.`,
   ignoreTitleTemplate: true,
 };
-
 const breadcrumbs = [
   { url: '/services', name: 'סוגי צילומים' },
   { url: '/services/feminine-photography', name: 'צילומי נשיות ובודואר' },
@@ -31,108 +22,146 @@ const breadcrumbs = [
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <Hero2
-    id="hero"
-    actions={[
-      {
-        variant: 'primary',
-        text: 'דברי איתי בווטסאפ',
-        href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אני%20מתעניינת%20בצילומי%20נשיות',
-        target: '_blank',
-        icon: 'tabler:brand-whatsapp',
-      },
-      { text: 'או בשיחת טלפון', href: 'tel:+972525836940' },
+  <ServiceSchema service={feminineService} />
+  <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:gap-12 md:py-12">
+    <div>
+      <p class="mb-3 font-semibold text-accent">יוליה קורנסקי · חולון ומרכז הארץ</p>
+      <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
+        צילומי נשיות ובודואר<br /><span class="text-accent">את, באור שלך.</span>
+      </h1>
+      <p class="mb-5 text-xl leading-relaxed">
+        לא צריך לדעת מה לעשות עם הידיים. גם לא להגיע עם ביטחון של כוכבת קולנוע. נתחיל בשיחה, נמצא אור יפה, ונשאיר מקום
+        למבט שקט, לתנועה ולקצת צחוק.
+      </p>
+      <p class="mb-6">
+        פורטרטים בלבוש מלא, אווירה רכה או סשן בודואר אמנותי — נבחר יחד מה מרגיש לך נכון. <strong
+          >חבילות החל מ־{femininePackages[0].price} ש״ח.</strong>
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <Button variant="primary" class="w-full" href={feminineWhatsApp()} target="_blank" icon="tabler:brand-whatsapp"
+          >בואי נבדוק תאריך</Button
+        >
+        <Button class="w-full" href="/gallery/feminine">לראות את התמונות</Button>
+      </div>
+      <p class="mt-5">
+        <a href="/pricing/feminine" class="underline underline-offset-4">למחירון ולכל מה שכלול בחבילות</a>
+      </p>
+    </div>
+    <Image
+      src={hero.image}
+      alt={hero.alt}
+      widths={[400, 640, 900, 1200]}
+      sizes="(min-width: 768px) 50vw, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="aspect-[4/5] w-full rounded-2xl object-cover"
+    />
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'סוגי צילומים', href: '/services' },
+      { label: 'צילומי נשיות ובודואר' },
     ]}
-    image={{ src: '~/assets/images/pricing/feminine_pricing.jpg', alt: 'צילומי נשיות ובודואר באווירה אומנותית' }}
-  >
-    <Fragment slot="title">
-      <span class="text-accent dark:text-white highlight">צילומי נשיות ובודואר</span>
-      מרחב קטן שהוא כולו שלך
-    </Fragment>
-    <Fragment slot="subtitle">
-      סשן אישי, אומנותי ומכבד — בקצב שלך, עם הכוונה עדינה ובלי צורך לדעת איך להצטלם.
-      <br /><br />
-      <strong>חבילות צילום החל מ־{PRICES['נשיות'][1]}₪</strong>
-    </Fragment>
-  </Hero2>
-
-  <Breadcrumbs items={[{ label: 'דף הבית', href: '/' }, { label: 'סוגי צילומים', href: '/services' }, { label: 'צילומי נשיות ובודואר' }]} />
-
-  <section class="max-w-5xl mx-auto px-4 py-16 space-y-6">
-    <h2>צילומי נשיות שמתחילים בהקשבה</h2>
+  />
+  <Journey journey={feminineJourney} current="service" />
+  <section class="mx-auto max-w-5xl px-4 py-12">
+    <h2 class="mb-8 text-3xl font-bold">איך נראה סשן איתי?</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">קודם נכיר</h3><p>
+          נדבר על התמונות שאת אוהבת, על מה שנעים לך ועל מה שפחות. נבחר מקום ולבוש, ונתאם ציפיות לפני שהמצלמה יוצאת
+          מהתיק.
+        </p>
+      </div>
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">בצילום, אני איתך</h3><p>
+          אכוון אותך בתנוחות ובתנועה ואעזור לך למצוא את הקצב שלך. אפשר להרגיש קצת נבוכה בהתחלה. גם לחיוך לוקח לפעמים רגע
+          להתחמם.
+        </p>
+      </div>
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">ואחר כך, האוסף שלך</h3><p>
+          תקבלי תמונות בעריכה מוקפדת ומלאה בגלריה דיגיטלית להורדה, עד 14 ימי עסקים מיום הצילום. הכמות תלויה בחבילה
+          שבחרת.
+        </p>
+      </div>
+    </div>
+    <p class="mt-6"><a href="/about" class="underline">קצת עליי ועל הדרך שבה אני מצלמת</a></p>
+  </section>
+  <ImageSection image={feminineGalleryImages[0].image} alt={feminineGalleryImages[0].alt}>
+    <h2 class="text-3xl font-bold">צילומי נשיות או בודואר — מה ההבדל?</h2>
     <p>
-      צילומי נשיות או בודואר לא צריכים להרגיש כמו הופעה. קודם מדברות על מה נעים לך, מה היית רוצה להרגיש בתמונות ומה הגבולות שלך. אחר כך בוחרות יחד לוקיישן, לבוש ואווירה שמתאימים בדיוק לך.
+      צילומי נשיות הם סשן אישי שמתמקד בך: בהבעה, בתנועה ובאופן שבו תרצי לראות את עצמך. אפשר ליצור דיוקן עדין, תמונה עם
+      נוכחות דרמטית או רגע חופשי בחוץ.
     </p>
     <p>
-      במהלך הסשן אני מכוונת בעדינות, משאירה מקום לנשימה ולרגעים טבעיים, ודואגת שהחוויה תהיה בטוחה ונעימה. אפשר לבחור צילום עדין בלבוש מלא, חושני או אמנותי — תמיד לפי מה שנכון לך.
+      בודואר הוא כיוון אינטימי יותר, שבו משחקים באור, בבד ובאווירה. הוא יכול להיות חושני בלי עירום, ואפשר לבחור גם בלבוש
+      מלא. אין רשימת חובה של בגדים או תנוחות.
     </p>
+    <p>
+      רמת החשיפה והגבולות שלך הם חלק מהשיחה לפני הסשן. גם במהלך הצילום אפשר לומר שמשהו פחות מתאים, לעצור או לבחור כיוון
+      אחר.
+    </p>
+  </ImageSection>
+  <ImageSection image={feminineGalleryImages[1].image} alt={feminineGalleryImages[1].alt} imageFirst={false}>
+    <h2 class="text-3xl font-bold">בחוץ או בסטודיו: איפה נוח לך להיות?</h2>
+    <p>
+      אני מצלמת בחולון ובמרכז. צילומי נשיות בטבע מאפשרים תנועה, אור שמש וקצת רוח בשיער. נבחר לוקיישן לפי העונה, הסגנון
+      והנוחות שלך.
+    </p>
+    <p>
+      סטודיו מאפשר רקע ותאורה מתוכננים, ומתאים גם למי שמעדיפה סביבה סגורה. צילום בסטודיו אפשרי בתוספת תשלום ובתיאום
+      מראש. אם חשובה לך פרטיות במקום הצילום, נדבר על כך כבר בבחירת הלוקיישן.
+    </p>
+    <a href="/gallery/feminine" class="inline-block font-semibold underline">לגלריית הפורטרטים בסטודיו ובחוץ</a>
+  </ImageSection>
+  <section id="preparation" class="scroll-mt-28 mx-auto max-w-4xl space-y-5 px-4 py-12">
+    <h2 class="text-3xl font-bold">מה לובשים לצילומי נשיות?</h2>
+    <p>
+      מתחילים מבגד שאת אוהבת על עצמך: ג׳ינס וחולצה, שמלה, ז׳קט או בד רך. אם בחרת בודואר, אפשר לחשוב יחד גם על פריטים
+      אינטימיים שנוח לך בהם. אין צורך לצאת למסע קניות כדי להרגיש את.
+    </p>
+    <ul class="list-disc space-y-2 ps-6">
+      <li>בדקי שנוח לך לשבת ולנוע בבגד, ולא רק לעמוד מול המראה.</li>
+      <li>שלחי לי מראש התלבטויות בין צבעים או פריטים; ההכוונה ללבוש כלולה בחבילה.</li>
+      <li>הביאי מים ונעליים נוחות למעבר בין נקודות הצילום בחוץ.</li>
+      <li>אפשר לבחור תמונה מהגלריה כהשראה. לא צריך לשחזר אותה, רק להבין מה אהבת.</li>
+    </ul>
+    <p>מספר התלבושות והזמן מתוכננים בהתאם לחבילה. בפרימיום אפשר לשלב עד שתי תלבושות והפסקות לפי הצורך.</p>
   </section>
-
-  <section class="max-w-3xl mx-auto px-4 py-10 text-center">
-    <h2 class="text-2xl font-bold mb-4">רוצה לראות עוד דוגמאות?</h2>
-    <p class="mb-4">אפשר להתרשם מצילומים אישיים אמיתיים ולראות את סגנון הצילום והעריכה.</p>
-    <a href="/gallery/solo" class="font-semibold underline text-accent">לצפייה בגלריית הצילומים האישיים</a>
+  <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
+    <h2 class="text-3xl font-bold">כמה עולה הרגע שלך מול המצלמה?</h2>
+    <p>
+      חבילות צילומי החוץ נעות בין {femininePackages[0].price} ל־{femininePackages[2].price} ש״ח. כולן כוללות הכוונה, תמונות
+      בעריכה מלאה וגלריה דיגיטלית. במחירון תמצאי את מספר התמונות, משך הצילום המשוער ותנאי ההזמנה. סטודיו בתוספת תשלום.
+    </p>
+    <Button href="/pricing/feminine">להשוואת חבילות צילומי נשיות ובודואר</Button>
   </section>
-
-  <section class="max-w-5xl mx-auto px-4 py-10">
-    <div class="grid gap-8 text-center">
-      <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_5} alt="צילום נשיות בטבע באור רך" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">איך נראה סשן צילומי נשיות?</h2><p>מתחילים בשיחה קצרה על האווירה שאת מחפשת ועל מה שחשוב לך להרגיש בתמונות. במהלך הצילום אני מכוונת בעדינות, בלי לחץ ובלי ציפייה שתדעי איך לעמוד מול מצלמה.</p><p>יש מקום לעצירות, להחלפת אווירה ולרגעים טבעיים. המטרה היא חוויה נעימה ותמונות שמרגישות אמיתיות לך.</p></article>
-      <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_6} alt="פורטרט נשי בשחור לבן" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">צילומי בודואר לפי הגבולות שלך</h2><p>צילומי בודואר יכולים להיות עדינים, חושניים או אמנותיים — וגם יכולים להיות בלבוש מלא. רמת החשיפה, הלבוש והאווירה נקבעים מראש יחד, כך שכל החלטה נשארת בידיים שלך.</p></article>
-      <article class="bg-gray-100 p-4 rounded-xl shadow"><Image src={image_7} alt="צילום נשיות אומנותי בסטודיו" class="rounded-lg shadow" loading="lazy" /><h2 class="font-extrabold text-accent py-5">איך מתכוננים לצילומי נשיות?</h2><p>אחרי קביעת הסשן תקבלי הנחיות פשוטות לגבי לבוש, צבעים ומה כדאי להביא. אין צורך בניסיון קודם או בהכנה מורכבת — חשוב בעיקר לבחור פריטים שגורמים לך להרגיש נוח ובטוח.</p></article>
-    </div>
-  </section>
-
-  <section class="max-w-6xl mx-auto px-4 py-10">
-    <h2 class="text-center mb-10">מה מחכה לך בסשן</h2>
-    <div class="grid md:grid-cols-4 gap-8 text-center">
-      <div class="bg-gray-100 p-4 rounded-xl shadow">
-        <Image src={image_1} alt="צילום נשיות עדין בסטודיו" class="rounded-lg mb-3" loading="eager" />
-        <h3 class="font-extrabold">הכוונה רגועה</h3>
-        <p>גם אם זו הפעם הראשונה שלך מול מצלמה.</p>
-      </div>
-      <div class="bg-gray-100 p-4 rounded-xl shadow">
-        <Image src={image_2} alt="צילום נשיות באור טבעי" class="rounded-lg mb-3" loading="eager" />
-        <h3 class="font-extrabold">בחירה שלך</h3>
-        <p>הסגנון, הלבוש ורמת החשיפה נקבעים יחד מראש.</p>
-      </div>
-      <div class="bg-gray-100 p-4 rounded-xl shadow">
-        <Image src={image_3} alt="צילום נשיות אומנותי בסטודיו" class="rounded-lg mb-3" loading="eager" />
-        <h3 class="font-extrabold">אווירה בטוחה</h3>
-        <p>מרחב אישי, נעים ומכבד שבו אפשר פשוט להיות את.</p>
-      </div>
-      <div class="bg-gray-100 p-4 rounded-xl shadow">
-        <Image src={image_4} alt="פורטרט נשי בשחור לבן" class="rounded-lg mb-3" loading="eager" />
-        <h3 class="font-extrabold">תוצאה שמרגישה שלך</h3>
-        <p>עריכה טבעית ומוקפדת ששומרת על האופי שלך.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="max-w-4xl mx-auto px-4 py-16 text-center">
-    <h2>מחיר צילומי נשיות ובודואר</h2>
-    <p>החבילות, מה שכלול בהן וכל הפרטים מופיעים במחירון המלא.</p>
-    <a href="/pricing/feminine" class="underline font-medium mt-4 inline-block">למחירון צילומי נשיות ובודואר</a>
-  </section>
-
-  <section class="bg-gray-50 py-16 px-6" id="reviews">
-    <h2 class="text-3xl font-bold text-center mb-10">אל תקשיבו לי, תקשיבו להם</h2>
-    <div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-      <blockquote class="bg-white p-6 rounded-2xl shadow"><p><span class="text-yellow-400 text-lg">★★★★★</span><br />"יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!"</p><footer class="mt-4 font-bold flex items-center"><Image src={osher_review} alt="אושר" class="w-10 h-10 rounded-full mr-3" width={40} height={40} /><span class="mx-2">אושר</span></footer></blockquote>
-      <blockquote class="bg-white p-6 rounded-2xl shadow"><p><span class="text-yellow-400 text-lg">★★★★★</span><br />"מעבר לתמונות מטורפות החוויה הייתה לא פחות חשובה והייתה מעבר לציפיות! את מוכשרת, זורמת, מלאת אנרגיות טובות."</p><footer class="mt-4 font-bold flex items-center"><Image src={inbal_review} alt="ענבל" class="w-10 h-10 rounded-full mr-3" width={40} height={40} /><span class="mx-2">ענבל</span></footer></blockquote>
-    </div>
-  </section>
-
-  <CallToAction id="bottomCallToAction" actions={[{ variant: 'primary', text: 'ווטסאפ', href: 'https://wa.me/972525836940', target: '_blank', icon: 'tabler:brand-whatsapp' }]}>
-    <Fragment slot="title">מוכנה לשיחה?</Fragment>
-    <Fragment slot="subtitle">נדבר ונבנה יחד סשן שמרגיש בדיוק נכון לך</Fragment>
-    <Fragment slot="bg"><div class="absolute inset-0 bg-page dark:bg-slate-900"></div></Fragment>
-  </CallToAction>
-
-  <FAQs title="שאלות נפוצות על צילומי נשיות ובודואר" columns={1} items={[
-    { title: 'האם צריך ניסיון קודם מול מצלמה?', description: 'ממש לא. אני מלווה ומכוונת בעדינות לאורך כל הסשן, כך שתוכלי להרגיש בטוחה ונינוחה.' },
-    { title: 'האם חייבים להצטלם בעירום?', description: 'לא. רמת החשיפה נבחרת מראש לפי הרצון והגבולות שלך; אפשר ליצור צילומים מלאי נוכחות גם בלבוש מלא.' },
-    { title: 'איפה מתקיימים הצילומים?', description: 'בלוקיישן חוץ או בסטודיו בתיאום מראש. נבחר את המרחב שהכי מתאים לאווירה שתרצי ליצור.' },
-  ]} />
-
-  <WhatssapCallToAction />
+  <FAQs
+    title="עוד כמה דברים שאולי רצית לשאול"
+    columns={2}
+    items={[
+      {
+        title: 'זה מתאים גם אם זו הפעם הראשונה שלי?',
+        description: 'כן. אין צורך בניסיון מול מצלמה. אני מסבירה ומכוונת לאורך הסשן ומשאירה מקום גם לרגעים טבעיים.',
+      },
+      {
+        title: 'חייבים להצטלם בעירום?',
+        description:
+          'לא. אפשר להצטלם בלבוש מלא או לבחור סגנון אינטימי יותר. הלבוש, התנוחות ורמת החשיפה נבחרים לפי הרצון והגבולות שלך.',
+      },
+      {
+        title: 'צריך סיבה מיוחדת לקבוע צילומי נשיות?',
+        description:
+          'אפשר לציין יום הולדת, שינוי בחיים או פשוט לפנות זמן לעצמך. לא צריך לחכות לאירוע מיוחד כדי לרצות תמונות שאת אוהבת.',
+      },
+      {
+        title: 'מה כדאי לברר לגבי פרטיות?',
+        description:
+          'ספרי לי מראש מה חשוב לך בנוגע למקום הצילום, למי שנוכח בו ולשימוש בתמונות. נדבר על הפרטים לפני קביעת הסשן כדי שתגיעי עם ציפיות ברורות.',
+      },
+    ]}
+  />
+  <Journey journey={feminineJourney} current="service" cta />
 </Layout>

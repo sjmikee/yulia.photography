@@ -2,23 +2,20 @@
 import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import 'photoswipe/style.css';
-import { pregnancyImageDescriptions, pregnancyGallerySelection } from '~/lib/pregnancy-gallery';
-const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/pregnancy_gallery/*.jpg', { eager: true });
+interface Props {
+  images: Array<{ image: ImageMetadata; alt: string }>;
+}
+const { images } = Astro.props;
 const photos = await Promise.all(
-  pregnancyGallerySelection.map(async (filename) => {
-    const image = files[`/src/assets/pregnancy_gallery/${filename}`]?.default;
-    if (!image || !pregnancyImageDescriptions[filename])
-      throw new Error(`Missing pregnancy gallery image or description: ${filename}`);
-    return {
-      image,
-      alt: pregnancyImageDescriptions[filename],
-      full: await getImage({ src: image, width: Math.min(1800, image.width) }),
-    };
-  })
+  images.map(async ({ image, alt }) => ({
+    image,
+    alt,
+    full: await getImage({ src: image, width: Math.min(1800, image.width) }),
+  }))
 );
 ---
 
-<pregnancy-gallery class="block columns-2 gap-4 space-y-4 md:columns-3">
+<photoshoot-gallery class="block columns-2 gap-4 space-y-4 md:columns-3">
   {
     photos.map(({ image, alt, full }) => (
       <a
@@ -39,10 +36,10 @@ const photos = await Promise.all(
       </a>
     ))
   }
-</pregnancy-gallery>
+</photoshoot-gallery>
 <script>
   import PhotoSwipeLightbox from 'photoswipe/lightbox';
-  class PregnancyGallery extends HTMLElement {
+  class PhotoshootGallery extends HTMLElement {
     lightbox?: PhotoSwipeLightbox;
     connectedCallback() {
       if (this.lightbox) return;
@@ -63,7 +60,7 @@ const photos = await Promise.all(
       this.lightbox = undefined;
     }
   }
-  if (!customElements.get('pregnancy-gallery')) customElements.define('pregnancy-gallery', PregnancyGallery);
+  if (!customElements.get('photoshoot-gallery')) customElements.define('photoshoot-gallery', PhotoshootGallery);
 </script>
 
 <style>

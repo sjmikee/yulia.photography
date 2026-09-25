@@ -147,6 +147,8 @@ export interface Item {
 }
 
 export interface Price {
+  id?: string;
+  highlight?: string;
   title?: string;
   subtitle?: string;
   description?: string;

@@ -1,3 +1,4 @@
+import type { ImageMetadata } from 'astro';
 // Descriptions checked against the existing photographs, not inferred from filenames.
 export const pregnancyImageDescriptions: Record<string, string> = {
   'Inbal-17.jpg': 'אישה בהריון יושבת על סלע ליד הים בחולצה לבנה וג׳ינס',
@@ -58,3 +59,11 @@ export const pregnancyGallerySelection = [
   'rotem&bar-50.jpg',
   'Osher&Ariel-59.jpg',
 ];
+
+const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/pregnancy_gallery/*.jpg', { eager: true });
+export const pregnancyGalleryImages = pregnancyGallerySelection.map((filename) => {
+  const image = files[`/src/assets/pregnancy_gallery/${filename}`]?.default;
+  const alt = pregnancyImageDescriptions[filename];
+  if (!image || !alt) throw new Error(`Missing pregnancy gallery image or description: ${filename}`);
+  return { image, alt };
+});

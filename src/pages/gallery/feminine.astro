@@ -1,0 +1,59 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import Button from '~/components/ui/Button.astro';
+import { feminineJourney, femininePackages } from '~/lib/feminine';
+import { feminineGalleryImages } from '~/lib/feminine-gallery';
+const metadata = {
+  title: 'גלריית צילומי נשיות — פורטרטים בסטודיו ובטבע | יוליה קורנסקי',
+  description:
+    'גלריית צילומי נשיות של יוליה קורנסקי: פורטרטים בלבוש מלא, אור טבעי, סטודיו ושחור לבן. מצאי את האווירה שלך והכירי את חבילות הצילום בחולון ובמרכז.',
+  ignoreTitleTemplate: true,
+};
+const breadcrumbs = [
+  { url: '/services/feminine-photography', name: 'צילומי נשיות' },
+  { url: '/gallery/feminine', name: 'גלריית צילומי נשיות' },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <section class="mx-auto max-w-4xl px-4 pt-12 pb-6 text-center">
+    <p class="mb-3 font-semibold text-accent">יוליה קורנסקי · רגעים מול המצלמה</p>
+    <h1 class="mb-5 text-4xl font-bold md:text-5xl">גלריית צילומי נשיות</h1>
+    <p class="mb-5 text-xl leading-relaxed">
+      מבט קרוב בשחור לבן, אור בין העצים וקצת צבע בסטודיו. כל אחת מביאה לפריים משהו משלה — וזה בדיוק מה שמעניין בו.
+    </p>
+    <p class="mb-6">
+      האוסף כאן מציג פורטרטים בלבוש מלא. חפשי את האור, ההבעה והאווירה שאת אוהבת; אפשר לתכנן גם סשן בודואר לפי הסגנון
+      והגבולות שלך.
+    </p>
+    <Button href="/pricing/feminine">לחבילות הצילום — החל מ־{femininePackages[0].price} ש״ח</Button>
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'צילומי נשיות', href: '/services/feminine-photography' },
+      { label: 'גלריה' },
+    ]}
+  />
+  <Journey journey={feminineJourney} current="gallery" />
+  <section class="mx-auto max-w-6xl px-4 py-8" aria-label="גלריית פורטרטים נשיים בסטודיו ובחוץ">
+    <p class="mb-5 text-center text-sm">לחצי על תמונה להגדלה ולדפדוף בגלריה.</p>
+    <Gallery images={feminineGalleryImages} />
+  </section>
+  <section class="mx-auto max-w-3xl space-y-4 px-4 py-10">
+    <h2 class="text-2xl font-bold">מצאת מבט או אור שמדברים אלייך?</h2>
+    <p>שלחי לי את התמונה וספרי מה אהבת בה. נשתמש בה כנקודת התחלה ונבנה סשן שמתאים לך, בלי לבקש ממך להיות מישהי אחרת.</p>
+    <p>
+      עוד על בחירת מקום, הכנה ולבוש תמצאי <a
+        href="/services/feminine-photography#preparation"
+        class="font-semibold underline">במדריך לקראת צילומי נשיות</a
+      >. את הכמויות, המחירים ומה שכלול בכל חבילה אפשר להשוות <a href="/pricing/feminine" class="font-semibold underline"
+        >במחירון צילומי נשיות ובודואר</a
+      >.
+    </p>
+  </section>
+  <Journey journey={feminineJourney} current="gallery" cta />
+</Layout>

@@ -1,226 +1,127 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import HeroText from '~/components/widgets/HeroText.astro';
-import Prices from '~/components/widgets/Pricing.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
-import { PRICES } from '~/lib/pricing';
-
-
+import Journey from '~/components/photoshoots/Journey.astro';
+import { feminineJourney, femininePackages, feminineWhatsApp, feminineService } from '~/lib/feminine';
+import HeroText from '~/components/widgets/HeroText.astro';
+import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
+import PricingCards from '~/components/ui/PricingCards.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { femininePricingCards } from '~/lib/feminine';
 const metadata = {
-  title: "מחירון צילומי נשיות מעצימים | צילומי בודואר מקצועיים - יוליה קורנסקי",
-  description: "מחירון צילומי נשיות מעצימים ואומנותיים, כולל צילומי בודואר מקצועיים באווירה בטוחה, רגועה ומחזקת. חבילות צילום נשי ליצירת פורטרטים מלאי רגש וביטוי אישי.",
+  title: `צילומי נשיות מחיר: החל מ־${femininePackages[0].price}₪ | יוליה קורנסקי`,
+  description: `מחירון צילומי נשיות ובודואר בחולון ובמרכז: ${femininePackages.map((p) => p.price).join(', ')} ש״ח. השוואת תמונות בעריכה מלאה, משך צילום ומה כלול. סטודיו בתוספת תשלום.`,
   ignoreTitleTemplate: true,
 };
-
 const breadcrumbs = [
-    { url: "/pricing", name: "מחירון"},
-    { url: "/pricing/feminine", name: "מחירון צילומי נשיות"},
+  { url: '/pricing', name: 'מחירון' },
+  { url: '/pricing/feminine', name: 'מחירון צילומי נשיות' },
 ];
-
-const session_type = "נשיות";
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <!-- HeroText Widget ******************* -->
-
+  <ServiceSchema service={feminineService} />
   <HeroText
-    tagline="רוך, עוצמה וביטוי אישי"
-    title="מחירון צילומי נשיות וצילומי בודואר מעצימים"
-    subtitle="סשן צילום נשי אומנותי או צילומי בודואר שמאפשרים לך להתחבר לעצמך, להרגיש בטוחה ולהיראות בדיוק כמו שאת."
-    content="צילומי נשיות וצילומי בודואר הם חוויה אישית ומעצימה, המשלבת רגש, נוכחות ואסתטיקה אומנותית. הסשן מתקיים באווירה רגועה ומכילה, בקצב שלך, עם הכוונה עדינה שמדגישה יופי טבעי, עוצמה ורוך."
+    tagline="יוליה קורנסקי · חולון ומרכז הארץ"
+    title="צילומי נשיות ובודואר — מחירון וחבילות"
+    subtitle={`רגע שהוא כולו שלך, החל מ־${femininePackages[0].price} ש״ח. את מביאה את עצמך, אני דואגת להכוונה ולאור.`}
+    content="כל החבילות כוללות הכוונה לפני הצילום, תמונות בעריכה מלאה וגלריה דיגיטלית להורדה. המחירים לצילומי חוץ; סטודיו בתוספת תשלום ובתיאום מראש."
+    callToAction={{ text: 'להשוואת החבילות', href: '#packages' }}
+    callToAction2={{ text: 'לבדיקת תאריך פנוי', href: feminineWhatsApp(), target: '_blank' }}
   />
-
-    <Breadcrumbs
-    items={[
-      { label: 'דף הבית', href: '/' },
-      { label: 'מחירון', href: '/pricing' },
-      { label: 'מחירון צילומי נשיות ובודואר'}
-    ]}
+  <Breadcrumbs
+    items={[{ label: 'דף הבית', href: '/' }, { label: 'מחירון', href: '/pricing' }, { label: 'מחירון צילומי נשיות' }]}
   />
-  <!-- Pricing Widget ******************* -->
-
-  <Prices
-    title="הבחירה שלכן"
-    subtitle=""
-    tagline="החבילות שלי"
-    prices={[
-      {
-        title: 'חבילת פרימיום',
-        subtitle: 'חוויה אומנותית מלאה',
-        price: PRICES[session_type][3],
-        period: 'חוויה נשית עמוקה ומלאת ביטוי אישי',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'כשעתיים של צילומים',
-          },
-          {
-            description: 'עד 2 תלבושות, הפסקות לפי הצורך',
-          },
-          {
-            description: 'לפחות 35 - 45 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גובהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%A0%D7%A9%D7%99%D7%95%D7%AA.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A4%D7%A8%D7%99%D7%9E%D7%99%D7%95%D7%9D%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
-        },
-      },
-      {
-        title: 'החבילה הקלאסית',
-        subtitle: 'חוויה מעצימה',
-        price: PRICES[session_type][2],
-        period: 'מושלם לצילומי נשיות מעצימים ואומנותיים',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'שעה וחצי של צילומים',
-          },
-          {
-            description: 'לפחות 25 - 35 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%A0%D7%A9%D7%99%D7%95%D7%AA.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%A9%D7%AA%D7%9C%D7%9E%D7%AA%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
-        },
-        hasRibbon: true,
-        ribbonTitle: 'הכי משתלם',
-      },
-      {
-        title: 'חבילת בסיס',
-        subtitle: 'רגע אישי',
-        price: PRICES[session_type][1],
-        period: 'מתאים לצילומי נשיות אישיים וקצרים',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: '45 דקות של צילומים',
-          },
-          {
-            description: 'לפחות 20 - 25 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%A0%D7%A9%D7%99%D7%95%D7%AA.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
-        },
-      },
-    ]}
-  />
-
-  <!-- Steps Widget ****************** -->
-
-  <Steps
-    title="תהליך צילומי נשיות"
-    tagline="ברגישות, בהקשבה ובקצב שלך"
-    isReversed={true}
-    items={[
-      {
-        title: 'שיחה ראשונית',
-        icon: 'tabler:number-1',
-      },
-      {
-        title: 'סגירת חבילה ותאריך',
-        icon: 'tabler:number-2',
-      },
-      {
-        title: 'תשלום על שריון תאריך (100ש״ח)',
-        icon: 'tabler:number-3',
-      },
-      {
-        title: 'מצטלמים ונהנים 😊',
-        icon: 'tabler:number-4',
-      },
-      {
-        title: 'עריכת התמונות (עד 14 ימי עסקים)',
-        icon: 'tabler:number-5',
-      },
-      {
-        title: 'קבלת קישור לגלריה דיגיטלית להורדה',
-        icon: 'tabler:number-6',
-      },
-      {
-        title: 'נהנים מתמונות איכותיות ומרגשות 😊',
-        icon: 'tabler:number-7',
-      },
-      {
-        title: 'לא שוכחים לתייג אותי 😉',
-        icon: 'tabler:number-8',
-      },
-    ]}
-    image={{ src: '~/assets/images/pricing/feminine_pricing.jpg', alt: 'צילומי נשיות וצילומי בודואר מעצימים ואומנותיים' }}
-  />
-
-  <!-- FAQs Widget ******************* -->
-
+  <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-right">
+    <h2 class="text-2xl font-bold">כמה עולים צילומי נשיות?</h2>
+    <p>
+      <strong>מחיר צילומי נשיות אצלי נע בין {femininePackages[0].price} ל־{femininePackages[2].price} ש״ח.</strong> בחרי לפי
+      אוסף התמונות שתרצי לקבל: {femininePackages[0].photos} תמונות בעריכה מלאה בבסיס, {femininePackages[1].photos} בקלאסית
+      ו־{femininePackages[2].photos} בפרימיום. זמני הצילום בהמשך הם הערכה לתכנון היום.
+    </p>
+    <p>
+      אפשר לבחור פורטרטים בלבוש מלא או לתכנן סשן בודואר אינטימי. הסגנון ורמת החשיפה נקבעים איתך מראש. צילום בסטודיו כרוך
+      בתוספת שנברר לפני קביעת הסשן.
+    </p>
+    <p>
+      רוצה קודם להרגיש את הסגנון? הציצי <a class="font-semibold underline" href="/gallery/feminine"
+        >בגלריית צילומי הנשיות</a
+      > או קראי <a class="font-semibold underline" href="/services/feminine-photography">איך נראה סשן איתי</a>.
+    </p>
+  </section>
+  <Journey journey={feminineJourney} current="pricing" />
+  <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+    <h2 class="mb-4 text-center text-3xl font-bold">החבילות שלך, במבט אחד</h2>
+    <p class="mb-8 text-center">בכל חבילה: הכוונה, עריכה מלאה וגלריה דיגיטלית. המחירים לצילומי חוץ.</p>
+    <PackageComparison
+      packages={[...femininePackages].reverse()}
+      label="השוואת חבילות צילומי נשיות"
+      caption="כמות תמונות בעריכה מלאה, מחיר ומשך צילום משוער"
+    />
+    <div class="mt-8"><PricingCards prices={femininePricingCards} /></div>
+  </section>
+  <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
+    <h2 class="text-2xl font-bold">איזו חבילה מתאימה לך?</h2>
+    <p>
+      <strong>בסיס</strong> מתאימה לאוסף ממוקד של דיוקנאות ורגעים אישיים. <strong>קלאסית</strong> נותנת לך אוסף רחב יותר של
+      הבעות ותנועה. <strong>פרימיום</strong> כוללת את כמות התמונות הגדולה ביותר ועד שתי תלבושות. אם הלב רוצה גם רך וגם קצת
+      דרמטי, נדבר על הדרך לשלב ביניהם.
+    </p>
+    <h2 class="text-2xl font-bold">מה כלול במחיר, ומה מתאמים בנפרד?</h2>
+    <p>
+      הכוונה לפני הצילום וטיפים ללבוש, ליווי במהלך הסשן, כמות התמונות המצוינת בחבילה בעריכה מוקפדת ומלאה וגלריה דיגיטלית
+      באיכות גבוהה להורדה. התמונות נמסרות עד 14 ימי עסקים מיום הצילום.
+    </p>
+    <p>
+      סטודיו אינו כלול במחירים המוצגים. אם תרצי לצלם בו, נתאם מראש מקום ועלות נוספת. איפור, שיער או אביזרים מיוחדים אינם
+      מופיעים כחלק מהחבילות; אם משהו מהם חשוב לך, העלי אותו בשיחה כדי שנברר מה אפשרי ומה העלות.
+    </p>
+    <h2 class="text-2xl font-bold">איך להשוות מחירי צילומי בודואר?</h2>
+    <p>
+      כדאי לבדוק כמה תמונות מקבלים בעריכה מלאה, האם המחיר כולל סטודיו ומה סגנון התמונות בגלריה. מספר גדול של קבצים אינו
+      בהכרח מספר התמונות הערוכות. כאן הכמות בכל חבילה מתייחסת לתמונות בעריכה מלאה, כדי שתוכלי לבחור כשכל הפרטים מולך.
+    </p>
+    <h2 class="text-2xl font-bold">מהשיחה הראשונה ועד התמונות</h2>
+    <p>
+      מדברות על הסגנון והגבולות שלך, בוחרות חבילה ולוקיישן וקובעות תאריך עם מקדמה של 100 ש״ח. ביום הצילום אני מכוונת
+      אותך צעד־צעד, ואחריו עוברת לעריכת התמונות. לך נשאר לפנות להן מקום בלב. וגם בטלפון.
+    </p>
+  </section>
   <FAQs
-    title="שאלות נפוצות על צילומי נשיות"
-    subtitle="כל מה שחשוב לדעת לפני סשן צילום נשיות או צילומי בודואר"
+    title="שאלות על המחיר ועל ההזמנה"
     columns={1}
     items={[
       {
-        title: 'האם צריך ניסיון קודם מול מצלמה?',
-        description: 'ממש לא. רוב המצולמות מגיעות ללא ניסיון קודם. אני מלווה ומכוונת בעדינות לאורך כל הסשן, כך שתרגישי בטוחה, נינוחה ותתחברי לעצמך.'
-      },
-      {
-        title: 'האם יש עירום בצילומי נשיות?',
-        description: 'הכל נבחר ומוגדר מראש בהתאם לרצון ולגבולות שלך. צילומי נשיות וצילומי בודואר יכולים להיות בעירום, חשופים בעדינות או ללא עירום כלל - תמיד מתוך כבוד, הקשבה וביטחון מלא.'
-      },
-      {
-        title: 'איפה מתקיימים הצילומים?',
+        title: 'האם מחיר צילומי בודואר כולל סטודיו?',
         description:
-          'צילומי נשיות מתקיימים בצילומי חוץ או בסטודיו. צילום בסטודיו אפשרי בתוספת תשלום ובתיאום מראש, בהתאם לאווירה ולסגנון שתרצי ליצור.',
+          'לא. המחירים בעמוד הם לצילומי חוץ. סטודיו אפשרי בתוספת תשלום ובתיאום מראש; נסכם את העלות לפני קביעת הסשן.',
       },
       {
-        title: 'מה ההבדל בין צילומי נשיות לצילומי בודואר?',
-        description: 'צילומי בודואר הם סגנון צילום אינטימי ואומנותי המדגיש ביטוי אישי, רוך ועוצמה נשית. בפועל, רבים משלבים בין צילומי נשיות לצילומי בודואר באותו הסשן, בהתאם לאווירה ולגבולות שנקבעים מראש.'
-      },
-      {
-        title: 'את עוזרת עם בגדים / צבעים?',
+        title: 'מתי מקבלים את התמונות?',
         description:
-          "בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.",
-      },
-      {
-        title: 'מה קורה אם יורד גשם או מישהו חולה?',
-        description:
-          'תמיד אפשר לתאם מועד חלופי - החיים קורים, ואני לגמרי מבינה. עדכנו אותי בהקדם, ונמצא מועד חדש שמתאים לשני הצדדים.',
-      },
-      {
-        title: 'מתי כדאי לסגור תאריך?',
-        description:
-          'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות.',
+          'עד 14 ימי עסקים מיום הצילום, בקישור לגלריה דיגיטלית באיכות גבוהה להורדה. כמות התמונות בעריכה מלאה תלויה בחבילה שבחרת.',
       },
       {
         title: 'צריך לשלם מקדמה?',
         description:
-          'כן. כדי לשמור את התאריך ביומן, יש לשלם מקדמה של ₪100 בעת ההזמנה. (המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד), במקרה של דחיה אם תודיעו עד 24 שעות מראש - נוכל למצוא יחד מועד חלופי.',
+          'כן, מקדמה של 100 ש״ח שומרת את התאריך ביומן. המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד. דחייה למועד חלופי אפשרית בהודעה עד 24 שעות מראש ובתיאום יחד.',
+      },
+      {
+        title: 'ומה אם אני לא יודעת להצטלם?',
+        description:
+          'בשביל זה אני כאן. ההכוונה כלולה בכל חבילה, מהבחירה בלבוש ועד מה לעשות עם הידיים. אין צורך בניסיון או בפוזות מוכנות.',
+      },
+      {
+        title: 'האם חייבים להצטלם בלבוש חשוף?',
+        description: 'ממש לא. אפשר להצטלם בלבוש מלא. נדבר מראש על הסגנון והגבולות שלך ונבחר יחד מה נעים לך.',
+      },
+      {
+        title: 'איך בוחרים בין חוץ לסטודיו?',
+        description:
+          'בחוץ יש אור טבעי ונוף; בסטודיו אפשר לתכנן את הרקע והתאורה. אם פרטיות במקום הצילום חשובה לך, צייני זאת בשיחה כדי שנבחר מרחב מתאים.',
       },
     ]}
   />
-
-  <!-- CallToAction Widget *********** -->
-
-  <WhatssapCallToAction />
+  <Journey journey={feminineJourney} current="pricing" cta />
 </Layout>

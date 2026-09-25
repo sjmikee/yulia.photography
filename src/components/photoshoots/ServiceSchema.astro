@@ -1,0 +1,28 @@
+---
+import type { PhotoshootService } from '~/lib/photoshoots';
+interface Props {
+  service: PhotoshootService;
+}
+const { service } = Astro.props;
+const site = Astro.site ?? new URL('https://yulia.photography');
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': new URL(`${service.url}#service`, site).href,
+  name: service.name,
+  serviceType: service.serviceType,
+  url: new URL(service.url, site).href,
+  provider: { '@id': new URL('/#business', site).href },
+  areaServed: service.areaServed,
+  offers: service.offers.map((p) => ({
+    '@type': 'Offer',
+    name: p.name,
+    price: p.price,
+    priceCurrency: 'ILS',
+    description: p.description,
+    url: new URL(p.url, site).href,
+  })),
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />

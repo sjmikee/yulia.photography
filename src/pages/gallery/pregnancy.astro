@@ -1,7 +1,9 @@
 ---
+import { pregnancyJourney } from '~/lib/pregnancy';
 import Layout from '~/layouts/PageLayout.astro';
-import Gallery from '~/components/pregnancy/Gallery.astro';
-import Journey from '~/components/pregnancy/Journey.astro';
+import { pregnancyGalleryImages } from '~/lib/pregnancy-gallery';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import Button from '~/components/ui/Button.astro';
 import { pregnancyPackages } from '~/lib/pregnancy';
@@ -48,10 +50,10 @@ const breadcrumbs = [
       { label: 'גלריה' },
     ]}
   />
-  <Journey current="gallery" />
+  <Journey journey={pregnancyJourney} current="gallery" />
   <section class="mx-auto max-w-6xl px-4 py-8" aria-label="תמונות מסשנים של צילומי הריון">
     <p class="mb-5 text-center text-sm">לחצי על תמונה להגדלה ולדפדוף בגלריה.</p>
-    <Gallery />
+    <Gallery images={pregnancyGalleryImages} />
   </section>
   <section class="mx-auto max-w-3xl space-y-4 px-4 py-10">
     <h2 class="text-2xl font-bold">מצאת תמונה שעצרה אותך?</h2>
@@ -66,5 +68,5 @@ const breadcrumbs = [
       >.
     </p>
   </section>
-  <Journey current="gallery" cta />
+  <Journey journey={pregnancyJourney} current="gallery" cta />
 </Layout>

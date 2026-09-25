@@ -51,6 +51,7 @@ export const headerData = {
           text: 'צילומים אישיים',
           href: getPermalink('/gallery/solo'),
         },
+        { text: 'צילומי נשיות', href: getPermalink('/gallery/feminine') },
       ],
     },
     {
@@ -144,6 +145,7 @@ export const footerData = {
         { text: 'צילומי הריון', href: getPermalink('/gallery/pregnancy') },
         { text: 'צילומי זוגיות', href: getPermalink('/gallery/couples') },
         { text: 'צילומים אישיים', href: getPermalink('/gallery/solo') },
+        { text: 'צילומי נשיות', href: getPermalink('/gallery/feminine') },
       ],
     },
     {

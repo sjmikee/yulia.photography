@@ -1,11 +1,12 @@
 ---
+import { pregnancyJourney, pregnancyService } from '~/lib/pregnancy';
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
-import Button from '~/components/ui/Button.astro';
-import { Icon } from 'astro-icon/components';
-import Journey from '~/components/pregnancy/Journey.astro';
-import ServiceSchema from '~/components/pregnancy/ServiceSchema.astro';
-import { pregnancyPackages, pregnancyWhatsApp, pregnancyChildSupplement } from '~/lib/pregnancy';
+import PricingCards from '~/components/ui/PricingCards.astro';
+import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import { pregnancyPackages, pregnancyWhatsApp, pregnancyChildSupplement, pregnancyPricingCards } from '~/lib/pregnancy';
 import preview from '~/assets/images/pricing/pregnancy_pricing.jpg';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
@@ -37,7 +38,7 @@ const breadcrumbs = [
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <ServiceSchema />
+  <ServiceSchema service={pregnancyService} />
 
   <HeroText
     tagline="יוליה קורנסקי · חולון ומרכז הארץ"
@@ -79,100 +80,18 @@ const breadcrumbs = [
     </p>
   </section>
 
-  <Journey current="pricing" />
+  <Journey journey={pregnancyJourney} current="pricing" />
 
   <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
     <h2 class="mb-4 text-center text-3xl font-bold">החבילה שמתאימה לך, במבט אחד</h2>
     <p class="mb-8 text-center">כל המחירים לצילומי חוץ. בכל חבילה: הכוונה לפני הצילום, עריכה מלאה וגלריה דיגיטלית.</p>
     <p class="mb-4 text-center text-sm">הזמנים בטבלה הם הערכה לתכנון הסשן. בחרי לפי כמות התמונות והאוסף שתרצי לקבל.</p>
-    <p class="mb-3 text-sm md:hidden">אפשר לגלול את הטבלה לצדדים כדי לראות את כל הפרטים.</p>
-    <div
-      class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700"
-      tabindex="0"
-      role="region"
-      aria-label="השוואת חבילות צילומי הריון"
-    >
-      <table class="w-full min-w-[560px] text-right">
-        <caption class="sr-only">השוואת כמות תמונות, מחיר ומשך צילום משוער בחבילות ההריון</caption>
-        <thead class="bg-gray-50 dark:bg-slate-800">
-          <tr>
-            <th scope="col" class="p-4">החבילה</th>
-            <th scope="col" class="p-4">תמונות בעריכה מלאה</th>
-            <th scope="col" class="p-4">מחיר</th>
-            <th scope="col" class="p-4">משך צילום משוער</th>
-          </tr>
-        </thead>
-        <tbody
-          >{
-            displayedPackages.map((p) => (
-              <tr class="border-t border-gray-200 dark:border-gray-700">
-                <th scope="row" class="p-4">
-                  <a href={`#${p.id}`} class="underline">
-                    {p.title}
-                  </a>
-                </th>
-                <td class="p-4 font-bold text-accent">{p.photos}</td>
-                <td class="p-4 whitespace-nowrap">{p.price} ש״ח</td>
-                <td class="p-4 text-sm">{p.duration}</td>
-              </tr>
-            ))
-          }</tbody
-        >
-      </table>
-    </div>
-    <div class="mt-8 grid gap-6 md:grid-cols-3">
-      {
-        displayedPackages.map((p) => (
-          <article
-            id={p.id}
-            class="relative mx-auto flex w-full max-w-sm scroll-mt-24 flex-col rounded-lg border border-gray-200 bg-white px-6 py-8 text-center shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-slate-900"
-          >
-            {p.id === 'classic' && (
-              <div
-                class="pointer-events-none absolute -left-2 -top-2 z-10 h-[100px] w-[100px] overflow-hidden"
-                aria-label="הכי משתלם"
-              >
-                <span class="absolute -left-[21px] top-[19px] block w-full -rotate-45 bg-green-700 text-center text-[10px] font-bold leading-5 text-white shadow-md">
-                  הכי משתלם
-                </span>
-              </div>
-            )}
-            <h3 class="mb-2 text-xl font-semibold leading-6 tracking-wider">{p.title}</h3>
-            <p class="mb-3 text-2xl font-bold text-accent">{p.photos} תמונות בעריכה מלאה</p>
-            <p class="mb-4 font-light text-gray-600 sm:text-lg dark:text-slate-400">{p.fit}</p>
-            <p class="my-8 text-4xl font-extrabold">
-              {p.price} <span class="text-lg">ש״ח</span>
-            </p>
-            <ul class="mb-8 space-y-2 text-right">
-              {[
-                `משך צילום משוער: ${p.duration}`,
-                'הכוונה לפני הצילום וטיפים ללבוש',
-                'גלריה דיגיטלית באיכות גבוהה להורדה',
-                p.extra,
-                `כל ילד בתוספת ${pregnancyChildSupplement} ש״ח`,
-              ]
-                .filter(Boolean)
-                .map((description, index) => (
-                  <li class:list={['flex items-start gap-3 leading-7', { 'text-sm': index === 0 }]}>
-                    <span class="mt-1 shrink-0 rounded-full bg-green-700" aria-hidden="true">
-                      <Icon name="tabler:check" class="h-5 w-5 p-1 font-bold text-white" />
-                    </span>
-                    <span>{description}</span>
-                  </li>
-                ))}
-            </ul>
-            <Button
-              class="mt-auto"
-              {...(p.id === 'classic' ? { variant: 'primary' as const } : {})}
-              href={pregnancyWhatsApp(`היי יוליה, אשמח לפרטים ולבדיקת תאריך לצילומי הריון — ${p.title}. אני בשבוע __.`)}
-              target="_blank"
-            >
-              לבדיקת תאריך — {p.title}
-            </Button>
-          </article>
-        ))
-      }
-    </div>
+    <PackageComparison
+      packages={displayedPackages}
+      label="השוואת חבילות צילומי הריון"
+      caption="השוואת כמות תמונות, מחיר ומשך צילום משוער בחבילות ההריון"
+    />
+    <div class="mt-8"><PricingCards prices={pregnancyPricingCards} /></div>
   </section>
 
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-right">
@@ -307,5 +226,5 @@ const breadcrumbs = [
 
   <!-- CallToAction Widget *********** -->
 
-  <Journey current="pricing" cta />
+  <Journey journey={pregnancyJourney} current="pricing" cta />
 </Layout>

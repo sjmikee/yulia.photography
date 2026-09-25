@@ -1,11 +1,13 @@
 ---
+import { pregnancyJourney, pregnancyService } from '~/lib/pregnancy';
 import Layout from '~/layouts/PageLayout.astro';
+import ImageSection from '~/components/photoshoots/ImageSection.astro';
 import { Image } from 'astro:assets';
 import Button from '~/components/ui/Button.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import Journey from '~/components/pregnancy/Journey.astro';
-import ServiceSchema from '~/components/pregnancy/ServiceSchema.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import { pregnancyPackages, pregnancyWhatsApp } from '~/lib/pregnancy';
 import hero from '~/assets/images/services/pregnancy-hero.jpg';
 import beach from '~/assets/images/services/pregnancy-10.jpg';
@@ -35,7 +37,7 @@ const breadcrumbs = [
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <ServiceSchema />
+  <ServiceSchema service={pregnancyService} />
   <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:gap-12 md:py-12">
     <div>
       <p class="mb-3 font-semibold text-accent">יוליה קורנסקי · חולון ומרכז הארץ</p>
@@ -74,7 +76,7 @@ const breadcrumbs = [
   <Breadcrumbs
     items={[{ label: 'דף הבית', href: '/' }, { label: 'סוגי צילומים', href: '/services' }, { label: 'צילומי הריון' }]}
   />
-  <Journey current="service" />
+  <Journey journey={pregnancyJourney} current="service" />
 
   <section class="mx-auto max-w-5xl px-4 py-12">
     <h2 class="mb-8 text-3xl font-bold">איך נראה סשן איתי?</h2>
@@ -101,69 +103,49 @@ const breadcrumbs = [
     <p class="mt-6"><a href="/about" class="underline">קצת עליי ועל הדרך שבה אני מצלמת</a></p>
   </section>
 
-  <section class="mx-auto grid max-w-5xl items-center gap-8 px-4 py-12 md:grid-cols-2">
-    <Image
-      src={couple}
-      alt="זוג מחובק בצילומי הריון לצד קיר אבן וצמחייה"
-      widths={[400, 640, 900]}
-      sizes="(min-width: 768px) 45vw, 100vw"
-      loading="lazy"
-      class="w-full rounded-2xl"
-    />
-    <div class="space-y-4">
-      <h2 class="text-3xl font-bold">בטבע, בים או בעיר: איזה רקע מרגיש לך נכון?</h2>
-      <p>
-        <strong>צילומי הריון בטבע</strong> מתאימים למי שאוהבת ירוק, עצים ואור שעובר בין העלים. <strong
-          >צילומי הריון בים</strong
-        > מביאים מרחב פתוח, רוח ושקיעה — וגם קצת חול בנעליים.
-      </p>
-      <p>
-        אני מצלמת בחולון ובמרכז. נבחר מקום לפי העונה, האור והנוחות שלך, ונחשוב גם על הגישה אליו ועל כמה תרצי ללכת. מקום
-        יפה צריך קודם כול להתאים לך.
-      </p>
-      <p>מעדיפה סטודיו? אפשר לתאם צילום בסטודיו בתוספת תשלום. את המקום והעלות נסכם מראש.</p>
-      <a href="/gallery/pregnancy" class="inline-block font-semibold underline">לגלריה: צילומים בים וביער</a>
-    </div>
-  </section>
+  <ImageSection image={couple} alt="זוג מחובק בצילומי הריון לצד קיר אבן וצמחייה" imageFirst={true}>
+    <h2 class="text-3xl font-bold">בטבע, בים או בעיר: איזה רקע מרגיש לך נכון?</h2>
+    <p>
+      <strong>צילומי הריון בטבע</strong> מתאימים למי שאוהבת ירוק, עצים ואור שעובר בין העלים. <strong
+        >צילומי הריון בים</strong
+      > מביאים מרחב פתוח, רוח ושקיעה — וגם קצת חול בנעליים.
+    </p>
+    <p>
+      אני מצלמת בחולון ובמרכז. נבחר מקום לפי העונה, האור והנוחות שלך, ונחשוב גם על הגישה אליו ועל כמה תרצי ללכת. מקום
+      יפה צריך קודם כול להתאים לך.
+    </p>
+    <p>מעדיפה סטודיו? אפשר לתאם צילום בסטודיו בתוספת תשלום. את המקום והעלות נסכם מראש.</p>
+    <a href="/gallery/pregnancy" class="inline-block font-semibold underline">לגלריה: צילומים בים וביער</a>
+  </ImageSection>
 
-  <section class="mx-auto grid max-w-5xl items-center gap-8 px-4 py-12 md:grid-cols-2">
-    <div class="space-y-4">
-      <h2 class="text-3xl font-bold">לבד, בזוג או עם הילדים</h2>
-      <h3 class="text-xl font-bold">כשאת מגיעה לבד, כל הסיפור הוא שלך</h3>
-      <p>
-        סשן אישי הוא הזדמנות לתת מקום לך ולתקופה שאת עוברת: לא רק לבטן, אלא גם למבט, לחיוך ולאופי שלך. אפשר ליצור
-        דיוקנאות קרובים ועדינים, להכניס תנועה ולשחק עם הבגד והרוח, או לבחור רגעים שקטים בין העצים. לא צריך להגיע עם מצב
-        רוח מסוים — יש מקום גם להתרגשות וגם לביישנות.
-      </p>
-      <p>
-        נבחר יחד לבוש ואווירה שמרגישים לך טבעיים. לאורך הצילום אני איתך, מכוונת בעדינות ועוזרת למצוא תנוחות שנוחות לך.
-        את לא צריכה להמציא פוזות; את יכולה פשוט לנשום, לזוז קצת ולתת לעצמך להיות במרכז. ניצור אוסף
-        אישי שתוכלי לחזור אליו ולהיזכר איך הרגע הזה הרגיש לך.
-      </p>
-      <h3 class="text-xl font-bold">ואם מתחשק לך לחלוק את הפריים</h3>
-      <p>
-        אפשר לשלב בן או בת זוג. בצילומי הריון זוגיים יש מקום לחיבוק, למבט ולבדיחה שרק שניכם מבינים, וגם לצילומים שלך לבד
-        בתוך הסשן המשותף.
-      </p>
-      <p>
-        ילדים מצטרפים? ספרי לי מראש כדי שנוכל לתכנן גם רגעים משפחתיים וגם זמן בשבילך. השתתפות ילדים היא בתוספת 100 ש״ח
-        לכל ילד.
-      </p>
-      <h3 class="text-xl font-bold">צילומי הריון צנועים, בסגנון שלך</h3>
-      <p>
-        לא חייבים לחשוף את הבטן כדי לספר את הסיפור. אפשר להצטלם בלבוש מלא ולבחור יחד בגדים ותנוחות שנעים לך איתם. אם
-        חשובה לך פרטיות במקום הצילום, נדבר על כך מראש בבחירת הלוקיישן.
-      </p>
-    </div>
-    <Image
-      src={beach}
-      alt="אישה בהריון בשמלה לבנה בתנועה על סלעים ליד הים"
-      widths={[400, 640, 900]}
-      sizes="(min-width: 768px) 45vw, 100vw"
-      loading="lazy"
-      class="w-full rounded-2xl"
-    />
-  </section>
+  <ImageSection image={beach} alt="אישה בהריון בשמלה לבנה בתנועה על סלעים ליד הים" imageFirst={false}>
+    <h2 class="text-3xl font-bold">לבד, בזוג או עם הילדים</h2>
+    <h3 class="text-xl font-bold">כשאת מגיעה לבד, כל הסיפור הוא שלך</h3>
+    <p>
+      סשן אישי הוא הזדמנות לתת מקום לך ולתקופה שאת עוברת: לא רק לבטן, אלא גם למבט, לחיוך ולאופי שלך. אפשר ליצור דיוקנאות
+      קרובים ועדינים, להכניס תנועה ולשחק עם הבגד והרוח, או לבחור רגעים שקטים בין העצים. לא צריך להגיע עם מצב רוח מסוים —
+      יש מקום גם להתרגשות וגם לביישנות.
+    </p>
+    <p>
+      נבחר יחד לבוש ואווירה שמרגישים לך טבעיים. לאורך הצילום אני איתך, מכוונת בעדינות ועוזרת למצוא תנוחות שנוחות לך. את
+      לא צריכה להמציא פוזות; את יכולה פשוט לנשום, לזוז קצת ולתת לעצמך להיות במרכז. ניצור אוסף אישי שתוכלי לחזור אליו
+      ולהיזכר איך הרגע הזה הרגיש לך.
+    </p>
+    <h3 class="text-xl font-bold">ואם מתחשק לך לחלוק את הפריים</h3>
+    <p>
+      אפשר לשלב בן או בת זוג. בצילומי הריון זוגיים יש מקום לחיבוק, למבט ולבדיחה שרק שניכם מבינים, וגם לצילומים שלך לבד
+      בתוך הסשן המשותף.
+    </p>
+    <p>
+      ילדים מצטרפים? ספרי לי מראש כדי שנוכל לתכנן גם רגעים משפחתיים וגם זמן בשבילך. השתתפות ילדים היא בתוספת 100 ש״ח לכל
+      ילד.
+    </p>
+    <h3 class="text-xl font-bold">צילומי הריון צנועים, בסגנון שלך</h3>
+    <p>
+      לא חייבים לחשוף את הבטן כדי לספר את הסיפור. אפשר להצטלם בלבוש מלא ולבחור יחד בגדים ותנוחות שנעים לך איתם. אם חשובה
+      לך פרטיות במקום הצילום, נדבר על כך מראש בבחירת הלוקיישן.
+    </p>
+  </ImageSection>
 
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-12" id="preparation" style="scroll-margin-top: 7rem">
     <h2 class="text-3xl font-bold">מתי מצטלמים ומה כדאי להביא?</h2>
@@ -264,5 +246,5 @@ const breadcrumbs = [
       },
     ]}
   />
-  <Journey current="service" cta />
+  <Journey journey={pregnancyJourney} current="service" cta />
 </Layout>

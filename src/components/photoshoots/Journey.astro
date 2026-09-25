@@ -1,0 +1,41 @@
+---
+import Button from '~/components/ui/Button.astro';
+import type { PhotoshootJourney } from '~/lib/photoshoots';
+interface Props {
+  journey: PhotoshootJourney;
+  current: string;
+  cta?: boolean;
+}
+const { journey, current, cta = false } = Astro.props;
+---
+
+{
+  cta && (
+    <section class="mx-auto max-w-3xl px-4 py-12 text-center">
+      <h2 class="mb-4 text-3xl font-bold">{journey.contact.title}</h2>
+      <p class="mb-6 text-lg">{journey.contact.description}</p>
+      <Button variant="primary" {...journey.contact.action} />
+      <p class="mt-4">
+        <a href={journey.contact.phone.href} class="underline">
+          {journey.contact.phone.label}
+        </a>
+      </p>
+    </section>
+  )
+}
+<nav
+  aria-label={journey.label}
+  class="mx-auto flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-4 px-4 py-6 text-center"
+>
+  {
+    journey.links.map(({ id, href, label }) => (
+      <a
+        href={href}
+        aria-current={id === current ? 'page' : undefined}
+        class:list={['underline underline-offset-4', { 'font-bold text-accent': id === current }]}
+      >
+        {label}
+      </a>
+    ))
+  }
+</nav>
