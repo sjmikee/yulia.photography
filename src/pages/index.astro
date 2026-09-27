@@ -7,6 +7,7 @@ import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astr
 import StaticHero from '~/components/widgets/StaticHero.astro';
 import ContentGrid from '~/components/widgets/ContentGrid.astro';
 import { feminineHomepageImages } from '~/lib/feminine-gallery';
+import { couplesHomepageImages, pregnancyHomepageImages, personalHomepageImages } from '~/lib/homepage-gallery';
 import Reviews from '~/components/widgets/reviews.astro';
 
 const metadata = {
@@ -55,16 +56,22 @@ const metadata = {
   <ContentGrid
     contentArray={[
       {
-        imagesFolder: 'family_index',
+        galleryImages: couplesHomepageImages,
+        galleryLayout: 'grid',
         title: 'צילומי זוגיות',
         subTitle: 'תמונות שישאירו אתכם פעורי פה',
         text: `נמאס מהתמונות שלכם שמעלות אבק באלבום?
 צילומי זוגיות אצלי הם חוויה זורמת, מלאה בצחוק, מגע ורגעים אמיתיים.
 בלי "תחייכו למצלמה" — רק אתם, בטבע.`,
-        callToAction: { text: 'גלריה', href: '/gallery/couples', icon: 'tabler:library-photo' },
+        actions: [
+          { text: 'על צילומי זוגיות', href: '/services/couples-photography', icon: 'tabler:camera' },
+          { text: 'מחירון צילומי זוגיות', href: '/pricing/couples', icon: 'tabler:currency-shekel' },
+          { text: 'גלריית צילומי זוגיות', href: '/gallery/couples', icon: 'tabler:library-photo' },
+        ],
       },
       {
-        imagesFolder: 'pregnancy_index',
+        galleryImages: pregnancyHomepageImages,
+        galleryLayout: 'grid',
         title: 'צילומי הריון',
         subTitle: 'את, הבטן, וכל מה שבדרך',
         text: `צילומי הריון בטבע ובים בחולון ובמרכז, עם הכוונה נעימה וקצת מקום לצחוק.
@@ -91,13 +98,18 @@ const metadata = {
         ],
       },
       {
-        imagesFolder: 'solo_index',
+        galleryImages: personalHomepageImages,
+        galleryLayout: 'grid',
         title: 'צילומים אישיים | צילומי תדמית',
         subTitle: 'זוית חדשה על עצמך',
         text: `זה לא עוד צילום סולו — זה זמן לעצמך.
 צילומים אישיים, צילומי נשיות ובוק תדמית שמותאמים לאופי ולווייב שלך,
 בטבע או בסטודיו.`,
-        callToAction: { text: 'גלריה', href: '/gallery/solo', icon: 'tabler:library-photo' },
+        actions: [
+          { text: 'על צילומים אישיים', href: '/services/personal-photography', icon: 'tabler:camera' },
+          { text: 'מחירון צילומים אישיים', href: '/pricing/personal', icon: 'tabler:currency-shekel' },
+          { text: 'גלריית צילומים אישיים', href: '/gallery/solo', icon: 'tabler:library-photo' },
+        ],
       },
     ]}
   >
