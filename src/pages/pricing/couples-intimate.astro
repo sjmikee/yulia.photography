@@ -1,309 +1,192 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import HeroText from '~/components/widgets/HeroText.astro';
-import Prices from '~/components/widgets/Pricing.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
-import Image from '~/components/common/Image.astro';
-import osher_review from '~/assets/reviewers/osher_review.jpg';
-import zehava_review from '~/assets/reviewers/inbal_review.jpg';
-import { PRICES } from '~/lib/pricing';
-
+import HeroText from '~/components/widgets/HeroText.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
+import PricingCards from '~/components/ui/PricingCards.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import {
+  intimateJourney,
+  intimatePackages,
+  intimatePricingCards,
+  intimateWhatsApp,
+  intimateService,
+} from '~/lib/couples-intimate';
+import { couplesHeroImage as hero, couplesFeaturedImages } from '~/lib/couples-gallery';
+// Keep the established pricing URL, title and H1 while improving the buying information.
 const metadata = {
   title: 'מחירון צילומי זוגיות אינטימיים ולייף סטייל - יוליה קורנסקי',
-  description:
-    'חבילות צילומי זוגיות אינטימיים מותאמות אישית. תיהנו מחוויית צילום כיפית ותמונות מקצועיות שישמרו את הסיפור שלכם. בדקו את המחירון והזמינו סשן עכשיו',
+  description: `חבילות צילומי זוגיות אינטימיים ב־${intimatePackages.map((p) => p.price).join(', ')} ש״ח. השוו זמן צילום ותמונות בעריכה מלאה. הכוונה אישית, גלריה פרטית וסשן בקצב ובגבולות שלכם.`,
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/couples_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
 };
-
 const breadcrumbs = [
   { url: '/pricing', name: 'מחירון' },
   { url: '/pricing/couples-intimate', name: 'מחירון צילומי זוגיות אינטימיים' },
 ];
-
-const session_type = 'זוגיות-אינטימי';
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <!-- HeroText Widget ******************* -->
-
-  <HeroText
-    tagline="צילום זוגי אינטימי, חושני ומלא רגש"
-    title="מחירון צילומי זוגיות אינטימיים"
-    subtitle="סשן צילום זוגי באווירה אינטימית ובטוחה, שמאפשרת לכם להתקרב, להרגיש ולהיות אתם — ברוך, בלי לחץ ובלי פוזות."
-    content="צילומי זוגיות אינטימיים נועדו ללכוד מבטים, מגעים ורגעים קטנים של קרבה. הסשן מתקיים בקצב שלכם, בלוקיישן שנעים לכם - בטבע, במקום אורבני או במרחב פרטי לבחירתכם - ויוצר חוויה זוגית עמוקה ותמונות ששומרות את האהבה שלכם כמו שהיא."
-    callToAction={{
-      variant: 'primary',
-      text: 'לשיחת ייעוץ בווטסאפ ללא התחייבות',
-      href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%AA%D7%A2%D7%A0%D7%99%D7%99%D7%9F%2F%D7%AA%20%D7%91%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA%20%D7%90%D7%99%D7%A0%D7%98%D7%99%D7%9E%D7%99%D7%99%D7%9D%20%D7%95%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
-      target: '_blank',
-      icon: 'tabler:brand-whatsapp',
-      'data-lead-source': 'intimate-hero',
-    }}
-  />
-
-  <Breadcrumbs
-    items={[
-      { label: 'דף הבית', href: '/' },
-      { label: 'מחירון', href: '/pricing' },
-      { label: 'מחירון צילומי זוגיות אינטימיים' },
-    ]}
-  />
-
-  <section class="max-w-5xl mx-auto px-4 pb-10 md:pb-16">
-    <div class="grid md:grid-cols-2 overflow-hidden rounded-2xl bg-gray-50 shadow-sm">
-      <Image
-        src="~/assets/images/pricing/couples_intimate_pricing.jpg"
-        alt="זוג בצילומי זוגיות אינטימיים באווירה טבעית"
-        widths={[400, 768, 1024, 1536]}
-        sizes="(max-width: 767px) 100vw, 50vw"
-        class="h-72 w-full object-cover md:h-full"
-        loading="eager"
-      />
-      <div class="p-7 md:p-10 text-right">
-        <p class="font-bold text-secondary mb-2">לפני הכול - אתם בשליטה</p>
-        <h2 class="text-2xl font-bold mb-4">חוויה אינטימית, לפי הגבולות שלכם</h2>
-        <ul class="space-y-3 text-gray-700">
-          <li>• אין חובה לעירום או לכל דבר שלא מרגיש לכם נכון.</li>
-          <li>• בוחרים יחד את רמת הקרבה, הלוקיישן והאווירה.</li>
-          <li>• התמונות נמסרות בגלריה דיגיטלית פרטית, רק לכם.</li>
-        </ul>
-        <p class="mt-5 text-sm text-gray-600">אפשר לשאול הכול בווטסאפ - בלי התחייבות לקבוע סשן.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing Widget ******************* -->
-
-  <Prices
-    title="בחרו את החוויה שמתאימה לכם"
-    subtitle="כל החבילות כוללות הכנה אישית, ליווי עדין לאורך הסשן וגלריה פרטית."
-    tagline="חבילות החל מ־700 ₪"
-    prices={[
-      {
-        title: 'חבילת פרימיום',
-        subtitle: 'חוויה חושנית עמוקה ומלאת חיבור',
-        price: PRICES[session_type][3],
-        period: 'סשן זוגי אינטימי ומורחב, עם מקום להעמקה, קרבה וביטוי רגשי',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'כשעתיים של צילומים',
-          },
-          {
-            description: 'עד 2 תלבושות, הפסקות לפי הצורך',
-          },
-          {
-            description: 'לפחות 35 - 50 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית פרטית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לבדיקת התאמה בוואטסאפ',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%95%D7%A8%D7%97%D7%91%D7%AA%20%D7%9E%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%AA%20%D7%90%D7%95%D7%AA%D7%99.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
-          'data-lead-source': 'intimate-package-premium',
-        },
-      },
-      {
-        title: 'החבילה הקלאסית',
-        subtitle: 'החוויה המאוזנת',
-        price: PRICES[session_type][2],
-        period: 'מספיק זמן להירגע, להתחבר וליצור מגוון טבעי בלוקיישן שנוח לכם',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'שעה וחצי של צילומים',
-          },
-          {
-            description: 'לפחות 20 - 35 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית פרטית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לבדיקת התאמה בוואטסאפ',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%A7%D7%9C%D7%90%D7%A1%D7%99%D7%AA%20%D7%9E%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%AA%20%D7%90%D7%95%D7%AA%D7%99.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
-          'data-lead-source': 'intimate-package-classic',
-        },
-        hasRibbon: true,
-        ribbonTitle: 'מומלצת',
-      },
-      {
-        title: 'חבילת בסיס',
-        subtitle: 'רגע אחד',
-        price: PRICES[session_type][1],
-        period: 'מתאים לצילומי זוגיות אינטימיים קצרים, עם דגש על קרבה, מבטים ומגע עדין',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: '45 דקות של צילומי זוגיות אינטימיים וחושניים בקצב רגוע',
-          },
-          {
-            description: 'לפחות 15 - 20 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית פרטית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לבדיקת התאמה בוואטסאפ',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%9E%D7%A2%D7%A0%D7%99%D7%99%D7%A0%D7%AA%20%D7%90%D7%95%D7%AA%D7%99.%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%91%D7%93%D7%95%D7%A7%20%D7%94%D7%AA%D7%90%D7%9E%D7%94%20%D7%95%D7%93%D7%99%D7%A1%D7%A7%D7%A8%D7%98%D7%99%D7%95%D7%AA.',
-          'data-lead-source': 'intimate-package-basic',
-        },
-      },
-    ]}
-  />
-
-  <section class="bg-gray-50 py-14 px-6" id="reviews">
-    <h2 class="text-3xl font-bold text-center mb-3">מה זוגות מספרים על החוויה</h2>
-    <p class="text-center text-gray-600 mb-9">גם אם אתם חוששים ממצלמה, המטרה היא שתרגישו בנוח להיות פשוט אתם.</p>
-    <div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-      <blockquote class="bg-white p-6 rounded-2xl shadow">
-        <p>
-          <span class="text-yellow-400 text-lg">★★★★★</span><br />"יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו
-          באווירה ממש כיפית וחווייתית והתוצרים הם ליגה ורמה אחרת!! ... נהננו מאוד והתוצאה יצאה הרבה מעבר למה שציפינו!"
-        </p>
-        <footer class="mt-4 font-bold flex items-center">
-          <Image src={osher_review} alt="אושר" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
-          <span class="mx-2">אושר</span>
-        </footer>
-      </blockquote>
-      <blockquote class="bg-white p-6 rounded-2xl shadow">
-        <p>
-          <span class="text-yellow-400 text-lg">★★★★★</span><br />"כבר בשיחת טלפון ידעתי שאותך אני סוגרת! מעבר לתמונות
-          מטורפות החוויה הייתה לא פחות חשובה והייתה מעבר לציפיות! את מוכשרת, זורמת, מלאת אנרגיות טובות."
-        </p>
-        <footer class="mt-4 font-bold flex items-center">
-          <Image src={zehava_review} alt="זהבה" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
-          <span class="mx-2">זהבה</span>
-        </footer>
-      </blockquote>
-    </div>
-  </section>
-
-  <!-- Steps Widget ****************** -->
-
-  <Steps
-    title="תהליך צילומי זוגיות אינטימיים וחושניים"
-    tagline="איך הכל יראה"
-    isReversed={true}
-    items={[
-      {
-        title: 'שיחת הכירות והתאמה',
-        icon: 'tabler:number-1',
-      },
-      {
-        title: 'סגירת חבילה, תאריך ותיאום ציפיות',
-        icon: 'tabler:number-2',
-      },
-      {
-        title: 'תשלום על שריון תאריך (100ש״ח)',
-        icon: 'tabler:number-3',
-      },
-      {
-        title: 'מצטלמים ונהנים 😊',
-        icon: 'tabler:number-4',
-      },
-      {
-        title: 'עריכת התמונות (עד 14 ימי עסקים)',
-        icon: 'tabler:number-5',
-      },
-      {
-        title: 'קבלת קישור לגלריה דיגיטלית להורדה',
-        icon: 'tabler:number-6',
-      },
-      {
-        title: 'נהנים מתמונות איכותיות ומרגשות 😊',
-        icon: 'tabler:number-7',
-      },
-    ]}
-    image={{
-      src: '~/assets/images/pricing/couples_intimate_pricing_2.jpg',
-      alt: 'צילומי זוגיות אינטימיים צילומי זוגיות מחירון',
-    }}
-  />
-
-  <!-- FAQs Widget ******************* -->
-
-  <FAQs
-    title="שאלות נפוצות"
-    subtitle="אשמח לענות על כל שאלה אחרת שיש לכם ולא מצאתם תשובה"
-    columns={1}
-    items={[
-      {
-        title: 'האם צילומי זוגיות אינטימיים כוללים עירום?',
-        description:
-          'רמת האינטימיות בצילומים נבחרת תמיד לפי הרצון, הגבולות והנוחות שלכם. אין חובה לעירום כלל - הכל נעשה בהקשבה מלאה, בכבוד וברגישות, ומתוך מטרה ליצור חוויה נעימה ובטוחה שמתאימה לכם.',
-      },
-      {
-        title: 'מתי כדאי לסגור תאריך?',
-        description: 'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות.',
-      },
-      {
-        title: 'את עוזרת עם בגדים / צבעים?',
-        description: 'בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.',
-      },
-      {
-        title: 'מה קורה אם יורד גשם או מישהו חולה?',
-        description:
-          'תמיד אפשר לתאם מועד חלופי - החיים קורים, ואני לגמרי מבינה. עדכנו אותי בהקדם, ונמצא מועד חדש שמתאים לשני הצדדים.',
-      },
-      {
-        title: 'איפה מתקיימים הצילומים?',
-        description:
-          'צילומי זוגיות אינטימיים יכולים להתקיים בטבע, בלוקיישן אורבני, בסטודיו או במקום פרטי לבחירתכם - בית, צימר או כל מרחב שבו אתם מרגישים בנוח. הבחירה בלוקיישן נעשית יחד, בהתאם לאווירה ולרמת האינטימיות הרצויה.',
-      },
-      {
-        title: 'צריך לשלם מקדמה?',
-        description:
-          'כן. כדי לשמור את התאריך ביומן, יש לשלם מקדמה של ₪100 בעת ההזמנה. (המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד), במקרה של דחיה אם תודיעו עד 24 שעות מראש - נוכל למצוא יחד מועד חלופי.',
-      },
-    ]}
-  />
-
-  <!-- CallToAction Widget *********** -->
-
-  <CallToAction
-    id="bottomCallToAction"
-    actions={[
-      {
-        variant: 'primary',
-        text: 'לשאלות ובדיקת תאריך בוואטסאפ',
-        href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%20%D7%99%D7%95%D7%9C%D7%99%D7%94%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%90%D7%95%D7%9C%20%D7%9B%D7%9E%D7%94%20%D7%A9%D7%90%D7%9C%D7%95%D7%AA%20%D7%A2%D7%9C%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA%20%D7%90%D7%99%D7%A0%D7%98%D7%99%D7%9E%D7%99%D7%99%D7%9D.',
+  <ServiceSchema service={intimateService} />
+  <LeadTracking service="couples_intimate">
+    <HeroText
+      tagline="צילום זוגי אינטימי, חושני ומלא רגש"
+      title="מחירון צילומי זוגיות אינטימיים"
+      subtitle={`זמן להיות יחד, החל מ־${intimatePackages[0].price} ש״ח. סשן בקצב שלכם, עם הכוונה עדינה ובלי צורך לדעת להצטלם.`}
+      content="כל החבילות כוללות הכנה אישית, תמונות בעריכה מוקפדת ומלאה וגלריה דיגיטלית פרטית. הלבוש ורמת הקרבה לבחירתכם, ללא חובה לעירום."
+      callToAction={{ text: 'להשוואת החבילות', href: '#packages' }}
+      callToAction2={{
+        text: 'לשיחת ייעוץ ללא התחייבות',
+        href: intimateWhatsApp(),
         target: '_blank',
-        icon: 'tabler:brand-whatsapp',
-        'data-lead-source': 'intimate-bottom-cta',
-      },
-    ]}
-  >
-    <Fragment slot="title">יש לכם שאלות לפני שמחליטים?</Fragment>
-    <Fragment slot="subtitle">כתבו לי בפרטיות. אשמח לעזור לכם להבין אם הסשן מתאים לכם - בלי התחייבות.</Fragment>
-  </CallToAction>
-
-  <script is:inline>
-    document.querySelectorAll('[data-lead-source]').forEach((element) => {
-      element.addEventListener('click', () => {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'generate_lead',
-          lead_source: element.dataset.leadSource,
-          service: 'couples_intimate',
-        });
-      });
-    });
-  </script>
+        'data-lead-source': 'intimate-hero',
+      }}
+    />
+    <Breadcrumbs
+      items={[
+        { label: 'דף הבית', href: '/' },
+        { label: 'מחירון', href: '/pricing' },
+        { label: 'מחירון צילומי זוגיות אינטימיים' },
+      ]}
+    />
+    <section class="mx-auto max-w-4xl space-y-4 px-4 py-8">
+      <h2 class="text-2xl font-bold">כמה עולים צילומי זוגיות אינטימיים?</h2>
+      <p>
+        <strong>מחיר הסשן נע בין {intimatePackages[0].price} ל־{intimatePackages[2].price} ש״ח.</strong> ההבדל בין החבילות
+        הוא זמן הצילום וכמות התמונות בעריכה מלאה. ההכוונה, היחס האישי והפרטיות הם חלק מכל חבילה.
+      </p>
+      <p>
+        הסשן יכול להיות רומנטי ועדין או חושני יותר, כולל צילומי לייף סטייל במרחב פרטי בתיאום. מקום הצילום נקבע יחד; אם
+        נדרשת שכירת סטודיו או לוקיישן, נברר את העלות מראש.
+      </p>
+    </section>
+    <Journey journey={intimateJourney} current="pricing" />
+    <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+      <h2 class="mb-4 text-center text-3xl font-bold">בחרו את החוויה שמתאימה לכם</h2>
+      <p class="mb-8 text-center">כמות התמונות מתייחסת לתמונות בעריכה מלאה. זמני הצילום משוערים לתכנון הסשן.</p>
+      <PackageComparison
+        packages={[...intimatePackages].reverse()}
+        label="השוואת חבילות צילומי זוגיות אינטימיים"
+        caption="כמות תמונות בעריכה מלאה, מחיר ומשך צילום משוער"
+      />
+      <div class="mt-8"><PricingCards prices={intimatePricingCards} /></div>
+    </section>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
+      <h2 class="text-2xl font-bold">איך בוחרים חבילה?</h2>
+      <p>
+        <strong>בסיס</strong> מתאימה לאוסף ממוקד של רגעי קרבה. <strong>קלאסית</strong> נותנת יותר זמן להתרגל למצלמה ולגוון.
+        <strong>פרימיום</strong> כוללת את האוסף הרחב ביותר, עד שתי תלבושות והפסקות לפי הצורך. חבילה ארוכה יותר אינה אומרת
+        צילום חשוף יותר — אתם בוחרים את הסגנון בכל חבילה.
+      </p>
+      <h2 class="text-2xl font-bold">מה כלול במחיר?</h2>
+      <p>
+        שיחת הכנה ותיאום ציפיות, טיפים ללבוש, הכוונה לאורך הצילום, התמונות המפורטות בחבילה בעריכה מוקפדת ומלאה וגלריה
+        דיגיטלית פרטית באיכות גבוהה להורדה. התמונות נמסרות עד 14 ימי עסקים מיום הצילום.
+      </p>
+      <p>
+        אם תרצו מקום שכור, איפור, שיער או אביזרים מיוחדים, העלו זאת בשיחת ההכנה כדי שנברר מה אפשרי ומה העלות. אלה אינם
+        מפורטים כחלק מהחבילות המוצגות.
+      </p>
+      <h2 class="text-2xl font-bold">לפני הכול — אתם בשליטה</h2>
+      <p>
+        אין חובה לעירום או לתנוחה שלא נוחה לכם. מתאמים את רמת הקרבה עם שניכם, ואפשר לעצור או לשנות כיוון במהלך הצילום.
+        נדבר מראש גם על כל מה שחשוב לכם בנוגע לפרטיות.
+      </p>
+      <p>
+        רוצים להבין איך מתחילים ומה לובשים? <a
+          class="font-semibold underline"
+          href="/services/intimate-couples-photography">כל הפרטים על סשן זוגיות אינטימי</a
+        >.
+      </p>
+      <h2 class="text-2xl font-bold">מהשיחה הראשונה ועד התמונות</h2>
+      <p>
+        מכירים, בוחרים חבילה ולוקיישן ומתאמים ציפיות. מקדמה של 100 ש״ח שומרת את התאריך. ביום הצילום מתחילים לאט
+        ובהכוונה; אחריו אני עוברת לעריכה, ואתם מקבלים קישור לגלריה הפרטית שלכם.
+      </p>
+    </section>
+    <section class="mx-auto max-w-5xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">רגעים מהגלריה</h2>
+      <p>
+        לפני שבוחרים חבילה, אפשר להכיר את סגנון הצילום שלי בגלריית הזוגיות. אם משהו בה מדבר אליכם, ספרו לי — נשתמש בו
+        כנקודת התחלה לתכנון הסשן שלכם.
+      </p>
+      <Gallery images={couplesFeaturedImages} />
+      <p>
+        <a class="font-semibold underline" href="/gallery/couples">לגלריית צילומי הזוגיות המלאה</a> · <a
+          class="underline"
+          href="/about">להכיר את יוליה</a
+        >
+      </p>
+    </section>
+    <section id="reviews" class="mx-auto max-w-3xl px-4 py-10">
+      <h2 class="mb-4 text-3xl font-bold">על החוויה מול המצלמה</h2>
+      <p class="mb-6 text-sm text-muted">ביקורת לקוחה על חוויית הצילום עם יוליה, לא על סשן אינטימי.</p>
+      <blockquote class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <p>
+          ״יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!״
+        </p>
+        <footer class="mt-4 font-semibold">אושר</footer>
+      </blockquote>
+    </section>
+    <FAQs
+      title="שאלות על המחיר ועל ההזמנה"
+      columns={1}
+      items={[
+        {
+          title: 'האם צילומי זוגיות אינטימיים כוללים עירום?',
+          description:
+            'אין חובה לעירום. הסגנון, הלבוש ורמת החשיפה נבחרים לפי הרצון והנוחות של שניכם, בכל אחת מהחבילות.',
+        },
+        {
+          title: 'איפה מתקיימים הצילומים, והאם סטודיו כלול?',
+          description:
+            'אפשר לתאם צילומים בטבע, בלוקיישן אורבני, בסטודיו או במרחב פרטי כמו בית או צימר. אם נדרש מקום שכור, נברר מראש את העלות; אין להניח שהשכירות כלולה במחיר החבילה.',
+        },
+        {
+          title: 'מתי מקבלים את התמונות?',
+          description:
+            'עד 14 ימי עסקים מיום הצילום, בקישור לגלריה דיגיטלית פרטית באיכות גבוהה להורדה. כמות התמונות בעריכה מלאה מופיעה בכל חבילה.',
+        },
+        {
+          title: 'צריך לשלם מקדמה?',
+          description:
+            'כן. מקדמה של 100 ש״ח שומרת את התאריך. המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד. דחייה למועד חלופי אפשרית בהודעה עד 24 שעות מראש ובתיאום יחד.',
+        },
+        {
+          title: 'מה קורה אם יורד גשם או מישהו חולה?',
+          description:
+            'עדכנו אותי בהקדם ונבדוק יחד מועד חלופי. תנאי הדחייה הם הודעה עד 24 שעות מראש ובתיאום מועד שמתאים לשני הצדדים.',
+        },
+        {
+          title: 'את עוזרת עם בגדים וצבעים?',
+          description:
+            'בוודאי. ההכוונה כלולה בכל החבילות. בוחרים לבוש שמתאים ללוקיישן ושנוח לכם בו; בפרימיום אפשר לשלב עד שתי תלבושות.',
+        },
+        {
+          title: 'מתי כדאי לסגור תאריך?',
+          description:
+            'כדאי לפנות מראש אם יש לכם תאריך מסוים או אירוע שתרצו לציין. אפשר לבדוק זמינות ולשאול שאלות לפני שמחליטים על חבילה.',
+        },
+        {
+          title: 'איך מקבלים את התמונות?',
+          description:
+            'תקבלו קישור לגלריה דיגיטלית פרטית, עם התמונות בעריכה מלאה ובאיכות גבוהה להורדה. כך תוכלו לשמור את האוסף שלכם ולחזור אליו מתי שתרצו.',
+        },
+      ]}
+    />
+    <Journey journey={intimateJourney} current="pricing" cta />
+  </LeadTracking>
 </Layout>

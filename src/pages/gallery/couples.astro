@@ -1,38 +1,95 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PhotoGallery from '~/components/widgets/PhotoGallery.astro';
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
-
-const richMetadata = {
-  title: 'יוליה קורנסקי - גלריית צילומי זוגיות טבעיים ומרגשים',
-  description:
-    'גלריית צילומי זוגיות טבעיים, רומנטיים ולא מבוימים. הציצו ברגעים אמיתיים של חיבור, אהבה וקרבה בלוקיישנים יפים במרכז הארץ.',
-  ignoreTitleTemplate: true,
-};
-
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import Button from '~/components/ui/Button.astro';
+import type { PhotoshootJourney } from '~/lib/photoshoots';
+import { PRICES } from '~/lib/pricing';
+import { intimatePackages } from '~/lib/couples-intimate';
+import { couplesGalleryImages, couplesHeroImage as hero } from '~/lib/couples-gallery';
 const metadata = {
   title: 'יוליה קורנסקי - גלריית צילומי זוגיות טבעיים ומרגשים',
   description:
-    'גלריית צילומי זוגיות טבעיים, רומנטיים ולא מבוימים. הציצו ברגעים אמיתיים של חיבור, אהבה וקרבה בלוקיישנים יפים במרכז הארץ.',
+    'גלריית צילומי זוגיות טבעיים ורומנטיים של יוליה קורנסקי. הכירו את הסגנון ובחרו סשן זוגי או אינטימי בחולון ובמרכז. חוויה אישית עם הכוונה ובקצב שלכם.',
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/couples_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
 };
-
-const title = 'גלריית צילומי זוגיות — רגעים אמיתיים של אהבה וחיבור';
+const breadcrumbs = [
+  { url: '/services/couples-photography', name: 'צילומי זוגיות' },
+  { url: '/gallery/couples', name: 'גלריית צילומי זוגיות' },
+];
+const journey: PhotoshootJourney = {
+  label: 'לבחירת סשן זוגי',
+  links: [
+    { id: 'couples-service', href: '/services/couples-photography', label: 'צילומי זוגיות' },
+    { id: 'couples-pricing', href: '/pricing/couples', label: 'מחירון זוגיות' },
+    { id: 'intimate-service', href: '/services/intimate-couples-photography', label: 'צילומי זוגיות אינטימיים' },
+    { id: 'intimate-pricing', href: '/pricing/couples-intimate', label: 'מחירון זוגיות אינטימיים' },
+  ],
+  contact: {
+    title: 'איזו אווירה תרצו לתמונות שלכם?',
+    description: 'ספרו לי מה אהבתם בגלריה ומה אתם מדמיינים לסשן שלכם. נבחר יחד מקום, סגנון וחבילה שמתאימים לשניכם.',
+    action: {
+      text: 'בואו נדבר על הסשן שלכם',
+      href: `https://wa.me/972525836940?text=${encodeURIComponent('היי יוליה, ראינו את גלריית הזוגיות ונשמח לשמוע על האפשרויות לסשן זוגי.')}`,
+      target: '_blank',
+      icon: 'tabler:brand-whatsapp',
+    },
+    phone: { href: 'tel:+972525836940', label: 'מעדיפים לדבר? 052-5836940' },
+  },
+};
 ---
 
-<Layout metadata={metadata}>
-  <RichSeo metadata={richMetadata} />
-  <div class="text-center py-5">
-    <h1 class="mb-2 font-bold text-4xl tracking-tight text-heading dark:text-slate-300"><div set:text={title} /></h1>
-  </div>
-
-  <WidgetWrapper>
-    <PhotoGallery imagesFolder="couples_gallery" />
-  </WidgetWrapper>
-
-  <!-- CallToAction Widget *********** -->
-
-  <WhatssapCallToAction />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <section class="mx-auto max-w-4xl px-4 pt-12 pb-6 text-center">
+    <p class="mb-3 font-semibold text-accent">יוליה קורנסקי · רגעים של יחד</p>
+    <h1 class="mb-5 text-4xl font-bold md:text-5xl">גלריית צילומי זוגיות</h1>
+    <p class="mb-5 text-xl leading-relaxed">
+      לא צריך לחכות לאירוע מיוחד כדי לפנות זמן לשניכם. סשן זוגי הוא הזדמנות לעצור לרגע, ליהנות יחד ולשמור מזכרת מהתקופה
+      הזאת בחיים שלכם.
+    </p>
+    <p>
+      אין צורך בניסיון מול המצלמה או ברעיון מוכן. אני כאן כדי להכיר אתכם, לכוון בעדינות ולתכנן איתכם חוויה שמרגישה שלכם.
+    </p>
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: 'דף הבית', href: '/' },
+      { label: 'צילומי זוגיות', href: '/services/couples-photography' },
+      { label: 'גלריה' },
+    ]}
+  />
+  <Journey journey={journey} current="gallery" />
+  <section class="mx-auto max-w-6xl px-4 py-8" aria-label="גלריית צילומי זוגיות">
+    <p class="mb-5 text-center text-sm">לחצו על תמונה להגדלה ולדפדוף בגלריה.</p>
+    <Gallery images={couplesGalleryImages} />
+  </section>
+  <section class="mx-auto max-w-5xl px-4 py-12">
+    <h2 class="mb-8 text-center text-3xl font-bold">אותו סגנון צילום, הסשן שמתאים לכם</h2>
+    <div class="grid gap-6 md:grid-cols-2">
+      <article class="space-y-5 rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="text-2xl font-bold">צילומי זוגיות</h3>
+        <p>זמן משותף בחוץ, תמונות רומנטיות ורגעים טבעיים. מתאים למזכרת מהתקופה שלכם יחד או לציון יום מיוחד.</p>
+        <p><a class="underline" href="/services/couples-photography">איך נראה סשן זוגיות?</a></p>
+        <Button href="/pricing/couples">לחבילות זוגיות — החל מ־{PRICES['זוגיות'][1]} ש״ח</Button>
+      </article>
+      <article class="space-y-5 rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="text-2xl font-bold">צילומי זוגיות אינטימיים</h3>
+        <p>סשן אישי עם מקום לקרבה ולביטוי חושני, בקצב ובגבולות שלכם. עם הכוונה אישית וללא חובה לעירום.</p>
+        <p><a class="underline" href="/services/intimate-couples-photography">איך מתכננים סשן אינטימי?</a></p>
+        <Button href="/pricing/couples-intimate">לחבילות אינטימיות — החל מ־{intimatePackages[0].price} ש״ח</Button>
+      </article>
+    </div>
+  </section>
+  <Journey journey={journey} current="gallery" cta />
 </Layout>

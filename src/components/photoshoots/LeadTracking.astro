@@ -1,0 +1,31 @@
+---
+interface Props {
+  service: string;
+}
+const { service } = Astro.props;
+---
+
+<photoshoot-leads data-service={service} class="contents"><slot /></photoshoot-leads>
+<script>
+  class PhotoshootLeads extends HTMLElement {
+    onClick = (event: MouseEvent) => {
+      const link =
+        event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[data-lead-source]') : null;
+      if (!link || !this.contains(link)) return;
+      const analytics = window as Window & { dataLayer?: Record<string, unknown>[] };
+      analytics.dataLayer ??= [];
+      analytics.dataLayer.push({
+        event: 'generate_lead',
+        lead_source: link.dataset.leadSource,
+        service: this.dataset.service,
+      });
+    };
+    connectedCallback() {
+      this.addEventListener('click', this.onClick);
+    }
+    disconnectedCallback() {
+      this.removeEventListener('click', this.onClick);
+    }
+  }
+  if (!customElements.get('photoshoot-leads')) customElements.define('photoshoot-leads', PhotoshootLeads);
+</script>
