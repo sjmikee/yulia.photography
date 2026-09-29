@@ -1,263 +1,171 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import HeroText from '~/components/widgets/HeroText.astro';
-import Prices from '~/components/widgets/Pricing.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
-import { PRICES } from '~/lib/pricing';
-
-
+import HeroText from '~/components/widgets/HeroText.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
+import PricingCards from '~/components/ui/PricingCards.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Button from '~/components/ui/Button.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import {
+  personalJourney,
+  personalPackages,
+  personalPricingCards,
+  personalWhatsApp,
+  personalService,
+} from '~/lib/personal';
+import { personalHeroImage as hero, personalFeaturedImages } from '~/lib/personal-gallery';
 const metadata = {
-  title: "מחירון צילומי בוק אישי - יוליה קורנסקי ",
-  description: "צילומי בוק אישי בהתאמה אישית - לעצמך או כמתנה למישהו שאוהבים. חוויה מעצימה, ליווי מקצועי ותמונות טבעיות ומחמיאות. בדקו חבילות ומחירים."
+  title: 'מחירון צילומי בוק אישי - יוליה קורנסקי',
+  description: `כמה עולה בוק אישי? חבילות ב־${personalPackages.map((p) => p.price).join(', ')} ש״ח, עם הכוונה ועריכה מלאה. השוו זמן צילום, כמות תמונות ותנאי הזמנה לסשן אישי במרכז.`,
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/solo_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
 };
-
 const breadcrumbs = [
-    { url: "/pricing", name: "מחירון"},
-    { url: "/pricing/personal", name: "מחירון בוק אישי"},
+  { url: '/pricing', name: 'מחירון' },
+  { url: '/pricing/personal', name: 'מחירון בוק אישי' },
 ];
-
-const session_type = "בוק-אישי";
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <!-- HeroText Widget ******************* -->
-
-  <HeroText
-    tagline="רגעים שתאהבו להיזכר בהם - עם חבילה שמדויקת לכם"
-    title="מחירון צילומי בוק אישי"
-    subtitle="בוק אישי לעצמך או כמתנה מרגשת - חוויה אישית עם תמונות טבעיות, מחמיאות ומלאות אופי."
-    content="* אני מאמינה שלכל אחד מגיעה חויה ואפשרות ליצור זיכרונות מהרגעים החשובים כל כך ולכן משתדלת לשמור על מחיר נגיש ללא פשרות באיכות"
-  />
-
+  <ServiceSchema service={personalService} />
+  <LeadTracking service="personal">
+    <HeroText
+      tagline="הפריים שלך. החבילה שמתאימה לך."
+      title="מחירון צילומי בוק אישי"
+      subtitle={`צילום אישי החל מ־${personalPackages[0].price} ש״ח. למזכרת, לפרופיל חדש או כמתנה — עם הכוונה גם בפעם הראשונה מול המצלמה.`}
+      content="בוחרים כמה זמן וכמה תמונות. ההכוונה האישית והעריכה המלאה כבר בפנים."
+      callToAction={{ text: 'להשוואת החבילות', href: '#packages' }}
+      callToAction2={{
+        text: 'לעזרה בבחירה ובדיקת תאריך',
+        href: personalWhatsApp(),
+        target: '_blank',
+        'data-lead-source': 'personal-pricing-hero',
+      }}
+    />
     <Breadcrumbs
-    items={[
-      { label: 'דף הבית', href: '/' },
-      { label: 'מחירון', href: '/pricing' },
-      { label: 'מחירון בוק אישי'}
-    ]}
-  />
-
-  <section class="mx-auto max-w-3xl px-4 py-8 text-right">
-  <h2 class="text-3xl font-bold mb-6">
-    כמה עולים צילומי בוק אישי ומה משפיע על המחיר?
-  </h2>
-
-  <p class="mb-4">
-    מחיר צילומי בוק אישי משתנה בהתאם לאורך הסשן, כמות התמונות שתקבלו, זמן העריכה וההשקעה בכל פרט לאורך התהליך. המטרה שלי היא להעניק חוויה אישית, נעימה ומקצועית, כך שכל אחד ואחת יוכלו ליהנות מתמונות מחמיאות שמרגישות טבעיות ואותנטיות.
-  </p>
-
-  <p class="mb-4">
-    כל אחת מהחבילות כוללת ליווי והכוונה לפני הצילומים, עזרה בבחירת לבוש וצבעים, הכוונה מלאה במהלך הסשן ועריכה מוקפדת של התמונות. אין צורך בניסיון קודם מול מצלמה - אני דואגת להוביל אתכם לאורך כל הדרך ולעזור לכם להרגיש בנוח.
-  </p>
-
-  <p class="mb-4">
-    אם אתם מתלבטים איזו חבילה מתאימה לכם, חשבו כמה מגוון אתם רוצים ליצור ומה המטרה של הבוק - מזכרת אישית, מתנה מיוחדת או חוויה מעצימה לעצמכם. סשן ארוך יותר מאפשר להחליף תלבושות, לשלב לוקיישנים שונים וליצור גלריה עשירה ומגוונת יותר.
-  </p>
-
-  <p>
-    רוצים להבין איך נראה סשן כזה בפועל ולקבל רעיונות לפני ההזמנה? מוזמנים לעבור לעמוד
-    <a href="/services/personal-photography" class="text-primary underline">
-      צילומי הבוק האישי
-    </a>
-    ולראות מידע נוסף, דוגמאות והשראה לקראת הצילומים.
-  </p>
-</section>
-
-  <!-- Pricing Widget ******************* -->
-
-  <Prices
-    title="הבחירה שלכם"
-    subtitle=""
-    tagline="החבילות שלי"
-    prices={[
-      {
-        title: 'חבילת פרימיום',
-        subtitle: 'סיפור של אהבה',
-        price: PRICES[session_type][3],
-        period: 'בוק מושקע וחווייתי למזכרת אישית ומרגשת',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'כשעתיים של צילומים',
-          },
-          {
-            description: 'עד 2 תלבושות, הפסקות לפי הצורך',
-          },
-          {
-            description: 'לפחות 50 - 70 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גובהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A4%D7%A8%D7%99%D7%9E%D7%99%D7%95%D7%9D%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
+      items={[{ label: 'דף הבית', href: '/' }, { label: 'מחירון', href: '/pricing' }, { label: 'מחירון בוק אישי' }]}
+    />
+    <Journey journey={personalJourney} current="pricing" />
+    <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+      <h2 class="mb-4 text-center text-3xl font-bold">כמה עולה צילום בוק אישי?</h2>
+      <p class="mb-8 text-center">
+        המחיר נע בין {personalPackages[0].price} ל־{personalPackages[2].price} ש״ח. כמות התמונות מתייחסת לתמונות בעריכה מלאה;
+        משך הצילום משוער.
+      </p>
+      <PackageComparison
+        packages={[...personalPackages].reverse()}
+        label="השוואת חבילות בוק אישי"
+        caption="מחיר, משך צילום וכמות תמונות בעריכה מלאה"
+      />
+      <div class="mt-8"><PricingCards prices={personalPricingCards} /></div>
+    </section>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">איזו חבילה מתאימה לך?</h2>
+      <p>
+        <strong>בסיס</strong> מתאימה לסשן קצר וממוקד. <strong>קלאסית</strong> נותנת יותר זמן להיכנס לקצב ולגוון בפריימים.
+        <strong>פרימיום</strong> מיועדת למי שרוצים אוסף רחב יותר, עם עד שתי תלבושות והפסקות לפי הצורך.
+      </p>
+      <p>
+        אם לוקח לך רגע להרגיש בנוח, אפשר לבחור יותר זמן לנשום בין התמונות. אם המטרה ממוקדת, יכול להיות שהבסיס מספיקה.
+        אפשר לספר לי מה חשוב לך ונבחר יחד — לא צריך להזמין הפקת שער כדי לעדכן תמונת פרופיל.
+      </p>
+      <h2 class="text-2xl font-bold">מה כלול במחיר?</h2>
+      <p>
+        הכוונה לפני הצילום וטיפים ללבוש, ליווי לאורך הסשן, כמות התמונות המפורטת בחבילה בעריכה מוקפדת ומלאה וגלריה
+        דיגיטלית באיכות גבוהה להורדה. התמונות נמסרות עד 14 ימי עסקים מיום הצילום.
+      </p>
+      <p>
+        הצילום מתקיים בעיקר בחוץ במרכז הארץ. סטודיו אפשר לתאם מראש; עלות שכירות, אם נדרשת, תיבדק לפני ההזמנה. איפור,
+        שיער ואלבום מודפס אינם מפורטים כחלק מהחבילות.
+      </p>
+      <p>
+        <a class="font-semibold underline" href="/services/personal-photography"
+          >איך נראה הסשן, מה לובשים ואיך מתכוננים?</a
+        >
+      </p>
+    </section>
+    <section id="booking" class="scroll-mt-28 mx-auto max-w-4xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">איך שומרים תאריך?</h2>
+      <ol class="list-decimal space-y-4 ps-6">
+        <li><strong>מתכננים.</strong> בוחרים חבילה, מקום ותאריך, ומדברים על מטרת התמונות והלבוש.</li>
+        <li><strong>משריינים.</strong> מקדמה של 100 ש״ח בעת ההזמנה שומרת את המועד ביומן.</li>
+        <li>
+          <strong>מצטלמים.</strong> אני מכוונת במהלך הסשן ועורכת את התמונות. הגלריה תגיע עד 14 ימי עסקים מיום הצילום.
+        </li>
+      </ol>
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">אם התוכניות משתנות</h3><p>
+          המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד. דחייה אפשרית בהודעה עד 24 שעות מראש ובתיאום מועד חלופי
+          שמתאים לשני הצדדים. במקרה של גשם או מחלה, עדכנו אותי בהקדם.
+        </p>
+      </div>
+    </section>
+    <section class="mx-auto max-w-5xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">לפני שבוחרים חבילה, מכירים את הסגנון</h2>
+      <Gallery images={personalFeaturedImages} />
+      <Button href="/gallery/solo">לגלריית הבוק האישי המלאה</Button>
+    </section>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">מתנה שלא נשארת בארון</h2>
+      <p>
+        שובר לבוק אישי יכול להתאים ליום הולדת, להתחלה חדשה או לאדם שכבר מזמן רוצה תמונות של עצמו. כדאי להשאיר את בחירת
+        התאריך והאווירה למי שמצטלמים.
+      </p>
+      <Button
+        variant="primary"
+        href={personalWhatsApp('היי יוליה, אשמח לפרטים על שובר מתנה לצילומי בוק אישי.')}
+        target="_blank"
+        data-lead-source="personal-gift">לפרטים על שובר מתנה</Button
+      >
+    </section>
+    <FAQs
+      title="שאלות על המחיר ועל ההזמנה"
+      columns={2}
+      items={[
+        {
+          title: 'כמה תמונות מקבלים בכל חבילה?',
+          description: `בבסיס ${personalPackages[0].photos}, בקלאסית ${personalPackages[1].photos} ובפרימיום ${personalPackages[2].photos} תמונות בעריכה מלאה. בכל חבילה מקבלים גלריה דיגיטלית באיכות גבוהה להורדה.`,
         },
-      },
-      {
-        title: 'החבילה הקלאסית',
-        subtitle: 'חוויה שלמה',
-        price: PRICES[session_type][2],
-        period: 'בוק אישי מלא - חוויה אישית ומעצימה',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'שעה וחצי של צילומים',
-          },
-          {
-            description: 'לפחות 40 - 50 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%A9%D7%AA%D7%9C%D7%9E%D7%AA%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
+        {
+          title: 'הכוונה כלולה גם בחבילת הבסיס?',
+          description:
+            'כן. בכל חבילה כלולות הכוונה לפני הצילום, עזרה בבחירת לבוש והכוונה בזמן הסשן. אין צורך בניסיון קודם.',
         },
-        hasRibbon: true,
-        ribbonTitle: 'הכי משתלם',
-      },
-      {
-        title: 'חבילת בסיס',
-        subtitle: 'רגע אחד',
-        price: PRICES[session_type][1],
-        period: 'מתאים לבוק אישי קצר או מתנה אישית',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: '45 דקות של צילומים',
-          },
-          {
-            description: 'לפחות 30 - 40 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A',
+        {
+          title: 'האם שכירת סטודיו כלולה במחיר?',
+          description:
+            'הצילום מתקיים בעיקר בחוץ. סטודיו אפשר לתאם מראש, ואם נדרשת שכירות נברר את עלותה לפני ההזמנה. אין להניח שהיא כלולה במחיר החבילה.',
         },
-      },
-    ]}
-  />
-
-  <!-- Steps Widget ****************** -->
-
-  <Steps
-    title="תהליך העבודה"
-    tagline="איך הכל יראה"
-    isReversed={true}
-    items={[
-      {
-        title: 'שיחה ראשונית',
-        icon: 'tabler:number-1',
-      },
-      {
-        title: 'סגירת חבילה ותאריך',
-        icon: 'tabler:number-2',
-      },
-      {
-        title: 'תשלום על שריון תאריך (100ש״ח)',
-        icon: 'tabler:number-3',
-      },
-      {
-        title: 'מצטלמים ונהנים 😊',
-        icon: 'tabler:number-4',
-      },
-      {
-        title: 'עריכת התמונות (עד 14 ימי עסקים)',
-        icon: 'tabler:number-5',
-      },
-      {
-        title: 'קבלת קישור לגלריה דיגיטלית להורדה',
-        icon: 'tabler:number-6',
-      },
-      {
-        title: 'נהנים מתמונות איכותיות ומרגשות 😊',
-        icon: 'tabler:number-7',
-      },
-      {
-        title: 'לא שוכחים לתייג אותי 😉',
-        icon: 'tabler:number-8',
-      },
-    ]}
-    image={{ src: '~/assets/images/pricing/personal_pricing.jpg', alt: 'צילומי בוק אישי מחירון' }}
-  />
-
-  <!-- FAQs Widget ******************* -->
-
-  <FAQs
-    title="שאלות נפוצות"
-    subtitle="אשמח לענות על כל שאלה אחרת שיש לכם ולא מצאתם תשובה"
-    columns={1}
-    items={[
-      {
-        title: 'למי מתאימים צילומי בוק אישי?',
-        description:
-          'צילומי בוק אישי מתאימים לכל מי שרוצה לעצמו חוויה אישית מול המצלמה, או להעניק מתנה מיוחדת ומרגשת לאדם אהוב.',
-      },
-      {
-        title: 'איפה מתקיימים הצילומים?',
-        description:
-          'אני מצלמת בטבע, בעיקר באיזור המרכז. אחרי שנבחר חבילה, אני אציע לך כמה לוקיישנים קסומים שמתאימים לעונה ולסגנון שלך.',
-      },
-      {
-        title: 'את עוזרת עם בגדים / צבעים?',
-        description:
-          "בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.",
-      },
-      {
-        title: 'מה קורה אם יורד גשם או מישהו חולה?',
-        description:
-          'תמיד אפשר לתאם מועד חלופי - החיים קורים, ואני לגמרי מבינה. עדכנו אותי בהקדם, ונמצא מועד חדש שמתאים לשני הצדדים.',
-      },
-      {
-        title: 'מתי כדאי לסגור תאריך?',
-        description:
-          'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות.',
-      },
-      {
-        title: 'צריך לשלם מקדמה?',
-        description:
-          'כן. כדי לשמור את התאריך ביומן, יש לשלם מקדמה של ₪100 בעת ההזמנה. (המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד), במקרה של דחיה אם תודיעו עד 24 שעות מראש - נוכל למצוא יחד מועד חלופי.',
-      },
-    ]}
-  />
-
-  <!-- Gift Card CTA ******************* -->
-
-  <section class="my-16 text-center">
-    <h2 class="text-3xl font-semibold mb-4">
-      מחפשים מתנה עם משמעות?
-    </h2>
-    <p class="text-lg mb-6 max-w-2xl mx-auto">
-      שובר מתנה לצילומי בוק אישי הוא חוויה מרגשת, מעצימה ובלתי נשכחת - מתנה שנשארת להרבה אחרי היום עצמו.
-    </p>
-    <a
-      href="https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%9C%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%A9%D7%95%D7%91%D7%A8%20%D7%9E%D7%AA%D7%A0%D7%94%20%D7%9C%D7%91%D7%95%D7%A7%20%D7%90%D7%99%D7%A9%D7%99"
-      target="_blank"
-      class="inline-block bg-primary text-white px-8 py-4 rounded-xl text-lg font-medium hover:opacity-90 transition"
-    >
-      לרכישת שובר מתנה
-    </a>
-  </section>
-
-  <!-- CallToAction Widget *********** -->
-
-  <WhatssapCallToAction />
+        {
+          title: 'מתי מקבלים את התמונות?',
+          description:
+            'עד 14 ימי עסקים מיום הצילום. אם יש מועד פרסום או יום הולדת שחשוב לך להספיק אליו, כדאי לציין זאת לפני קביעת התאריך.',
+        },
+        {
+          title: 'אפשר להחליף בגדים?',
+          description:
+            'חבילת הפרימיום כוללת עד שתי תלבושות והפסקות לפי הצורך. אם החלפת לבוש חשובה לך בחבילה אחרת, נתאם את האפשרויות מראש.',
+        },
+        {
+          title: 'מה תנאי הביטול והדחייה?',
+          description:
+            'מקדמה של 100 ש״ח שומרת את התאריך. היא תוחזר בביטול עד 3 ימים לפני המועד. דחייה אפשרית בהודעה עד 24 שעות מראש ובתיאום מועד חלופי יחד.',
+        },
+      ]}
+    />
+    <Journey journey={personalJourney} current="pricing" cta />
+  </LeadTracking>
 </Layout>

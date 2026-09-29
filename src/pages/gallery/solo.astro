@@ -1,36 +1,66 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PhotoGallery from '~/components/widgets/PhotoGallery.astro';
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
-
-const richMetadata = {
-  title: "יוליה קורנסקי - גלריית צילומי פורטרטים, בוק אישי ותדמית",
-  description: "מחפשים צילומי פורטרט, בוק אישי או תדמית שיראו אתכם במיטבכם? הציצו בגלריה שלי והתרשמו מצילומים מלאי רגש, סגנון ואותנטיות.",
-  ignoreTitleTemplate: true,
-}
-
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Button from '~/components/ui/Button.astro';
+import { personalJourney, personalPackages } from '~/lib/personal';
+import { personalGalleryImages, personalHeroImage as hero } from '~/lib/personal-gallery';
 const metadata = {
-  title: "יוליה קורנסקי - גלריית צילומי פורטרטים, בוק אישי ותדמית",
-  description: "מחפשים צילומי פורטרט, בוק אישי או תדמית שיראו אתכם במיטבכם? הציצו בגלריה שלי והתרשמו מצילומים מלאי רגש, סגנון ואותנטיות.",
+  title: 'יוליה קורנסקי - גלריית צילומי פורטרטים, בוק אישי ותדמית',
+  description:
+    'גלריית צילומי בוק אישי, פורטרטים ותמונות פרופיל לנשים ולגברים. הכירו את הסגנון של יוליה קורנסקי, בחרו כיוון לסשן שלכם במרכז וצפו בחבילות ובמחירים.',
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/solo_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
 };
-
-const title = "גלריית צילומי בוק אישי";
+const breadcrumbs = [
+  { url: '/services/personal-photography', name: 'בוק אישי' },
+  { url: '/gallery/solo', name: 'גלריית בוק אישי' },
+];
 ---
 
-<Layout metadata={metadata}>
-    <RichSeo metadata={richMetadata} />
-    <div class="text-center py-5">
-    <h1 class="mb-2 font-bold text-4xl tracking-tight text-heading dark:text-slate-300"><div set:text={title} /></h1>
-    </div>
-
-    <WidgetWrapper>
-        <PhotoGallery imagesFolder="solo_gallery" />
-    </WidgetWrapper>
-
-    <!-- CallToAction Widget *********** -->
-
-    <WhatssapCallToAction />
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <LeadTracking service="personal">
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-12 text-center">
+      <p class="font-semibold text-accent">פנים, אור וקצת חוצפה טובה</p>
+      <h1 class="text-4xl font-bold md:text-5xl">גלריית צילומי בוק אישי</h1>
+      <p class="text-xl leading-relaxed">
+        יש מי שמרגישים בבית מול הים, יש מי שנפתחים דווקא בעיר. כאן אפשר לראות פורטרטים של נשים וגברים באווירות שונות —
+        ולגלות איזה כיוון מדבר אליך.
+      </p>
+      <p>לא צריך לשחזר פוזה מהגלריה. אפשר לשלוח לי תמונה שאהבת, ומשם נבנה סשן שמתאים לאופי ולמטרה שלך.</p>
+      <Button href="/pricing/personal">לחבילות בוק אישי — החל מ־{personalPackages[0].price} ש״ח</Button>
+    </section>
+    <Breadcrumbs
+      items={[
+        { label: 'דף הבית', href: '/' },
+        { label: 'בוק אישי', href: '/services/personal-photography' },
+        { label: 'גלריה' },
+      ]}
+    />
+    <Journey journey={personalJourney} current="gallery" />
+    <section class="mx-auto max-w-6xl px-4 py-8" aria-label="גלריית פורטרטים ובוק אישי">
+      <p class="mb-5 text-center text-sm">לחצו על תמונה להגדלה ולדפדוף בגלריה.</p>
+      <Gallery images={personalGalleryImages} />
+    </section>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-12 text-center">
+      <h2 class="text-3xl font-bold">אהבת את הסגנון, אבל המצלמה קצת מלחיצה?</h2>
+      <p>
+        לא צריך להגיע עם ניסיון. אני עוזרת לבחור לבוש ולוקיישן ומכוונת את התנועה והמבט לאורך הסשן. נשאר לך להביא את
+        עצמך.
+      </p>
+      <Button href="/services/personal-photography">כך נראה סשן צילום אישי</Button>
+    </section>
+    <Journey journey={personalJourney} current="gallery" cta />
+  </LeadTracking>
 </Layout>
