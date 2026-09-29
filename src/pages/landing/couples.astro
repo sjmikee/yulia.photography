@@ -1,4 +1,5 @@
 ---
+import { couplesPackages } from '~/lib/couples';
 import RichSeo from "~/components/common/RichSeo.astro";
 import Layout from "~/layouts/Layout.astro";
 import LandingHeader from "~/components/widgets/LandingHeader.astro";
@@ -64,7 +65,7 @@ const metadata = {
         <Fragment slot="subtitle">
             יוליה קורנסקי – צלמת זוגיות במרכז הארץ. מתמחה בצילומי זוגיות וגם צילומי זוגיות אינטימיים, בטבע או בלוקיישן לבחירתכם. חוויה קלילה, טבעית ומלאת אהבה.
             <br /><br />
-            <strong>חבילות צילום החל מ 500₪</strong>
+            <strong>חבילות צילום החל מ־{couplesPackages[0].price}₪</strong>
             <br />
             לעוד פרטים ומידע דברו איתי
         </Fragment>
@@ -283,7 +284,7 @@ const metadata = {
         <details class="p-4 bg-white rounded-lg shadow" open>
           <summary class="font-semibold cursor-pointer">כמה עולה סשן צילומי זוגיות במרכז?</summary>
           <p class="mt-2">
-            מחיר סשן צילומי זוגיות במרכז <strong>מתחיל מ-500 ₪</strong>,
+            מחיר סשן צילומי זוגיות במרכז <strong>מתחיל מ־{couplesPackages[0].price} ₪</strong>,
             וכולל גלריה דיגיטלית עם תמונות ערוכות. ניתן לשדרג לצילומי זוגיות אינטימיים או להוסיף אלבום מודפס.
           </p>
         </details>

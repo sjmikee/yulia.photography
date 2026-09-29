@@ -1,414 +1,222 @@
 ---
-import Layout from '~/layouts/PageLayout.astro';
-import Hero2 from '~/components/widgets/Hero2.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
 import { Image } from 'astro:assets';
+import Layout from '~/layouts/PageLayout.astro';
+import Button from '~/components/ui/Button.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
-import image_1 from '~/assets/images/services/couples-1.jpg';
-import image_2 from '~/assets/images/services/couples-2.jpg';
-import image_3 from '~/assets/images/services/couples-3.jpg';
-import image_4 from '~/assets/images/services/couples-4.jpg';
-import image_5 from '~/assets/images/services/couples-5.jpg';
-import image_6 from '~/assets/images/services/couples-6.jpg';
-import image_7 from '~/assets/images/services/couples-7.jpg';
-import image_8 from '~/assets/images/services/couples-8.jpg';
-import image_9 from '~/assets/images/services/couples-9.jpg';
-import image_10 from '~/assets/images/services/couples-10.jpg';
-import osher_review from '~/assets/reviewers/osher_review.jpg';
-import zehava_review from '~/assets/reviewers/inbal_review.jpg';
-import { PRICES } from '~/lib/pricing';
-
+import ImageSection from '~/components/photoshoots/ImageSection.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import SessionFacts from '~/components/photoshoots/SessionFacts.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { couplesJourney, couplesPackages, couplesWhatsApp, couplesService, couplesFacts } from '~/lib/couples';
+import { couplesHeroImage as hero, couplesFeaturedImages } from '~/lib/couples-gallery';
 const metadata = {
   title: 'צילום זוגיות טבעי ולא מבוים | צילומי זוגות במרכז | יוליה קורנסקי',
-  description:
-    'צילום זוגיות טבעי, מרגש ולא מבוים לזוגות. סשן זוגי רגוע בסטודיו או בלוקיישן חוץ במרכז הארץ - מתאים לזוגיות, אירוסין ורגעים של יחד.',
+  description: `צילום זוגיות טבעי בחולון ובמרכז, בים, בטבע או בסטודיו בתיאום. הכוונה גם למי שלא רגילים למצלמה. לאירוסין, יום נישואין או פשוט יחד. חבילות החל מ־${couplesPackages[0].price} ש״ח.`,
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/couples_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
 };
-
 const breadcrumbs = [
   { url: '/services', name: 'סוגי צילומים' },
   { url: '/services/couples-photography', name: 'צילומי זוגיות' },
 ];
-
-const session_type = 'זוגיות';
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <!-- HERO -->
-  <Hero2
-    id="hero"
-    actions={[
-      {
-        variant: 'primary',
-        text: 'דברו איתי בווטסאפ',
-        href: 'https://wa.me/972525836940?text=היי%20יוליה,%20אני%20מתעניינת%20בסשן%20צילום%20זוגי',
-        target: '_blank',
-        icon: 'tabler:brand-whatsapp',
-        id: 'heroWhatsapp',
-      },
-      {
-        text: 'או בשיחת טלפון',
-        href: 'tel:+972525836940',
-        id: 'heroCall',
-      },
-    ]}
-    image={{
-      src: '~/assets/images/services/couples-hero.jpg',
-      alt: 'צילום זוגיות טבעי של זוג בלוקיישן חוץ',
-    }}
-  >
-    <Fragment slot="title">
-      <span class="text-accent dark:text-white highlight">צילום זוגיות טבעי</span>
-      רגעים אמיתיים של חיבור, קרבה ואהבה
-    </Fragment>
-
-    <Fragment slot="subtitle">
-      סשן צילום זוגי שהוא יותר זמן איכות ביחד — בלי פוזות מאולצות ובלי לחץ.
-      <br />
-      צילומי זוגות, אירוסין או מתנה מרגשת לבן או בת הזוג, בסטודיו או בלוקיישן חוץ במרכז הארץ.
-      <br /><br />
-      <strong>חבילות צילום זוגיות החל מ־{PRICES[session_type][1]}₪</strong>
-    </Fragment>
-  </Hero2>
-
-  <Breadcrumbs
-    items={[{ label: 'דף הבית', href: '/' }, { label: 'סוגי צילומים', href: '/services' }, { label: 'צילומי זוגיות' }]}
-  />
-
-  <!-- WHAT YOU GET -->
-  <section class="max-w-5xl mx-auto px-4 py-10">
-    <h2
-      class="text-center text-2xl md:text-3xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-    >
-      מה תקבלו בסשן צילום זוגיות
-    </h2>
-
-    <div class="grid md:grid-cols-4 gap-8 text-center">
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_1}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="צילומי זוגיות טבעיים"
-          class="rounded-lg mb-3"
-          loading="eager"
-        />
-        <h3 class="font-extrabold">הכוונה זוגית טבעית</h3>
-        <p>איך לזוז יחד, איפה לעמוד ואיך להיות פשוט אתם - בלי לשחק תפקיד</p>
-      </div>
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_2}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="צילומי זוגות באווירה קלילה"
-          class="rounded-lg mb-3"
-          loading="eager"
-        />
-        <h3 class="font-extrabold">אווירה קלילה ומכילה</h3>
-        <p>גם אם אחד מכם פחות אוהב מצלמה — הכל קורה בקצב נעים ובטוח</p>
-      </div>
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_3}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="לוקיישן לצילומי זוגיות"
-          class="rounded-lg mb-3"
-          loading="eager"
-        />
-        <h3 class="font-extrabold">לוקיישן שמתאים לסיפור שלכם</h3>
-        <p>ים, טבע, עיר או סטודיו — נבחר יחד לפי האופי והחיבור ביניכם</p>
-      </div>
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_4}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="עריכת תמונות זוגיות"
-          class="rounded-lg mb-3"
-          loading="eager"
-        />
-        <h3 class="font-extrabold">עריכה רגישה ומדויקת</h3>
-        <p>מראה טבעי שמדגיש רגש וקשר — בדיוק כמו שאתם</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEO-HEAVY: צילום זוגיות – לתעד את מה שביניכם -->
-  <section class="max-w-5xl mx-auto px-4 py-16">
-    <h2 class="text-3xl font-bold mb-6">צילום זוגיות - לתעד את מה שביניכם</h2>
-    <p>
-      צילום זוגיות הוא לא רק תמונות יפות — הוא דרך לעצור את הזמן להרגיש ולחיות את הרגעים הקטנים של החיבור, המבטים, הצחוק
-      והשקט משותף.
-    </p>
-    <p>
-      רוב הזוגות שמגיעים אליי אומרים בהתחלה “אנחנו לא יודעים להצטלם” או “זה מרגיש מביך”. דווקא שם נולדים הצילומים הכי
-      יפים — כשמשחררים ונותנים לדינמיקה הטבעית להוביל.
-    </p>
-    <a href="/gallery/couples" class="underline font-medium my-2 text-accent inline-block">
-      לצפייה בגלריית צילומי זוגיות
-    </a>
-    <p>הסשן בנוי כתנועה משותפת — הליכה, שיחה, מגע קטן. אני מכוונת בעדינות ונותנת מקום למה שכבר קיים ביניכם.</p>
-  </section>
-
-  <!-- למי מתאים צילום זוגיות -->
-  <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="text-3xl font-bold mb-4">למי מתאים צילום זוגיות?</h2>
-    <p>
-      צילום זוגיות מתאים לזוגות בכל שלב — בתחילת הדרך, בזוגיות ארוכת‑שנים, לפני אירוסין או פשוט כי בא לכם לתעד את
-      ה״ביחד״.
-    </p>
-    <p>
-      אין צורך בניסיון קודם או ביכולת להצטלם. גם אם אחד מכם יותר מוביל והשני יותר סגור — אני מתאימה את הסשן לדינמיקה
-      שלכם.
-    </p>
-  </section>
-
-  <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="text-3xl font-bold mb-4">צילום זוגיות במרכז הארץ - סטודיו או לוקיישן חוץ</h2>
-    <p>
-      סשני צילום זוגיות מתקיימים במרכז הארץ, בים, בטבע, בלוקיישנים אורבניים או בסטודיו. המיקום נבחר יחד לפי האור,
-      האווירה והתחושה שחשוב לכם לשמור בתמונות.
-    </p>
-  </section>
-
-  <!-- המלצות -->
-  <section
-    class="bg-gray-50 py-16 px-6 intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-    id="reviews"
-  >
-    <h2 class="text-3xl font-bold text-center mb-10">אל תקשיבו לי, תקשיבו להם</h2>
-    <div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-      <blockquote
-        class="bg-white p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <p>
-          <span class="text-yellow-400 text-lg">★★★★★</span>
-          <br />
-          "יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!! מדוייקת,
-          פרפקציוניסטית, דייקנית ואלופה אמיתית!! נהננו מאוד והתוצאה יצאה הרבה מעבר למה שציפינו! כל תמונה ברמה! מחכים כבר להיפגש
-          שוב❤️"
+  <ServiceSchema service={couplesService} />
+  <LeadTracking service="couples">
+    <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:gap-12 md:py-12">
+      <div>
+        <p class="mb-3 font-semibold text-accent">יוליה קורנסקי · חולון ומרכז הארץ</p>
+        <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
+          צילום זוגיות טבעי<br /><span class="text-accent">זמן לשניכם. מזכרת מהביחד.</span>
+        </h1>
+        <p class="mb-5 text-xl leading-relaxed">
+          הליכה ליד הים, צחוק באמצע שיחה, חיבוק מוכר. לא צריך לחכות לחתונה כדי לעצור לרגע וליצור תמונות של שניכם, כמו
+          שאתם היום.
         </p>
-        <footer class="mt-4 font-bold flex items-center">
-          <Image src={osher_review} alt="Reviewer photo" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
-          <span class="mx-2">אושר</span>
-        </footer>
+        <p class="mb-6">
+          גם אם אתם לא רגילים למצלמה, לא תצטרכו לנחש מה לעשות. אני אכוון אתכם בתנועה ובמחוות פשוטות, בקצב שנעים לשניכם. <strong
+            >חבילות החל מ־{couplesPackages[0].price} ש״ח.</strong
+          >
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <Button
+            class="w-full"
+            variant="primary"
+            href={couplesWhatsApp()}
+            target="_blank"
+            icon="tabler:brand-whatsapp"
+            data-lead-source="couples-service-hero">בואו נתכנן את הסשן שלכם</Button
+          >
+          <Button class="w-full" href="/pricing/couples">למחירון ולחבילות</Button>
+        </div>
+        <p class="mt-5 text-sm">אפשר להתחיל בשאלה, בלי להתחייב לתאריך.</p>
+      </div>
+      <Image
+        src={hero.image}
+        alt={hero.alt}
+        widths={[400, 640, 900, 1200]}
+        sizes="(min-width: 768px) 50vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[4/5] w-full rounded-2xl object-cover"
+      />
+    </section>
+    <Breadcrumbs
+      items={[
+        { label: 'דף הבית', href: '/' },
+        { label: 'סוגי צילומים', href: '/services' },
+        { label: 'צילומי זוגיות' },
+      ]}
+    />
+    <Journey journey={couplesJourney} current="service" />
+    <SessionFacts title="צילומי זוגיות — הפרטים בקצרה" facts={couplesFacts} />
+    <section class="mx-auto max-w-5xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">רגעים מהסשנים הזוגיים</h2>
+      <p>
+        לפני שמחליטים, קחו רגע לראות אם אתם מתחברים לסגנון. אפשר לשלוח לי תמונה שאהבתם מהגלריה ולספר מה משך אתכם בה.
+      </p>
+      <Gallery images={couplesFeaturedImages} />
+      <Button href="/gallery/couples">לגלריית צילומי הזוגיות המלאה</Button>
+    </section>
+    <ImageSection image={couplesFeaturedImages[1].image} alt={couplesFeaturedImages[1].alt}>
+      <h2 class="text-3xl font-bold">״אבל אנחנו לא יודעים להצטלם״</h2>
+      <p>
+        אתם לא צריכים להגיע עם פוזות מוכנות. נתחיל בהליכה קצרה, בשיחה או בישיבה יחד. אני אעזור עם העמידה, הידיים והמבט,
+        ואתם תוכלו להתרכז זה בזו.
+      </p>
+      <p>
+        צילום טבעי לא אומר שאין הכוונה. הוא אומר שההכוונה נותנת מקום לאופי שלכם, בלי לבקש חיוך קבוע או מחווה שלא מתאימה
+        לכם. אם אחד מכם מהסס, אפשר לדבר איתי לפני שמחליטים.
+      </p>
+      <p><a class="underline" href="/about">להכיר אותי לפני שנפגשים — יוליה, הצלמת שלכם</a></p>
+    </ImageSection>
+    <section class="mx-auto max-w-5xl px-4 py-12">
+      <h2 class="mb-8 text-3xl font-bold">למי מתאים סשן צילום זוגי?</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">פשוט כי אתם יחד</h3><p>
+            לא צריך סיבה חגיגית. זוגיות חדשה או שנים של היכרות — אפשר לשמור מזכרת מהתקופה הזאת ולפנות זמן משותף מחוץ
+            לשגרה.
+          </p>
+        </div>
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">אירוסין ו־Save the Date</h3><p>
+            אם התמונות מיועדות להזמנה או להודעה על החתונה, ספרו לי מראש על הסגנון ועל מועד הפרסום. נתכנן את הצילום
+            בהתחשב בזמן העריכה: עד 14 ימי עסקים.
+          </p>
+        </div>
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">יום נישואין או מתנה זוגית</h3><p>
+            חוויה משותפת שאפשר לחזור אליה דרך התמונות. אפשר להפתיע ברעיון, ואז לבחור יחד תאריך, מקום ואווירה ששניכם
+            אוהבים.
+          </p>
+        </div>
+      </div>
+    </section>
+    <ImageSection image={couplesFeaturedImages[2].image} alt={couplesFeaturedImages[2].alt} imageFirst={false}>
+      <h2 class="text-3xl font-bold">צילומי זוגיות במרכז — בים, בטבע או בסטודיו?</h2>
+      <p>
+        אני מצלמת בחולון ובמרכז הארץ. הים מתאים למרחב פתוח ולתנועה, טבע נותן רקע ירוק ועונתי, ובעיר אפשר לשלב רחובות
+        וקירות עם אופי. בוחרים יחד לפי מה שאתם אוהבים, העונה והאור.
+      </p>
+      <p>
+        אם אתם מעדיפים סטודיו, נתאם מקום וסגנון מראש. כשנדרשת שכירת סטודיו או לוקיישן, נברר את העלות לפני שסוגרים. אין
+        צורך להגיע עם מקום מוכן — אעזור לכם לבחור.
+      </p>
+      <h3 class="text-xl font-bold">מה לובשים לצילומי זוגיות?</h3>
+      <p>
+        בגדים שאתם אוהבים על עצמכם ושנוח לכם לנוע בהם. כדאי לבחור צבעים שמשתלבים, בלי להרגיש שחייבים להתלבש אותו הדבר.
+        אפשר לשלוח לי אפשרויות לפני הצילום; בחבילת פרימיום ניתן לשלב עד שתי תלבושות.
+      </p>
+    </ImageSection>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-12">
+      <h2 class="text-3xl font-bold">איך נראה הסשן, מהשיחה ועד התמונות?</h2>
+      <ol class="list-decimal space-y-4 ps-6">
+        <li>
+          <strong>מכירים ומתכננים.</strong> נדבר על הסיבה לצילום, המקום והסגנון, נבחר חבילה ותאריך ונתאם לבוש. מקדמה של 100
+          ש״ח שומרת את התאריך.
+        </li>
+        <li>
+          <strong>נפגשים ומצטלמים.</strong> מתחילים בפעולות פשוטות יחד, עם הכוונה לאורך הדרך. זמן הצילום נע בין 45 דקות לכשעתיים,
+          לפי החבילה.
+        </li>
+        <li>
+          <strong>מקבלים את האוסף שלכם.</strong> עד 14 ימי עסקים מיום הצילום תקבלו קישור לגלריה דיגיטלית, עם התמונות בעריכה
+          מלאה ובאיכות גבוהה להורדה.
+        </li>
+      </ol>
+    </section>
+    <section id="reviews" class="mx-auto max-w-3xl px-4 py-10">
+      <h2 class="mb-4 text-3xl font-bold">על החוויה עם יוליה</h2>
+      <p class="mb-6 text-sm text-muted">מתוך ביקורת לקוחה על חוויית הצילום.</p>
+      <blockquote class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <p>
+          ״יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!״
+        </p><footer class="mt-4 font-semibold">אושר</footer>
       </blockquote>
-      <blockquote
-        class="bg-white p-6 rounded-2xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <p>
-          <span class="text-yellow-400 text-lg">★★★★★</span>
-          <br />
-          "וווואוווווו הבחירה הכי טובה שעשינו!!! כבר בשיחת טלפון ידעתי שאותך אני סוגרת! מעבר לתמונות מטורפות החוויה הייתה
-          לא פחות חשובה והייתה מעבר לציפיות! את מוכשרת, זורמת, מלא אנרגיות טובות ואיזה כיף לנו! לא לחשוב פעמיים ולסגור את
-          יוליה!!!!!!!!!!! "
-        </p>
-        <footer class="mt-4 font-bold flex items-center">
-          <Image src={zehava_review} alt="Reviewer photo" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
-          <span class="mx-2">זהבה</span>
-        </footer>
-      </blockquote>
-    </div>
-  </section>
-
-  <CallToAction
-    id="bottomCallToAction"
-    actions={[
-      {
-        variant: 'primary',
-        text: 'ווטסאפ',
-        href: 'https://wa.me/972525836940',
-        target: '_blank',
-        icon: 'tabler:brand-whatsapp',
-      },
-    ]}
-  >
-    <Fragment slot="title"> מוכנים לשיחה? </Fragment>
-
-    <Fragment slot="subtitle"> תדברו איתי ואעזור לכם לקבל את ההחלטה הנכונה </Fragment>
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
-    </Fragment>
-  </CallToAction>
-
-  <section class="max-w-5xl mx-auto px-4 py-10">
-    <div class="grid md:grid-cols-1 gap-8 text-center">
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_5}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="סשן צילום זוגי בטבע"
-          class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-          loading="eager"
-        />
-        <h2 class="font-extrabold text-accent py-5">איך נראה סשן צילום זוגי?</h2>
-        <p>הרבה זוגות מגיעים עם חשש איך ירגיש מול מצלמה - וזה טבעי.</p>
-        <p>
-          הסשן מרגיש יותר כמו זמן איכות ביחד ופחות כמו “צילומים”. אנחנו זזים, משוחחים, עוצרים כשצריך, ונותנים לדברים
-          לקרות בצורה טבעית.
-        </p>
-        <p>אני שם כדי לכוון, להרגיע ולדאוג שתרגישו בנוח - גם אם מעולם לא הצטלמתם יחד.</p>
-      </div>
-
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_6}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="צילום זוגיות בסטודיו"
-          class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-          loading="eager"
-        />
-        <h2 class="font-extrabold text-accent py-5">צילום זוגיות בסטודיו או בחוץ</h2>
-        <p>
-          צילום זוגי בסטודיו יוצר מראה נקי ואינטימי. צילום בלוקיישן חוץ נותן תחושה טבעית וחופשית. נבחר יחד את המקום לפי
-          האווירה והתחושה שתרצו לשמר.
-        </p>
-      </div>
-
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_7}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="רעיונות לצילומי זוגיות טבעיים"
-          class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-          loading="eager"
-        />
-        <h2 class="font-extrabold text-accent py-5">רעיונות לצילומי זוגיות טבעיים</h2>
-        <p>
-          אפשר להצטלם תוך כדי הליכה, חיבוק, שיחה, צחוק או אפילו שקט ביחד. המטרה היא לתפוס את הרגעים הקטנים שמספרים את
-          הסיפור שלכם.
-        </p>
-      </div>
-
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_9}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="הכנה לצילומי זוגיות"
-          class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-          loading="eager"
-        />
-        <h2 class="font-extrabold text-accent py-5">איך מתכוננים לצילום זוגי?</h2>
-        <p>
-          אחרי קביעת הסשן אתן הנחיות פשוטות וברורות לגבי לבוש, צבעים וסטייל. אין צורך בניסיון קודם - הכל קורה יחד, בקצב
-          שנעים לכם.
-        </p>
-      </div>
-
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_8}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="צילומי זוגיות, אירוסין"
-          class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-          loading="eager"
-        />
-        <h2 class="font-extrabold text-accent py-5">צילומי זוגיות, אירוסין</h2>
-        <p>הסשן מתאים לזוגות בכל שלב: זוגיות חדשה, אירוסין או גם אם אתם כבר המון שנים ביחד.</p>
-      </div>
-
-      <div
-        class="bg-gray-100 p-4 rounded-xl shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-      >
-        <Image
-          src={image_10}
-          widths={[400, 768, 1024, 2040]}
-          sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-          alt="צילום זוגיות טבעי ולא מבוים"
-          class="rounded-lg shadow intersect-once motion-safe:intersect:animate-fade motion-safe:opacity-0 intersect-quarter"
-          loading="eager"
-        />
-        <h2 class="font-extrabold text-accent py-5">צילום זוגיות טבעי ולא מבוים</h2>
-        <p>
-          אני מאמינה בצילום שמרגיש אמיתי - בלי פוזות ובלי חיוכים מאולצים. המטרה היא שתסתכלו על התמונות ותגידו: “כן, זה
-          אנחנו”.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- לאילו מטרות מתאים צילום זוגיות? -->
-  <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="text-3xl font-bold mb-4">לאילו מטרות מתאים צילום זוגיות?</h2>
-    <ul class="list-disc pr-6 space-y-2">
-      <li>צילומי זוגיות טבעיים</li>
-      <li>צילומי אירוסין</li>
-      <li>מתנה זוגית או יום נישואין</li>
-      <li>תוכן זוגי לרשתות חברתיות</li>
-      <li>מזכרת לשניכם מהתקופות הכי יפות שלכם</li>
-    </ul>
-  </section>
-
-  <!-- PRICING BRIDGE -->
-  <section class="max-w-4xl mx-auto px-4 py-16 text-center">
-    <h2><strong>צילום זוגיות - מחיר</strong></h2>
-    <p>מחירי צילום זוגיות משתנים לפי אורך הסשן, מיקום הצילום וכמות התמונות שתרצו לקבל לאחר עריכה מקצועית.</p>
-    <a href="/pricing/couples" class="underline font-medium mt-4 text-accent inline-block">
-      לצפייה במחירון צילום זוגיות
-    </a>
-  </section>
-
-  <!-- FAQ -->
-  <FAQs
-    title="שאלות נפוצות על צילום זוגיות"
-    columns={1}
-    items={[
-      {
-        title: 'מה לובשים לצילום זוגי?',
-        description:
-          'מומלץ לבחור בגדים נוחים שמרגישים לכם טבעיים, בצבעים רגועים וללא הדפסים גדולים. אשמח לייעץ אחרי קביעת הסשן ולשלוח דוגמאות השראה.',
-      },
-      {
-        title: 'מה קורה אם אחד מבני הזוג נבוך מול מצלמה?',
-        description:
-          'זה מאוד נפוץ! אני דואגת לאווירה קלילה, מכוונת בעדינות ונותנת מקום לדינמיקה שלכם. תוך זמן קצר תרגישו בנוח ותשכחו מהמצלמה.',
-      },
-      {
-        title: 'האם הסשן מתאים גם לצילומי אירוסין?',
-        description: 'בהחלט. סשן צילום זוגי מתאים גם לצילומי אירוסין, הצעת נישואין או סתם לתיעוד רגעים מיוחדים ביחד.',
-      },
-      {
-        title: 'איפה מתקיים צילום זוגיות?',
-        description:
-          'הצילום יכול להתקיים בסטודיו במרכז הארץ, בטבע, בים או בלוקיישן אורבני - נבחר יחד לפי מה שמתאים לכם.',
-      },
-      {
-        title: 'כמה זמן נמשך סשן צילום זוגי?',
-        description: 'בדרך כלל בין 45 ל־90 דקות, בהתאם למספר הלוקים, המיקום והקצב שנוח לכם.',
-      },
-      {
-        title: 'כמה עולה צילום זוגיות?',
-        description: `מחירי צילום זוגיות מתחילים מ־${PRICES[session_type][1]}₪ ומשתנים לפי סוג החבילה, המיקום וכמות התמונות.`,
-      },
-    ]}
-  />
-
-  <WhatssapCallToAction />
+    </section>
+    <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
+      <h2 class="text-3xl font-bold">כמה עולים צילומי זוגיות?</h2>
+      <p>
+        שלוש חבילות ב־{couplesPackages.map((p) => p.price).join(', ')} ש״ח. בכל חבילה כלולים הכנה, הכוונה בצילום, עריכה מלאה
+        וגלריה דיגיטלית. ההבדל הוא בזמן הצילום ובכמות התמונות.
+      </p>
+      <Button href="/pricing/couples">להשוואת החבילות ולתנאי ההזמנה</Button>
+    </section>
+    <FAQs
+      title="שאלות נפוצות על צילום זוגיות"
+      columns={2}
+      items={[
+        {
+          title: 'מה אם אחד מאיתנו לא אוהב להצטלם?',
+          description:
+            'אפשר להתחיל בשיחה ולספר לי מה מרגיש מביך או לא נוח. בזמן הצילום אתן הכוונה פשוטה ואפשר לשנות כיוון. לא צריך ניסיון, וכדאי לקבוע כששניכם רוצים בחוויה.',
+        },
+        {
+          title: 'אפשר להצטלם לאירוסין או ל־Save the Date?',
+          description:
+            'כן. ספרו לי מתי אתם צריכים את התמונות ולמה הן מיועדות, כדי שנתכנן את הסשן מראש. מסירת התמונות היא עד 14 ימי עסקים; עיצוב הזמנה אינו מופיע כחלק מהחבילות.',
+        },
+        {
+          title: 'אפשר לתכנן צילום של הצעת נישואין?',
+          description:
+            'כתבו לי מראש על המקום, התאריך והרגע שתרצו לתעד. נבדוק יחד זמינות ואפשרות לתכנון מתאים לפני שקובעים; אל תסתמכו על הזמנה של סשן רגיל בלי תיאום ההפתעה.',
+        },
+        {
+          title: 'מה קורה אם יורד גשם?',
+          description:
+            'עדכנו אותי בהקדם ונתאם פתרון. דחייה למועד חלופי אפשרית בהודעה עד 24 שעות מראש ובתיאום מועד שמתאים לשני הצדדים.',
+        },
+        {
+          title: 'מה ההבדל בין צילומי זוגיות לצילומים אינטימיים?',
+          description:
+            'סשן הזוגיות מתמקד בזמן משותף, בתנועה ובתמונות רומנטיות. סשן אינטימי נותן מקום לביטוי חושני יותר, עם תיאום אישי של הלבוש, הקרבה והפרטיות. אין צורך לבחור בסגנון אינטימי כדי לקבל תמונות מלאות רגש.',
+        },
+        {
+          title: 'אפשר לראות עוד תמונות לפני שמחליטים?',
+          description:
+            'כן. גלריית הזוגיות המשותפת מקושרת כאן ומאפשרת להכיר את הסגנון. תוכלו לספר לי אילו תמונות אהבתם כדי שנחשוב יחד על הכיוון שלכם.',
+        },
+      ]}
+    />
+    <p class="mx-auto max-w-4xl px-4 text-center">
+      מחפשים אווירה חושנית יותר? <a class="underline" href="/services/intimate-couples-photography"
+        >כל הפרטים על צילומי זוגיות אינטימיים</a
+      >.
+    </p>
+    <Journey journey={couplesJourney} current="service" cta />
+  </LeadTracking>
 </Layout>

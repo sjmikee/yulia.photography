@@ -1,215 +1,185 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import HeroText from '~/components/widgets/HeroText.astro';
-import Prices from '~/components/widgets/Pricing.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
-import { PRICES } from '~/lib/pricing';
-
-
+import HeroText from '~/components/widgets/HeroText.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
+import PricingCards from '~/components/ui/PricingCards.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { couplesJourney, couplesPackages, couplesPricingCards, couplesWhatsApp, couplesService } from '~/lib/couples';
+import { couplesHeroImage as hero, couplesFeaturedImages } from '~/lib/couples-gallery';
+// Keep the established pricing URL, title and H1.
 const metadata = {
-  title: "מחירון צילומי זוגיות ולייף סטייל - יוליה קורנסקי",
-  description: "חבילות צילומי זוגיות מותאמות אישית. תיהנו מחוויית צילום כיפית ותמונות מקצועיות שישמרו את הסיפור שלכם. בדקו את המחירון והזמינו סשן עכשיו",
+  title: 'מחירון צילומי זוגיות ולייף סטייל - יוליה קורנסקי',
+  description: `מחירון צילומי זוגיות: חבילות ב־${couplesPackages.map((p) => p.price).join(', ')} ש״ח. השוו זמן צילום וכמות תמונות בעריכה מלאה. הכוונה אישית, גלריה דיגיטלית ותנאי הזמנה ברורים.`,
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/couples_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
 };
-
 const breadcrumbs = [
-    { url: "/pricing", name: "מחירון"},
-    { url: "/pricing/couples", name: "מחירון צילומי זוגיות"},
+  { url: '/pricing', name: 'מחירון' },
+  { url: '/pricing/couples', name: 'מחירון צילומי זוגיות' },
 ];
-
-const session_type = "זוגיות";
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <!-- HeroText Widget ******************* -->
-
-  <HeroText
-    tagline="רגעים שתאהבו להיזכר בהם - עם חבילה שמדויקת לכם"
-    title="מחירון צילומי זוגיות"
-    subtitle="כל סשן הוא חוויה אישית ומיוחדת - כי התמונות הכי יפות נוצרות כשנעים, כשבטוח וכשכיף."
-    content="* אני מאמינה שלכל אחד מגיעה חויה ואפשרות ליצור זיכרונות מהרגעים החשובים כל כך ולכן משתדלת לשמור על מחיר נגיש ללא פשרות באיכות"
-  />
-
+  <ServiceSchema service={couplesService} />
+  <LeadTracking service="couples">
+    <HeroText
+      tagline="זמן לשניכם, עם חבילה שמתאימה לכם"
+      title="מחירון צילומי זוגיות"
+      subtitle={`סשן זוגי החל מ־${couplesPackages[0].price} ש״ח. למזכרת מהביחד, לאירוסין או ליום נישואין — עם הכוונה גם אם זו הפעם הראשונה שלכם מול מצלמה.`}
+      content="בכל חבילה: הכנה אישית, הכוונה לאורך הצילום, תמונות בעריכה מוקפדת ומלאה וגלריה דיגיטלית באיכות גבוהה להורדה."
+      callToAction={{ text: 'להשוואת החבילות', href: '#packages' }}
+      callToAction2={{
+        text: 'לשאלות ובדיקת תאריך',
+        href: couplesWhatsApp(),
+        target: '_blank',
+        'data-lead-source': 'couples-pricing-hero',
+      }}
+    />
     <Breadcrumbs
-    items={[
-      { label: 'דף הבית', href: '/' },
-      { label: 'מחירון', href: '/pricing' },
-      { label: 'מחירון צילומי זוגיות'}
-    ]}
-  />
-
-  <!-- Pricing Widget ******************* -->
-
-  <Prices
-    title="הבחירה שלכם"
-    subtitle=""
-    tagline="החבילות שלי"
-    prices={[
-      {
-        title: 'חבילת פרימיום',
-        subtitle: 'סיפור של אהבה',
-        price: PRICES[session_type][3],
-        period: 'מתאים במיוחד כמתנה זוגית מושקעת',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'כשעתיים של צילומים',
-          },
-          {
-            description: 'עד 2 תלבושות, הפסקות לפי הצורך',
-          },
-          {
-            description: 'לפחות 50 - 70 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גובהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%A4%D7%A8%D7%99%D7%9E%D7%99%D7%95%D7%9D%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A.',
+      items={[
+        { label: 'דף הבית', href: '/' },
+        { label: 'מחירון', href: '/pricing' },
+        { label: 'מחירון צילומי זוגיות' },
+      ]}
+    />
+    <section class="mx-auto max-w-4xl space-y-4 px-4 py-8">
+      <h2 class="text-2xl font-bold">כמה עולים צילומי זוגיות?</h2>
+      <p>
+        <strong>מחיר הסשן נע בין {couplesPackages[0].price} ל־{couplesPackages[2].price} ש״ח.</strong> בוחרים לפי הזמן שתרצו
+        להקדיש לצילום וכמות התמונות שתרצו לקבל. הכוונה ועריכה מלאה כלולות גם בחבילת הבסיס.
+      </p>
+      <p>
+        הצילומים מתקיימים בחולון ובמרכז הארץ, בעיקר בחוץ. אפשר לתאם גם סטודיו; אם נדרשת שכירת מקום, נברר את העלות מראש
+        לפני שסוגרים.
+      </p>
+    </section>
+    <Journey journey={couplesJourney} current="pricing" />
+    <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+      <h2 class="mb-4 text-center text-3xl font-bold">השוואת חבילות צילומי זוגיות</h2>
+      <p class="mb-8 text-center">כמות התמונות מתייחסת לתמונות בעריכה מלאה. זמני הצילום משוערים לתכנון הסשן.</p>
+      <PackageComparison
+        packages={[...couplesPackages].reverse()}
+        label="השוואת חבילות צילומי זוגיות"
+        caption="כמות תמונות בעריכה מלאה, מחיר ומשך צילום משוער"
+      />
+      <div class="mt-8"><PricingCards prices={couplesPricingCards} /></div>
+    </section>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
+      <h2 class="text-2xl font-bold">איך בוחרים חבילה?</h2>
+      <p>
+        <strong>בסיס</strong> מתאימה כשמחפשים צילום קצר ואוסף ממוקד. <strong>קלאסית</strong> נותנת יותר זמן להיכנס לקצב ולגוון
+        בתמונות. <strong>פרימיום</strong> כוללת את האוסף הרחב ביותר, עד שתי תלבושות והפסקות לפי הצורך.
+      </p>
+      <p>
+        לא בטוחים כמה זמן תרצו? ספרו לי מה אתם מתכננים ומה חשוב לכם בתמונות. אין צורך לבחור את החבילה הארוכה ביותר כדי
+        לקבל הכוונה אישית.
+      </p>
+      <h2 class="text-2xl font-bold">מה כלול במחיר?</h2>
+      <p>
+        הכוונה לפני הצילום וטיפים ללבוש, ליווי במהלך הסשן, כמות התמונות המפורטת בחבילה בעריכה מוקפדת ומלאה וגלריה
+        דיגיטלית באיכות גבוהה להורדה. התמונות נמסרות עד 14 ימי עסקים מיום הצילום.
+      </p>
+      <p>
+        שכירת סטודיו או לוקיישן, איפור, שיער, אלבום מודפס ועיצוב הזמנה אינם מפורטים כחלק מהחבילות. אם אחד מהם חשוב לכם,
+        נברר יחד אפשרויות ועלויות לפני ההזמנה.
+      </p>
+      <p>
+        רוצים לדעת איך נראה הצילום ומה לובשים? <a class="font-semibold underline" href="/services/couples-photography"
+          >כל הפרטים על סשן צילומי זוגיות</a
+        >.
+      </p>
+    </section>
+    <section id="booking" class="scroll-mt-28 mx-auto max-w-4xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">הזמנה, מקדמה ושינוי תאריך</h2>
+      <ol class="list-decimal space-y-4 ps-6">
+        <li><strong>מדברים ומתכננים.</strong> בוחרים חבילה, מקום ותאריך, ומתאמים את האווירה והלבוש.</li>
+        <li><strong>שומרים את התאריך.</strong> מקדמה של 100 ש״ח בעת ההזמנה משריינת את המועד ביומן.</li>
+        <li>
+          <strong>מצטלמים ומקבלים תמונות.</strong> אחרי הסשן אני עורכת את האוסף שלכם ושולחת קישור לגלריה עד 14 ימי עסקים.
+        </li>
+      </ol>
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">אם התוכניות משתנות</h3>
+        <p>
+          המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד. דחייה אפשרית בהודעה עד 24 שעות מראש ובתיאום מועד חלופי
+          שמתאים לשני הצדדים. אם צפוי גשם או מישהו חולה, עדכנו אותי בהקדם.
+        </p>
+      </div>
+    </section>
+    <section class="mx-auto max-w-5xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">רגעים מהגלריה</h2>
+      <p>
+        החבילה קובעת את הזמן ואת גודל האוסף; את האווירה נבחר יחד. כאן תוכלו להכיר את סגנון הצילום ולספר לי מה אהבתם.
+      </p>
+      <Gallery images={couplesFeaturedImages} />
+      <p>
+        <a class="font-semibold underline" href="/gallery/couples">לגלריית צילומי הזוגיות המלאה</a> · <a
+          class="underline"
+          href="/about">להכיר את יוליה</a
+        >
+      </p>
+    </section>
+    <section id="reviews" class="mx-auto max-w-3xl px-4 py-10">
+      <h2 class="mb-4 text-3xl font-bold">על החוויה עם יוליה</h2>
+      <p class="mb-6 text-sm text-muted">מתוך ביקורת לקוחה על חוויית הצילום.</p>
+      <blockquote class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <p>
+          ״יוליה התותחית!! סופר סבלנית ומקלילה, הצילומים היו באווירה ממש כיפית וחוויתית והתוצרים הם ליגה ורמה אחרת!״
+        </p><footer class="mt-4 font-semibold">אושר</footer>
+      </blockquote>
+    </section>
+    <FAQs
+      title="שאלות על המחיר ועל ההזמנה"
+      columns={2}
+      items={[
+        {
+          title: 'האם צריך ניסיון מול המצלמה?',
+          description:
+            'לא. הכוונה לפני הצילום ובמהלכו כלולה בכל חבילה. מתחילים בהליכה, בשיחה ובפעולות פשוטות, בלי צורך להכין פוזות מראש.',
         },
-      },
-      {
-        title: 'החבילה הקלאסית',
-        subtitle: 'חוויה שלמה',
-        price: PRICES[session_type][2],
-        period: 'מושלם לצילומי זוגות ולייף סטייל בטבע',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: 'שעה וחצי של צילומים',
-          },
-          {
-            description: 'לפחות 40 - 50 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%94%D7%97%D7%91%D7%99%D7%9C%D7%94%20%D7%94%D7%9E%D7%A9%D7%AA%D7%9C%D7%9E%D7%AA%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A.',
+        {
+          title: 'איפה מצלמים, והאם סטודיו כלול?',
+          description:
+            'בעיקר בטבע, בים ובלוקיישנים בחוץ באזור המרכז. אפשר לתאם סטודיו מראש; אם נדרשת שכירות, נברר את העלות לפני ההזמנה. אין להניח שהיא כלולה במחיר החבילה.',
         },
-        hasRibbon: true,
-        ribbonTitle: 'הכי משתלם',
-      },
-      {
-        title: 'חבילת בסיס',
-        subtitle: 'רגע אחד',
-        price: PRICES[session_type][1],
-        period: 'מתאים לצילום זוגי קצר או מתנה מתוקה',
-        items: [
-          {
-            description: 'הכוונה מלאה לפני הצילום + טיפים',
-          },
-          {
-            description: '45 דקות של צילומים',
-          },
-          {
-            description: 'לפחות 30 - 40 תמונות בעריכה מוקפדת ומלאה',
-          },
-          {
-            description: 'גלריה דיגיטלית באיכות גבוהה להורדה',
-          },
-        ],
-        callToAction: {
-          target: '_blank',
-          text: 'לקביעת תאריך',
-          href: 'https://wa.me/972525836940?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%A6%D7%99%D7%9C%D7%95%D7%9E%D7%99%20%D7%96%D7%95%D7%92%D7%99%D7%95%D7%AA.%20%D7%9E%D7%AA%D7%90%D7%99%D7%9E%D7%94%20%D7%9C%D7%99%20%D7%97%D7%91%D7%99%D7%9C%D7%AA%20%D7%94%D7%91%D7%A1%D7%99%D7%A1%20%D7%95%D7%94%D7%99%D7%99%D7%AA%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A1%D7%92%D7%95%D7%A8%20%D7%AA%D7%90%D7%A8%D7%99%D7%9A.',
+        {
+          title: 'כמה תמונות מקבלים?',
+          description: `בחבילת בסיס ${couplesPackages[0].photos}, בקלאסית ${couplesPackages[1].photos} ובפרימיום ${couplesPackages[2].photos} תמונות בעריכה מלאה. כל החבילות כוללות גלריה דיגיטלית באיכות גבוהה להורדה.`,
         },
-      },
-    ]}
-  />
-
-  <!-- Steps Widget ****************** -->
-
-  <Steps
-    title="תהליך העבודה"
-    tagline="איך הכל יראה"
-    isReversed={true}
-    items={[
-      {
-        title: 'שיחה ראשונית',
-        icon: 'tabler:number-1',
-      },
-      {
-        title: 'סגירת חבילה ותאריך',
-        icon: 'tabler:number-2',
-      },
-      {
-        title: 'תשלום על שריון תאריך (100ש״ח)',
-        icon: 'tabler:number-3',
-      },
-      {
-        title: 'מצטלמים ונהנים 😊',
-        icon: 'tabler:number-4',
-      },
-      {
-        title: 'עריכת התמונות (עד 14 ימי עסקים)',
-        icon: 'tabler:number-5',
-      },
-      {
-        title: 'קבלת קישור לגלריה דיגיטלית להורדה',
-        icon: 'tabler:number-6',
-      },
-      {
-        title: 'נהנים מתמונות איכותיות ומרגשות 😊',
-        icon: 'tabler:number-7',
-      },
-      {
-        title: 'לא שוכחים לתייג אותי 😉',
-        icon: 'tabler:number-8',
-      },
-    ]}
-    image={{ src: '~/assets/images/pricing/couples_pricing.jpg', alt: 'צילומי זוגיות צילומי זוגיות מחירון' }}
-  />
-
-  <!-- FAQs Widget ******************* -->
-
-  <FAQs
-    title="שאלות נפוצות"
-    subtitle="אשמח לענות על כל שאלה אחרת שיש לכם ולא מצאתם תשובה"
-    columns={1}
-    items={[
-      {
-        title: 'איפה מתקיימים הצילומים?',
-        description:
-          'אני מצלמת בטבע, בעיקר באיזור המרכז. אחרי שנבחר חבילה, אני אציע לך כמה לוקיישנים קסומים שמתאימים לעונה ולסגנון שלך.',
-      },
-      {
-        title: 'את עוזרת עם בגדים / צבעים?',
-        description:
-          "בוודאי! תקבלו ממני השראה והכוונה לתלבושות שיתאימו ללוקיישן ולוייב.",
-      },
-      {
-        title: 'מה קורה אם יורד גשם או מישהו חולה?',
-        description:
-          'תמיד אפשר לתאם מועד חלופי - החיים קורים, ואני לגמרי מבינה. עדכנו אותי בהקדם, ונמצא מועד חדש שמתאים לשני הצדדים.',
-      },
-      {
-        title: 'מתי כדאי לסגור תאריך?',
-        description:
-          'כדאי לסגור תאריך כמה שיותר מראש - במיוחד בעונות המבוקשות.',
-      },
-      {
-        title: 'צריך לשלם מקדמה?',
-        description:
-          'כן. כדי לשמור את התאריך ביומן, יש לשלם מקדמה של ₪100 בעת ההזמנה. (המקדמה תוחזר במקרה של ביטול עד 3 ימים לפני המועד), במקרה של דחיה אם תודיעו עד 24 שעות מראש - נוכל למצוא יחד מועד חלופי.',
-      },
-    ]}
-  />
-
-  <!-- CallToAction Widget *********** -->
-
-  <WhatssapCallToAction />
+        {
+          title: 'מתי מקבלים את התמונות?',
+          description:
+            'עד 14 ימי עסקים מיום הצילום. אם אתם צריכים את התמונות ל־Save the Date או לתאריך מיוחד, ציינו זאת לפני ההזמנה כדי שנוכל לתכנן בהתאם.',
+        },
+        {
+          title: 'אפשר לתת סשן זוגי במתנה?',
+          description:
+            'כן, אפשר לתכנן חוויה לכבוד יום נישואין, יום הולדת או פשוט זמן יחד. כתבו לי על הרעיון, ואת התאריך והמקום כדאי לבחור עם בני הזוג שמצטלמים.',
+        },
+        {
+          title: 'צריך לשלם מקדמה, ומה אם מבטלים?',
+          description:
+            'מקדמה של 100 ש״ח שומרת את התאריך. היא תוחזר בביטול עד 3 ימים לפני המועד. דחייה אפשרית בהודעה עד 24 שעות מראש ובתיאום מועד חלופי יחד.',
+        },
+      ]}
+    />
+    <p class="mx-auto max-w-4xl px-4 text-center">
+      מחפשים סשן חושני יותר? <a class="underline" href="/pricing/couples-intimate">למחירון צילומי זוגיות אינטימיים</a>.
+    </p>
+    <Journey journey={couplesJourney} current="pricing" cta />
+  </LeadTracking>
 </Layout>
