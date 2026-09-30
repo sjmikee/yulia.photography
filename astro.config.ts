@@ -38,6 +38,8 @@ const isIndexableSitemapPage = (page: string) => {
 
 export default defineConfig({
   output: 'static',
+  // Preserve the HTML whitespace behavior used before Astro 7.
+  compressHTML: true,
   adapter: vercel({}),
 
   fonts: [{
