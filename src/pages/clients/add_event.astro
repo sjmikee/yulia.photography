@@ -97,32 +97,43 @@ const metadata = {
 <!-- Scripts -->
 
 <script>
+  const initializedForms = new WeakSet<HTMLFormElement>();
   function initAddEvent() {
-    const phoneInput = document.getElementById("phone");
-    const nameField = document.getElementById("clientName");
-    const form = document.getElementById("calendarForm");
+    const phoneInput = document.querySelector<HTMLInputElement>("#phone");
+    const nameField = document.querySelector<HTMLInputElement>("#clientName");
+    const form = document.querySelector<HTMLFormElement>("#calendarForm");
+
+    const emailField = document.querySelector<HTMLInputElement>("#clientEmail");
+    const dateField = document.querySelector<HTMLInputElement>("#date");
+    const timeField = document.querySelector<HTMLInputElement>("#time");
+    const sessionField = document.querySelector<HTMLSelectElement>("#sessionType");
+    const durationField = document.querySelector<HTMLSelectElement>("#duration");
+
+    if (!phoneInput || !nameField || !form || !emailField || !dateField || !timeField || !sessionField || !durationField) return;
+    if (initializedForms.has(form)) return;
+    initializedForms.add(form);
 
     let lastFetchedPhone = "";
-    let lookupTimeout;
+    let lookupTimeout: ReturnType<typeof setTimeout>;
     let clientEmail = "";
 
     // Auto-format and lookup
-    phoneInput?.addEventListener("input", (e) => {
-      const digits = e.target?.value.replace(/\D/g, "");
+    phoneInput?.addEventListener("input", () => {
+      const digits = phoneInput.value.replace(/\D/g, "");
       let formatted = digits;
       if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
-      e.target.value = formatted;
+      phoneInput.value = formatted;
 
       clearTimeout(lookupTimeout);
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
         nameField.value = "";
-        document.getElementById("clientEmail").value = "";
+        emailField.value = "";
         clientEmail = "";
       }
     });
 
-    async function lookupClient(phoneDigits) {
+    const lookupClient = async (phoneDigits: string) => {
       if (phoneDigits === lastFetchedPhone) return;
       lastFetchedPhone = phoneDigits;
 
@@ -137,21 +148,21 @@ const metadata = {
         if (!res.ok) {
           nameField.value = "לא נמצא לקוח";
           nameField.classList.add("text-gray-400");
-          document.getElementById("clientEmail").value = "";
+          emailField.value = "";
           clientEmail = "";
         } else {
           nameField.value = data.name;
-          document.getElementById("clientEmail").value = data.email || "";
+          emailField.value = data.email || "";
           nameField.classList.remove("text-gray-400");
           clientEmail = data.email || "";
         }
       } catch {
         nameField.value = "שגיאה בחיפוש";
         nameField.classList.add("text-gray-400");
-        document.getElementById("clientEmail").value = "";
+        emailField.value = "";
         clientEmail = "";
       }
-    }
+    };
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -160,24 +171,24 @@ const metadata = {
       const name = nameField.value.trim();
       const email = clientEmail;
       const MKemail = "sjmikee@gmail.com";
-      const date = document.getElementById("date").value;
-      const time = document.getElementById("time").value;
-      const sessionType = document.getElementById("sessionType").value;
-      const duration = parseInt(document.getElementById("duration").value);
+      const date = dateField.value;
+      const time = timeField.value;
+      const sessionType = sessionField.value;
+      const duration = parseInt(durationField.value);
 
       if (!phone || !name || !date || !time || !sessionType || !duration) {
-        Swal.fire({ icon: "warning", title: "נא למלא את כל השדות", timer: 1500, showConfirmButton: false });
+        alert("נא למלא את כל השדות");
         return;
       }
 
       if (["לא נמצא לקוח", "שגיאה בחיפוש", "מחפש..."].includes(name)) {
-        Swal.fire({ icon: "error", title: "לא נמצא לקוח עבור מספר זה", timer: 1500, showConfirmButton: false });
+        alert("לא נמצא לקוח עבור מספר זה");
         return;
       }
 
       const startDate = new Date(`${date}T${time}:00`);
       const endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000);
-      const formatDate = (d) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
       const startStr = formatDate(startDate);
       const endStr = formatDate(endDate);
@@ -192,25 +203,6 @@ const metadata = {
     });
   }
   
-  // Bulletproof init: runs on first load and every Astro navigation, without double-binding
-  function runInitOncePerSwap() {
-    if (window.__ADD_EVENT_INIT_DONE__) return;
-    window.__ADD_EVENT_INIT_DONE__ = true;
-    initAddEvent();
-  }
-
-  // Reset flag before Astro swaps the page
-  document.addEventListener("astro:before-swap", () => {
-    window.__ADD_EVENT_INIT_DONE__ = false;
-  });
-
-  // Run after navigation or first load
-  document.addEventListener("astro:page-load", runInitOncePerSwap);
-
-  // Also run if this script executes on a full reload without Astro navigation
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-    runInitOncePerSwap();
-  } else {
-    document.addEventListener("DOMContentLoaded", runInitOncePerSwap, { once: true });
-  }
+  document.addEventListener("astro:page-load", initAddEvent);
+  initAddEvent();
 </script>

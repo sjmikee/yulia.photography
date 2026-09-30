@@ -68,19 +68,24 @@ const metadata = {
 </Layout>
 
 <script>
+  const initializedForms = new WeakSet<HTMLFormElement>();
   function initSendReview() {
-    const phoneInput = document.getElementById("phone");
-    const nameField = document.getElementById("clientName");
-    const form = document.getElementById("whatsappForm");
+    const phoneInput = document.querySelector<HTMLInputElement>("#phone");
+    const nameField = document.querySelector<HTMLInputElement>("#clientName");
+    const form = document.querySelector<HTMLFormElement>("#whatsappForm");
+
+    if (!phoneInput || !nameField || !form) return;
+    if (initializedForms.has(form)) return;
+    initializedForms.add(form);
 
     let lastFetchedPhone = "";
-    let lookupTimeout;
+    let lookupTimeout: ReturnType<typeof setTimeout>;
 
-    phoneInput?.addEventListener("input", (e) => {
-      const digits = e.target.value.replace(/\D/g, "");
+    phoneInput?.addEventListener("input", () => {
+      const digits = phoneInput.value.replace(/\D/g, "");
       let formatted = digits;
       if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
-      e.target.value = formatted;
+      phoneInput.value = formatted;
 
       clearTimeout(lookupTimeout);
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
@@ -89,7 +94,7 @@ const metadata = {
       }
     });
 
-    async function lookupClient(phoneDigits) {
+    const lookupClient = async (phoneDigits: string) => {
       if (phoneDigits === lastFetchedPhone) return;
       lastFetchedPhone = phoneDigits;
 
@@ -109,7 +114,7 @@ const metadata = {
       } catch {
         nameField.value = "שגיאה בחיפוש";
       }
-    }
+    };
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -128,25 +133,6 @@ const metadata = {
     });
   }
 
-  // Bulletproof init: runs on first load and every Astro navigation, without double-binding
-  function runInitOncePerSwap() {
-      if (window.__ADD_EVENT_INIT_DONE__) return;
-      window.__ADD_EVENT_INIT_DONE__ = true;
-      initSendReview();
-  }
-
-  // Reset flag before Astro swaps the page
-  document.addEventListener("astro:before-swap", () => {
-      window.__ADD_EVENT_INIT_DONE__ = false;
-  });
-
-  // Run after navigation or first load
-  document.addEventListener("astro:page-load", runInitOncePerSwap);
-
-  // Also run if this script executes on a full reload without Astro navigation
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-      runInitOncePerSwap();
-  } else {
-      document.addEventListener("DOMContentLoaded", runInitOncePerSwap, { once: true });
-  }
+  document.addEventListener("astro:page-load", initSendReview);
+  initSendReview();
 </script>

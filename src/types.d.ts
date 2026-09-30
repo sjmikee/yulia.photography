@@ -74,12 +74,14 @@ export interface MetaDataRobots {
 }
 
 export interface MetaDataImage {
+  alt?: string;
   url: string;
   width?: number;
   height?: number;
 }
 
 export interface MetaDataOpenGraph {
+  site_name?: string;
   url?: string;
   siteName?: string;
   images?: Array<MetaDataImage>;

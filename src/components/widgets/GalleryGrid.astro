@@ -1,8 +1,12 @@
 ---
-import type { ContentType as Props } from '~/types';
+import type { ContentType } from '~/types';
+import type { ImageMetadata } from 'astro';
+interface Props extends ContentType {
+  images?: Array<{ src: ImageMetadata; alt: string }>;
+}
 import Image from '~/components/common/Image.astro';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
-import SlideModal from '~/components/widgets/SlideModal.astro';
+import 'photoswipe/style.css';
 
 const { 
   title,
@@ -28,9 +32,9 @@ const {
     <h2 class="mb-2 font-bold text-lg tracking-tight text-accent dark:text-white"><div set:text={subTitle} /></h2>
 
     
-    <div class="columns-2 md:columns-4 gap-4 space-y-4">
-        {images.map((image, index) => (
-            <div onclick={`openModal();currentSlide(${index + 1})`}>
+    <div data-gallery-grid class="columns-2 md:columns-4 gap-4 space-y-4">
+        {images.map((image) => (
+            <a href={image.src.src} data-pswp-width={image.src.width} data-pswp-height={image.src.height}>
             {
             <Image
                 class="w-full rounded-lg shadow"
@@ -40,7 +44,7 @@ const {
                 {...image}
             />
             }
-            </div>
+            </a>
         ))}
     </div>
 
@@ -49,4 +53,22 @@ const {
     <hr class="mt-10 sm:mt-20 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-accent to-transparent opacity-50 dark:via-neutral-400" />
 </WidgetWrapper>
 
-<SlideModal images={images} />
+<script>
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+
+  function initGalleries() {
+    document.querySelectorAll<HTMLElement>('[data-gallery-grid]').forEach((gallery) => {
+      if (gallery.dataset.initialized) return;
+      gallery.dataset.initialized = 'true';
+      const lightbox = new PhotoSwipeLightbox({
+        gallery,
+        children: 'a',
+        pswpModule: () => import('photoswipe'),
+      });
+      lightbox.init();
+      document.addEventListener('astro:before-swap', () => lightbox.destroy(), { once: true });
+    });
+  }
+  document.addEventListener('astro:page-load', initGalleries);
+  initGalleries();
+</script>

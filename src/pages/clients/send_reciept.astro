@@ -92,29 +92,34 @@ const metadata = {
 </Layout>
 
 <script>
+  const initializedForms = new WeakSet<HTMLFormElement>();
   function initReceiptForm() {
 
-    const phoneInput = document.getElementById("phone");
-    const nameField = document.getElementById("clientName");
-    const emailField = document.getElementById("clientEmail");
+    const phoneInput = document.querySelector<HTMLInputElement>("#phone");
+    const nameField = document.querySelector<HTMLInputElement>("#clientName");
+    const emailField = document.querySelector<HTMLInputElement>("#clientEmail");
 
-    const amount = document.getElementById("amount");
-    const payment = document.getElementById("payment");
-    const paymentDate = document.getElementById("paymentDate");
-    const description = document.getElementById("description");
-    const remarks = document.getElementById("remarks");
+    const amount = document.querySelector<HTMLInputElement>("#amount");
+    const payment = document.querySelector<HTMLSelectElement>("#payment");
+    const paymentDate = document.querySelector<HTMLInputElement>("#paymentDate");
+    const description = document.querySelector<HTMLInputElement>("#description");
+    const remarks = document.querySelector<HTMLInputElement>("#remarks");
 
-    const form = document.getElementById("receiptForm");
-    const submitButton = document.getElementById("submit");
+    const form = document.querySelector<HTMLFormElement>("#receiptForm");
+    const submitButton = document.querySelector<HTMLButtonElement>("#submit");
 
-    let timeout;
+    if (!phoneInput || !nameField || !emailField || !amount || !payment || !paymentDate || !description || !remarks || !form || !submitButton) return;
+    if (initializedForms.has(form)) return;
+    initializedForms.add(form);
+
+    let timeout: ReturnType<typeof setTimeout>;
     let lastPhone = "";
 
-    phoneInput.addEventListener("input", (e) => {
-      const digits = e.target.value.replace(/\D/g, "");
+    phoneInput.addEventListener("input", () => {
+      const digits = phoneInput.value.replace(/\D/g, "");
       let formatted = digits;
       if (digits.length > 3) formatted = digits.slice(0,3)+"-"+digits.slice(3);
-      e.target.value = formatted;
+      phoneInput.value = formatted;
 
       clearTimeout(timeout);
 
@@ -126,7 +131,7 @@ const metadata = {
       }
     });
 
-    async function lookup(phone) {
+    const lookup = async (phone: string) => {
       if (phone === lastPhone) return;
       lastPhone = phone;
 
@@ -147,7 +152,7 @@ const metadata = {
         nameField.value = data.name;
         emailField.value = data.email ?? "";
       }
-    }
+    };
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -185,7 +190,7 @@ const metadata = {
         return;
       }
 
-      let waPhone = digits.startsWith("0")
+      const waPhone = digits.startsWith("0")
         ? "972" + digits.slice(1)
         : digits;
 
@@ -200,25 +205,6 @@ const metadata = {
 
   }
 
-  // Bulletproof init: runs on first load and every Astro navigation, without double-binding
-  function runInitOncePerSwap() {
-      if (window.__ADD_EVENT_INIT_DONE__) return;
-      window.__ADD_EVENT_INIT_DONE__ = true;
-      initReceiptForm();
-  }
-
-  // Reset flag before Astro swaps the page
-  document.addEventListener("astro:before-swap", () => {
-      window.__ADD_EVENT_INIT_DONE__ = false;
-  });
-
-  // Run after navigation or first load
-  document.addEventListener("astro:page-load", runInitOncePerSwap);
-
-  // Also run if this script executes on a full reload without Astro navigation
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-      runInitOncePerSwap();
-  } else {
-      document.addEventListener("DOMContentLoaded", runInitOncePerSwap, { once: true });
-  }
+  document.addEventListener("astro:page-load", initReceiptForm);
+  initReceiptForm();
 </script>

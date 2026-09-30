@@ -226,7 +226,6 @@ const metadata = {
       const priceInput = document.getElementById("price-input");
       const durationInput = document.getElementById("duration-input");
       const phoneInput = document.getElementById("phone-input");
-      let signaturePad;
 
       if (phone) {
         phoneInput.value = phone;
@@ -291,11 +290,10 @@ const metadata = {
         canvas.style.height = height + "px";
         const ctx = canvas.getContext("2d");
         ctx.scale(ratio, ratio);
-        if (signaturePad) signaturePad.clear();
       }
 
       resizeCanvas();
-      signaturePad = new window.SignaturePad(canvas);
+      const signaturePad = new window.SignaturePad(canvas);
 
       window.addEventListener("resize", () => {
         resizeCanvas();

@@ -82,7 +82,7 @@ const resolvedOpenGraph = await adaptOpenGraphImages(seoProps?.openGraph, Astro.
 {resolvedOpenGraph?.type && <meta property="og:type" content={resolvedOpenGraph.type} />}
 {resolvedOpenGraph?.locale && <meta property="og:locale" content={resolvedOpenGraph.locale} />}
 
-{resolvedOpenGraph?.images?.map((image: any) => {
+{resolvedOpenGraph?.images?.map((image) => {
   let url = typeof image === 'string' ? image : image.url;
 
   if (typeof url === 'string' && url.includes('/_image?')) {

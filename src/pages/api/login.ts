@@ -21,7 +21,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   cookies.set("session", sessionValue, {
     path: "/",
     httpOnly: true,
-    secure: true,
+    // Local development uses HTTP; production sessions remain HTTPS-only.
+    secure: !import.meta.env.DEV || new URL(request.url).protocol === "https:",
     sameSite: "strict",
     maxAge: remember ? 30 * 24 * 60 * 60 : 2 * 60 * 60,
   });

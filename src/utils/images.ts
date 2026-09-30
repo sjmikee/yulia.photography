@@ -1,6 +1,6 @@
 import { isUnpicCompatible, unpicOptimizer, astroAsseetsOptimizer } from './images-optimization';
 import type { ImageMetadata } from 'astro';
-import type { OpenGraph } from '@astrolib/seo';
+import type { MetaDataOpenGraph as OpenGraph } from '~/types';
 
 const load = async function () {
   let images: Record<string, () => Promise<unknown>> | undefined = undefined;
@@ -51,7 +51,7 @@ export const findImage = async (
 /** */
 export const adaptOpenGraphImages = async (
   openGraph: OpenGraph = {},
-  astroSite: URL | undefined = new URL('')
+  astroSite?: URL
 ): Promise<OpenGraph> => {
   if (!openGraph?.images?.length) {
     return openGraph;
