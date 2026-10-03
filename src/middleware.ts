@@ -1,21 +1,30 @@
-import { defineMiddleware } from "astro:middleware";
-import { verifySessionCookie } from "~/lib/session";
+import { defineMiddleware } from 'astro:middleware';
+import { verifySessionCookie } from '~/lib/session';
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const url = new URL(context.request.url);
-  const pathname = url.pathname;
+  const pathname = new URL(context.request.url).pathname.replace(/\/+$/, '') || '/';
+  // Public contract endpoints verify their own scoped invitation token.
+  const publicPaths = new Set([
+    '/clients/login',
+    '/api/login',
+    '/api/logout',
+    '/api/get_price',
+    '/api/submit_contract',
+  ]);
+  if (publicPaths.has(pathname)) return next();
 
-  const unprotected = ["/clients/login", "/api/login", "/api/logout"];
-  if (unprotected.some((path) => pathname.startsWith(path))) return next();
-
-  if (pathname.startsWith("/clients")) {
-    const token = context.cookies.get("session")?.value;
-    const validUser = await verifySessionCookie(token || "");
+  const isApi = pathname === '/api' || pathname.startsWith('/api/');
+  if (isApi || pathname === '/clients' || pathname.startsWith('/clients/')) {
+    const validUser = await verifySessionCookie(context.cookies.get('session')?.value || '');
     if (!validUser) {
-      context.cookies.delete("session", { path: "/" });
-      return context.redirect("/clients/login");
+      context.cookies.delete('session', { path: '/' });
+      if (isApi)
+        return new Response(JSON.stringify({ error: 'Authentication required' }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+        });
+      return context.redirect('/clients/login');
     }
   }
-
   return next();
 });

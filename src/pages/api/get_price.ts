@@ -1,29 +1,27 @@
-import { sql } from "../../lib/db.ts";
-import type { APIContext } from "astro";
+import { verifyContractToken } from '../../lib/contract-token';
+import { getContractInvitation, invitationError } from '../../lib/contract-invitation';
+import type { APIContext } from 'astro';
 
 export const prerender = false;
 
 export async function GET(context: APIContext) {
   const urlParams = new URL(context.request.url);
-  const phone = urlParams.searchParams.get("phone");
-  if (!phone) {
-    return new Response(JSON.stringify({ error: "Missing phone parameter" }), { status: 400 });
-  }
+  const invitation = await verifyContractToken(urlParams.searchParams.get('token') || '');
+  if (!invitation) return new Response(JSON.stringify({ error: 'Invalid or expired contract link' }), { status: 403 });
 
-  const result = await sql`
-    SELECT s.session_price, s.package_type
-    FROM clients c
-    JOIN sessions s ON s.client_id = c.id
-    WHERE c.phone = ${phone}
-    ORDER BY s.id DESC
-    LIMIT 1;
-  `;
+  const booking = await getContractInvitation(invitation);
+  const unavailable = invitationError(booking);
+  if (unavailable) return unavailable;
 
-  if (result.length === 0) {
-    return new Response(JSON.stringify({ error: "No booking found" }), { status: 404 });
-  }
-
-  return new Response(JSON.stringify({ price: result[0].session_price.toString(), duration: result[0].package_type.toString() }), {
-    headers: { "Content-Type": "application/json" },
-  });
+  return new Response(
+    JSON.stringify({
+      price: booking.session_price.toString(),
+      duration: booking.package_type.toString(),
+      phone: invitation.phone,
+      conf: invitation.conf,
+    }),
+    {
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    }
+  );
 }

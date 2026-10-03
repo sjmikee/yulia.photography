@@ -1,20 +1,20 @@
 ---
 export const prerender = false;
 
-import Layout from "~/layouts/Layout.astro";
-import RichSeo from "~/components/common/RichSeo.astro";
-import LandingHeader from "~/components/widgets/LandingHeader.astro";
-import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
-import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+import Layout from '~/layouts/Layout.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+import LandingHeader from '~/components/widgets/LandingHeader.astro';
+import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
+import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
 const richMetadata = {
-  title: "יוליה קורנסקי - הפקת קבלה ללקוח",
-  description: "הפקת קבלה ושליחתה בוואטסאפ",
+  title: 'יוליה קורנסקי - הפקת קבלה ללקוח',
+  description: 'הפקת קבלה ושליחתה בוואטסאפ',
 };
 
 const metadata = {
-  title: "יוליה קורנסקי | הפקת קבלה ללקוח",
-  description: "הפקת קבלה ושליחתה בוואטסאפ",
+  title: 'יוליה קורנסקי | הפקת קבלה ללקוח',
+  description: 'הפקת קבלה ושליחתה בוואטסאפ',
   ignoreTitleTemplate: true,
 };
 ---
@@ -29,31 +29,58 @@ const metadata = {
 
       <section class="bg-gray-50 py-16 px-6 text-center">
         <h1 class="text-3xl font-bold mb-4">הפקת קבלה ללקוח</h1>
-        <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-          מפיקים קבלה בלחיצה ושולחים מיד בוואטסאפ 📄
-        </p>
+        <p class="text-lg text-gray-700 max-w-2xl mx-auto">מפיקים קבלה בלחיצה ושולחים מיד בוואטסאפ 📄</p>
       </section>
 
       <section class="max-w-2xl mx-auto py-12 px-6">
         <form id="receiptForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
-
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="tel" id="phone" placeholder="טלפון לקוח" required
-              class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+            <input
+              type="tel"
+              id="phone"
+              placeholder="טלפון לקוח"
+              required
+              class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+            />
 
-            <input type="text" id="clientName" placeholder="שם הלקוח" readonly
-              class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+            <input
+              type="text"
+              id="clientName"
+              placeholder="שם הלקוח"
+              readonly
+              class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+            />
 
-            <input type="text" id="clientEmail" placeholder="מייל הלקוח" readonly
-              class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+            <input
+              type="text"
+              id="clientEmail"
+              placeholder="מייל הלקוח"
+              readonly
+              class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+            />
           </div>
 
-          <input type="number" id="amount" placeholder="סכום ששולם (₪)" required
-            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
-        
-            <input type="date" id="paymentDate" placeholder="תאריך התשלום" required class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+          <input
+            type="number"
+            id="amount"
+            placeholder="סכום ששולם (₪)"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          />
 
-          <select id="payment" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+          <input
+            type="date"
+            id="paymentDate"
+            placeholder="תאריך התשלום"
+            required
+            class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          />
+
+          <select
+            id="payment"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          >
             <option value="" disabled selected>בחרי אמצעי תשלום</option>
             <option value="1">מזומן</option>
             <option value="4">העברה בנקאית</option>
@@ -61,28 +88,40 @@ const metadata = {
             <option value="10" data-app="3">PayBox</option>
           </select>
 
-          <input type="text" id="description" placeholder="תיאור (לדוגמה: תשלום על סשן משפחה)" required
-            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
-          <input type="text" id="remarks" placeholder="הערות (לדוגמא: תאריך הצילומים)" required
-            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+          <input
+            type="text"
+            id="description"
+            placeholder="תיאור (לדוגמה: תשלום על סשן משפחה)"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          />
+          <input
+            type="text"
+            id="remarks"
+            placeholder="הערות (לדוגמא: תאריך הצילומים)"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          />
 
-          <button type="submit" id="submit"
-            class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
+          <button
+            type="submit"
+            id="submit"
+            class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition"
+          >
             הפקת קבלה ושליחה ללקוח
           </button>
-
         </form>
       </section>
     </main>
 
     <footer class="bg-footer text-white py-8 text-center">
-        <button
-        aria-label="Footer Scroll to top" 
+      <button
+        aria-label="Footer Scroll to top"
         id="scrollToTopFooter"
         class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
-    >
+      >
         <span class="sr-only">Footer Scroll to top</span> ↑
-    </button>
+      </button>
       <p class="mb-4 font-bold">יוליה קורנסקי | yulia.photography</p>
       <p>הפקת קבלה ❤️</p>
     </footer>
@@ -94,40 +133,50 @@ const metadata = {
 <script>
   const initializedForms = new WeakSet<HTMLFormElement>();
   function initReceiptForm() {
+    const phoneInput = document.querySelector<HTMLInputElement>('#phone');
+    const nameField = document.querySelector<HTMLInputElement>('#clientName');
+    const emailField = document.querySelector<HTMLInputElement>('#clientEmail');
 
-    const phoneInput = document.querySelector<HTMLInputElement>("#phone");
-    const nameField = document.querySelector<HTMLInputElement>("#clientName");
-    const emailField = document.querySelector<HTMLInputElement>("#clientEmail");
+    const amount = document.querySelector<HTMLInputElement>('#amount');
+    const payment = document.querySelector<HTMLSelectElement>('#payment');
+    const paymentDate = document.querySelector<HTMLInputElement>('#paymentDate');
+    const description = document.querySelector<HTMLInputElement>('#description');
+    const remarks = document.querySelector<HTMLInputElement>('#remarks');
 
-    const amount = document.querySelector<HTMLInputElement>("#amount");
-    const payment = document.querySelector<HTMLSelectElement>("#payment");
-    const paymentDate = document.querySelector<HTMLInputElement>("#paymentDate");
-    const description = document.querySelector<HTMLInputElement>("#description");
-    const remarks = document.querySelector<HTMLInputElement>("#remarks");
+    const form = document.querySelector<HTMLFormElement>('#receiptForm');
+    const submitButton = document.querySelector<HTMLButtonElement>('#submit');
 
-    const form = document.querySelector<HTMLFormElement>("#receiptForm");
-    const submitButton = document.querySelector<HTMLButtonElement>("#submit");
-
-    if (!phoneInput || !nameField || !emailField || !amount || !payment || !paymentDate || !description || !remarks || !form || !submitButton) return;
+    if (
+      !phoneInput ||
+      !nameField ||
+      !emailField ||
+      !amount ||
+      !payment ||
+      !paymentDate ||
+      !description ||
+      !remarks ||
+      !form ||
+      !submitButton
+    )
+      return;
     if (initializedForms.has(form)) return;
     initializedForms.add(form);
 
     let timeout: ReturnType<typeof setTimeout>;
-    let lastPhone = "";
+    let lastPhone = '';
 
-    phoneInput.addEventListener("input", () => {
-      const digits = phoneInput.value.replace(/\D/g, "");
+    phoneInput.addEventListener('input', () => {
+      const digits = phoneInput.value.replace(/\D/g, '');
       let formatted = digits;
-      if (digits.length > 3) formatted = digits.slice(0,3)+"-"+digits.slice(3);
+      if (digits.length > 3) formatted = digits.slice(0, 3) + '-' + digits.slice(3);
       phoneInput.value = formatted;
 
       clearTimeout(timeout);
 
-      if (digits.length >= 10)
-        timeout = setTimeout(() => lookup(digits), 400);
+      if (digits.length >= 10) timeout = setTimeout(() => lookup(digits), 400);
       else {
-        nameField.value = "";
-        emailField.value = "";
+        nameField.value = '';
+        emailField.value = '';
       }
     });
 
@@ -135,76 +184,76 @@ const metadata = {
       if (phone === lastPhone) return;
       lastPhone = phone;
 
-      nameField.value = "מחפש...";
+      nameField.value = 'מחפש...';
 
-      const res = await fetch("/api/get_client_for_receipt", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ phone })
+      const res = await fetch('/api/get_client_for_receipt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        nameField.value = "לא נמצא לקוח";
-        emailField.value = "";
+        nameField.value = 'לא נמצא לקוח';
+        emailField.value = '';
       } else {
         nameField.value = data.name;
-        emailField.value = data.email ?? "";
+        emailField.value = data.email ?? '';
       }
     };
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const digits = phoneInput.value.replace(/\D/g, "");
-      if (digits.length < 10) return alert("מספר טלפון לא תקין");
+      const digits = phoneInput.value.replace(/\D/g, '');
+      if (digits.length < 10) return alert('מספר טלפון לא תקין');
 
       submitButton.disabled = true;
-      submitButton.textContent = "שולח...";
+      submitButton.textContent = 'שולח...';
 
-      const selectedOption = payment.options[payment.selectedIndex];
-      const appType = selectedOption.dataset.app || null;
+      try {
+        const selectedOption = payment.options[payment.selectedIndex];
+        const appType = selectedOption.dataset.app || null;
 
-      const res = await fetch("/api/create_receipt", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({
-          phone: digits,
-          name: nameField.value,
-          email: emailField.value,
-          amount: Number(amount.value),
-          payment: Number(payment.value),
-          appType: appType,
-          paymentDate: new Date(paymentDate.value).toISOString().split('T')[0],
-          description: description.value,
-          remarks: remarks.value
-        })
-      });
+        const res = await fetch('/api/create_receipt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: digits,
+            name: nameField.value,
+            email: emailField.value,
+            amount: Number(amount.value),
+            payment: Number(payment.value),
+            appType: appType,
+            paymentDate: new Date(paymentDate.value).toISOString().split('T')[0],
+            description: description.value,
+            remarks: remarks.value,
+          }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        alert("שגיאה בהפקת קבלה");
-        console.error(data);
-        return;
+        if (!res.ok) {
+          alert('שגיאה בהפקת קבלה');
+          console.error(data);
+          return;
+        }
+
+        const waPhone = digits.startsWith('0') ? '972' + digits.slice(1) : digits;
+
+        const msg = encodeURIComponent(`היי!\n` + `הקבלה שלך מוכנה\n\n` + `לינק להורדה:\n` + `${data.url}`);
+        window.open(`https://wa.me/${waPhone}?text=${msg}`, '_blank');
+      } catch (error) {
+        console.error(error);
+        alert('לא ניתן לאשר אם הקבלה הופקה. בדקי במערכת הקבלות לפני ניסיון נוסף.');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'הפקת קבלה';
       }
-
-      const waPhone = digits.startsWith("0")
-        ? "972" + digits.slice(1)
-        : digits;
-
-      const msg = encodeURIComponent(
-        `היי!\n` +
-        `הקבלה שלך מוכנה\n\n` +
-        `לינק להורדה:\n` +
-        `${data.url}`
-      );
-      window.open(`https://wa.me/${waPhone}?text=${msg}`, "_blank");
     });
-
   }
 
-  document.addEventListener("astro:page-load", initReceiptForm);
+  document.addEventListener('astro:page-load', initReceiptForm);
   initReceiptForm();
 </script>

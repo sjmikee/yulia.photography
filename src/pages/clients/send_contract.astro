@@ -1,118 +1,138 @@
 ---
 export const prerender = false;
 
-import Layout from "~/layouts/Layout.astro";
-import RichSeo from "~/components/common/RichSeo.astro";
-import LandingHeader from "~/components/widgets/LandingHeader.astro";
-import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
-import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+import Layout from '~/layouts/Layout.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+import LandingHeader from '~/components/widgets/LandingHeader.astro';
+import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
+import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
 const richMetadata = {
-  title: "יוליה קורנסקי - שליחת חוזה ללקוח",
-  description: "שליחת חוזה ללקוח קיים דרך WhatsApp",
+  title: 'יוליה קורנסקי - שליחת חוזה ללקוח',
+  description: 'שליחת חוזה ללקוח קיים דרך WhatsApp',
 };
 
 const metadata = {
-  title: "יוליה קורנסקי | שליחת חוזה ללקוח",
-  description: "שליחת חוזה ללקוח קיים דרך WhatsApp",
+  title: 'יוליה קורנסקי | שליחת חוזה ללקוח',
+  description: 'שליחת חוזה ללקוח קיים דרך WhatsApp',
   ignoreTitleTemplate: true,
 };
 
 const url = new URL(Astro.url);
-const phoneParam = url.searchParams.get("phone");
+const phoneParam = url.searchParams.get('phone');
 ---
 
 <Layout metadata={metadata}>
   <meta name="robots" content="noindex" />
   <div class="flex flex-col min-h-screen">
     <main class="flex-grow">
-  <RichSeo metadata={richMetadata} />
-  <LandingHeader isSticky />
-  <ScrollToTopButton />
+      <RichSeo metadata={richMetadata} />
+      <LandingHeader isSticky />
+      <ScrollToTopButton />
 
-  <section class="bg-gray-50 py-16 px-6 text-center">
-    <h1 class="text-3xl font-bold mb-4">שליחת חוזה ללקוח</h1>
-    <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-      שולחים חוזה בלחיצה אחת דרך וואטסאפ 📄
-    </p>
-  </section>
+      <section class="bg-gray-50 py-16 px-6 text-center">
+        <h1 class="text-3xl font-bold mb-4">שליחת חוזה ללקוח</h1>
+        <p class="text-lg text-gray-700 max-w-2xl mx-auto">שולחים חוזה בלחיצה אחת דרך וואטסאפ 📄</p>
+      </section>
 
-  <section class="max-w-2xl mx-auto py-12 px-6">
-    <form id="whatsappForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="tel" id="phone" placeholder="טלפון לקוח" required
-               class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+      <section class="max-w-2xl mx-auto py-12 px-6">
+        <form id="whatsappForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="tel"
+              id="phone"
+              placeholder="טלפון לקוח"
+              required
+              class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+            />
 
-        <input type="text" id="clientName" placeholder="שם הלקוח" readonly
-               class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+            <input
+              type="text"
+              id="clientName"
+              placeholder="שם הלקוח"
+              readonly
+              class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+            />
 
-        <input type="text" id="clientEmail" placeholder="מייל הלקוח" readonly
-               class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
-        
-        <select id="conf" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
-          <option value="" disabled selected>אישור פרסום</option>
-          <option value="1">כן</option>
-          <option value="0">לא</option>
-        </select>
-      </div>
+            <input
+              type="text"
+              id="clientEmail"
+              placeholder="מייל הלקוח"
+              readonly
+              class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+            />
 
-      <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
-        שליחת חוזה
-      </button>
-    </form>
-  </section>
-  </main>
+            <select
+              id="conf"
+              required
+              class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+            >
+              <option value="" disabled selected>אישור פרסום</option>
+              <option value="1">כן</option>
+              <option value="0">לא</option>
+            </select>
+          </div>
 
-  <footer class="bg-footer text-white py-8 text-center">
-    <button
-        aria-label="Footer Scroll to top" 
+          <button
+            type="submit"
+            class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition"
+          >
+            שליחת חוזה
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="bg-footer text-white py-8 text-center">
+      <button
+        aria-label="Footer Scroll to top"
         id="scrollToTopFooter"
         class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
-    >
+      >
         <span class="sr-only">Footer Scroll to top</span> ↑
-    </button>
-    <p class="mb-4 font-bold">יוליה קורנסקי | yulia.photography</p>
-    <p>שליחת חוזה ❤️</p>
-  </footer>
-</div>
+      </button>
+      <p class="mb-4 font-bold">יוליה קורנסקי | yulia.photography</p>
+      <p>שליחת חוזה ❤️</p>
+    </footer>
+  </div>
 
   <WhatsAppButton />
 </Layout>
 
 <script is:inline define:vars={{ PHONE: phoneParam }}>
   function initSendContract() {
-    const phoneInput = document.getElementById("phone");
-    const nameField = document.getElementById("clientName");
-    const emailField = document.getElementById("clientEmail");
-    const conf = document.getElementById("conf");
-    const form = document.getElementById("whatsappForm");
+    const phoneInput = document.getElementById('phone');
+    const nameField = document.getElementById('clientName');
+    const emailField = document.getElementById('clientEmail');
+    const conf = document.getElementById('conf');
+    const form = document.getElementById('whatsappForm');
 
     if (!form || !phoneInput) return;
 
-    let lastFetchedPhone = "";
+    let lastFetchedPhone = '';
     let lookupTimeout;
 
     // Auto-fill phone from URL and lock field
     if (PHONE) {
-      const digits = PHONE.replace(/\D/g, "");
+      const digits = PHONE.replace(/\D/g, '');
       let formatted = digits;
-      if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
+      if (digits.length > 3) formatted = digits.slice(0, 3) + '-' + digits.slice(3);
       phoneInput.value = formatted;
       phoneInput.readOnly = true;
       lookupClient(digits);
     }
 
-    phoneInput.addEventListener("input", (e) => {
-      const digits = e.target.value.replace(/\D/g, "");
+    phoneInput.addEventListener('input', (e) => {
+      const digits = e.target.value.replace(/\D/g, '');
       let formatted = digits;
-      if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
+      if (digits.length > 3) formatted = digits.slice(0, 3) + '-' + digits.slice(3);
       e.target.value = formatted;
 
       clearTimeout(lookupTimeout);
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
-        nameField.value = "";
-        emailField.value = "";
+        nameField.value = '';
+        emailField.value = '';
       }
     });
 
@@ -120,63 +140,85 @@ const phoneParam = url.searchParams.get("phone");
       if (phoneDigits === lastFetchedPhone) return;
       lastFetchedPhone = phoneDigits;
 
-      nameField.value = "מחפש...";
+      nameField.value = 'מחפש...';
       try {
-        const res = await fetch("/api/get_client_by_phone", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch('/api/get_client_by_phone', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: phoneDigits }),
         });
         const data = await res.json();
         if (!res.ok) {
-          nameField.value = "לא נמצא לקוח";
-          emailField.value = "";
+          nameField.value = 'לא נמצא לקוח';
+          emailField.value = '';
         } else {
           nameField.value = data.name;
-          emailField.value = data.email || "";
+          emailField.value = data.email || '';
         }
       } catch {
-        nameField.value = "שגיאה בחיפוש";
-        emailField.value = "";
+        nameField.value = 'שגיאה בחיפוש';
+        emailField.value = '';
       }
     }
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const rawPhone = phoneInput.value.replace(/\D/g, "");
-      if (!rawPhone) return alert("אנא הזיני מספר טלפון");
+      const rawPhone = phoneInput.value.replace(/\D/g, '');
+      if (!rawPhone) return alert('אנא הזיני מספר טלפון');
 
       let waPhone = rawPhone;
-      if (waPhone.startsWith("0")) waPhone = "972" + waPhone.slice(1);
+      if (waPhone.startsWith('0')) waPhone = '972' + waPhone.slice(1);
 
-      const contractLink = `https://yulia.photography/contract?phone=${rawPhone}&conf=${conf.value}`;
-      const message = encodeURIComponent(contractLink);
-      const waUrl = `https://wa.me/${waPhone}?text=${message}`;
-
-      window.open(waUrl, "_blank");
+      const button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      // Open synchronously so browsers do not block WhatsApp after the request.
+      const popup = window.open('about:blank', '_blank');
+      if (popup) popup.opener = null;
+      try {
+        const response = await fetch('/api/create_contract_link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: rawPhone, conf: conf.value }),
+        });
+        if (response.status === 409) {
+          if (popup) popup.close();
+          alert('חוזה זה עדיין בטיפול. יש לבדוק את שליחת המייל ואת מצב החוזה לפני יצירת קישור חדש.');
+          return;
+        }
+        if (!response.ok) throw new Error('Unable to create contract link');
+        const data = await response.json();
+        const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(data.url)}`;
+        if (popup) popup.location.href = waUrl;
+        else window.location.href = waUrl;
+      } catch {
+        if (popup) popup.close();
+        alert('לא ניתן ליצור קישור לחוזה. ודאי שקיימת הזמנה ונסי שוב.');
+      } finally {
+        button.disabled = false;
+      }
     });
   }
 
   // Bulletproof init: runs on first load and every Astro navigation, without double-binding
   function runInitOncePerSwap() {
-      if (window.__ADD_EVENT_INIT_DONE__) return;
-      window.__ADD_EVENT_INIT_DONE__ = true;
-      initSendContract();
+    if (window.__ADD_EVENT_INIT_DONE__) return;
+    window.__ADD_EVENT_INIT_DONE__ = true;
+    initSendContract();
   }
 
   // Reset flag before Astro swaps the page
-  document.addEventListener("astro:before-swap", () => {
-      window.__ADD_EVENT_INIT_DONE__ = false;
+  document.addEventListener('astro:before-swap', () => {
+    window.__ADD_EVENT_INIT_DONE__ = false;
   });
 
   // Run after navigation or first load
-  document.addEventListener("astro:page-load", runInitOncePerSwap);
+  document.addEventListener('astro:page-load', runInitOncePerSwap);
 
   // Also run if this script executes on a full reload without Astro navigation
-  if (document.readyState === "complete" || document.readyState === "interactive") {
-      runInitOncePerSwap();
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    runInitOncePerSwap();
   } else {
-      document.addEventListener("DOMContentLoaded", runInitOncePerSwap, { once: true });
+    document.addEventListener('DOMContentLoaded', runInitOncePerSwap, { once: true });
   }
 </script>

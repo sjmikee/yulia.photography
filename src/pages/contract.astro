@@ -1,37 +1,32 @@
 ---
-import Layout from "~/layouts/Layout.astro";
-import LandingHeader from "~/components/widgets/LandingHeader.astro";
-import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
-import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
-
+import Layout from '~/layouts/Layout.astro';
+import LandingHeader from '~/components/widgets/LandingHeader.astro';
+import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
+import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
 const metadata = {
-  title: "יוליה קורנסקי | חוזה צילום",
-  description: "חתימה על חוזה צילומים עם יוליה קורנסקי - פשוט, מאובטח ונוח אונליין",
+  title: 'יוליה קורנסקי | חוזה צילום',
+  description: 'חתימה על חוזה צילומים עם יוליה קורנסקי - פשוט, מאובטח ונוח אונליין',
   ignoreTitleTemplate: true,
 };
 ---
 
 <Layout metadata={metadata} richMetadata={metadata}>
   <meta name="robots" content="noindex" />
+  <meta name="referrer" content="no-referrer" />
   <LandingHeader isSticky />
   <ScrollToTopButton />
 
   <!-- Hero -->
   <section class="bg-gray-50 py-16 px-6 text-center">
     <h1 class="text-3xl font-bold mb-4">חתימה על חוזה צילום</h1>
-    <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-      כאן תוכלו לקרוא את חוזה הצילום ולחתום עליו בצורה נוחה ובטוחה
-    </p>
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto">כאן תוכלו לקרוא את חוזה הצילום ולחתום עליו בצורה נוחה ובטוחה</p>
   </section>
 
   <!-- PDF Viewer -->
   <section class="max-w-6xl mx-auto py-12 px-1">
     <h2 class="text-2xl font-bold text-center mb-6">מסמך החוזה</h2>
-    <div
-      id="pdf-container"
-      class="w-full h-[600px] border rounded-lg shadow overflow-auto"
-    >
+    <div id="pdf-container" class="w-full h-[600px] border rounded-lg shadow overflow-auto">
       <p class="text-center text-gray-500 py-8">טוען PDF...</p>
     </div>
   </section>
@@ -45,28 +40,10 @@ const metadata = {
       accept-charset="UTF-8"
       class="space-y-4 bg-white p-6 rounded-xl shadow"
     >
-      <input
-        type="text"
-        name="name"
-        placeholder="שם מלא"
-        required
-        class="border p-2 w-full"
-      />
-      <input
-        type="text"
-        name="address"
-        id="address-input"
-        placeholder="כתובת"
-        required
-        class="border p-2 w-full"
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="מייל"
-        required
-        class="border p-2 w-full"
-      />
+      <input type="hidden" name="token" id="contract-token" />
+      <input type="text" name="name" placeholder="שם מלא" required class="border p-2 w-full" />
+      <input type="text" name="address" id="address-input" placeholder="כתובת" required class="border p-2 w-full" />
+      <input type="email" name="email" placeholder="מייל" required class="border p-2 w-full" />
       <input
         type="tel"
         name="phone"
@@ -76,13 +53,7 @@ const metadata = {
         class="border p-2 w-full bg-gray-100"
         readonly
       />
-      <input
-        type="text"
-        name="id"
-        placeholder="תעודת זהות"
-        required
-        class="border p-2 w-full"
-      />
+      <input type="text" name="id" placeholder="תעודת זהות" required class="border p-2 w-full" />
       <label class="block">תמורה כוללת:</label>
       <input
         type="text"
@@ -101,21 +72,14 @@ const metadata = {
         class="border p-2 w-full bg-gray-100"
         disabled
       />
-      <input 
-        type="text"
-        name="conf"
-        id="conf"
-        hidden
-      />
+      <input type="text" name="conf" id="conf" hidden />
 
       <label class="block">חתימה:</label>
       <canvas id="signature" class="border w-full max-w-md h-40"></canvas>
-      <button type="button" id="clear-signature" class="btn-secondary">
-        נקה חתימה
-      </button>
+      <button type="button" id="clear-signature" class="btn-secondary"> נקה חתימה </button>
       <input type="hidden" name="signature" id="signature-input" />
 
-      <button type="submit" id="submit" class="btn-primary"> שלח </button>
+      <button type="submit" id="submit" disabled class="btn-primary"> שלח </button>
     </form>
   </section>
 
@@ -136,56 +100,82 @@ const metadata = {
   <WhatsAppButton />
 
   <!-- SignaturePad Script and PDF.js -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"
-    is:inline
-  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js" is:inline></script>
   <script type="module" is:inline>
     // PDF.js imports and setup from CDN
-    import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.min.mjs";
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.min.mjs';
 
     // Set the path to the worker script from the CDN
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.worker.min.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.worker.min.mjs';
 
-    window.addEventListener("DOMContentLoaded", () => {
+    const invitationMessages = {
+      signed: 'החוזה כבר נחתם בהצלחה. אין צורך לחתום שוב.',
+      processing: 'החוזה בטיפול. אין לשלוח שוב. אם ההודעה נמשכת, אנא צרו קשר עם יוליה.',
+      revoked: 'קישור זה הוחלף. אנא השתמשו בקישור האחרון שקיבלתם.',
+      expired: 'תוקף הקישור פג. אנא בקשו קישור חדש מיוליה.',
+      invalid: 'הקישור לחוזה אינו תקין. אנא בקשו קישור חדש מיוליה.',
+    };
+    function showInvitationStatus(form, code) {
+      form.hidden = true;
+      const container = document.getElementById('pdf-container');
+      container.textContent = invitationMessages[code] || invitationMessages.invalid;
+      container.setAttribute('role', 'status');
+      container.scrollIntoView({ block: 'center' });
+    }
+
+    async function initContract() {
+      const contractForm = document.querySelector('form[action="/api/submit_contract"]');
+      if (!contractForm || contractForm.dataset.initialized) return;
+      contractForm.dataset.initialized = 'true';
       const urlParams = new URLSearchParams(window.location.search);
-      const conf = urlParams.get("conf");
-      let pdfUrl = "";
-      if(conf == 1)
-      {
-        pdfUrl = "https://yulia.photography/contract_template_fillable.pdf";
+      const token = urlParams.get('token') || '';
+      let invitation;
+      try {
+        const response = await fetch(`/api/get_price?token=${encodeURIComponent(token)}`);
+        invitation = await response.json();
+        if (!response.ok) {
+          showInvitationStatus(contractForm, invitation.code || 'invalid');
+          return;
+        }
+      } catch {
+        document.getElementById('pdf-container').textContent =
+          'הקישור לחוזה אינו תקין או שפג תוקפו. אנא בקשו קישור חדש.';
+        return;
       }
-      else
-      {
-        pdfUrl = "https://yulia.photography/contract_template_conf_fillable.pdf";
+      document.getElementById('contract-token').value = token;
+      const conf = invitation.conf;
+      let pdfUrl = '';
+      if (conf == 1) {
+        pdfUrl = 'https://yulia.photography/contract_template_fillable.pdf';
+      } else {
+        pdfUrl = 'https://yulia.photography/contract_template_conf_fillable.pdf';
       }
 
-      const pdfContainer = document.getElementById("pdf-container");
+      const pdfContainer = document.getElementById('pdf-container');
 
       async function renderPage(pdf, pageNum) {
         const page = await pdf.getPage(pageNum);
-        
+
         const ratio = window.devicePixelRatio || 1;
 
         const unscaledViewport = page.getViewport({ scale: 1 });
-        
+
         const scale = (pdfContainer.clientWidth - 40) / unscaledViewport.width;
-        
+
         const viewport = page.getViewport({ scale: scale * ratio });
 
-        const canvas = document.createElement("canvas");
+        const canvas = document.createElement('canvas');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
-        canvas.style.display = "block";
-        
-        // Add a margin to visually separate the pages
-        canvas.style.margin = "0 auto 20px auto"; 
-        
-        canvas.style.width = viewport.width / ratio + "px";
-        canvas.style.height = viewport.height / ratio + "px";
+        canvas.style.display = 'block';
 
-        const context = canvas.getContext("2d");
+        // Add a margin to visually separate the pages
+        canvas.style.margin = '0 auto 20px auto';
+
+        canvas.style.width = viewport.width / ratio + 'px';
+        canvas.style.height = viewport.height / ratio + 'px';
+
+        const context = canvas.getContext('2d');
 
         const renderContext = {
           canvasContext: context,
@@ -200,7 +190,7 @@ const metadata = {
         try {
           const loadingTask = pdfjsLib.getDocument(pdfUrl);
           const pdf = await loadingTask.promise;
-          pdfContainer.innerHTML = "";
+          pdfContainer.innerHTML = '';
 
           const renderPromises = [];
           for (let i = 1; i <= pdf.numPages; i++) {
@@ -208,74 +198,53 @@ const metadata = {
           }
           await Promise.all(renderPromises);
         } catch (err) {
-          pdfContainer.innerHTML =
-            "<p class='text-red-600 text-center py-8'>לא ניתן לטעון את מסמך ה-PDF.</p>";
+          pdfContainer.innerHTML = "<p class='text-red-600 text-center py-8'>לא ניתן לטעון את מסמך ה-PDF.</p>";
           console.error(err);
         }
       }
       renderPdf();
 
-
-      const canvas = document.getElementById("signature");
-      const clearButton = document.getElementById("clear-signature");
-      const signatureInput = document.getElementById("signature-input");
-      const submitButton = document.getElementById("submit");
-      const form = document.querySelector("form");
-      const confInput = document.getElementById("conf");
-      const phone = urlParams.get("phone");
-      const priceInput = document.getElementById("price-input");
-      const durationInput = document.getElementById("duration-input");
-      const phoneInput = document.getElementById("phone-input");
+      const canvas = document.getElementById('signature');
+      const clearButton = document.getElementById('clear-signature');
+      const signatureInput = document.getElementById('signature-input');
+      const submitButton = document.getElementById('submit');
+      const form = document.querySelector('form');
+      const confInput = document.getElementById('conf');
+      const phone = invitation.phone;
+      const priceInput = document.getElementById('price-input');
+      const durationInput = document.getElementById('duration-input');
+      const phoneInput = document.getElementById('phone-input');
 
       if (phone) {
         phoneInput.value = phone;
 
-        if(conf == 1)
-        {
-          confInput.value = "1"
+        if (conf == 1) {
+          confInput.value = '1';
+        } else {
+          confInput.value = '0';
         }
-        else
-        {
-          confInput.value = "0"
-        }
-        
+
         (async () => {
           try {
-            const res = await fetch(
-              `/api/get_price?phone=${encodeURIComponent(phone)}`
-            );
-            if (!res.ok) throw new Error("מחיר לא נמצא");
-            const data = await res.json();
-            priceInput.value = data.price || "";
+            const data = invitation;
+            priceInput.value = data.price || '';
 
-            if(data.duration == 1)
-            {
-              durationInput.value = "שעה עד שעתיים";
+            if (data.duration == 1) {
+              durationInput.value = 'שעה עד שעתיים';
+            } else if (data.duration == 2) {
+              durationInput.value = 'שעתיים עד שלוש';
+            } else if (data.duration == 3) {
+              durationInput.value = 'שלוש שעות';
+            } else if (data.duration == 4) {
+              durationInput.value = 'עד שלוש שעות';
+            } else if (data.duration == 5) {
+              durationInput.value = 'עד שש שעות';
+            } else if (data.duration == 6) {
+              durationInput.value = 'עד תשע שעות';
             }
-            else if(data.duration == 2)
-            {
-              durationInput.value = "שעתיים עד שלוש"
-            }
-            else if(data.duration == 3)
-            {
-              durationInput.value = "שלוש שעות"
-            }
-            else if(data.duration == 4)
-            {
-              durationInput.value = "עד שלוש שעות"
-            }
-            else if(data.duration == 5)
-            {
-              durationInput.value = "עד שש שעות"
-            }
-            else if(data.duration == 6)
-            {
-              durationInput.value = "עד תשע שעות"
-            }
-
           } catch (err) {
             console.error(err);
-            priceInput.value = "מחיר לא זמין";
+            priceInput.value = 'מחיר לא זמין';
           }
         })();
       }
@@ -286,66 +255,89 @@ const metadata = {
         const height = canvas.offsetHeight;
         canvas.width = width * ratio;
         canvas.height = height * ratio;
-        canvas.style.width = width + "px";
-        canvas.style.height = height + "px";
-        const ctx = canvas.getContext("2d");
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        const ctx = canvas.getContext('2d');
         ctx.scale(ratio, ratio);
       }
 
       resizeCanvas();
       const signaturePad = new window.SignaturePad(canvas);
 
-      window.addEventListener("resize", () => {
+      window.addEventListener('resize', () => {
         resizeCanvas();
         signaturePad.clear();
       });
 
-      clearButton.addEventListener("click", () => {
+      clearButton.addEventListener('click', () => {
         signaturePad.clear();
       });
 
-      form.addEventListener("submit", (e) => {
+      submitButton.disabled = false;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
         if (signaturePad.isEmpty()) {
           e.preventDefault();
-          alert("יש לחתום לפני השליחה");
+          alert('יש לחתום לפני השליחה');
           return;
         }
 
         submitButton.disabled = true;
-        submitButton.textContent = "שולח...";
+        submitButton.textContent = 'שולח...';
         signatureInput.value = signaturePad.toDataURL();
+        try {
+          const response = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+          if (!response.ok) {
+            const error = await response.json();
+            if (invitationMessages[error.code]) {
+              showInvitationStatus(contractForm, error.code);
+              return;
+            }
+            throw new Error('Contract submission failed');
+          }
+          window.location.assign('/thank_you');
+        } catch {
+          alert('שליחת החוזה נכשלה. אנא נסו שוב או צרו קשר.');
+          submitButton.disabled = false;
+          submitButton.textContent = 'שלח';
+        }
       });
-    });
+    }
+    document.addEventListener('astro:page-load', initContract);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initContract, { once: true });
+    } else {
+      initContract();
+    }
   </script>
 
   <script is:inline>
-  window.initAutocomplete = function () {
-    const input = document.getElementById("address-input");
+    window.initAutocomplete = function () {
+      const input = document.getElementById('address-input');
 
-    // Create the first session token
-    let sessionToken = new google.maps.places.AutocompleteSessionToken();
+      // Create the first session token
+      let sessionToken = new google.maps.places.AutocompleteSessionToken();
 
-    const autocomplete = new google.maps.places.Autocomplete(input, {
-      fields: ["formatted_address", "geometry", "name"],
-      sessionToken,
-    });
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        fields: ['formatted_address', 'geometry', 'name'],
+        sessionToken,
+      });
 
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
 
-      if (place.formatted_address) {
-        input.value = place.formatted_address;
-      }
+        if (place.formatted_address) {
+          input.value = place.formatted_address;
+        }
 
-      // Reset token for next user typing session
-      sessionToken = new google.maps.places.AutocompleteSessionToken();
-      autocomplete.setOptions({ sessionToken });
-    });
-  };
-</script>
+        // Reset token for next user typing session
+        sessionToken = new google.maps.places.AutocompleteSessionToken();
+        autocomplete.setOptions({ sessionToken });
+      });
+    };
+  </script>
 
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN7CiFeaMo1JYYXYW6kvHAM1xndEEPNTs&libraries=places&loading=async&language=HE&region=IL&callback=initAutocomplete"
-  defer
-></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN7CiFeaMo1JYYXYW6kvHAM1xndEEPNTs&libraries=places&loading=async&language=HE&region=IL&callback=initAutocomplete"
+    defer></script>
 </Layout>
