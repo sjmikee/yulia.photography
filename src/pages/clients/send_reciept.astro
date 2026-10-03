@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 
+import { sql } from '~/lib/db';
 import Layout from '~/layouts/Layout.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
 import LandingHeader from '~/components/widgets/LandingHeader.astro';
@@ -12,6 +13,12 @@ const richMetadata = {
   description: 'הפקת קבלה ושליחתה בוואטסאפ',
 };
 
+const paymentId = Astro.url.searchParams.get('payment_id');
+if (!paymentId || !/^[0-9a-f-]{36}$/i.test(paymentId)) return Astro.redirect('/clients');
+const [record] = await sql`SELECT p.*, p.paid_on::text AS paid_on, s.client_id, s.session_type, c.name, c.phone, c.email
+  FROM session_payments p JOIN sessions s ON s.id = p.session_id
+  JOIN clients c ON c.id = s.client_id WHERE p.id = ${paymentId}::uuid`;
+if (!record) return Astro.redirect('/clients');
 const metadata = {
   title: 'יוליה קורנסקי | הפקת קבלה ללקוח',
   description: 'הפקת קבלה ושליחתה בוואטסאפ',
@@ -33,7 +40,21 @@ const metadata = {
       </section>
 
       <section class="max-w-2xl mx-auto py-12 px-6">
-        <form id="receiptForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
+        <a href={`/clients/${record.client_id}#session-${record.session_id}`} class="block mb-4 underline"
+          >חזרה לפרופיל הלקוח</a
+        >
+        <form
+          data-payment-id={record.id}
+          data-name={record.name}
+          data-email={record.email || ''}
+          data-phone={record.phone}
+          data-amount={record.amount}
+          data-date={String(record.paid_on).slice(0, 10)}
+          data-description={`${record.stage === 'deposit' ? 'סגירת תאריך' : 'יתרת תשלום'} — ${record.session_type}`}
+          data-status={record.receipt_status}
+          id="receiptForm"
+          class="space-y-6 bg-white p-8 rounded-2xl shadow-lg"
+        >
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="tel"
@@ -99,7 +120,6 @@ const metadata = {
             type="text"
             id="remarks"
             placeholder="הערות (לדוגמא: תאריך הצילומים)"
-            required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           />
 
@@ -111,6 +131,17 @@ const metadata = {
             הפקת קבלה ושליחה ללקוח
           </button>
         </form>
+        <section
+          id="receiptNext"
+          hidden={record.receipt_status !== 'issued'}
+          class="mt-6 bg-white p-8 rounded-2xl shadow-lg text-center space-y-4"
+          aria-live="polite"
+        >
+          <p>הקבלה הופקה. שלחי אותה בוואטסאפ והמשיכי לשלב הבא.</p>
+          <a class="btn-primary w-full" href={`/clients/${record.client_id}#session-${record.session_id}`}
+            >{record.stage === 'deposit' ? 'המשך להוספה ליומן' : 'המשך לעריכת התמונות'}</a
+          >
+        </section>
       </section>
     </main>
 
@@ -162,46 +193,20 @@ const metadata = {
     if (initializedForms.has(form)) return;
     initializedForms.add(form);
 
-    let timeout: ReturnType<typeof setTimeout>;
-    let lastPhone = '';
-
-    phoneInput.addEventListener('input', () => {
-      const digits = phoneInput.value.replace(/\D/g, '');
-      let formatted = digits;
-      if (digits.length > 3) formatted = digits.slice(0, 3) + '-' + digits.slice(3);
-      phoneInput.value = formatted;
-
-      clearTimeout(timeout);
-
-      if (digits.length >= 10) timeout = setTimeout(() => lookup(digits), 400);
-      else {
-        nameField.value = '';
-        emailField.value = '';
-      }
-    });
-
-    const lookup = async (phone: string) => {
-      if (phone === lastPhone) return;
-      lastPhone = phone;
-
-      nameField.value = 'מחפש...';
-
-      const res = await fetch('/api/get_client_for_receipt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        nameField.value = 'לא נמצא לקוח';
-        emailField.value = '';
-      } else {
-        nameField.value = data.name;
-        emailField.value = data.email ?? '';
-      }
-    };
+    phoneInput.value = form.dataset.phone || '';
+    phoneInput.readOnly = true;
+    nameField.value = form.dataset.name || '';
+    emailField.value = form.dataset.email || '';
+    amount.value = form.dataset.amount || '';
+    amount.readOnly = true;
+    paymentDate.value = form.dataset.date || '';
+    paymentDate.readOnly = true;
+    description.value = form.dataset.description || '';
+    if (form.dataset.status === 'processing') {
+      submitButton.disabled = true;
+      submitButton.textContent = 'נדרשת בדיקת הקבלה במערכת Morning';
+    }
+    if (form.dataset.status === 'issued') submitButton.textContent = 'פתיחת הקבלה הקיימת בוואטסאפ';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -212,6 +217,9 @@ const metadata = {
       submitButton.disabled = true;
       submitButton.textContent = 'שולח...';
 
+      const popup = window.open('about:blank', '_blank');
+      if (popup) popup.opener = null;
+      let completed = false;
       try {
         const selectedOption = payment.options[payment.selectedIndex];
         const appType = selectedOption.dataset.app || null;
@@ -220,6 +228,7 @@ const metadata = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            payment_id: form.dataset.paymentId,
             phone: digits,
             name: nameField.value,
             email: emailField.value,
@@ -235,7 +244,8 @@ const metadata = {
         const data = await res.json();
 
         if (!res.ok) {
-          alert('שגיאה בהפקת קבלה');
+          popup?.close();
+          alert('לא ניתן לאשר את הפקת הקבלה. בדקי בפרופיל ובמערכת Morning לפני ניסיון נוסף.');
           console.error(data);
           return;
         }
@@ -243,13 +253,22 @@ const metadata = {
         const waPhone = digits.startsWith('0') ? '972' + digits.slice(1) : digits;
 
         const msg = encodeURIComponent(`היי!\n` + `הקבלה שלך מוכנה\n\n` + `לינק להורדה:\n` + `${data.url}`);
-        window.open(`https://wa.me/${waPhone}?text=${msg}`, '_blank');
+        completed = true;
+        const nextStage = document.getElementById('receiptNext');
+        if (nextStage) {
+          nextStage.hidden = false;
+          nextStage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        const target = `https://wa.me/${waPhone}?text=${msg}`;
+        if (popup) popup.location.href = target;
+        else window.location.href = target;
       } catch (error) {
+        popup?.close();
         console.error(error);
         alert('לא ניתן לאשר אם הקבלה הופקה. בדקי במערכת הקבלות לפני ניסיון נוסף.');
       } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'הפקת קבלה';
+        submitButton.disabled = !completed;
+        submitButton.textContent = completed ? 'פתיחת הקבלה הקיימת בוואטסאפ' : 'חזרי לפרופיל ובדקי את מצב הקבלה';
       }
     });
   }

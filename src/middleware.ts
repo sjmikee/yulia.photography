@@ -26,5 +26,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
       return context.redirect('/clients/login');
     }
   }
-  return next();
+  const response = await next();
+  if (isApi || pathname === '/clients' || pathname.startsWith('/clients/')) {
+    // Response.redirect() has immutable headers. Copy them into a writable response.
+    const headers = new Headers(response.headers);
+    headers.set('Cache-Control', 'private, no-store');
+    headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  }
+  return response;
 });

@@ -1,0 +1,90 @@
+---
+export const prerender = false;
+import Layout from '~/layouts/ClientLayout.astro';
+import SessionCard from '~/components/clients/SessionCard.astro';
+import type { Client, Session, Payment } from '~/lib/client-workflow';
+import { sql } from '~/lib/db';
+const id = Number(Astro.params.id);
+if (!Number.isSafeInteger(id) || id <= 0) return Astro.redirect('/clients');
+let client: Client | undefined;
+let sessions: Session[] = [];
+let payments: Payment[] = [];
+let failed = false;
+try {
+  [client] = (await sql`SELECT id, name, phone, email, notes FROM clients WHERE id = ${id}`) as Client[];
+  if (client) {
+    sessions = (await sql`SELECT * FROM sessions WHERE client_id = ${id} ORDER BY id DESC`) as Session[];
+    payments =
+      (await sql`SELECT p.*, p.paid_on::text AS paid_on FROM session_payments p JOIN sessions s ON s.id = p.session_id WHERE s.client_id = ${id} ORDER BY p.created_at`) as Payment[];
+  }
+} catch {
+  failed = true;
+}
+if (!client && !failed) Astro.response.status = 404;
+---
+
+<Layout title={client?.name || (failed ? 'לא ניתן לטעון פרופיל' : 'לקוח לא נמצא')}>
+  {
+    failed ? (
+      <p role="alert">לא ניתן לטעון את הפרופיל. יש לוודא שעדכון מסד הנתונים הושלם ולנסות שוב.</p>
+    ) : client ? (
+      <>
+        <section class="panel">
+          <div class="flex flex-wrap gap-5 mb-4">
+            <a href={`tel:${client.phone}`}>{client.phone}</a>
+            {client.email && <a href={`mailto:${client.email}`}>{client.email}</a>}
+            <a href={`https://wa.me/${client.phone.replace(/^0/, '972')}`} target="_blank" rel="noopener noreferrer">
+              וואטסאפ
+            </a>
+          </div>
+          <details>
+            <>
+              <summary>הערות על הלקוח</summary>
+              <form method="POST" action="/api/client_workflow" class="grid gap-3 mt-4">
+                <>
+                  <input type="hidden" name="action" value="notes" />
+                  <input type="hidden" name="client_id" value={id} />
+                </>
+                <>
+                  <label>
+                    הערות על הלקוח
+                    <textarea name="notes" maxlength="10000">
+                      {client.notes}
+                    </textarea>
+                  </label>
+                  <button class="btn-secondary">שמירת הערות</button>
+                </>
+              </form>
+            </>
+          </details>
+        </section>
+        {Astro.url.searchParams.has('error') && (
+          <p role="alert" class="panel">
+            התשלום לא נשמר: ייתכן שכבר נרשם או שהיתרה השתנתה. בדקי את התשלומים והיתרה לפני ניסיון נוסף.
+          </p>
+        )}
+        <a
+          class="btn-secondary mb-6"
+          href={`/clients/add_session?client_id=${id}&phone=${encodeURIComponent(client.phone)}`}
+        >
+          יצירת סשן חדש
+        </a>
+        {!sessions.length && <p>עדיין אין סשנים. התחילי ביצירת הסשן הראשון.</p>}
+        {sessions.map((session, index) =>
+          index === 0 ? (
+            <SessionCard session={session} client={client} payments={payments} />
+          ) : (
+            <details class="mb-5">
+              <summary class="cursor-pointer p-4 font-bold">
+                {session.session_type} · סשן #{session.id} · יתרה ₪{session.to_pay}
+              </summary>
+              <SessionCard session={session} client={client} payments={payments} />
+            </details>
+          )
+        )}
+      </>
+    ) : (
+      <a href="/clients">חזרה לחיפוש לקוחות</a>
+    )
+  }
+</Layout>

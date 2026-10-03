@@ -1,0 +1,16 @@
+---
+import WorkflowFields from './WorkflowFields.astro';
+interface Props {
+  clientId: number;
+  sessionId: number;
+  step: string;
+  label: string;
+}
+const { clientId, sessionId, step, label } = Astro.props;
+---
+
+<form method="POST" action="/api/client_workflow">
+  <WorkflowFields clientId={clientId} sessionId={sessionId} action="step" />
+  <input type="hidden" name="step" value={step} /><input type="hidden" name="done" value="1" />
+  <button class="btn-primary w-full">{label}</button>
+</form>

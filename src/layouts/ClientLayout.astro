@@ -1,0 +1,64 @@
+---
+import Layout from './Layout.astro';
+import LandingHeader from '~/components/widgets/LandingHeader.astro';
+import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
+const { title, subtitle = 'כל הלקוחות והצילומים שלך, במקום אחד ❤️' } = Astro.props;
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+---
+
+<Layout metadata={{ title, robots: { index: false, follow: false } }}>
+  <LandingHeader isSticky />
+  <section class="bg-gray-50 py-16 px-6 text-center" dir="rtl">
+    <h1 class="text-3xl font-bold mb-4">{title}</h1>
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto">{subtitle}</p>
+  </section>
+  <main dir="rtl" class="client-area max-w-4xl mx-auto py-10 px-6">
+    <nav class="mb-8 flex flex-wrap gap-4" aria-label="ניהול לקוחות">
+      <a class="btn-secondary" href="/clients">לקוחות</a><a class="btn-secondary" href="/clients/add">לקוח חדש</a>
+    </nav>
+    <slot />
+  </main>
+  <footer class="bg-footer text-white py-8 text-center">
+    <p class="mb-4 font-bold">יוליה קורנסקי | yulia.photography</p>
+    <p>ניהול לקוחות ❤️</p>
+  </footer>
+  <ScrollToTopButton />
+</Layout>
+<style is:global>
+  .client-area input,
+  .client-area select,
+  .client-area textarea {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    background: white;
+    color: #1f2937;
+    width: 100%;
+  }
+  .client-area label {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .client-area .panel {
+    padding: clamp(1.25rem, 4vw, 2rem);
+    border-radius: 1rem;
+    background: white;
+    color: #1f2937;
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+    margin-bottom: 1.5rem;
+  }
+  .client-area :focus-visible {
+    outline: 3px solid var(--aw-color-primary);
+    outline-offset: 3px;
+  }
+  .client-area button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+  .client-area summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+</style>

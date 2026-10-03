@@ -1,0 +1,12 @@
+---
+interface Props {
+  clientId: number;
+  sessionId: number;
+  action: string;
+}
+const { clientId, sessionId, action } = Astro.props;
+---
+
+<input type="hidden" name="client_id" value={clientId} />
+<input type="hidden" name="session_id" value={sessionId} />
+<input type="hidden" name="action" value={action} />

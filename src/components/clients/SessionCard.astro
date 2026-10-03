@@ -1,0 +1,474 @@
+---
+import { manualSteps, stepsFor, type Payment, type Workflow, type Client, type Session } from '~/lib/client-workflow';
+import WorkflowFields from './WorkflowFields.astro';
+import AdvanceStage from './AdvanceStage.astro';
+interface Props {
+  session: Session;
+  client: Client;
+  payments: Payment[];
+}
+const { session: s, client, payments } = Astro.props;
+const w: Workflow = s.workflow || {};
+const sessionPayments = payments.filter((p) => Number(p.session_id) === Number(s.id));
+const steps = stepsFor(s, sessionPayments);
+const next = steps.find((step) => !step.done);
+const current = next?.key;
+const position = steps.findIndex((step) => step.key === current);
+const after = steps[position + 1];
+const receipt = sessionPayments.find((p) => p.stage === (current === 'deposit_receipt' ? 'deposit' : 'balance'));
+const base = `client_id=${client.id}&session_id=${s.id}&phone=${encodeURIComponent(client.phone)}`;
+const wa = `https://wa.me/${client.phone.replace(/^0/, '972')}`;
+const review = `${wa}?text=${encodeURIComponent('אשמח אם תכתבו לי ביקורת ❤️\nhttps://g.page/r/CfFq0GZG4TgjEBE/review')}`;
+const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
+---
+
+<article
+  id={`session-${s.id}`}
+  class="panel"
+  data-session-card
+  data-session-id={s.id}
+  data-current-step={current}
+  data-name={client.name}
+  data-phone={client.phone}
+  data-email={client.email || ''}
+  data-type={s.session_type}
+  data-wa={wa}
+>
+  <header class="mb-6">
+    <h2 class="text-2xl font-bold mb-2">צילומי {s.session_type}</h2>
+    <p class="text-gray-600">
+      סשן #{s.id} · חבילה {s.package_type} · מחיר ₪{s.session_price} · נותר לתשלום ₪{s.to_pay}
+    </p>
+    {
+      w.scheduled && (
+        <p class="text-gray-600 mt-2">
+          {w.scheduled.replace('T', ' · ')}
+          {w.location && ` · ${w.location}`}
+        </p>
+      )
+    }
+  </header>
+  <section class="rounded-2xl bg-gray-50 p-5 sm:p-8 mb-6 space-y-5" aria-label="השלב הנוכחי">
+    <div>
+      <p class="text-sm text-gray-500 mb-2">{next ? `שלב ${position + 1} מתוך ${steps.length}` : 'הסשן הושלם'}</p>
+      <h3 class="text-2xl font-bold">{next?.label || 'עוד זיכרונות יפים נמסרו ❤️'}</h3>
+    </div>
+    {
+      current === 'contract_sent' && (
+        <>
+          <p>פרטי הלקוח והסשן כבר מוכנים. בחרי אישור פרסום והמשיכי לשליחה בוואטסאפ.</p>
+          <a class="btn-primary w-full" href={`/clients/send_contract?${base}`}>
+            המשך לשליחת חוזה
+          </a>
+        </>
+      )
+    }
+    {
+      current === 'signed' && (
+        <>
+          <p>
+            אחרי שליחת הקישור בוואטסאפ, מחכים לחתימה. העמוד בודק את החתימה אוטומטית ויעבור לשלב התשלום כשהחוזה ייחתם.
+          </p>
+          <a class="btn-primary w-full" href={`/clients/${client.id}#session-${s.id}`}>
+            בדיקת חתימה והמשך לתשלום
+          </a>
+          <a class="block text-center underline" href={`/clients/send_contract?${base}`}>
+            פתיחת מסך החוזה שוב
+          </a>
+        </>
+      )
+    }
+    {
+      (current === 'deposit' || current === 'balance') && (
+        <>
+          <p>
+            {current === 'deposit'
+              ? 'לאחר קבלת ₪100 לסגירת התאריך, המשיכי ישירות להפקת הקבלה.'
+              : `לאחר קבלת היתרה בסך ₪${s.to_pay}, המשיכי להפקת הקבלה.`}
+          </p>
+          {Number(s.to_pay) >= (current === 'deposit' ? 100 : 0) && Number(s.to_pay) > 0 ? (
+            <form method="POST" action="/api/client_workflow" class="space-y-4">
+              <WorkflowFields clientId={client.id} sessionId={s.id} action="payment" />
+              <input type="hidden" name="stage" value={current} />
+              <input type="hidden" name="amount" value={current === 'deposit' ? 100 : s.to_pay} />
+              <input type="hidden" name="continue" value="receipt" />
+              <label>
+                מתי התקבל התשלום?
+                <input type="date" name="paid_on" value={today} required />
+              </label>
+              <button class="btn-primary w-full">קיבלתי ₪{current === 'deposit' ? 100 : s.to_pay} — להפקת קבלה</button>
+            </form>
+          ) : (
+            <p>אין יתרה לרישום תשלום זה. אם התשלום כבר נרשם בעבר, אין לרשום אותו שוב.</p>
+          )}
+        </>
+      )
+    }
+    {
+      (current === 'deposit_receipt' || current === 'balance_receipt') && (
+        <>
+          {receipt?.receipt_status === 'processing' ? (
+            <>
+              <p role="status">הקבלה בטיפול. אם התהליך נעצר, יש לבדוק ב־Morning לפני הפקה נוספת.</p>
+              <a class="btn-primary w-full" href={`/clients/${client.id}#session-${s.id}`}>
+                בדיקת מצב הקבלה והמשך
+              </a>
+            </>
+          ) : receipt ? (
+            <>
+              <p>התשלום נשמר. הסכום והתאריך כבר מולאו בקבלה.</p>
+              <a class="btn-primary w-full" href={`/clients/send_reciept?payment_id=${receipt.id}`}>
+                המשך להפקת קבלה
+              </a>
+            </>
+          ) : (
+            <p>לא נמצאה קבלה לתשלום זה. תשלומים ישנים שכבר נוכו מהיתרה דורשים בדיקת היסטוריה לפני רישום נוסף.</p>
+          )}
+        </>
+      )
+    }
+    {
+      current === 'calendar_added' && (
+        <>
+          <p>שמרי את פרטי הצילומים ופתחי אירוע מוכן ביומן.</p>
+          <form data-calendar-form method="POST" action="/api/client_workflow" class="grid sm:grid-cols-2 gap-4">
+            <WorkflowFields clientId={client.id} sessionId={s.id} action="details" />
+            <>
+              <input type="hidden" name="notes" value={w.notes || ''} />
+              <input type="hidden" name="pixieset" value={w.pixieset || ''} />
+            </>
+            <label>
+              תאריך ושעה (שעון ישראל)
+              <input type="datetime-local" name="scheduled" value={w.scheduled} required />
+            </label>
+            <label>
+              משך
+              <select name="duration">
+                {[1, 2, 3, 6, 9].map((n) => (
+                  <option value={n} selected={Number(w.duration || 1) === n}>
+                    {n} שעות
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label class="sm:col-span-2">
+              מיקום
+              <input name="location" value={w.location} maxlength="500" />
+            </label>
+            <button class={`${w.scheduled ? 'btn-secondary' : 'btn-primary'} sm:col-span-2`}>
+              שמירת הפרטים ופתיחת היומן
+            </button>
+          </form>
+          <div data-calendar-confirm hidden={!w.scheduled}>
+            <AdvanceStage
+              clientId={client.id}
+              sessionId={s.id}
+              step="calendar_added"
+              label="שמרתי ביומן — המשך ליום הצילומים"
+            />
+          </div>
+        </>
+      )
+    }
+    {
+      current === 'shoot_done' && (
+        <>
+          <p>הכול מוכן ליום הצילומים. בסיום הסשן, המשיכי לתשלום היתרה.</p>
+          <AdvanceStage
+            clientId={client.id}
+            sessionId={s.id}
+            step="shoot_done"
+            label="הצילומים הסתיימו — המשך לתשלום"
+          />
+        </>
+      )
+    }
+    {
+      current === 'editing_done' && (
+        <>
+          <p>עכשיו נשאר לערוך את התמונות. כשהכול מוכן, המשיכי להעלאה ולמסירה.</p>
+          <AdvanceStage
+            clientId={client.id}
+            sessionId={s.id}
+            step="editing_done"
+            label="סיימתי לערוך — המשך למסירת התמונות"
+          />
+        </>
+      )
+    }
+    {
+      current === 'delivered' && (
+        <>
+          <p>העלי תמונות מוקטנות ל־Pixieset ותמונות מלאות ל־MyAirBridge, ואז הכיני הודעה עם שני הקישורים.</p>
+          <div class="flex flex-wrap gap-3">
+            <>
+              <a class="btn-secondary" href="https://pixieset.com/" target="_blank" rel="noopener noreferrer">
+                פתיחת Pixieset
+              </a>
+              <a class="btn-secondary" href="https://www.myairbridge.com/" target="_blank" rel="noopener noreferrer">
+                פתיחת MyAirBridge
+              </a>
+            </>
+          </div>
+          <form data-delivery method="POST" action="/api/client_workflow" class="space-y-4">
+            <WorkflowFields clientId={client.id} sessionId={s.id} action="delivery" />
+            <label>
+              קישור לגלריית Pixieset
+              <input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" required />
+            </label>
+            <label>
+              קישור זמני ל־MyAirBridge
+              <input data-airbridge type="url" dir="ltr" placeholder="https://" autocomplete="off" required />
+            </label>
+            <p class="text-sm text-gray-600">
+              קישור MyAirBridge לא נשמר. ההודעה מזכירה להוריד את התמונות בתוך שלושה ימים מההעלאה.
+            </p>
+            <button class={`${w.delivery_prepared || w.pixieset ? 'btn-secondary' : 'btn-primary'} w-full`}>
+              שמירת הגלריה ופתיחת הודעה בוואטסאפ
+            </button>
+          </form>
+          <div data-delivery-confirm hidden={!w.delivery_prepared && !w.pixieset}>
+            <AdvanceStage
+              clientId={client.id}
+              sessionId={s.id}
+              step="delivered"
+              label="שלחתי את הקישורים — המשך לבקשת ביקורת"
+            />
+          </div>
+        </>
+      )
+    }
+    {
+      current === 'review_requested' && (
+        <>
+          <p>התמונות נמסרו! אפשר לשלוח הודעה מוכנה עם קישור לביקורת בגוגל.</p>
+          <a class="btn-secondary w-full" href={review} target="_blank" rel="noopener noreferrer">
+            פתיחת בקשת ביקורת בוואטסאפ
+          </a>
+          <AdvanceStage
+            clientId={client.id}
+            sessionId={s.id}
+            step="review_requested"
+            label="שלחתי בקשת ביקורת — סיום הסשן"
+          />
+        </>
+      )
+    }
+    {
+      !next && (
+        <a
+          class="btn-primary w-full"
+          href={`/clients/add_session?client_id=${client.id}&phone=${encodeURIComponent(client.phone)}`}
+        >
+          יצירת סשן נוסף ללקוח
+        </a>
+      )
+    }
+    <p data-action-error role="alert" hidden class="text-red-700"></p>
+    <a data-external-fallback class="underline" target="_blank" rel="noopener noreferrer" hidden>פתיחת החלון שהוכן</a>
+    {next && after && <p class="text-sm text-gray-500">לאחר מכן: {after.label}</p>}
+  </section>
+  <details class="mb-5">
+    <summary>התקדמות הסשן · {steps.filter((step) => step.done).length} מתוך {steps.length} שלבים הושלמו</summary>
+    <ol class="grid sm:grid-cols-2 gap-3 mt-4">
+      {
+        steps.map((step) => (
+          <li class={step.done ? 'text-green-700' : 'text-gray-600'}>
+            {step.done ? '✓' : '○'} {step.key === 'signed' && step.done ? 'החוזה נחתם' : step.label}
+          </li>
+        ))
+      }
+    </ol>
+  </details>
+  <details class="mb-5">
+    <summary>עריכת פרטי הסשן</summary>
+    <form method="POST" action="/api/client_workflow" class="grid sm:grid-cols-2 gap-4 mt-4">
+      <WorkflowFields clientId={client.id} sessionId={s.id} action="details" />
+      <label>תאריך ושעה (שעון ישראל)<input type="datetime-local" name="scheduled" value={w.scheduled} /></label>
+      <label
+        >משך<select name="duration"
+          >{
+            [1, 2, 3, 6, 9].map((n) => (
+              <option value={n} selected={Number(w.duration || 1) === n}>
+                {n} שעות
+              </option>
+            ))
+          }</select
+        ></label
+      >
+      <label>מיקום<input name="location" value={w.location} maxlength="500" /></label>
+      <label
+        >גלריית Pixieset<input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" /></label
+      >
+      <label class="sm:col-span-2">הערות<textarea name="notes" maxlength="10000">{w.notes}</textarea></label>
+      <button class="btn-secondary sm:col-span-2">שמירת פרטים</button>
+    </form>
+  </details>
+  <details class="mb-5">
+    <summary>תשלומים וקבלות</summary>
+    <p class="my-4">יתרה לתשלום: ₪{s.to_pay}. תשלומים ישנים שכבר נוכו מהיתרה אין לרשום שוב.</p>
+    {
+      sessionPayments.map((p) => (
+        <div class="border-b border-gray-200 py-3">
+          <p>
+            {p.stage === 'deposit' ? 'סגירת תאריך' : 'יתרת התשלום'} · ₪{p.amount} · {p.paid_on.slice(0, 10)}
+          </p>
+          {p.receipt_status === 'issued' ? (
+            <div class="flex flex-wrap gap-4 mt-2">
+              <a class="underline" href={p.receipt_url} target="_blank" rel="noopener noreferrer">
+                פתיחת קבלה
+              </a>
+              <a
+                class="underline"
+                href={`${wa}?text=${encodeURIComponent(`הקבלה שלך מוכנה ❤️\n${p.receipt_url}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                שליחת קבלה בוואטסאפ
+              </a>
+            </div>
+          ) : p.receipt_status === 'pending' ? (
+            <a class="btn-secondary mt-2" href={`/clients/send_reciept?payment_id=${p.id}`}>
+              הפקת קבלה
+            </a>
+          ) : (
+            <p>הקבלה בטיפול או דורשת בדיקה ב־Morning.</p>
+          )}
+        </div>
+      ))
+    }
+  </details>
+  <details>
+    <summary>תיקון שלב שסומן בטעות</summary>
+    <div class="grid sm:grid-cols-2 gap-3 mt-4">
+      {
+        manualSteps
+          .filter(([key]) => !['editing_started', 'pixieset_uploaded', 'fullsize_uploaded'].includes(key))
+          .map(([key, label]) => (
+            <form
+              method="POST"
+              action="/api/client_workflow"
+              class="flex flex-wrap gap-3 items-center justify-between border rounded-lg p-3"
+            >
+              <>
+                <WorkflowFields clientId={client.id} sessionId={s.id} action="step" />
+                <input type="hidden" name="step" value={key} />
+                <input type="hidden" name="done" value={w[key] ? '0' : '1'} />
+              </>
+              <>
+                <span>{label}</span>
+                <button class="btn-secondary">{w[key] ? 'ביטול הסימון' : 'סימון בוצע'}</button>
+              </>
+            </form>
+          ))
+      }
+    </div>
+  </details>
+</article>
+<script>
+  import { safeWebUrl } from '~/lib/client-workflow';
+  const initialized = new WeakSet();
+  function init() {
+    const selected = document.getElementById(location.hash.slice(1));
+    if (selected?.parentElement instanceof HTMLDetailsElement) selected.parentElement.open = true;
+    document.querySelectorAll<HTMLElement>('[data-session-card]').forEach((card) => {
+      if (initialized.has(card)) return;
+      initialized.add(card);
+      const error = card.querySelector<HTMLElement>('[data-action-error]')!;
+      const fallback = card.querySelector<HTMLAnchorElement>('[data-external-fallback]')!;
+      async function saveAndOpen(form: HTMLFormElement, target: string, confirm: string) {
+        const button = form.querySelector<HTMLButtonElement>('button')!;
+        button.disabled = true;
+        error.hidden = true;
+        const popup = window.open('about:blank', '_blank');
+        if (popup) popup.opener = null;
+        try {
+          const response = await fetch('/api/client_workflow', {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: new FormData(form),
+          });
+          if (!response.ok || !(await response.json()).saved) throw new Error('Save failed');
+          fallback.href = target;
+          fallback.hidden = false;
+          if (popup) popup.location.href = target;
+          card.querySelector<HTMLElement>(confirm)!.hidden = false;
+          button.classList.replace('btn-primary', 'btn-secondary');
+        } catch {
+          popup?.close();
+          error.textContent = 'לא ניתן לשמור כרגע. נסי שוב; השלב הבא עדיין לא סומן.';
+          error.hidden = false;
+        } finally {
+          button.disabled = false;
+        }
+      }
+      card.querySelector<HTMLFormElement>('[data-calendar-form]')?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const form = event.currentTarget as HTMLFormElement;
+        const data = new FormData(form);
+        const start = String(data.get('scheduled'));
+        const end = new Date(Date.parse(start + 'Z') + Number(data.get('duration')) * 3600000)
+          .toISOString()
+          .slice(0, 19);
+        const format = (date: string) => date.replace(/[-:]/g, '');
+        const params = new URLSearchParams({
+          action: 'TEMPLATE',
+          text: `${card.dataset.type} - ${card.dataset.name}`,
+          dates: `${format(start + ':00')}/${format(end)}`,
+          ctz: 'Asia/Jerusalem',
+          location: String(data.get('location') || ''),
+          details: `לקוח: ${card.dataset.name}\nטלפון: ${card.dataset.phone}`,
+          add: [card.dataset.email, 'sjmikee@gmail.com'].filter(Boolean).join(','),
+        });
+        void saveAndOpen(form, `https://calendar.google.com/calendar/render?${params}`, '[data-calendar-confirm]');
+      });
+      card.querySelector<HTMLFormElement>('[data-delivery]')?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const form = event.currentTarget as HTMLFormElement;
+        try {
+          const link = safeWebUrl(form.querySelector<HTMLInputElement>('[data-airbridge]')!.value);
+          const pixieset = safeWebUrl(new FormData(form).get('pixieset'));
+          const message = `היי ${card.dataset.name}! התמונות שלך מוכנות ❤️\n\nגלריה לצפייה ותמונות לנייד:\n${pixieset}\n\nתמונות בגודל מלא:\n${link}\n\nחשוב להוריד את התמונות המלאות בתוך 3 ימים ממועד ההעלאה, לפני שהקישור יפוג.`;
+          void saveAndOpen(form, `${card.dataset.wa}?text=${encodeURIComponent(message)}`, '[data-delivery-confirm]');
+        } catch {
+          error.textContent = 'יש להזין שני קישורי HTTPS תקינים.';
+          error.hidden = false;
+        }
+      });
+      if (card.dataset.currentStep === 'signed') {
+        let checking = false;
+        let dirty = false;
+        const onInput = () => {
+          dirty = true;
+        };
+        document.addEventListener('input', onInput);
+        async function checkSignature() {
+          if (checking || dirty || document.hidden || !card.isConnected) return;
+          if (card.parentElement instanceof HTMLDetailsElement && !card.parentElement.open) return;
+          checking = true;
+          try {
+            const response = await fetch(`/api/session_status?session_id=${card.dataset.sessionId}`);
+            if (response.ok && (await response.json()).signed) location.reload();
+          } catch {
+            /* The refresh link remains available. */
+          } finally {
+            checking = false;
+          }
+        }
+        const interval = window.setInterval(checkSignature, 20000);
+        window.addEventListener('focus', checkSignature);
+        document.addEventListener(
+          'astro:before-swap',
+          () => {
+            clearInterval(interval);
+            window.removeEventListener('focus', checkSignature);
+            document.removeEventListener('input', onInput);
+          },
+          { once: true }
+        );
+      }
+    });
+  }
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

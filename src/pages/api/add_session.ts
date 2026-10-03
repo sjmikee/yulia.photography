@@ -1,25 +1,32 @@
 export const prerender = false;
 
-import type { APIRoute } from "astro";
-import { sql } from "../../lib/db.ts";
-import { PRICES } from "../../lib/pricing"; // your single source of truth
+import type { APIRoute } from 'astro';
+import { sql } from '../../lib/db.ts';
+import { PRICES } from '../../lib/pricing'; // your single source of truth
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData();
 
-  const clientIdRaw = formData.get("client_id");
-  const sessionType = formData.get("session_type") as string;
-  const packageTypeRaw = formData.get("package_type");
-  const phone = formData.get("phone") as string;
-  const additionalPriceRaw = formData.get("additional_price");
+  const clientIdRaw = formData.get('client_id');
+  const sessionType = formData.get('session_type') as string;
+  const packageTypeRaw = formData.get('package_type');
+
+  const additionalPriceRaw = formData.get('additional_price');
 
   const client_id = Number(clientIdRaw);
   const package_type = Number(packageTypeRaw);
   const additional_price = Number(additionalPriceRaw ?? 0);
 
   // Basic validation
-  if (!client_id || !sessionType || !package_type || !Number.isFinite(additional_price) || additional_price < 0) {
-    const msg = encodeURIComponent("נתונים לא תקינים");
+  if (
+    !Number.isSafeInteger(client_id) ||
+    client_id < 1 ||
+    !sessionType ||
+    !Number.isSafeInteger(package_type) ||
+    !Number.isFinite(additional_price) ||
+    additional_price < 0
+  ) {
+    const msg = encodeURIComponent('נתונים לא תקינים');
     return new Response(null, {
       status: 303,
       headers: { Location: `/clients/add_session?error=${msg}` },
@@ -27,11 +34,10 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   // Get price ONLY from central config (never trust form price)
-  const session_price =
-    PRICES?.[sessionType]?.[package_type] ?? null;
+  const session_price = PRICES?.[sessionType]?.[package_type] ?? null;
 
   if (!Number.isInteger(session_price) || session_price < 0) {
-    const msg = encodeURIComponent("מחיר לא נמצא");
+    const msg = encodeURIComponent('מחיר לא נמצא');
     return new Response(null, {
       status: 303,
       headers: { Location: `/clients/add_session?error=${msg}` },
@@ -41,7 +47,10 @@ export const POST: APIRoute = async ({ request }) => {
   const total_price = session_price + additional_price;
   const to_pay = total_price;
 
-  await sql`
+  const clients = await sql`SELECT id FROM clients WHERE id = ${client_id}`;
+  if (!clients.length) return new Response('Client not found', { status: 404 });
+
+  const [session] = await sql`
     INSERT INTO sessions (
       client_id,
       session_type,
@@ -55,11 +64,11 @@ export const POST: APIRoute = async ({ request }) => {
       ${package_type},
       ${total_price},
       ${to_pay}
-    )
+    ) RETURNING id
   `;
 
   return new Response(null, {
     status: 303,
-    headers: { Location: `/clients/add_session?success=1&phone=${phone}` },
+    headers: { Location: `/clients/${client_id}#session-${session.id}` },
   });
 };

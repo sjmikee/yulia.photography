@@ -73,6 +73,8 @@ await test('admin APIs reject anonymous requests, including trailing slash and l
     );
   for (const path of [
     '/api/add_client',
+    '/api/client_workflow',
+    '/api/session_status',
     '/api/add_session/',
     '/api/create_receipt',
     '/api/get_client_by_phone',
@@ -86,6 +88,39 @@ await test('admin APIs reject anonymous requests, including trailing slash and l
   assert.equal((await invoke('/clients')).status, 302);
   for (const path of ['/', '/contract', '/api/login', '/api/get_price', '/api/submit_contract'])
     assert.equal((await invoke(path)).status, 200, path);
+});
+
+await test('private middleware preserves immutable redirects and response bodies when adding headers', async () => {
+  const token = await createSessionCookie('admin');
+  const location = 'https://example.test/clients/7#session-42';
+  for (const path of ['/api/client_workflow', '/clients/7']) {
+    for (const original of [
+      Response.redirect(location, 303),
+      new Response('saved', {
+        status: 201,
+        headers: { 'Content-Type': 'text/plain', 'Set-Cookie': 'test=value; HttpOnly' },
+      }),
+    ]) {
+      const response = await onRequest(
+        {
+          request: new Request(`https://example.test${path}`),
+          cookies: { get: () => ({ value: token }), delete: () => {} },
+        },
+        () => original
+      );
+      assert.equal(response.status, original.status);
+      assert.equal(response.headers.get('Cache-Control'), 'private, no-store');
+      assert.equal(response.headers.get('X-Robots-Tag'), 'noindex, nofollow');
+      if (original.status === 303) {
+        assert.equal(response.headers.get('Location'), location);
+        assert.equal(await response.text(), '');
+      } else {
+        assert.equal(response.headers.get('Content-Type'), 'text/plain');
+        assert.equal(response.headers.get('Set-Cookie'), 'test=value; HttpOnly');
+        assert.equal(await response.text(), 'saved');
+      }
+    }
+  }
 });
 
 const mockUrl = moduleUrl(`
@@ -251,7 +286,7 @@ await test('issuing an invitation stores its ID and expiry in the token and bloc
       request: new Request('https://example.test/api/create_contract_link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: '0501234567', conf: '0' }),
+        body: JSON.stringify({ phone: '0501234567', conf: '0', session_id: 42 }),
       }),
       url: new URL('https://example.test/api/create_contract_link'),
     });
@@ -262,6 +297,14 @@ await test('issuing an invitation stores its ID and expiry in the token and bloc
   const invitation = await verifyContractToken(link.searchParams.get('token'));
   assert.equal(invitation.invitationId, invitationId);
   assert.equal(invitation.sessionId, 42);
+  const selectedQuery = issuanceState.queries.find((q) => q.text.includes('SELECT s.id'));
+  assert.ok(selectedQuery.text.includes('s.id = ?'));
+  assert.deepEqual(selectedQuery.values, ['0501234567', false, 42]);
+  assert.ok(
+    issuanceState.queries.some(
+      (q) => q.text.includes('UPDATE sessions') && String(q.values[0]).includes('contract_prepared')
+    )
+  );
   issuanceState.processing = true;
   assert.equal((await invoke()).status, 409);
   const legacyToken = await signToken({

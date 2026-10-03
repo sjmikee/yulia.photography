@@ -28,12 +28,13 @@ export interface Props {
 
 const { metadata = {}, richMetadata = {}, breadcrumbs = [] } = Astro.props;
 const { language, textDirection } = I18N;
+const privatePage = Astro.url.pathname === '/clients' || Astro.url.pathname.startsWith('/clients/');
 ---
 
 <!doctype html>
 <html lang={language} dir={textDirection} class="2xl:text-[20px]">
   <head>
-    <GtmHead />
+    {!privatePage && <GtmHead />}
     <CommonMeta />
     <Favicons />
     <Font cssVariable="--font-heebo" preload />
@@ -48,7 +49,7 @@ const { language, textDirection } = I18N;
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight">
-    <GtmBody />
+    {!privatePage && <GtmBody />}
     <slot />
 
     <BasicScripts />
