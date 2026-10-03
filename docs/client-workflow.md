@@ -91,3 +91,9 @@ Do not reset an unknown outcome. Never deduct the payment again during receipt r
 - `npm run build`
 
 After migration, verify client search and profile loading against your Neon branch. Real receipt delivery and calendar/WhatsApp actions require your manual end-to-end check; automated checks deliberately do not issue real receipts or contact clients.
+
+### Manual payment and receipt completion
+
+Both deposit and balance stages offer “קיבלתי תשלום והקבלה טופלה — המשך”. This records the payment on the selected date, deducts it from the remaining balance once, and marks its receipt as handled without calling Morning. The normal receipt-generation option remains available. An already-recorded payment with a pending receipt also offers “הקבלה טופלה — המשך”; this does not deduct the amount again. Processing receipts cannot be manually overwritten.
+
+Manually handled receipts use the existing `issued` status with no generated receipt URL; payment history labels them as manually handled instead of showing empty receipt links. No database migration is required.

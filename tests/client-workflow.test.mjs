@@ -253,3 +253,44 @@ test('signature refresh exposes only the selected booking signature status', asy
     400
   );
 });
+
+test('manual payment completion records an issued receipt without a provider call and keeps duplicate guards', async () => {
+  state.inserted = true;
+  for (const stage of ['deposit', 'balance']) {
+    state.queries = [];
+    const response = await invokeUpdate({
+      action: 'payment',
+      stage,
+      amount: stage === 'deposit' ? '100' : '600',
+      paid_on: '2026-10-03',
+      continue: 'done',
+    });
+    assert.equal(response.headers.get('location'), 'https://example.test/clients/7#session-42');
+    const query = state.queries.find((q) => q.text.includes('WITH locked'));
+    assert.ok(query.values.includes('issued'));
+    assert.ok(query.text.includes('ON CONFLICT(session_id, stage) DO NOTHING'));
+    assert.ok(query.text.includes('s.to_pay - p.amount'));
+  }
+  state.inserted = false;
+  const duplicate = await invokeUpdate({
+    action: 'payment',
+    stage: 'deposit',
+    amount: '100',
+    paid_on: '2026-10-03',
+    continue: 'done',
+  });
+  assert.ok(duplicate.headers.get('location').includes('error=payment'));
+});
+
+test('manual receipt completion only updates pending receipts for the selected session and never deducts payment', async () => {
+  state.queries = [];
+  const response = await invokeUpdate({ action: 'receipt_done', stage: 'deposit' });
+  assert.equal(response.status, 303);
+  const query = state.queries.find((q) => q.text.includes('UPDATE session_payments'));
+  assert.deepEqual(query.values, [42, 'deposit']);
+  assert.ok(query.text.includes("receipt_status = 'pending'"));
+  assert.equal(
+    state.queries.some((q) => q.text.includes('UPDATE sessions')),
+    false
+  );
+});

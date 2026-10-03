@@ -39,6 +39,12 @@ export const POST: APIRoute = async ({ request, url }) => {
         const pixieset = safeWebUrl(form.get('pixieset'));
         if (!pixieset) throw new Error('Missing gallery');
         await sql`UPDATE sessions SET workflow = workflow || ${JSON.stringify({ pixieset, delivery_prepared: new Date().toISOString() })}::jsonb WHERE id = ${sessionId}`;
+      } else if (action === 'receipt_done') {
+        const stage = String(form.get('stage'));
+        if (!['deposit', 'balance'].includes(stage)) throw new Error('Invalid stage');
+        // Never overwrite an in-flight provider request or an existing receipt.
+        await sql`UPDATE session_payments SET receipt_status = 'issued'
+          WHERE session_id = ${sessionId} AND stage = ${stage} AND receipt_status = 'pending'`;
       } else if (action === 'payment') {
         const stage = form.get('stage');
         const amount = Number(form.get('amount'));
@@ -53,12 +59,13 @@ export const POST: APIRoute = async ({ request, url }) => {
           !Number.isFinite(Date.parse(paidOn))
         )
           throw new Error('Invalid payment');
+        const receiptStatus = form.get('continue') === 'done' ? 'issued' : 'pending';
         // A row lock and a single atomic statement prevent duplicate deductions and overpayment.
         const inserted = await sql`WITH locked AS (
           SELECT id, to_pay FROM sessions WHERE id = ${sessionId} FOR UPDATE
         ), payment AS (
-          INSERT INTO session_payments(session_id, stage, amount, paid_on)
-          SELECT id, ${stage}, ${amount}, ${paidOn}::date FROM locked
+          INSERT INTO session_payments(session_id, stage, amount, paid_on, receipt_status)
+          SELECT id, ${stage}, ${amount}, ${paidOn}::date, ${receiptStatus} FROM locked
           WHERE to_pay >= ${amount} AND (${stage} = 'deposit' OR to_pay = ${amount})
           ON CONFLICT(session_id, stage) DO NOTHING RETURNING session_id, amount
         ) UPDATE sessions s SET to_pay = s.to_pay - p.amount FROM payment p

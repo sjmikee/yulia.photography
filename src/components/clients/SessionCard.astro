@@ -91,12 +91,17 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
               <WorkflowFields clientId={client.id} sessionId={s.id} action="payment" />
               <input type="hidden" name="stage" value={current} />
               <input type="hidden" name="amount" value={current === 'deposit' ? 100 : s.to_pay} />
-              <input type="hidden" name="continue" value="receipt" />
               <label>
                 מתי התקבל התשלום?
                 <input type="date" name="paid_on" value={today} required />
               </label>
-              <button class="btn-primary w-full">קיבלתי ₪{current === 'deposit' ? 100 : s.to_pay} — להפקת קבלה</button>
+              <button class="btn-primary w-full" name="continue" value="receipt">
+                קיבלתי ₪{current === 'deposit' ? 100 : s.to_pay} — להפקת קבלה
+              </button>
+              <button class="btn-secondary w-full" name="continue" value="done">
+                קיבלתי תשלום והקבלה טופלה — המשך
+              </button>
+              <p class="text-sm text-gray-600">סימון ידני יעדכן את היתרה וישלים את שלב הקבלה, בלי להפיק קבלה באתר.</p>
             </form>
           ) : (
             <p>אין יתרה לרישום תשלום זה. אם התשלום כבר נרשם בעבר, אין לרשום אותו שוב.</p>
@@ -120,6 +125,11 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
               <a class="btn-primary w-full" href={`/clients/send_reciept?payment_id=${receipt.id}`}>
                 המשך להפקת קבלה
               </a>
+              <form method="POST" action="/api/client_workflow">
+                <WorkflowFields clientId={client.id} sessionId={s.id} action="receipt_done" />
+                <input type="hidden" name="stage" value={receipt.stage} />
+                <button class="btn-secondary w-full">הקבלה טופלה — המשך</button>
+              </form>
             </>
           ) : (
             <p>לא נמצאה קבלה לתשלום זה. תשלומים ישנים שכבר נוכו מהיתרה דורשים בדיקת היסטוריה לפני רישום נוסף.</p>
@@ -313,7 +323,9 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
           <p>
             {p.stage === 'deposit' ? 'סגירת תאריך' : 'יתרת התשלום'} · ₪{p.amount} · {p.paid_on.slice(0, 10)}
           </p>
-          {p.receipt_status === 'issued' ? (
+          {p.receipt_status === 'issued' && !p.receipt_url ? (
+            <p class="text-gray-600 mt-2">הקבלה סומנה כטופלה ידנית.</p>
+          ) : p.receipt_status === 'issued' ? (
             <div class="flex flex-wrap gap-4 mt-2">
               <a class="underline" href={p.receipt_url} rel="noopener noreferrer">
                 פתיחת קבלה
