@@ -1,20 +1,20 @@
 ---
 export const prerender = false;
 
-import Layout from "~/layouts/Layout.astro";
-import RichSeo from "~/components/common/RichSeo.astro";
-import LandingHeader from "~/components/widgets/LandingHeader.astro";
-import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
-import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+import Layout from '~/layouts/Layout.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+import LandingHeader from '~/components/widgets/LandingHeader.astro';
+import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
+import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
 const richMetadata = {
-  title: "יוליה קורנסקי - הוספת אירוע ליומן",
-  description: "הוספת אירוע חדש בגוגל קלנדר ללקוח קיים",
+  title: 'יוליה קורנסקי - הוספת אירוע ליומן',
+  description: 'הוספת אירוע חדש בגוגל קלנדר ללקוח קיים',
 };
 
 const metadata = {
-  title: "יוליה קורנסקי | הוספת אירוע ליומן",
-  description: "הוספת אירוע חדש בגוגל קלנדר ללקוח קיים",
+  title: 'יוליה קורנסקי | הוספת אירוע ליומן',
+  description: 'הוספת אירוע חדש בגוגל קלנדר ללקוח קיים',
   ignoreTitleTemplate: true,
 };
 ---
@@ -28,26 +28,58 @@ const metadata = {
   <!-- Hero Section -->
   <section class="bg-gray-50 py-16 px-6 text-center">
     <h1 class="text-3xl font-bold mb-4">הוספת לקוח ליומן</h1>
-    <p class="text-lg text-gray-700 max-w-2xl mx-auto">
-      קובעים צילומים בקליק אחד 🎯
-    </p>
+    <p class="text-lg text-gray-700 max-w-2xl mx-auto">קובעים צילומים בקליק אחד 🎯</p>
   </section>
 
   <!-- Add Event Form -->
   <section class="max-w-4xl mx-auto py-12 px-6">
     <form id="calendarForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="tel" id="phone" placeholder="טלפון לקוח" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
-        <input type="text" id="clientName" placeholder="שם" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
-        <input type="text" id="clientEmail" placeholder="מייל" readonly class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600" />
+        <input
+          type="tel"
+          id="phone"
+          placeholder="טלפון לקוח"
+          required
+          class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+        />
+        <input
+          type="text"
+          id="clientName"
+          placeholder="שם"
+          readonly
+          class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+        />
+        <input
+          type="text"
+          id="clientEmail"
+          placeholder="מייל"
+          readonly
+          class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+        />
         <label class="block">תאריך:</label>
-        <input type="date" id="date" placeholder="בחר תאריך" required class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+        <input
+          type="date"
+          id="date"
+          placeholder="בחר תאריך"
+          required
+          class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+        />
         <label class="block">שעה:</label>
-        <input type="time" id="time" placeholder="בחר שעה" required class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none" />
+        <input
+          type="time"
+          id="time"
+          placeholder="בחר שעה"
+          required
+          class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+        />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <select id="sessionType" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+        <select
+          id="sessionType"
+          required
+          class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+        >
           <option value="" disabled selected>בחרי סוג צילומים</option>
           <option value="צילומים אישיים">צילומים אישיים</option>
           <option value="צילומי תדמית">צילומי תדמית</option>
@@ -62,7 +94,11 @@ const metadata = {
           <option value="צילומי אירוע">צילומי אירוע</option>
         </select>
 
-        <select id="duration" required class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none">
+        <select
+          id="duration"
+          required
+          class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+        >
           <option value="" disabled selected>בחרי משך</option>
           <option value="1">1 שעות</option>
           <option value="2">2 שעות</option>
@@ -72,7 +108,10 @@ const metadata = {
         </select>
       </div>
 
-      <button type="submit" class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition">
+      <button
+        type="submit"
+        class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition"
+      >
         הוספה
       </button>
     </form>
@@ -82,11 +121,11 @@ const metadata = {
 
   <footer class="bg-footer text-white py-8 text-center">
     <button
-        aria-label="Footer Scroll to top" 
-        id="scrollToTopFooter"
-        class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+      aria-label="Footer Scroll to top"
+      id="scrollToTopFooter"
+      class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
     >
-        <span class="sr-only">Footer Scroll to top</span> ↑
+      <span class="sr-only">Footer Scroll to top</span> ↑
     </button>
     <p class="mb-4 font-bold">יוליה קורנסקי | yulia.photography</p>
     <p>הוספת אירוע ליומן ❤️</p>
@@ -97,39 +136,50 @@ const metadata = {
 <!-- Scripts -->
 
 <script>
+  import { openClientApp } from '~/lib/client-app-links';
   const initializedForms = new WeakSet<HTMLFormElement>();
   function initAddEvent() {
-    const phoneInput = document.querySelector<HTMLInputElement>("#phone");
-    const nameField = document.querySelector<HTMLInputElement>("#clientName");
-    const form = document.querySelector<HTMLFormElement>("#calendarForm");
+    const phoneInput = document.querySelector<HTMLInputElement>('#phone');
+    const nameField = document.querySelector<HTMLInputElement>('#clientName');
+    const form = document.querySelector<HTMLFormElement>('#calendarForm');
 
-    const emailField = document.querySelector<HTMLInputElement>("#clientEmail");
-    const dateField = document.querySelector<HTMLInputElement>("#date");
-    const timeField = document.querySelector<HTMLInputElement>("#time");
-    const sessionField = document.querySelector<HTMLSelectElement>("#sessionType");
-    const durationField = document.querySelector<HTMLSelectElement>("#duration");
+    const emailField = document.querySelector<HTMLInputElement>('#clientEmail');
+    const dateField = document.querySelector<HTMLInputElement>('#date');
+    const timeField = document.querySelector<HTMLInputElement>('#time');
+    const sessionField = document.querySelector<HTMLSelectElement>('#sessionType');
+    const durationField = document.querySelector<HTMLSelectElement>('#duration');
 
-    if (!phoneInput || !nameField || !form || !emailField || !dateField || !timeField || !sessionField || !durationField) return;
+    if (
+      !phoneInput ||
+      !nameField ||
+      !form ||
+      !emailField ||
+      !dateField ||
+      !timeField ||
+      !sessionField ||
+      !durationField
+    )
+      return;
     if (initializedForms.has(form)) return;
     initializedForms.add(form);
 
-    let lastFetchedPhone = "";
+    let lastFetchedPhone = '';
     let lookupTimeout: ReturnType<typeof setTimeout>;
-    let clientEmail = "";
+    let clientEmail = '';
 
     // Auto-format and lookup
-    phoneInput?.addEventListener("input", () => {
-      const digits = phoneInput.value.replace(/\D/g, "");
+    phoneInput?.addEventListener('input', () => {
+      const digits = phoneInput.value.replace(/\D/g, '');
       let formatted = digits;
-      if (digits.length > 3) formatted = digits.slice(0, 3) + "-" + digits.slice(3);
+      if (digits.length > 3) formatted = digits.slice(0, 3) + '-' + digits.slice(3);
       phoneInput.value = formatted;
 
       clearTimeout(lookupTimeout);
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
-        nameField.value = "";
-        emailField.value = "";
-        clientEmail = "";
+        nameField.value = '';
+        emailField.value = '';
+        clientEmail = '';
       }
     });
 
@@ -137,72 +187,74 @@ const metadata = {
       if (phoneDigits === lastFetchedPhone) return;
       lastFetchedPhone = phoneDigits;
 
-      nameField.value = "מחפש...";
+      nameField.value = 'מחפש...';
       try {
-        const res = await fetch("/api/get_client_by_phone", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch('/api/get_client_by_phone', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: phoneDigits }),
         });
         const data = await res.json();
         if (!res.ok) {
-          nameField.value = "לא נמצא לקוח";
-          nameField.classList.add("text-gray-400");
-          emailField.value = "";
-          clientEmail = "";
+          nameField.value = 'לא נמצא לקוח';
+          nameField.classList.add('text-gray-400');
+          emailField.value = '';
+          clientEmail = '';
         } else {
           nameField.value = data.name;
-          emailField.value = data.email || "";
-          nameField.classList.remove("text-gray-400");
-          clientEmail = data.email || "";
+          emailField.value = data.email || '';
+          nameField.classList.remove('text-gray-400');
+          clientEmail = data.email || '';
         }
       } catch {
-        nameField.value = "שגיאה בחיפוש";
-        nameField.classList.add("text-gray-400");
-        emailField.value = "";
-        clientEmail = "";
+        nameField.value = 'שגיאה בחיפוש';
+        nameField.classList.add('text-gray-400');
+        emailField.value = '';
+        clientEmail = '';
       }
     };
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const phone = phoneInput.value.replace(/\D/g, "");
+      const phone = phoneInput.value.replace(/\D/g, '');
       const name = nameField.value.trim();
       const email = clientEmail;
-      const MKemail = "sjmikee@gmail.com";
+      const MKemail = 'sjmikee@gmail.com';
       const date = dateField.value;
       const time = timeField.value;
       const sessionType = sessionField.value;
       const duration = parseInt(durationField.value);
 
       if (!phone || !name || !date || !time || !sessionType || !duration) {
-        alert("נא למלא את כל השדות");
+        alert('נא למלא את כל השדות');
         return;
       }
 
-      if (["לא נמצא לקוח", "שגיאה בחיפוש", "מחפש..."].includes(name)) {
-        alert("לא נמצא לקוח עבור מספר זה");
+      if (['לא נמצא לקוח', 'שגיאה בחיפוש', 'מחפש...'].includes(name)) {
+        alert('לא נמצא לקוח עבור מספר זה');
         return;
       }
 
       const startDate = new Date(`${date}T${time}:00`);
       const endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000);
-      const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
       const startStr = formatDate(startDate);
       const endStr = formatDate(endDate);
 
-      const base = "https://calendar.google.com/calendar/render?action=TEMPLATE";
+      const base = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
       const text = encodeURIComponent(`${sessionType} - ${name}`);
-      const details = encodeURIComponent(`לקוח: ${name}\nטלפון: ${phone}\nסוג צילומים: ${sessionType}\nמשך: ${duration} שעות`);
+      const details = encodeURIComponent(
+        `לקוח: ${name}\nטלפון: ${phone}\nסוג צילומים: ${sessionType}\nמשך: ${duration} שעות`
+      );
       const dates = `${startStr}/${endStr}`;
       const url = `${base}&text=${text}&details=${details}&dates=${dates}&add=${encodeURIComponent(email)},${encodeURIComponent(MKemail)}`;
 
-      window.open(url, "_blank");
+      openClientApp(url, form);
     });
   }
-  
-  document.addEventListener("astro:page-load", initAddEvent);
+
+  document.addEventListener('astro:page-load', initAddEvent);
   initAddEvent();
 </script>

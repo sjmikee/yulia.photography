@@ -10,6 +10,7 @@ import ApplyColorMode from '~/components/common/ApplyColorMode.astro';
 import Metadata from '~/components/common/Metadata.astro';
 import RichSeo from '~/components/common/RichSeo.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
+import AppLinks from '~/components/clients/AppLinks.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
 import GtmHead from '~/components/common/GTMHead.astro';
 import GtmBody from '~/components/common/GTMBody.astro';
@@ -53,5 +54,6 @@ const privatePage = Astro.url.pathname === '/clients' || Astro.url.pathname.star
     <slot />
 
     <BasicScripts />
+    {privatePage && <AppLinks />}
   </body>
 </html>

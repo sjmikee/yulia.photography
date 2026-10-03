@@ -162,6 +162,7 @@ const metadata = {
 </Layout>
 
 <script>
+  import { openClientApp } from '~/lib/client-app-links';
   const initializedForms = new WeakSet<HTMLFormElement>();
   function initReceiptForm() {
     const phoneInput = document.querySelector<HTMLInputElement>('#phone');
@@ -217,8 +218,6 @@ const metadata = {
       submitButton.disabled = true;
       submitButton.textContent = 'שולח...';
 
-      const popup = window.open('about:blank', '_blank');
-      if (popup) popup.opener = null;
       let completed = false;
       try {
         const selectedOption = payment.options[payment.selectedIndex];
@@ -244,7 +243,6 @@ const metadata = {
         const data = await res.json();
 
         if (!res.ok) {
-          popup?.close();
           alert('לא ניתן לאשר את הפקת הקבלה. בדקי בפרופיל ובמערכת Morning לפני ניסיון נוסף.');
           console.error(data);
           return;
@@ -260,10 +258,8 @@ const metadata = {
           nextStage.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
         const target = `https://wa.me/${waPhone}?text=${msg}`;
-        if (popup) popup.location.href = target;
-        else window.location.href = target;
+        openClientApp(target, document.getElementById('receiptNext'));
       } catch (error) {
-        popup?.close();
         console.error(error);
         alert('לא ניתן לאשר אם הקבלה הופקה. בדקי במערכת הקבלות לפני ניסיון נוסף.');
       } finally {

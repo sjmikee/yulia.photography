@@ -19,6 +19,14 @@ The migration adds client notes, session workflow details, and a payment ledger.
 
 ## Guided daily workflow
 
+On iPhone, WhatsApp and Google Calendar use direct installed-app links, leaving the client page open underneath. Returning to the browser should show the same page and its continuation button, without using Back. No extra browser tab or automatic web fallback is created. If Safari's tap authorization expires during a save, an inline “Open in app” link waits for a fresh tap. A separate, explicit web fallback is available if the installed app cannot be opened. Desktop behavior remains same-tab web navigation. Pixieset and MyAirBridge upload links still open separately.
+
+Google Calendar dates are converted from the session's Israel wall-clock time to UTC before handing them to the native app, including summer/winter offsets. Existing UTC dates from the older calendar form remain unchanged. Opening the app is not evidence that an event was saved or a message was sent.
+
+Native app launching cannot be end-to-end verified with desktop tests. Check once on the iPhone: open a prepared WhatsApp message and return to the browser; open a Calendar event and verify its title, date, time, location and guests before saving, then return. Google Calendar's native create-event URL is not a versioned public API; app versions may treat fields differently. The web fallback is explicit, never automatic.
+
+App-link references: [WhatsApp URL schemes](https://faq.whatsapp.com/425247423114725/), [Apple custom URL scheme behavior](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app), and the [observed Google Calendar scheme parameters](https://github.com/jimmy-zhening-luo/scheme#google-calendar) (community-maintained, not a Google API contract).
+
 The profile shows one current stage and its main action. Progress, receipts, session details and corrections stay collapsed below it. The design reuses the management pages' header, gray hero, white rounded cards, existing buttons and footer.
 
 - Create a client and session as before. Prepare the contract from the current-stage button. Successful link creation automatically advances the profile to waiting for a signature; it does not claim that WhatsApp sent the message. The contract screen shows a button to continue to signature tracking.
