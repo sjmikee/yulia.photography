@@ -1,3 +1,4 @@
+import { packageDurationLabel } from '../../lib/session-duration';
 export const prerender = false;
 
 import { getContractInvitation, invitationError } from '../../lib/contract-invitation';
@@ -82,21 +83,7 @@ export async function POST(context: APIContext) {
 
     const sessionId = booking.id;
     const price = booking.session_price?.toString() ?? 'לא נמצא';
-    const duration = booking.package_type ?? 0;
-    const contractType =
-      duration === 1
-        ? 'שעה עד שעתיים'
-        : duration === 2
-          ? 'שעתיים עד שלוש'
-          : duration === 3
-            ? 'שלוש שעות'
-            : duration === 4
-              ? 'עד שלוש שעות'
-              : duration === 5
-                ? 'עד שש שעות'
-                : duration === 6
-                  ? 'עד תשע שעות'
-                  : '';
+    const contractType = packageDurationLabel(booking.package_type);
 
     const pdfDoc = await PDFDocument.load(templateBytes);
     const pdfForm = pdfDoc.getForm();

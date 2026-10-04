@@ -34,6 +34,12 @@ const metadata = {
   <!-- Add Event Form -->
   <section class="max-w-4xl mx-auto py-12 px-6">
     <form id="calendarForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
+      <label id="booking-label" class="block" hidden>
+        סשן
+        <select id="booking" class="border p-3 w-full rounded-lg">
+          <option value="">בחרי סשן</option>
+        </select>
+      </label>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="tel"
@@ -136,6 +142,8 @@ const metadata = {
 <!-- Scripts -->
 
 <script>
+  import { sessionDurationHours } from '~/lib/session-duration';
+  import type { Session } from '~/lib/client-workflow';
   import { openClientApp } from '~/lib/client-app-links';
   const initializedForms = new WeakSet<HTMLFormElement>();
   function initAddEvent() {
@@ -163,6 +171,14 @@ const metadata = {
     if (initializedForms.has(form)) return;
     initializedForms.add(form);
 
+    const bookingField = document.querySelector<HTMLSelectElement>('#booking')!;
+    const bookingLabel = document.querySelector<HTMLElement>('#booking-label')!;
+    let sessions: Session[] = [];
+    function applyBooking() {
+      const session = sessions.find((item) => String(item.id) === bookingField.value);
+      durationField!.value = session ? String(sessionDurationHours(session) ?? '') : '';
+    }
+    bookingField.addEventListener('change', applyBooking);
     let lastFetchedPhone = '';
     let lookupTimeout: ReturnType<typeof setTimeout>;
     let clientEmail = '';
@@ -174,6 +190,11 @@ const metadata = {
       if (digits.length > 3) formatted = digits.slice(0, 3) + '-' + digits.slice(3);
       phoneInput.value = formatted;
 
+      sessions = [];
+      bookingField.replaceChildren(new Option('בחרי סשן', ''));
+      bookingLabel.hidden = true;
+      durationField.value = '';
+      lastFetchedPhone = '';
       clearTimeout(lookupTimeout);
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
@@ -192,9 +213,10 @@ const metadata = {
         const res = await fetch('/api/get_client_by_phone', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: phoneDigits }),
+          body: JSON.stringify({ phone: phoneDigits, include_sessions: true }),
         });
         const data = await res.json();
+        if (phoneInput.value.replace(/\D/g, '') !== phoneDigits) return;
         if (!res.ok) {
           nameField.value = 'לא נמצא לקוח';
           nameField.classList.add('text-gray-400');
@@ -205,6 +227,16 @@ const metadata = {
           emailField.value = data.email || '';
           nameField.classList.remove('text-gray-400');
           clientEmail = data.email || '';
+          sessions = data.sessions || [];
+          bookingField.replaceChildren(new Option('בחרי סשן', ''));
+          for (const session of sessions) {
+            bookingField.add(
+              new Option(`#${session.id} · ${session.session_type} · חבילה ${session.package_type}`, String(session.id))
+            );
+          }
+          bookingLabel.hidden = sessions.length === 0;
+          if (sessions.length === 1) bookingField.value = String(sessions[0].id);
+          applyBooking();
         }
       } catch {
         nameField.value = 'שגיאה בחיפוש';

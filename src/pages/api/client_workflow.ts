@@ -1,7 +1,8 @@
 export const prerender = false;
 import type { APIRoute } from 'astro';
 import { sql } from '~/lib/db';
-import { manualSteps, safeWebUrl, validId } from '~/lib/client-workflow';
+import { durationOptions } from '~/lib/session-duration';
+import { manualSteps, stepsFor, safeWebUrl, validId } from '~/lib/client-workflow';
 
 export const POST: APIRoute = async ({ request, url }) => {
   let clientId: number;
@@ -17,11 +18,17 @@ export const POST: APIRoute = async ({ request, url }) => {
       const sessionId = validId(form.get('session_id'));
       const rows = await sql`SELECT id FROM sessions WHERE id = ${sessionId} AND client_id = ${clientId}`;
       if (!rows.length) return new Response('Session not found', { status: 404 });
-      if (action === 'step') {
+      if (action === 'correction') {
+        const key = String(form.get('step'));
+        const done = form.get('done');
+        if (!stepsFor({ to_pay: 1 }, []).some((step) => step.key === key) || !['0', '1'].includes(String(done)))
+          throw new Error('Invalid correction');
+        await sql`UPDATE sessions SET workflow = COALESCE(workflow, '{}'::jsonb) || ${JSON.stringify({ [`override_${key}`]: done })}::jsonb WHERE id = ${sessionId}`;
+      } else if (action === 'step') {
         const key = String(form.get('step'));
         if (!manualSteps.some(([k]) => k === key)) throw new Error('Invalid step');
         const value = form.get('done') === '1' ? new Date().toISOString() : null;
-        await sql`UPDATE sessions SET workflow = workflow || ${JSON.stringify({ [key]: value })}::jsonb WHERE id = ${sessionId}`;
+        await sql`UPDATE sessions SET workflow = workflow || ${JSON.stringify({ [key]: value, [`override_${key}`]: null })}::jsonb WHERE id = ${sessionId}`;
       } else if (action === 'details') {
         const scheduled = String(form.get('scheduled') || '');
         if (
@@ -30,7 +37,7 @@ export const POST: APIRoute = async ({ request, url }) => {
         )
           throw new Error('Invalid date');
         const duration = Number(form.get('duration'));
-        if (![1, 2, 3, 6, 9].includes(duration)) throw new Error('Invalid duration');
+        if (!durationOptions.includes(duration)) throw new Error('Invalid duration');
         const location = String(form.get('location') || '').slice(0, 500);
         const notes = String(form.get('notes') || '').slice(0, 10000);
         const pixieset = safeWebUrl(form.get('pixieset'));

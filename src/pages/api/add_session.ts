@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { sql } from '../../lib/db.ts';
+import { packageDurationHours } from '../../lib/session-duration';
 import { PRICES } from '../../lib/pricing'; // your single source of truth
 
 export const POST: APIRoute = async ({ request }) => {
@@ -56,14 +57,16 @@ export const POST: APIRoute = async ({ request }) => {
       session_type,
       package_type,
       session_price,
-      to_pay
+      to_pay,
+      workflow
     )
     VALUES (
       ${client_id},
       ${sessionType},
       ${package_type},
       ${total_price},
-      ${to_pay}
+      ${to_pay},
+      ${JSON.stringify({ duration: String(packageDurationHours(package_type)) })}::jsonb
     ) RETURNING id
   `;
 

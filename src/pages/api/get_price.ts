@@ -1,3 +1,4 @@
+import { packageDurationLabel } from '../../lib/session-duration';
 import { verifyContractToken } from '../../lib/contract-token';
 import { getContractInvitation, invitationError } from '../../lib/contract-invitation';
 import type { APIContext } from 'astro';
@@ -17,6 +18,7 @@ export async function GET(context: APIContext) {
     JSON.stringify({
       price: booking.session_price.toString(),
       duration: booking.package_type.toString(),
+      duration_label: packageDurationLabel(booking.package_type),
       phone: invitation.phone,
       conf: invitation.conf,
     }),

@@ -155,10 +155,12 @@ export const PDFDocument = { load: async () => {
 export default {};
 `);
 const { state } = await import(mockUrl);
+const durationUrl = await loadSource('src/lib/session-duration.ts');
 const invitationUrl = await loadSource('src/lib/contract-invitation.ts', { "'./db'": JSON.stringify(mockUrl) });
 const handlerUrl = await loadSource('src/pages/api/submit_contract.ts', {
   "'../../lib/contract-token'": JSON.stringify(contractUrl),
   "'../../lib/contract-invitation'": JSON.stringify(invitationUrl),
+  "'../../lib/session-duration'": JSON.stringify(durationUrl),
   "'../../lib/db.ts'": JSON.stringify(mockUrl),
   "'@pdf-lib/fontkit'": JSON.stringify(mockUrl),
   "'pdf-lib'": JSON.stringify(mockUrl),
@@ -239,6 +241,7 @@ await test('public price lookup requires an invitation and ignores arbitrary pho
   const priceUrl = await loadSource('src/pages/api/get_price.ts', {
     "'../../lib/contract-token'": JSON.stringify(contractUrl),
     "'../../lib/contract-invitation'": JSON.stringify(invitationUrl),
+    "'../../lib/session-duration'": JSON.stringify(durationUrl),
   });
   const { GET } = await import(priceUrl);
   const invoke = (query) => GET({ request: new Request(`https://example.test/api/get_price?${query}`) });

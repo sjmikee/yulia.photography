@@ -1,5 +1,6 @@
 ---
-import { manualSteps, stepsFor, type Payment, type Workflow, type Client, type Session } from '~/lib/client-workflow';
+import { stepsFor, type Payment, type Workflow, type Client, type Session } from '~/lib/client-workflow';
+import { durationOptions, sessionDurationHours } from '~/lib/session-duration';
 import WorkflowFields from './WorkflowFields.astro';
 import AdvanceStage from './AdvanceStage.astro';
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 const { session: s, client, payments } = Astro.props;
 const w: Workflow = s.workflow || {};
+const duration = sessionDurationHours(s);
 const sessionPayments = payments.filter((p) => Number(p.session_id) === Number(s.id));
 const steps = stepsFor(s, sessionPayments);
 const next = steps.find((step) => !step.done);
@@ -28,6 +30,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   data-session-card
   data-session-id={s.id}
   data-current-step={current}
+  data-contract-signed={s.contract_signed ? 'true' : 'false'}
   data-name={client.name}
   data-phone={client.phone}
   data-email={client.email || ''}
@@ -154,8 +157,8 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
             <label>
               משך
               <select name="duration">
-                {[1, 2, 3, 6, 9].map((n) => (
-                  <option value={n} selected={Number(w.duration || 1) === n}>
+                {durationOptions.map((n) => (
+                  <option value={n} selected={duration === n}>
                     {n} שעות
                   </option>
                 ))}
@@ -298,8 +301,8 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       <label
         >משך<select name="duration"
           >{
-            [1, 2, 3, 6, 9].map((n) => (
-              <option value={n} selected={Number(w.duration || 1) === n}>
+            durationOptions.map((n) => (
+              <option value={n} selected={duration === n}>
                 {n} שעות
               </option>
             ))
@@ -351,31 +354,80 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   </details>
   <details>
     <summary>תיקון שלב שסומן בטעות</summary>
-    <div class="grid sm:grid-cols-2 gap-3 mt-4">
+    <p class="text-sm text-gray-600 mt-3">
+      תיקון הסימון משנה את התקדמות הסשן בלבד. הוא לא משנה יתרה, רושם תשלום, מפיק קבלה או משנה את החוזה החתום.
+    </p>
+    <p data-toggle-status role="status" aria-live="polite" class="text-sm mt-2"></p>
+    <div class="mt-4 divide-y divide-gray-200">
       {
-        manualSteps
-          .filter(([key]) => !['editing_started', 'pixieset_uploaded', 'fullsize_uploaded'].includes(key))
-          .map(([key, label]) => (
-            <form
-              method="POST"
-              action="/api/client_workflow"
-              class="flex flex-wrap gap-3 items-center justify-between border rounded-lg p-3"
+        steps.map((step) => (
+          <form
+            method="POST"
+            action="/api/client_workflow"
+            data-stage-toggle
+            class="flex gap-4 items-center justify-between py-3"
+          >
+            <WorkflowFields clientId={client.id} sessionId={s.id} action="correction" />
+            <input type="hidden" name="step" value={step.key} />
+            <input type="hidden" name="done" value={step.done ? '0' : '1'} />
+            <span id={`stage-${s.id}-${step.key}`}>{step.label}</span>
+            <button
+              type="submit"
+              role="switch"
+              aria-checked={step.done ? 'true' : 'false'}
+              aria-labelledby={`stage-${s.id}-${step.key}`}
+              class="stage-switch"
             >
-              <>
-                <WorkflowFields clientId={client.id} sessionId={s.id} action="step" />
-                <input type="hidden" name="step" value={key} />
-                <input type="hidden" name="done" value={w[key] ? '0' : '1'} />
-              </>
-              <>
-                <span>{label}</span>
-                <button class="btn-secondary">{w[key] ? 'ביטול הסימון' : 'סימון בוצע'}</button>
-              </>
-            </form>
-          ))
+              <span />
+            </button>
+          </form>
+        ))
       }
     </div>
   </details>
 </article>
+<style>
+  .stage-switch {
+    width: 51px;
+    height: 31px;
+    border-radius: 999px;
+    background: #9ca3af;
+    padding: 3px;
+    flex-shrink: 0;
+    border: 0;
+    direction: ltr;
+    transition: background 0.18s;
+  }
+  .stage-switch span {
+    display: block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 3px #0003;
+    transition: transform 0.18s;
+  }
+  .stage-switch[aria-checked='true'] {
+    background: #248a3d;
+  }
+  .stage-switch[aria-checked='true'] span {
+    transform: translateX(20px);
+  }
+  .stage-switch:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+  }
+  .stage-switch:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage-switch,
+    .stage-switch span {
+      transition: none;
+    }
+  }
+</style>
 <script>
   import { openClientApp } from '~/lib/client-app-links';
   import { safeWebUrl } from '~/lib/client-workflow';
@@ -386,6 +438,59 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
     document.querySelectorAll<HTMLElement>('[data-session-card]').forEach((card) => {
       if (initialized.has(card)) return;
       initialized.add(card);
+      card.querySelectorAll<HTMLFormElement>('[data-stage-toggle]').forEach((form) => {
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const button = form.querySelector<HTMLButtonElement>('button')!;
+          const status = card.querySelector<HTMLElement>('[data-toggle-status]')!;
+          const switches = card.querySelectorAll<HTMLButtonElement>('[data-stage-toggle] button');
+          const previous = button.getAttribute('aria-checked');
+          switches.forEach((item) => {
+            item.disabled = true;
+          });
+          button.setAttribute('aria-checked', previous === 'true' ? 'false' : 'true');
+          status.textContent = 'שומרת…';
+          let saved = false;
+          try {
+            const response = await fetch('/api/client_workflow', {
+              method: 'POST',
+              headers: { Accept: 'application/json' },
+              body: new FormData(form),
+            });
+            if (!response.ok || !(await response.json()).saved) throw new Error('Save failed');
+            saved = true;
+            const page = await fetch(location.href, { cache: 'no-store' });
+            if (!page.ok) throw new Error('Refresh failed');
+            const doc = new DOMParser().parseFromString(await page.text(), 'text/html');
+            const replacement = doc.getElementById(card.id);
+            if (!replacement) throw new Error('Missing session');
+            // Preserve expanded sections and unsaved session details while updating the workflow.
+            card.querySelectorAll('details').forEach((details, index) => {
+              const target = replacement.querySelectorAll('details')[index];
+              if (target) target.open = details.open;
+            });
+            const oldDetails = card.querySelector<HTMLFormElement>('details form:not([data-stage-toggle])');
+            const newDetails = replacement.querySelector<HTMLFormElement>('details form:not([data-stage-toggle])');
+            if (oldDetails && newDetails) newDetails.replaceWith(oldDetails);
+            card.replaceWith(replacement);
+            init();
+            replacement.querySelector<HTMLElement>('[data-toggle-status]')!.textContent = 'נשמר';
+            replacement
+              .querySelector<HTMLButtonElement>(`button[aria-labelledby="${button.getAttribute('aria-labelledby')}"]`)
+              ?.focus({ preventScroll: true });
+          } catch {
+            if (!saved) button.setAttribute('aria-checked', previous!);
+            else form.querySelector<HTMLInputElement>('[name="done"]')!.value = previous === 'true' ? '1' : '0';
+            status.textContent = saved
+              ? 'הסימון נשמר, אך התצוגה לא עודכנה. רענני לעדכון ההתקדמות.'
+              : 'השמירה נכשלה. נסי שוב.';
+          } finally {
+            switches.forEach((item) => {
+              item.disabled = false;
+            });
+          }
+        });
+      });
       const error = card.querySelector<HTMLElement>('[data-action-error]')!;
       const fallback = card.querySelector<HTMLAnchorElement>('[data-external-fallback]')!;
       async function saveAndOpen(form: HTMLFormElement, target: string, confirm: string) {
@@ -444,7 +549,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
           error.hidden = false;
         }
       });
-      if (card.dataset.currentStep === 'signed') {
+      if (card.dataset.currentStep === 'signed' && card.dataset.contractSigned !== 'true') {
         let checking = false;
         let dirty = false;
         const onInput = () => {
@@ -452,7 +557,13 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
         };
         document.addEventListener('input', onInput);
         async function checkSignature() {
-          if (checking || dirty || document.hidden || !card.isConnected) return;
+          if (!card.isConnected) {
+            clearInterval(interval);
+            window.removeEventListener('focus', checkSignature);
+            document.removeEventListener('input', onInput);
+            return;
+          }
+          if (checking || dirty || document.hidden) return;
           if (card.parentElement instanceof HTMLDetailsElement && !card.parentElement.open) return;
           checking = true;
           try {

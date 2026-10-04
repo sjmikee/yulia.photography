@@ -11,6 +11,7 @@ async function load(path, replacements = {}) {
       .outputText
   );
 }
+const durationUrl = await load('src/lib/session-duration.ts');
 const workflowUrl = await load('src/lib/client-workflow.ts');
 const { stepsFor, safeWebUrl, validId } = await import(workflowUrl);
 test('workflow distinguishes payment, receipt and signature; editing/delivery remain manual', () => {
@@ -122,6 +123,7 @@ test('uncertain provider outcome stays locked and prevents another receipt', asy
 const endpointUrl = await load('src/pages/api/client_workflow.ts', {
   "'~/lib/db'": JSON.stringify(mockUrl),
   "'~/lib/client-workflow'": JSON.stringify(workflowUrl),
+  "'~/lib/session-duration'": JSON.stringify(durationUrl),
 });
 const { POST: update } = await import(endpointUrl);
 function invokeUpdate(values) {
@@ -239,6 +241,7 @@ test('preparing delivery stores only the gallery and does not mark delivery comp
 const statusUrl = await load('src/pages/api/session_status.ts', {
   "'~/lib/db'": JSON.stringify(mockUrl),
   "'~/lib/client-workflow'": JSON.stringify(workflowUrl),
+  "'~/lib/session-duration'": JSON.stringify(durationUrl),
 });
 const { GET: getStatus } = await import(statusUrl);
 test('signature refresh exposes only the selected booking signature status', async () => {
@@ -293,4 +296,33 @@ test('manual receipt completion only updates pending receipts for the selected s
     state.queries.some((q) => q.text.includes('UPDATE sessions')),
     false
   );
+});
+
+test('corrections cover every guided stage and override inferred completion in both directions', () => {
+  const session = { to_pay: 0, contract_signed: true, workflow: { contract_prepared: '2026-10-03' } };
+  const payments = [
+    { stage: 'deposit', receipt_status: 'issued' },
+    { stage: 'balance', receipt_status: 'issued' },
+  ];
+  assert.equal(stepsFor(session, payments)[0].done, true);
+  for (const step of stepsFor(session, payments)) {
+    session.workflow[`override_${step.key}`] = '0';
+    assert.equal(stepsFor(session, payments).find((item) => item.key === step.key).done, false);
+    session.workflow[`override_${step.key}`] = '1';
+    assert.equal(stepsFor(session, payments).find((item) => item.key === step.key).done, true);
+  }
+});
+
+test('payment and contract corrections save checklist overrides without altering financial or signature records', async () => {
+  for (const step of ['contract_sent', 'signed', 'deposit', 'deposit_receipt', 'balance', 'balance_receipt']) {
+    state.queries = [];
+    const response = await invokeUpdate({ action: 'correction', step, done: '0' });
+    assert.equal(response.status, 303);
+    const mutations = state.queries.filter((q) => q.text.includes('UPDATE'));
+    assert.equal(mutations.length, 1);
+    assert.deepEqual(JSON.parse(mutations[0].values[0]), { [`override_${step}`]: '0' });
+    assert.equal(mutations[0].values[1], 42);
+    assert.ok(!mutations[0].text.includes('to_pay ='));
+    assert.ok(!mutations[0].text.includes('contract_signed ='));
+  }
 });

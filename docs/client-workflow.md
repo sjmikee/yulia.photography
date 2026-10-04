@@ -97,3 +97,9 @@ After migration, verify client search and profile loading against your Neon bran
 Both deposit and balance stages offer “קיבלתי תשלום והקבלה טופלה — המשך”. This records the payment on the selected date, deducts it from the remaining balance once, and marks its receipt as handled without calling Morning. The normal receipt-generation option remains available. An already-recorded payment with a pending receipt also offers “הקבלה טופלה — המשך”; this does not deduct the amount again. Processing receipts cannot be manually overwritten.
 
 Manually handled receipts use the existing `issued` status with no generated receipt URL; payment history labels them as manually handled instead of showing empty receipt links. No database migration is required.
+
+### Workflow correction switches
+
+The session correction section includes every guided stage, including signature, payments and receipts. Its switches use the same effective status as the progress checklist, including contract preparation and signing. Corrections are explicit checklist overrides; they do not change signed contracts, payment records, balances or Morning receipts. This also allows historical stages to be reconciled without deducting payments again. Turning a switch off overrides automatic completion; turning it on marks the checklist stage complete. Normal manual stage advancement clears that stage's override.
+
+Switches save in the background and refresh the session card without navigating or reloading the window. Expanded sections and unsaved session-detail edits are retained. A failed save restores the switch and displays an inline error. No migration, additional framework or hosting service is required.

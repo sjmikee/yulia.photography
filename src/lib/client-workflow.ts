@@ -59,7 +59,10 @@ export function stepsFor(
     { key: 'editing_done', label: 'עריכת התמונות', done: !!w.editing_done },
     { key: 'delivered', label: 'העלאה ומסירת התמונות', done: !!w.delivered },
     { key: 'review_requested', label: 'בקשת ביקורת', done: !!w.review_requested },
-  ];
+  ].map((step) => ({
+    ...step,
+    done: w[`override_${step.key}`] === '1' ? true : w[`override_${step.key}`] === '0' ? false : step.done,
+  }));
 }
 export function safeWebUrl(value: unknown): string {
   if (typeof value !== 'string' || value.length > 2000) throw new Error('Invalid URL');

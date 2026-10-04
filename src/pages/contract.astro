@@ -229,19 +229,7 @@ const metadata = {
             const data = invitation;
             priceInput.value = data.price || '';
 
-            if (data.duration == 1) {
-              durationInput.value = 'שעה עד שעתיים';
-            } else if (data.duration == 2) {
-              durationInput.value = 'שעתיים עד שלוש';
-            } else if (data.duration == 3) {
-              durationInput.value = 'שלוש שעות';
-            } else if (data.duration == 4) {
-              durationInput.value = 'עד שלוש שעות';
-            } else if (data.duration == 5) {
-              durationInput.value = 'עד שש שעות';
-            } else if (data.duration == 6) {
-              durationInput.value = 'עד תשע שעות';
-            }
+            durationInput.value = data.duration_label || '';
           } catch (err) {
             console.error(err);
             priceInput.value = 'מחיר לא זמין';
