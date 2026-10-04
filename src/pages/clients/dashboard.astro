@@ -1,0 +1,127 @@
+---
+export const prerender = false;
+import Layout from '~/layouts/ClientLayout.astro';
+import ManagementRow from '~/components/clients/ManagementRow.astro';
+import { sql } from '~/lib/db';
+import { managementData, israelToday, type ManagedSession, type Payment } from '~/lib/client-workflow';
+const today = israelToday();
+let data = managementData([], [], today);
+let failed = false;
+try {
+  const [sessions, payments] = await Promise.all([
+    sql`SELECT s.*, c.name AS client_name FROM sessions s JOIN clients c ON c.id = s.client_id`,
+    sql`SELECT session_id, id, stage, amount, receipt_status, paid_on::text AS paid_on FROM session_payments`,
+  ]);
+  data = managementData(sessions as ManagedSession[], payments as Payment[], today);
+} catch {
+  failed = true;
+}
+const groups = [
+  ['all', 'הכול'],
+  ['overdue', 'מסירה באיחור'],
+  ['today', 'מסירה היום'],
+  ['contracts', 'חוזים'],
+  ['payments', 'תשלומים וקבלות'],
+  ['editing', 'עריכה'],
+  ['delivery', 'מסירה'],
+  ['reviews', 'בקשות ביקורת'],
+  ['calendar', 'יומן'],
+];
+const requested = Astro.url.searchParams.get('filter') || 'all';
+const filter = groups.some(([key]) => key === requested) ? requested : 'all';
+const filtered = data.attention.filter((row) => {
+  const key = row.next?.key;
+  if (filter === 'overdue') return row.overdue;
+  if (filter === 'today') return row.deadline === today && !row.delivered;
+  if (filter === 'contracts') return key === 'contract_sent' || key === 'signed';
+  if (filter === 'payments') return ['deposit', 'deposit_receipt', 'balance', 'balance_receipt'].includes(key || '');
+  if (filter === 'editing') return key === 'editing_done';
+  if (filter === 'delivery') return key === 'delivered';
+  if (filter === 'reviews') return key === 'review_requested';
+  if (filter === 'calendar') return key === 'calendar_added' || row.session.workflow?.calendar_needs_update === '1';
+  return true;
+});
+const requestedPage = Number(Astro.url.searchParams.get('page')) || 1;
+const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.floor(requestedPage)));
+---
+
+<Layout title="מה על הפרק?" subtitle="הצילומים הקרובים, מסירת התמונות והשלב הבא לכל לקוח">
+  {
+    failed ? (
+      <p role="alert" class="panel">
+        לא ניתן לטעון את הנתונים כרגע. נסי לרענן.
+      </p>
+    ) : (
+      <>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          {[
+            ['צילומים היום', data.upcoming.filter((r) => r.day === today).length, '#upcoming'],
+            ['מסירות באיחור', data.attention.filter((r) => r.overdue).length, '?filter=overdue#attention'],
+            [
+              'מסירות להיום',
+              data.active.filter((r) => r.deadline === today && !r.delivered).length,
+              '?filter=today#attention',
+            ],
+            ['סשנים בטיפול', data.attention.length, '#attention'],
+          ].map(([label, count, href]) => (
+            <a href={String(href)} class="rounded-xl bg-gray-50 p-4">
+              <span class="block text-3xl font-bold">{count}</span>
+              <span>{label}</span>
+            </a>
+          ))}
+        </div>
+        <section id="upcoming" class="panel">
+          <h2 class="text-2xl font-bold">הצילומים הקרובים</h2>
+          <p class="text-sm text-gray-600 mt-2">עד 10 הצילומים הקרובים, לפי המועד שנשמר במערכת.</p>
+          {data.upcoming.length ? (
+            <ul>
+              {data.upcoming.slice(0, 10).map((row) => (
+                <ManagementRow row={row} today={today} />
+              ))}
+            </ul>
+          ) : (
+            <p class="mt-4">אין צילומים קרובים עם מועד שמור.</p>
+          )}
+        </section>
+        <section id="attention" class="panel">
+          <h2 class="text-2xl font-bold mb-4">דורש טיפול</h2>
+          <nav class="flex flex-wrap gap-2" aria-label="סינון לפי שלב">
+            {groups.map(([key, label]) => (
+              <a
+                href={`?filter=${key}#attention`}
+                class={filter === key ? 'btn-primary' : 'btn-secondary'}
+                aria-current={filter === key ? 'page' : undefined}
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+          <p class="text-sm text-gray-600 mt-4">
+            {filtered.length} סשנים · מסירות באיחור מופיעות ראשונות. מועד המסירה: 14 ימים לאחר יום הצילומים.
+          </p>
+          {filtered.length ? (
+            <ul>
+              {filtered.slice((page - 1) * 20, page * 20).map((row) => (
+                <ManagementRow row={row} today={today} />
+              ))}
+            </ul>
+          ) : (
+            <p class="mt-4">אין סשנים לטיפול בקטגוריה הזו.</p>
+          )}
+          <nav class="flex gap-5 mt-4" aria-label="עמודי סשנים">
+            {page > 1 && (
+              <a class="underline" href={`?filter=${filter}&page=${page - 1}#attention`}>
+                הקודם
+              </a>
+            )}
+            {page * 20 < filtered.length && (
+              <a class="underline" href={`?filter=${filter}&page=${page + 1}#attention`}>
+                הבא
+              </a>
+            )}
+          </nav>
+        </section>
+      </>
+    )
+  }
+</Layout>

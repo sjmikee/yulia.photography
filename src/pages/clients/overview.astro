@@ -1,0 +1,91 @@
+---
+export const prerender = false;
+import Layout from '~/layouts/ClientLayout.astro';
+import { sql } from '~/lib/db';
+import { businessSummary, israelToday, type ManagedSession, type Payment } from '~/lib/client-workflow';
+const requested = Astro.url.searchParams.get('month') || '';
+const month = /^\d{4}-(0[1-9]|1[0-2])$/.test(requested) ? requested : israelToday().slice(0, 7);
+let summary = businessSummary([], [], month);
+let failed = false;
+const money = (value: number) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(value);
+try {
+  const [sessions, payments] = await Promise.all([
+    sql`SELECT s.*, c.name AS client_name FROM sessions s JOIN clients c ON c.id = s.client_id`,
+    sql`SELECT session_id, id, stage, amount, receipt_status, paid_on::text AS paid_on FROM session_payments`,
+  ]);
+  summary = businessSummary(sessions as ManagedSession[], payments as Payment[], month);
+} catch {
+  failed = true;
+}
+---
+
+<Layout title="תמונת מצב עסקית" subtitle="תשלומים, יתרות וצילומים — לפי הנתונים שנרשמו במערכת">
+  <form class="panel flex flex-wrap items-end gap-4" method="GET">
+    <label class="grow">בחירת חודש<input type="month" name="month" value={month} required /></label>
+    <button class="btn-secondary">הצגת החודש</button>
+  </form>
+  {
+    failed ? (
+      <p class="panel" role="alert">
+        לא ניתן לטעון את הנתונים כרגע. נסי לרענן.
+      </p>
+    ) : (
+      <>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <section class="panel">
+            <>
+              <h2>תשלומים שהתקבלו בחודש הנבחר</h2>
+              <p class="text-3xl font-bold my-3">{money(summary.received)}</p>
+              <p class="text-sm text-gray-600">לפי תאריך קבלת התשלום, כולל תשלומים מסשנים שבוטלו.</p>
+            </>
+          </section>
+          <section class="panel">
+            <>
+              <h2>צילומים שהסתיימו בחודש הנבחר</h2>
+              <p class="text-3xl font-bold my-3">{summary.completed}</p>
+              <p class="text-sm text-gray-600">לפי יום הצילומים וסימון סיום הצילומים; ללא סשנים מבוטלים.</p>
+            </>
+          </section>
+          <section class="panel">
+            <>
+              <h2>יתרות פתוחות כרגע</h2>
+              <p class="text-3xl font-bold my-3">{money(summary.outstanding)}</p>
+              <p class="text-sm text-gray-600">כל הסשנים שלא בוטלו, בכל החודשים.</p>
+            </>
+          </section>
+          <section class="panel">
+            <>
+              <h2>יתרות בסשנים מבוטלים — לבדיקה</h2>
+              <p class="text-3xl font-bold my-3">{money(summary.cancelledBalance)}</p>
+              <p class="text-sm text-gray-600">הביטול אינו מוחק יתרות או מבצע החזר כספי.</p>
+            </>
+          </section>
+        </div>
+        <section class="panel">
+          <h2 class="text-2xl font-bold mb-4">חבילות בצילומים שהסתיימו החודש</h2>
+          {summary.packages.length ? (
+            <ul class="divide-y divide-gray-200">
+              {summary.packages.map(([name, count]) => (
+                <li class="flex justify-between gap-4 py-3">
+                  <span>{name}</span>
+                  <strong>{count}</strong>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>אין צילומים שהסתיימו עם מועד שמור בחודש הזה.</p>
+          )}
+        </section>
+        <p class="text-sm text-gray-600">
+          תשלומים היסטוריים שלא נרשמו במערכת אינם נכללים בסכום שהתקבל. הסכומים אינם רווח ואינם כוללים חישוב הוצאות או
+          החזרים.
+        </p>
+        {summary.missingDates > 0 && (
+          <p class="text-sm text-amber-800 mt-3">
+            {summary.missingDates} סשנים סומנו כצולמו ללא מועד שמור, ולכן אינם נכללים בנתוני החודש.
+          </p>
+        )}
+      </>
+    )
+  }
+</Layout>

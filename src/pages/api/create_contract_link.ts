@@ -12,7 +12,7 @@ export const POST: APIRoute = async ({ request, url }) => {
     if (session_id !== undefined && (!Number.isSafeInteger(Number(session_id)) || Number(session_id) < 1))
       return new Response('Invalid session', { status: 400 });
     const rows = await sql`SELECT s.id FROM sessions s JOIN clients c ON c.id = s.client_id
-      WHERE c.phone = ${phone} AND (${session_id == null} OR s.id = ${Number(session_id) || 0}) ORDER BY s.id DESC LIMIT 1`;
+      WHERE COALESCE(s.workflow->>'status', '') <> 'cancelled' AND c.phone = ${phone} AND (${session_id == null} OR s.id = ${Number(session_id) || 0}) ORDER BY s.id DESC LIMIT 1`;
     if (!rows.length) return new Response(JSON.stringify({ error: 'No booking found' }), { status: 404 });
     const sessionId = Number(rows[0].id);
     // Serialize link issuance per booking. Never replace a submission whose email outcome is uncertain.
@@ -21,7 +21,7 @@ export const POST: APIRoute = async ({ request, url }) => {
       sql`UPDATE contract_invitations SET status = 'revoked'
           WHERE session_id = ${sessionId} AND status = 'pending'`,
       sql`INSERT INTO contract_invitations (session_id)
-          SELECT ${sessionId} WHERE NOT EXISTS (
+          SELECT ${sessionId} WHERE EXISTS (SELECT 1 FROM sessions WHERE id = ${sessionId} AND COALESCE(workflow->>'status', '') <> 'cancelled') AND NOT EXISTS (
             SELECT 1 FROM contract_invitations WHERE session_id = ${sessionId} AND status = 'processing'
           ) RETURNING id, expires_at`,
     ]);

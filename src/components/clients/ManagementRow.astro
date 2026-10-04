@@ -1,0 +1,31 @@
+---
+import { displayDay, deliveryLabel, type managementData } from '~/lib/client-workflow';
+interface Props {
+  row: ReturnType<typeof managementData>['rows'][number];
+  today: string;
+}
+const { row, today } = Astro.props;
+const { session: s } = row;
+---
+
+<li class="border-b border-gray-200 py-5 last:border-0">
+  <div class="flex flex-wrap justify-between gap-3">
+    <div>
+      <a class="font-bold text-lg underline" href={`/clients/${s.client_id}#session-${s.id}`}>{s.client_name}</a>
+      <p class="text-gray-600">{s.session_type} · חבילה {s.package_type} · סשן #{s.id}</p>
+    </div>
+    <a class="btn-secondary" href={`/clients/${s.client_id}#session-${s.id}`}>{row.next?.label || 'פתיחת הסשן'}</a>
+  </div>
+  <p class="mt-2">
+    {row.day ? `מועד הצילומים: ${displayDay(row.day)} · ${row.scheduled.slice(11, 16)}` : 'טרם נקבע מועד לצילומים'}
+  </p>
+  {
+    row.deadline && !row.delivered && (
+      <p class={row.overdue ? 'text-red-700 font-bold' : 'text-gray-700'}>
+        מסירת תמונות עד {displayDay(row.deadline)} · {deliveryLabel(row.deadline, today)}
+      </p>
+    )
+  }
+  {Number(s.to_pay) > 0 && <p>יתרה: ₪{s.to_pay}</p>}
+  {s.workflow?.calendar_needs_update === '1' && <p class="text-amber-800">נדרש עדכון האירוע הקיים ביומן Google</p>}
+</li>

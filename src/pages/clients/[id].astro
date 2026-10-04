@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 import Layout from '~/layouts/ClientLayout.astro';
+import { Icon } from 'astro-icon/components';
 import SessionCard from '~/components/clients/SessionCard.astro';
 import type { Client, Session, Payment } from '~/lib/client-workflow';
 import { sql } from '~/lib/db';
@@ -30,13 +31,94 @@ if (!client && !failed) Astro.response.status = 404;
     ) : client ? (
       <>
         <section class="panel">
-          <div class="flex flex-wrap gap-5 mb-4">
-            <a href={`tel:${client.phone}`}>{client.phone}</a>
-            {client.email && <a href={`mailto:${client.email}`}>{client.email}</a>}
-            <a href={`https://wa.me/${client.phone.replace(/^0/, '972')}`} rel="noopener noreferrer">
-              וואטסאפ
+          <div class="relative flex flex-wrap gap-3 mb-4 pl-14">
+            <div id="client-actions" class="absolute top-0 left-0 z-10">
+              <button
+                type="button"
+                id="client-actions-toggle"
+                class="inline-flex size-12 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                aria-label="אפשרויות לקוח"
+                title="אפשרויות לקוח"
+                aria-expanded="false"
+                aria-controls="client-actions-menu"
+              >
+                <Icon name="tabler:dots-vertical" class="size-6" aria-hidden="true" />
+              </button>
+              <div
+                id="client-actions-menu"
+                hidden
+                class="absolute top-full left-0 mt-2 w-52 rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+              >
+                <button
+                  type="button"
+                  class="flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-start text-sm text-gray-800 hover:bg-gray-100"
+                  id="edit-client"
+                  aria-expanded="false"
+                  aria-controls="client-editor"
+                >
+                  <Icon name="tabler:edit" class="size-5" aria-hidden="true" />
+                  עריכת פרטי לקוח
+                </button>
+              </div>
+            </div>
+            <a
+              class="btn-secondary size-12 p-0 md:p-0"
+              href={`tel:${client.phone}`}
+              aria-label={`התקשרות אל ${client.name}: ${client.phone}`}
+              title={`טלפון: ${client.phone}`}
+            >
+              <Icon name="tabler:phone" class="size-6" aria-hidden="true" />
+            </a>
+            {client.email && (
+              <a
+                class="btn-secondary size-12 p-0 md:p-0"
+                href={`mailto:${client.email}`}
+                aria-label={`שליחת מייל אל ${client.name}: ${client.email}`}
+                title={`מייל: ${client.email}`}
+              >
+                <Icon name="tabler:mail" class="size-6" aria-hidden="true" />
+              </a>
+            )}
+            <a
+              class="btn-secondary size-12 p-0 md:p-0"
+              href={`https://wa.me/${client.phone.replace(/^0/, '972')}`}
+              rel="noopener noreferrer"
+              aria-label={`שליחת הודעת וואטסאפ אל ${client.name}`}
+              title="וואטסאפ"
+            >
+              <Icon name="tabler:brand-whatsapp" class="size-6" aria-hidden="true" />
             </a>
           </div>
+          <form id="client-editor" hidden method="POST" action="/api/client_workflow" class="mb-6">
+            <input type="hidden" name="action" value="client_details" />
+            <input type="hidden" name="client_id" value={id} />
+            <fieldset disabled class="grid gap-4">
+              <legend class="font-bold mb-3">עריכת פרטי לקוח</legend>
+              <label>
+                שם
+                <input name="name" value={client.name} maxlength="200" required />
+              </label>
+              <label>
+                טלפון
+                <input name="phone" type="tel" dir="ltr" value={client.phone} required />
+              </label>
+              <label>
+                מייל
+                <input name="email" type="email" dir="ltr" value={client.email} maxlength="254" />
+              </label>
+              <p class="text-sm text-gray-600">
+                שינוי טלפון ידרוש הכנת קישור חוזה חדש אם החוזה טרם נחתם. מסמכים שכבר הונפקו לא ישתנו.
+              </p>
+              <div class="flex flex-wrap gap-3">
+                <button class="btn-primary" name="confirm" value="1">
+                  אישור ושמירת השינויים
+                </button>
+                <button class="btn-secondary" id="cancel-client-edit" type="button">
+                  ביטול העריכה
+                </button>
+              </div>
+            </fieldset>
+          </form>
           <details>
             <>
               <summary>הערות על הלקוח</summary>
@@ -77,6 +159,7 @@ if (!client && !failed) Astro.response.status = 404;
             <details class="mb-5">
               <summary class="cursor-pointer p-4 font-bold">
                 {session.session_type} · סשן #{session.id} · יתרה ₪{session.to_pay}
+                {session.workflow?.status === 'cancelled' ? ' · בוטל' : ''}
               </summary>
               <SessionCard session={session} client={client} payments={payments} />
             </details>
@@ -88,3 +171,61 @@ if (!client && !failed) Astro.response.status = 404;
     )
   }
 </Layout>
+
+<script>
+  function initClientEditor() {
+    const button = document.querySelector<HTMLButtonElement>('#edit-client');
+    const form = document.querySelector<HTMLFormElement>('#client-editor');
+    const actions = document.querySelector<HTMLElement>('#client-actions');
+    const toggle = document.querySelector<HTMLButtonElement>('#client-actions-toggle');
+    const menu = document.querySelector<HTMLElement>('#client-actions-menu');
+    if (!button || !form || !actions || !toggle || !menu || button.dataset.ready) return;
+    button.dataset.ready = '1';
+    const closeMenu = () => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    toggle.addEventListener('click', () => {
+      menu.hidden = !menu.hidden;
+      toggle.setAttribute('aria-expanded', String(!menu.hidden));
+      if (!menu.hidden) button.focus();
+    });
+    actions.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeMenu();
+        toggle.focus();
+      }
+    });
+    actions.addEventListener('focusout', (event) => {
+      if (!actions.contains(event.relatedTarget as Node | null)) closeMenu();
+    });
+    const onOutsideClick = (event: MouseEvent) => {
+      if (!actions.contains(event.target as Node)) closeMenu();
+    };
+    document.addEventListener('click', onOutsideClick);
+    document.addEventListener('astro:before-swap', () => document.removeEventListener('click', onOutsideClick), {
+      once: true,
+    });
+    const fieldset = form.querySelector('fieldset')!;
+    const close = () => {
+      form.reset();
+      form.hidden = true;
+      fieldset.disabled = true;
+      button.setAttribute('aria-expanded', 'false');
+      toggle.focus();
+    };
+    button.addEventListener('click', () => {
+      closeMenu();
+      form.hidden = false;
+      fieldset.disabled = false;
+      button.setAttribute('aria-expanded', 'true');
+      form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
+    });
+    form.querySelector('#cancel-client-edit')?.addEventListener('click', close);
+    form.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') close();
+    });
+  }
+  initClientEditor();
+  document.addEventListener('astro:page-load', initClientEditor);
+</script>

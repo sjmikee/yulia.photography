@@ -76,3 +76,110 @@ export function validId(value: unknown): number {
   if (!Number.isSafeInteger(id) || id < 1) throw new Error('Invalid ID');
   return id;
 }
+
+/** Date-only arithmetic deliberately avoids daylight-saving transitions. */
+export function israelToday(now = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(now);
+}
+export function validDay(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T12:00:00Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+export function validScheduled(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}T([01]\d|2[0-3]):[0-5]\d$/.test(value) && validDay(value.slice(0, 10));
+}
+export function deliveryDeadline(session: Pick<Session, 'workflow'>): string | undefined {
+  const day = session.workflow?.scheduled?.slice(0, 10);
+  if (!day || !validDay(day)) return undefined;
+  const date = new Date(`${day}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + 14);
+  return date.toISOString().slice(0, 10);
+}
+export function isCancelled(session: Pick<Session, 'workflow'>): boolean {
+  return session.workflow?.status === 'cancelled';
+}
+export function displayDay(day: string): string {
+  return day.slice(0, 10).split('-').reverse().join('.');
+}
+export function deliveryLabel(deadline: string, today = israelToday()): string {
+  const days = Math.round((Date.parse(`${deadline}T12:00:00Z`) - Date.parse(`${today}T12:00:00Z`)) / 86400000);
+  return days < 0 ? `באיחור של ${-days} ימים` : days === 0 ? 'למסירה היום' : `עוד ${days} ימים למסירה`;
+}
+export function clientDetails(form: FormData) {
+  const name = String(form.get('name') || '').trim();
+  let phone = String(form.get('phone') || '').replace(/\D/g, '');
+  if (phone.startsWith('972')) phone = '0' + phone.slice(3);
+  const email = String(form.get('email') || '').trim();
+  if (
+    !name ||
+    name.length > 200 ||
+    !/^05\d{8}$/.test(phone) ||
+    email.length > 254 ||
+    (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+  )
+    throw new Error('Invalid client details');
+  return { name, phone, email };
+}
+export type ManagedSession = Session & { client_name: string };
+export function managementData(sessions: ManagedSession[], payments: Payment[], today = israelToday()) {
+  const bySession = new Map<number, Payment[]>();
+  for (const payment of payments) {
+    const key = Number(payment.session_id);
+    bySession.set(key, [...(bySession.get(key) || []), payment]);
+  }
+  const rows = sessions.map((session) => {
+    const steps = stepsFor(session, bySession.get(Number(session.id)) || []);
+    const done = (key: string) => !!steps.find((step) => step.key === key)?.done;
+    const deadline = deliveryDeadline(session);
+    const scheduled = session.workflow?.scheduled || '';
+    const day = scheduled.slice(0, 10);
+    return {
+      session,
+      steps,
+      next: steps.find((step) => !step.done),
+      deadline,
+      scheduled,
+      day: validDay(day) ? day : '',
+      delivered: done('delivered'),
+      shot: done('shoot_done'),
+      overdue: !!deadline && deadline < today && !done('delivered'),
+      cancelled: isCancelled(session),
+    };
+  });
+  const active = rows.filter((row) => !row.cancelled);
+  const upcoming = active
+    .filter((row) => row.day >= today && !row.shot)
+    .sort((a, b) => a.scheduled.localeCompare(b.scheduled) || a.session.id - b.session.id);
+  const attention = active
+    .filter((row) => row.next || row.overdue || row.session.workflow?.calendar_needs_update === '1')
+    .sort(
+      (a, b) =>
+        Number(b.overdue) - Number(a.overdue) ||
+        (a.deadline || '9999').localeCompare(b.deadline || '9999') ||
+        a.session.id - b.session.id
+    );
+  return { rows, active, upcoming, attention };
+}
+export function businessSummary(sessions: ManagedSession[], payments: Payment[], month: string) {
+  const { rows, active } = managementData(sessions, payments);
+  const completed = active.filter((row) => row.shot && row.day.startsWith(month));
+  const packages = new Map<string, number>();
+  for (const { session } of completed) {
+    const key = `${session.session_type} · חבילה ${session.package_type}`;
+    packages.set(key, (packages.get(key) || 0) + 1);
+  }
+  const sumBalance = (items: typeof rows) =>
+    items.reduce((sum, row) => sum + Math.round(Number(row.session.to_pay) * 100), 0) / 100;
+  return {
+    received:
+      payments
+        .filter((p) => p.paid_on.slice(0, 7) === month)
+        .reduce((sum, p) => sum + Math.round(Number(p.amount) * 100), 0) / 100,
+    outstanding: sumBalance(active),
+    cancelledBalance: sumBalance(rows.filter((row) => row.cancelled)),
+    completed: completed.length,
+    missingDates: active.filter((row) => row.shot && !row.day).length,
+    packages: [...packages].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])),
+  };
+}

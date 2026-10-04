@@ -10,7 +10,7 @@ export async function getContractInvitation(invitation: Invitation) {
     JOIN sessions s ON s.id = i.session_id
     JOIN clients c ON c.id = s.client_id
     WHERE i.id = ${invitation.invitationId} AND i.session_id = ${invitation.sessionId}
-      AND c.phone = ${invitation.phone}`;
+      AND c.phone = ${invitation.phone} AND COALESCE(s.workflow->>'status', '') <> 'cancelled'`;
   return rows[0];
 }
 

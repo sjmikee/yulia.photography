@@ -172,6 +172,7 @@ export async function POST(context: APIContext) {
       SET status = 'processing', processing_started_at = NOW()
       WHERE id = ${invitation.invitationId} AND session_id = ${invitation.sessionId}
         AND status = 'pending' AND expires_at > NOW()
+        AND EXISTS (SELECT 1 FROM sessions WHERE id = ${invitation.sessionId} AND COALESCE(workflow->>'status', '') <> 'cancelled')
       RETURNING id`;
     if (!claimed.length) {
       return (

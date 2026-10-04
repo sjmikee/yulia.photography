@@ -34,7 +34,7 @@ test('saved links and identifiers reject unsafe inputs', () => {
   for (const id of [0, -1, 1.5, 'abc', Infinity]) assert.throws(() => validId(id));
 });
 const mockUrl = moduleUrl(`
-export const state = { queries: [], record: null, claim: true, inserted: true, signed: false };
+export const state = { queries: [], record: null, claim: true, inserted: true, signed: false, cancelled: false };
 export async function sql(strings, ...values) {
  const text = strings.join('?'); state.queries.push({text, values});
  if (text.includes('SELECT p.*')) return state.record ? [{...state.record}] : [];
@@ -42,7 +42,9 @@ export async function sql(strings, ...values) {
  if (text.includes("receipt_status = 'issued'")) { state.record.receipt_status = 'issued'; state.record.receipt_url = values[2]; return []; }
  if (text.includes('SELECT id FROM session_payments')) return [{id: 'test-payment'}];
  if (text.includes('SELECT contract_signed')) return [{contract_signed: state.signed}];
+ if (text.includes('SELECT id, workflow FROM sessions')) return [{id: 42, workflow: state.cancelled ? {status: 'cancelled'} : {}}];
  if (text.includes('SELECT id FROM sessions')) return [{id: 42}];
+ if (text.includes('RETURNING id') && text.includes('UPDATE')) return [{id: 42}];
  if (text.includes('WITH locked')) return state.inserted ? [{id: 42}] : [];
  return [];
 }`);
@@ -325,4 +327,134 @@ test('payment and contract corrections save checklist overrides without altering
     assert.ok(!mutations[0].text.includes('to_pay ='));
     assert.ok(!mutations[0].text.includes('contract_signed ='));
   }
+});
+
+const { deliveryDeadline, validScheduled, israelToday, deliveryLabel, managementData, businessSummary, clientDetails } =
+  await import(workflowUrl);
+const booking = (id, workflow = {}, extra = {}) => ({
+  id,
+  client_id: id,
+  client_name: `Client ${id}`,
+  session_type: 'family',
+  package_type: 1,
+  to_pay: 500,
+  workflow,
+  ...extra,
+});
+test('delivery deadlines add 14 calendar days over DST, month and year boundaries', () => {
+  for (const [scheduled, expected] of [
+    ['2026-10-18T23:30', '2026-11-01'],
+    ['2026-03-20T08:00', '2026-04-03'],
+    ['2026-12-25T12:00', '2027-01-08'],
+    ['2028-02-20T10:00', '2028-03-05'],
+  ])
+    assert.equal(deliveryDeadline(booking(1, { scheduled })), expected);
+  assert.equal(deliveryDeadline(booking(1)), undefined);
+  assert.equal(deliveryDeadline(booking(1, { scheduled: '2026-02-30T10:00' })), undefined);
+  for (const value of ['2026-02-30T10:00', '2026-10-01T24:00', '2026-10-01T12:60', 'bad'])
+    assert.equal(validScheduled(value), false);
+  assert.equal(israelToday(new Date('2026-10-03T22:30:00Z')), '2026-10-04');
+  assert.equal(deliveryLabel('2026-10-04', '2026-10-04'), 'למסירה היום');
+});
+test('dashboard excludes cancellations, sorts overdue work first and honors delivery corrections', () => {
+  const sessions = [
+    booking(1, { scheduled: '2026-10-05T10:00' }),
+    booking(2, { scheduled: '2026-09-01T10:00', status: 'cancelled' }),
+    booking(3, { scheduled: '2026-09-02T10:00' }),
+    booking(4, { scheduled: '2026-09-01T10:00', delivered: 'yes' }),
+    booking(5, { scheduled: '2026-09-01T10:00', delivered: 'yes', override_delivered: '0' }),
+  ];
+  const data = managementData(sessions, [], '2026-10-04');
+  assert.deepEqual(
+    data.upcoming.map((r) => r.session.id),
+    [1]
+  );
+  assert.deepEqual(
+    data.attention.filter((r) => r.overdue).map((r) => r.session.id),
+    [5, 3]
+  );
+  assert.equal(
+    data.active.some((r) => r.session.id === 2),
+    false
+  );
+});
+test('overview uses payment dates, keeps cancelled receipts and separates their balances', () => {
+  const sessions = [
+    booking(1, { scheduled: '2026-10-01T10:00', shoot_done: 'yes' }),
+    booking(2, { scheduled: '2026-10-02T10:00', shoot_done: 'yes', status: 'cancelled' }, { to_pay: 300 }),
+    booking(3, { shoot_done: 'yes' }),
+  ];
+  const payments = [
+    { session_id: 1, amount: '100.10', paid_on: '2026-10-01' },
+    { session_id: 2, amount: '200.20', paid_on: '2026-10-02' },
+    { session_id: 1, amount: '900', paid_on: '2026-09-01' },
+  ];
+  const summary = businessSummary(sessions, payments, '2026-10');
+  assert.equal(summary.received, 300.3);
+  assert.equal(summary.outstanding, 1000);
+  assert.equal(summary.cancelledBalance, 300);
+  assert.equal(summary.completed, 1);
+  assert.equal(summary.missingDates, 1);
+  assert.deepEqual(summary.packages, [['family · חבילה 1', 1]]);
+});
+test('client edits normalize phones and require explicit confirmation before mutation', async () => {
+  const form = new FormData();
+  for (const [key, value] of Object.entries({ name: ' Test ', phone: '+972 50-123-4567', email: 'a@example.test' }))
+    form.set(key, value);
+  assert.deepEqual(clientDetails(form), { name: 'Test', phone: '0501234567', email: 'a@example.test' });
+  const originalError = console.error;
+  console.error = () => {};
+  try {
+    state.queries = [];
+    assert.equal((await invokeUpdate({ action: 'client_details', name: 'Test', phone: '0501234567' })).status, 400);
+    assert.equal(state.queries.length, 0);
+    assert.equal(
+      (await invokeUpdate({ action: 'client_details', confirm: '1', name: 'Test', phone: '0501234567' })).status,
+      303
+    );
+    assert.ok(state.queries[0].text.includes('NOT EXISTS'));
+    form.set('email', 'not-an-email');
+    assert.throws(() => clientDetails(form));
+  } finally {
+    console.error = originalError;
+  }
+});
+test('cancellation preserves money and contract records; cancelled sessions reject workflow and payment changes', async () => {
+  state.queries = [];
+  assert.equal((await invokeUpdate({ action: 'cancel', confirm: '1', reason: 'Client request' })).status, 303);
+  const mutation = state.queries.find((q) => q.text.includes('UPDATE'));
+  assert.equal(JSON.parse(mutation.values[0]).status, 'cancelled');
+  assert.ok(!mutation.text.includes('to_pay') && !mutation.text.includes('contract_signed'));
+  state.cancelled = true;
+  try {
+    for (const values of [
+      { action: 'step', step: 'shoot_done', done: '1' },
+      { action: 'payment', stage: 'deposit', amount: '100', paid_on: '2026-10-04' },
+    ]) {
+      state.queries = [];
+      assert.equal((await invokeUpdate(values)).status, 409);
+      assert.ok(!state.queries.some((q) => q.text.includes('UPDATE') || q.text.includes('INSERT')));
+    }
+    assert.equal((await invokeUpdate({ action: 'restore', confirm: '1' })).status, 303);
+  } finally {
+    state.cancelled = false;
+  }
+});
+test('rescheduling uses a stale-date guard, retains previous date, and asks for calendar update', async () => {
+  state.queries = [];
+  assert.equal(
+    (
+      await invokeUpdate({
+        action: 'reschedule',
+        confirm: '1',
+        scheduled: '2026-10-20T10:00',
+        previous_scheduled: '2026-10-10T10:00',
+      })
+    ).status,
+    303
+  );
+  const query = state.queries.find((q) => q.text.includes('UPDATE'));
+  assert.ok(query.text.includes('previous_scheduled') && query.text.includes('calendar_needs_update'));
+  assert.ok(query.values.includes('2026-10-10T10:00'));
+  assert.equal(deliveryDeadline(booking(1, { scheduled: '2026-10-20T10:00' })), '2026-11-03');
 });

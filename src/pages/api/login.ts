@@ -27,5 +27,5 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
     maxAge: remember ? 30 * 24 * 60 * 60 : 2 * 60 * 60,
   });
 
-  return redirect('/clients');
+  return redirect('/clients/dashboard');
 };

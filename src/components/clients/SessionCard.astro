@@ -1,5 +1,15 @@
 ---
-import { stepsFor, type Payment, type Workflow, type Client, type Session } from '~/lib/client-workflow';
+import {
+  deliveryDeadline,
+  deliveryLabel,
+  displayDay,
+  isCancelled,
+  stepsFor,
+  type Payment,
+  type Workflow,
+  type Client,
+  type Session,
+} from '~/lib/client-workflow';
 import { durationOptions, sessionDurationHours } from '~/lib/session-duration';
 import WorkflowFields from './WorkflowFields.astro';
 import AdvanceStage from './AdvanceStage.astro';
@@ -13,7 +23,10 @@ const w: Workflow = s.workflow || {};
 const duration = sessionDurationHours(s);
 const sessionPayments = payments.filter((p) => Number(p.session_id) === Number(s.id));
 const steps = stepsFor(s, sessionPayments);
-const next = steps.find((step) => !step.done);
+const cancelled = isCancelled(s);
+const deadline = deliveryDeadline(s);
+const delivered = steps.some((step) => step.key === 'delivered' && step.done);
+const next = cancelled ? undefined : steps.find((step) => !step.done);
 const current = next?.key;
 const position = steps.findIndex((step) => step.key === current);
 const after = steps[position + 1];
@@ -50,237 +63,257 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
         </p>
       )
     }
-  </header>
-  <section class="rounded-2xl bg-gray-50 p-5 sm:p-8 mb-6 space-y-5" aria-label="השלב הנוכחי">
-    <div>
-      <p class="text-sm text-gray-500 mb-2">{next ? `שלב ${position + 1} מתוך ${steps.length}` : 'הסשן הושלם'}</p>
-      <h3 class="text-2xl font-bold">{next?.label || 'עוד זיכרונות יפים נמסרו ❤️'}</h3>
-    </div>
+    {cancelled && <p class="mt-3 font-bold text-red-700">הסשן בוטל · {w.cancellation_reason}</p>}
     {
-      current === 'contract_sent' && (
-        <>
-          <p>פרטי הלקוח והסשן כבר מוכנים. בחרי אישור פרסום והמשיכי לשליחה בוואטסאפ.</p>
-          <a class="btn-primary w-full" href={`/clients/send_contract?${base}`}>
-            המשך לשליחת חוזה
-          </a>
-        </>
-      )
-    }
-    {
-      current === 'signed' && (
-        <>
-          <p>
-            אחרי שליחת הקישור בוואטסאפ, מחכים לחתימה. העמוד בודק את החתימה אוטומטית ויעבור לשלב התשלום כשהחוזה ייחתם.
-          </p>
-          <a class="btn-primary w-full" href={`/clients/${client.id}#session-${s.id}`}>
-            בדיקת חתימה והמשך לתשלום
-          </a>
-          <a class="block text-center underline" href={`/clients/send_contract?${base}`}>
-            פתיחת מסך החוזה שוב
-          </a>
-        </>
-      )
-    }
-    {
-      (current === 'deposit' || current === 'balance') && (
-        <>
-          <p>
-            {current === 'deposit'
-              ? 'לאחר קבלת ₪100 לסגירת התאריך, המשיכי ישירות להפקת הקבלה.'
-              : `לאחר קבלת היתרה בסך ₪${s.to_pay}, המשיכי להפקת הקבלה.`}
-          </p>
-          {Number(s.to_pay) >= (current === 'deposit' ? 100 : 0) && Number(s.to_pay) > 0 ? (
-            <form method="POST" action="/api/client_workflow" class="space-y-4">
-              <WorkflowFields clientId={client.id} sessionId={s.id} action="payment" />
-              <input type="hidden" name="stage" value={current} />
-              <input type="hidden" name="amount" value={current === 'deposit' ? 100 : s.to_pay} />
-              <label>
-                מתי התקבל התשלום?
-                <input type="date" name="paid_on" value={today} required />
-              </label>
-              <button class="btn-primary w-full" name="continue" value="receipt">
-                קיבלתי ₪{current === 'deposit' ? 100 : s.to_pay} — להפקת קבלה
-              </button>
-              <button class="btn-secondary w-full" name="continue" value="done">
-                קיבלתי תשלום והקבלה טופלה — המשך
-              </button>
-              <p class="text-sm text-gray-600">סימון ידני יעדכן את היתרה וישלים את שלב הקבלה, בלי להפיק קבלה באתר.</p>
-            </form>
-          ) : (
-            <p>אין יתרה לרישום תשלום זה. אם התשלום כבר נרשם בעבר, אין לרשום אותו שוב.</p>
-          )}
-        </>
-      )
-    }
-    {
-      (current === 'deposit_receipt' || current === 'balance_receipt') && (
-        <>
-          {receipt?.receipt_status === 'processing' ? (
-            <>
-              <p role="status">הקבלה בטיפול. אם התהליך נעצר, יש לבדוק ב־Morning לפני הפקה נוספת.</p>
-              <a class="btn-primary w-full" href={`/clients/${client.id}#session-${s.id}`}>
-                בדיקת מצב הקבלה והמשך
-              </a>
-            </>
-          ) : receipt ? (
-            <>
-              <p>התשלום נשמר. הסכום והתאריך כבר מולאו בקבלה.</p>
-              <a class="btn-primary w-full" href={`/clients/send_reciept?payment_id=${receipt.id}`}>
-                המשך להפקת קבלה
-              </a>
-              <form method="POST" action="/api/client_workflow">
-                <WorkflowFields clientId={client.id} sessionId={s.id} action="receipt_done" />
-                <input type="hidden" name="stage" value={receipt.stage} />
-                <button class="btn-secondary w-full">הקבלה טופלה — המשך</button>
-              </form>
-            </>
-          ) : (
-            <p>לא נמצאה קבלה לתשלום זה. תשלומים ישנים שכבר נוכו מהיתרה דורשים בדיקת היסטוריה לפני רישום נוסף.</p>
-          )}
-        </>
-      )
-    }
-    {
-      current === 'calendar_added' && (
-        <>
-          <p>שמרי את פרטי הצילומים ופתחי אירוע מוכן ביומן.</p>
-          <form data-calendar-form method="POST" action="/api/client_workflow" class="grid sm:grid-cols-2 gap-4">
-            <WorkflowFields clientId={client.id} sessionId={s.id} action="details" />
-            <>
-              <input type="hidden" name="notes" value={w.notes || ''} />
-              <input type="hidden" name="pixieset" value={w.pixieset || ''} />
-            </>
-            <label>
-              תאריך ושעה (שעון ישראל)
-              <input type="datetime-local" name="scheduled" value={w.scheduled} required />
-            </label>
-            <label>
-              משך
-              <select name="duration">
-                {durationOptions.map((n) => (
-                  <option value={n} selected={duration === n}>
-                    {n} שעות
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label class="sm:col-span-2">
-              מיקום
-              <input name="location" value={w.location} maxlength="500" />
-            </label>
-            <button class={`${w.scheduled ? 'btn-secondary' : 'btn-primary'} sm:col-span-2`}>
-              שמירת הפרטים ופתיחת היומן
-            </button>
-          </form>
-          <div data-calendar-confirm hidden={!w.scheduled}>
-            <AdvanceStage
-              clientId={client.id}
-              sessionId={s.id}
-              step="calendar_added"
-              label="שמרתי ביומן — המשך ליום הצילומים"
-            />
-          </div>
-        </>
-      )
-    }
-    {
-      current === 'shoot_done' && (
-        <>
-          <p>הכול מוכן ליום הצילומים. בסיום הסשן, המשיכי לתשלום היתרה.</p>
-          <AdvanceStage
-            clientId={client.id}
-            sessionId={s.id}
-            step="shoot_done"
-            label="הצילומים הסתיימו — המשך לתשלום"
-          />
-        </>
-      )
-    }
-    {
-      current === 'editing_done' && (
-        <>
-          <p>עכשיו נשאר לערוך את התמונות. כשהכול מוכן, המשיכי להעלאה ולמסירה.</p>
-          <AdvanceStage
-            clientId={client.id}
-            sessionId={s.id}
-            step="editing_done"
-            label="סיימתי לערוך — המשך למסירת התמונות"
-          />
-        </>
-      )
-    }
-    {
-      current === 'delivered' && (
-        <>
-          <p>העלי תמונות מוקטנות ל־Pixieset ותמונות מלאות ל־MyAirBridge, ואז הכיני הודעה עם שני הקישורים.</p>
-          <div class="flex flex-wrap gap-3">
-            <>
-              <a class="btn-secondary" href="https://pixieset.com/" target="_blank" rel="noopener noreferrer">
-                פתיחת Pixieset
-              </a>
-              <a class="btn-secondary" href="https://www.myairbridge.com/" target="_blank" rel="noopener noreferrer">
-                פתיחת MyAirBridge
-              </a>
-            </>
-          </div>
-          <form data-delivery method="POST" action="/api/client_workflow" class="space-y-4">
-            <WorkflowFields clientId={client.id} sessionId={s.id} action="delivery" />
-            <label>
-              קישור לגלריית Pixieset
-              <input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" required />
-            </label>
-            <label>
-              קישור זמני ל־MyAirBridge
-              <input data-airbridge type="url" dir="ltr" placeholder="https://" autocomplete="off" required />
-            </label>
-            <p class="text-sm text-gray-600">
-              קישור MyAirBridge לא נשמר. ההודעה מזכירה להוריד את התמונות בתוך שלושה ימים מההעלאה.
-            </p>
-            <button class={`${w.delivery_prepared || w.pixieset ? 'btn-secondary' : 'btn-primary'} w-full`}>
-              שמירת הגלריה ופתיחת הודעה בוואטסאפ
-            </button>
-          </form>
-          <div data-delivery-confirm hidden={!w.delivery_prepared && !w.pixieset}>
-            <AdvanceStage
-              clientId={client.id}
-              sessionId={s.id}
-              step="delivered"
-              label="שלחתי את הקישורים — המשך לבקשת ביקורת"
-            />
-          </div>
-        </>
-      )
-    }
-    {
-      current === 'review_requested' && (
-        <>
-          <p>התמונות נמסרו! אפשר לשלוח הודעה מוכנה עם קישור לביקורת בגוגל.</p>
-          <a class="btn-secondary w-full" href={review} rel="noopener noreferrer">
-            פתיחת בקשת ביקורת בוואטסאפ
-          </a>
-          <AdvanceStage
-            clientId={client.id}
-            sessionId={s.id}
-            step="review_requested"
-            label="שלחתי בקשת ביקורת — סיום הסשן"
-          />
-        </>
-      )
-    }
-    {
-      !next && (
-        <a
-          class="btn-primary w-full"
-          href={`/clients/add_session?client_id=${client.id}&phone=${encodeURIComponent(client.phone)}`}
+      !cancelled && deadline && (
+        <p
+          data-delivery-deadline
+          class={`mt-3 ${!delivered && deadline < today ? 'text-red-700 font-bold' : 'text-gray-700'}`}
         >
-          יצירת סשן נוסף ללקוח
-        </a>
+          מסירת תמונות עד {displayDay(deadline)}
+          {!delivered && ` · ${deliveryLabel(deadline, today)}`}
+        </p>
       )
     }
-    <p data-action-error role="alert" hidden class="text-red-700"></p>
-    <a data-external-fallback class="underline" rel="noopener noreferrer" hidden>פתיחת הקישור שהוכן</a>
-    {next && after && <p class="text-sm text-gray-500">לאחר מכן: {after.label}</p>}
-  </section>
+    {
+      !cancelled && !deadline && (
+        <p data-delivery-deadline class="mt-3 text-amber-800">
+          יש לשמור את מועד הצילומים כדי לחשב מסירה בתוך 14 ימים.
+        </p>
+      )
+    }
+  </header>
+  {
+    w.calendar_needs_update === '1' && (
+      <aside class="rounded-xl bg-amber-50 p-4 mb-5">
+        <p class="font-bold">נדרש עדכון ביומן Google</p>
+        <p>יש {cancelled ? 'לבטל' : 'לעדכן'} את האירוע הקיים ביומן. השינוי באתר אינו מעדכן אותו אוטומטית.</p>
+        <a class="underline block my-3" href="https://calendar.google.com/calendar/u/0/r">
+          פתיחת היומן
+        </a>
+        <form method="POST" action="/api/client_workflow">
+          <WorkflowFields clientId={client.id} sessionId={s.id} action="calendar_updated" />
+          <button class="btn-secondary">עדכנתי את האירוע ביומן</button>
+        </form>
+      </aside>
+    )
+  }
+  {
+    !cancelled && (
+      <section class="rounded-2xl bg-gray-50 p-5 sm:p-8 mb-6 space-y-5" aria-label="השלב הנוכחי">
+        <div>
+          <p class="text-sm text-gray-500 mb-2">{next ? `שלב ${position + 1} מתוך ${steps.length}` : 'הסשן הושלם'}</p>
+          <h3 class="text-2xl font-bold">{next?.label || 'עוד זיכרונות יפים נמסרו ❤️'}</h3>
+        </div>
+        {current === 'contract_sent' && (
+          <>
+            <p>פרטי הלקוח והסשן כבר מוכנים. בחרי אישור פרסום והמשיכי לשליחה בוואטסאפ.</p>
+            <a class="btn-primary w-full" href={`/clients/send_contract?${base}`}>
+              המשך לשליחת חוזה
+            </a>
+          </>
+        )}
+        {current === 'signed' && (
+          <>
+            <p>
+              אחרי שליחת הקישור בוואטסאפ, מחכים לחתימה. העמוד בודק את החתימה אוטומטית ויעבור לשלב התשלום כשהחוזה ייחתם.
+            </p>
+            <a class="btn-primary w-full" href={`/clients/${client.id}#session-${s.id}`}>
+              בדיקת חתימה והמשך לתשלום
+            </a>
+            <a class="block text-center underline" href={`/clients/send_contract?${base}`}>
+              פתיחת מסך החוזה שוב
+            </a>
+          </>
+        )}
+        {(current === 'deposit' || current === 'balance') && (
+          <>
+            <p>
+              {current === 'deposit'
+                ? 'לאחר קבלת ₪100 לסגירת התאריך, המשיכי ישירות להפקת הקבלה.'
+                : `לאחר קבלת היתרה בסך ₪${s.to_pay}, המשיכי להפקת הקבלה.`}
+            </p>
+            {Number(s.to_pay) >= (current === 'deposit' ? 100 : 0) && Number(s.to_pay) > 0 ? (
+              <form method="POST" action="/api/client_workflow" class="space-y-4">
+                <WorkflowFields clientId={client.id} sessionId={s.id} action="payment" />
+                <input type="hidden" name="stage" value={current} />
+                <input type="hidden" name="amount" value={current === 'deposit' ? 100 : s.to_pay} />
+                <label>
+                  מתי התקבל התשלום?
+                  <input type="date" name="paid_on" value={today} required />
+                </label>
+                <button class="btn-primary w-full" name="continue" value="receipt">
+                  קיבלתי ₪{current === 'deposit' ? 100 : s.to_pay} — להפקת קבלה
+                </button>
+                <button class="btn-secondary w-full" name="continue" value="done">
+                  קיבלתי תשלום והקבלה טופלה — המשך
+                </button>
+                <p class="text-sm text-gray-600">סימון ידני יעדכן את היתרה וישלים את שלב הקבלה, בלי להפיק קבלה באתר.</p>
+              </form>
+            ) : (
+              <p>אין יתרה לרישום תשלום זה. אם התשלום כבר נרשם בעבר, אין לרשום אותו שוב.</p>
+            )}
+          </>
+        )}
+        {(current === 'deposit_receipt' || current === 'balance_receipt') && (
+          <>
+            {receipt?.receipt_status === 'processing' ? (
+              <>
+                <p role="status">הקבלה בטיפול. אם התהליך נעצר, יש לבדוק ב־Morning לפני הפקה נוספת.</p>
+                <a class="btn-primary w-full" href={`/clients/${client.id}#session-${s.id}`}>
+                  בדיקת מצב הקבלה והמשך
+                </a>
+              </>
+            ) : receipt ? (
+              <>
+                <p>התשלום נשמר. הסכום והתאריך כבר מולאו בקבלה.</p>
+                <a class="btn-primary w-full" href={`/clients/send_reciept?payment_id=${receipt.id}`}>
+                  המשך להפקת קבלה
+                </a>
+                <form method="POST" action="/api/client_workflow">
+                  <WorkflowFields clientId={client.id} sessionId={s.id} action="receipt_done" />
+                  <input type="hidden" name="stage" value={receipt.stage} />
+                  <button class="btn-secondary w-full">הקבלה טופלה — המשך</button>
+                </form>
+              </>
+            ) : (
+              <p>לא נמצאה קבלה לתשלום זה. תשלומים ישנים שכבר נוכו מהיתרה דורשים בדיקת היסטוריה לפני רישום נוסף.</p>
+            )}
+          </>
+        )}
+        {current === 'calendar_added' && (
+          <>
+            <p>שמרי את פרטי הצילומים ופתחי אירוע מוכן ביומן.</p>
+            <form data-calendar-form method="POST" action="/api/client_workflow" class="grid sm:grid-cols-2 gap-4">
+              <WorkflowFields clientId={client.id} sessionId={s.id} action="details" />
+              <>
+                <input type="hidden" name="notes" value={w.notes || ''} />
+                <input type="hidden" name="pixieset" value={w.pixieset || ''} />
+              </>
+              <label>
+                תאריך ושעה (שעון ישראל)
+                <input type="datetime-local" name="scheduled" value={w.scheduled} required />
+              </label>
+              <label>
+                משך
+                <select name="duration">
+                  {durationOptions.map((n) => (
+                    <option value={n} selected={duration === n}>
+                      {n} שעות
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label class="sm:col-span-2">
+                מיקום
+                <input name="location" value={w.location} maxlength="500" />
+              </label>
+              <button class={`${w.scheduled ? 'btn-secondary' : 'btn-primary'} sm:col-span-2`}>
+                שמירת הפרטים ופתיחת היומן
+              </button>
+            </form>
+            <div data-calendar-confirm hidden={!w.scheduled}>
+              <AdvanceStage
+                clientId={client.id}
+                sessionId={s.id}
+                step="calendar_added"
+                label="שמרתי ביומן — המשך ליום הצילומים"
+              />
+            </div>
+          </>
+        )}
+        {current === 'shoot_done' && (
+          <>
+            <p>הכול מוכן ליום הצילומים. בסיום הסשן, המשיכי לתשלום היתרה.</p>
+            <AdvanceStage
+              clientId={client.id}
+              sessionId={s.id}
+              step="shoot_done"
+              label="הצילומים הסתיימו — המשך לתשלום"
+            />
+          </>
+        )}
+        {current === 'editing_done' && (
+          <>
+            <p>עכשיו נשאר לערוך את התמונות. כשהכול מוכן, המשיכי להעלאה ולמסירה.</p>
+            <AdvanceStage
+              clientId={client.id}
+              sessionId={s.id}
+              step="editing_done"
+              label="סיימתי לערוך — המשך למסירת התמונות"
+            />
+          </>
+        )}
+        {current === 'delivered' && (
+          <>
+            <p>העלי תמונות מוקטנות ל־Pixieset ותמונות מלאות ל־MyAirBridge, ואז הכיני הודעה עם שני הקישורים.</p>
+            <div class="flex flex-wrap gap-3">
+              <>
+                <a class="btn-secondary" href="https://pixieset.com/" target="_blank" rel="noopener noreferrer">
+                  פתיחת Pixieset
+                </a>
+                <a class="btn-secondary" href="https://www.myairbridge.com/" target="_blank" rel="noopener noreferrer">
+                  פתיחת MyAirBridge
+                </a>
+              </>
+            </div>
+            <form data-delivery method="POST" action="/api/client_workflow" class="space-y-4">
+              <WorkflowFields clientId={client.id} sessionId={s.id} action="delivery" />
+              <label>
+                קישור לגלריית Pixieset
+                <input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" required />
+              </label>
+              <label>
+                קישור זמני ל־MyAirBridge
+                <input data-airbridge type="url" dir="ltr" placeholder="https://" autocomplete="off" required />
+              </label>
+              <p class="text-sm text-gray-600">
+                קישור MyAirBridge לא נשמר. ההודעה מזכירה להוריד את התמונות בתוך שלושה ימים מההעלאה.
+              </p>
+              <button class={`${w.delivery_prepared || w.pixieset ? 'btn-secondary' : 'btn-primary'} w-full`}>
+                שמירת הגלריה ופתיחת הודעה בוואטסאפ
+              </button>
+            </form>
+            <div data-delivery-confirm hidden={!w.delivery_prepared && !w.pixieset}>
+              <AdvanceStage
+                clientId={client.id}
+                sessionId={s.id}
+                step="delivered"
+                label="שלחתי את הקישורים — המשך לבקשת ביקורת"
+              />
+            </div>
+          </>
+        )}
+        {current === 'review_requested' && (
+          <>
+            <p>התמונות נמסרו! אפשר לשלוח הודעה מוכנה עם קישור לביקורת בגוגל.</p>
+            <a class="btn-secondary w-full" href={review} rel="noopener noreferrer">
+              פתיחת בקשת ביקורת בוואטסאפ
+            </a>
+            <AdvanceStage
+              clientId={client.id}
+              sessionId={s.id}
+              step="review_requested"
+              label="שלחתי בקשת ביקורת — סיום הסשן"
+            />
+          </>
+        )}
+        {!next && (
+          <a
+            class="btn-primary w-full"
+            href={`/clients/add_session?client_id=${client.id}&phone=${encodeURIComponent(client.phone)}`}
+          >
+            יצירת סשן נוסף ללקוח
+          </a>
+        )}
+        <p data-action-error role="alert" hidden class="text-red-700" />
+        <a data-external-fallback class="underline" rel="noopener noreferrer" hidden>
+          פתיחת הקישור שהוכן
+        </a>
+        {next && after && <p class="text-sm text-gray-500">לאחר מכן: {after.label}</p>}
+      </section>
+    )
+  }
   <details class="mb-5">
     <summary>התקדמות הסשן · {steps.filter((step) => step.done).length} מתוך {steps.length} שלבים הושלמו</summary>
     <ol class="grid sm:grid-cols-2 gap-3 mt-4">
@@ -293,30 +326,43 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       }
     </ol>
   </details>
-  <details class="mb-5">
-    <summary>עריכת פרטי הסשן</summary>
-    <form method="POST" action="/api/client_workflow" class="grid sm:grid-cols-2 gap-4 mt-4">
-      <WorkflowFields clientId={client.id} sessionId={s.id} action="details" />
-      <label>תאריך ושעה (שעון ישראל)<input type="datetime-local" name="scheduled" value={w.scheduled} /></label>
-      <label
-        >משך<select name="duration"
-          >{
-            durationOptions.map((n) => (
-              <option value={n} selected={duration === n}>
-                {n} שעות
-              </option>
-            ))
-          }</select
-        ></label
-      >
-      <label>מיקום<input name="location" value={w.location} maxlength="500" /></label>
-      <label
-        >גלריית Pixieset<input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" /></label
-      >
-      <label class="sm:col-span-2">הערות<textarea name="notes" maxlength="10000">{w.notes}</textarea></label>
-      <button class="btn-secondary sm:col-span-2">שמירת פרטים</button>
-    </form>
-  </details>
+  {
+    !cancelled && (
+      <details class="mb-5">
+        <summary>עריכת פרטי הסשן</summary>
+        <form data-session-details method="POST" action="/api/client_workflow" class="grid sm:grid-cols-2 gap-4 mt-4">
+          <WorkflowFields clientId={client.id} sessionId={s.id} action="details" />
+
+          <p class="sm:col-span-2">לשינוי מועד הצילומים, פתחי את אפשרות שינוי המועד בהמשך.</p>
+          <label>
+            משך
+            <select name="duration">
+              {durationOptions.map((n) => (
+                <option value={n} selected={duration === n}>
+                  {n} שעות
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            מיקום
+            <input name="location" value={w.location} maxlength="500" />
+          </label>
+          <label>
+            גלריית Pixieset
+            <input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" />
+          </label>
+          <label class="sm:col-span-2">
+            הערות
+            <textarea name="notes" maxlength="10000">
+              {w.notes}
+            </textarea>
+          </label>
+          <button class="btn-secondary sm:col-span-2">שמירת פרטים</button>
+        </form>
+      </details>
+    )
+  }
   <details class="mb-5">
     <summary>תשלומים וקבלות</summary>
     <p class="my-4">יתרה לתשלום: ₪{s.to_pay}. תשלומים ישנים שכבר נוכו מהיתרה אין לרשום שוב.</p>
@@ -352,38 +398,86 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       ))
     }
   </details>
-  <details>
-    <summary>תיקון שלב שסומן בטעות</summary>
-    <p class="text-sm text-gray-600 mt-3">
-      תיקון הסימון משנה את התקדמות הסשן בלבד. הוא לא משנה יתרה, רושם תשלום, מפיק קבלה או משנה את החוזה החתום.
-    </p>
-    <p data-toggle-status role="status" aria-live="polite" class="text-sm mt-2"></p>
-    <div class="mt-4 divide-y divide-gray-200">
-      {
-        steps.map((step) => (
-          <form
-            method="POST"
-            action="/api/client_workflow"
-            data-stage-toggle
-            class="flex gap-4 items-center justify-between py-3"
-          >
-            <WorkflowFields clientId={client.id} sessionId={s.id} action="correction" />
-            <input type="hidden" name="step" value={step.key} />
-            <input type="hidden" name="done" value={step.done ? '0' : '1'} />
-            <span id={`stage-${s.id}-${step.key}`}>{step.label}</span>
-            <button
-              type="submit"
-              role="switch"
-              aria-checked={step.done ? 'true' : 'false'}
-              aria-labelledby={`stage-${s.id}-${step.key}`}
-              class="stage-switch"
+  {
+    !cancelled && (
+      <details>
+        <summary>תיקון שלב שסומן בטעות</summary>
+        <p class="text-sm text-gray-600 mt-3">
+          תיקון הסימון משנה את התקדמות הסשן בלבד. הוא לא משנה יתרה, רושם תשלום, מפיק קבלה או משנה את החוזה החתום.
+        </p>
+        <p data-toggle-status role="status" aria-live="polite" class="text-sm mt-2" />
+        <div class="mt-4 divide-y divide-gray-200">
+          {steps.map((step) => (
+            <form
+              method="POST"
+              action="/api/client_workflow"
+              data-stage-toggle
+              class="flex gap-4 items-center justify-between py-3"
             >
-              <span />
+              <WorkflowFields clientId={client.id} sessionId={s.id} action="correction" />
+              <input type="hidden" name="step" value={step.key} />
+              <input type="hidden" name="done" value={step.done ? '0' : '1'} />
+              <span id={`stage-${s.id}-${step.key}`}>{step.label}</span>
+              <button
+                type="submit"
+                role="switch"
+                aria-checked={step.done ? 'true' : 'false'}
+                aria-labelledby={`stage-${s.id}-${step.key}`}
+                class="stage-switch"
+              >
+                <span />
+              </button>
+            </form>
+          ))}
+        </div>
+      </details>
+    )
+  }
+  <details class="mt-5">
+    <summary>{cancelled ? 'החזרת הסשן לפעילות' : 'שינוי מועד או ביטול הסשן'}</summary>
+    {w.previous_scheduled && <p class="mt-3 text-gray-600">מועד קודם: {w.previous_scheduled.replace('T', ' · ')}</p>}
+    {
+      cancelled ? (
+        <form method="POST" action="/api/client_workflow" class="mt-4 space-y-4">
+          <WorkflowFields clientId={client.id} sessionId={s.id} action="restore" />
+          <p>הסשן יחזור לרשימת העבודה עם ההתקדמות, התשלומים והמועד הקיימים. בדקי שהמועד עדיין מתאים.</p>
+          <button class="btn-secondary" name="confirm" value="1">
+            אישור החזרה לפעילות
+          </button>
+        </form>
+      ) : (
+        <>
+          <form method="POST" action="/api/client_workflow" class="mt-4 space-y-4">
+            <WorkflowFields clientId={client.id} sessionId={s.id} action="reschedule" />
+            <input type="hidden" name="previous_scheduled" value={w.scheduled || ''} />
+            <label>
+              מועד חדש (שעון ישראל)
+              <input type="datetime-local" name="scheduled" value={w.scheduled} required />
+            </label>
+            <p class="text-sm text-gray-600">
+              מועד מסירת התמונות יעודכן ל־14 ימים לאחר התאריך החדש. יש לעדכן גם את האירוע הקיים ביומן Google.
+            </p>
+            <button class="btn-secondary" name="confirm" value="1">
+              אישור ושמירת המועד החדש
             </button>
           </form>
-        ))
-      }
-    </div>
+          <details class="mt-6 border-t pt-4">
+            <summary class="text-red-700">ביטול הסשן</summary>
+            <form method="POST" action="/api/client_workflow" class="mt-4 space-y-4">
+              <WorkflowFields clientId={client.id} sessionId={s.id} action="cancel" />
+              <label>
+                סיבת הביטול
+                <textarea name="reason" maxlength="1000" required />
+              </label>
+              <p>הסשן יוסר מהעבודה הפעילה. החוזה, התשלומים והיתרה יישמרו. ביטול אינו מבצע החזר כספי או מבטל קבלות.</p>
+              <button class="btn-secondary text-red-700" name="confirm" value="1">
+                אישור ביטול הסשן
+              </button>
+            </form>
+          </details>
+        </>
+      )
+    }
   </details>
 </article>
 <style>
@@ -430,7 +524,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
 </style>
 <script>
   import { openClientApp } from '~/lib/client-app-links';
-  import { safeWebUrl } from '~/lib/client-workflow';
+  import { safeWebUrl, deliveryDeadline, displayDay, deliveryLabel } from '~/lib/client-workflow';
   const initialized = new WeakSet();
   function init() {
     const selected = document.getElementById(location.hash.slice(1));
@@ -469,8 +563,8 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
               const target = replacement.querySelectorAll('details')[index];
               if (target) target.open = details.open;
             });
-            const oldDetails = card.querySelector<HTMLFormElement>('details form:not([data-stage-toggle])');
-            const newDetails = replacement.querySelector<HTMLFormElement>('details form:not([data-stage-toggle])');
+            const oldDetails = card.querySelector<HTMLFormElement>('[data-session-details]');
+            const newDetails = replacement.querySelector<HTMLFormElement>('[data-session-details]');
             if (oldDetails && newDetails) newDetails.replaceWith(oldDetails);
             card.replaceWith(replacement);
             init();
@@ -504,6 +598,15 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
             body: new FormData(form),
           });
           if (!response.ok || !(await response.json()).saved) throw new Error('Save failed');
+          const scheduled = new FormData(form).get('scheduled');
+          if (typeof scheduled === 'string') {
+            const deadline = deliveryDeadline({ workflow: { scheduled } });
+            const label = card.querySelector<HTMLElement>('[data-delivery-deadline]');
+            if (deadline && label) {
+              label.className = 'mt-3 text-gray-700';
+              label.textContent = `מסירת תמונות עד ${displayDay(deadline)} · ${deliveryLabel(deadline)}`;
+            }
+          }
           fallback.href = target;
           fallback.hidden = false;
           card.querySelector<HTMLElement>(confirm)!.hidden = false;
