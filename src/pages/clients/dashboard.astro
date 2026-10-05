@@ -84,18 +84,22 @@ const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.flo
           )}
         </section>
         <section id="attention" class="panel">
-          <h2 class="text-2xl font-bold mb-4">דורש טיפול</h2>
-          <nav class="flex flex-wrap gap-2" aria-label="סינון לפי שלב">
-            {groups.map(([key, label]) => (
-              <a
-                href={`?filter=${key}#attention`}
-                class={filter === key ? 'btn-primary' : 'btn-secondary'}
-                aria-current={filter === key ? 'page' : undefined}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
+          <div class="attention-heading">
+            <h2 class="text-2xl font-bold">דורש טיפול</h2>
+            <form id="attention-filter" method="GET" action="/clients/dashboard#attention" class="attention-filter">
+              <label for="attention-category">הצגת סשנים</label>
+              <select id="attention-category" name="filter">
+                {groups.map(([key, label]) => (
+                  <option value={key} selected={filter === key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <button type="submit" class="filter-submit">
+                הצגה
+              </button>
+            </form>
+          </div>
           <p class="text-sm text-gray-600 mt-4">
             {filtered.length} סשנים · מסירות באיחור מופיעות ראשונות. מועד המסירה: 14 ימים לאחר יום הצילומים.
           </p>
@@ -125,3 +129,60 @@ const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.flo
     )
   }
 </Layout>
+
+<style>
+  .attention-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .attention-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .attention-filter label {
+    color: #6b7280;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+  .attention-filter select {
+    width: auto;
+    min-width: 11rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+  .filter-submit {
+    min-height: 2.75rem;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  @media (max-width: 540px) {
+    .attention-filter {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .attention-filter select {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+</style>
+
+<script>
+  function setupAttentionFilter() {
+    const form = document.querySelector<HTMLFormElement>('#attention-filter');
+    const select = form?.querySelector<HTMLSelectElement>('select');
+    const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (!form || !select || !submit || form.dataset.enhanced) return;
+    form.dataset.enhanced = 'true';
+    submit.hidden = true;
+    select.addEventListener('change', () => form.requestSubmit());
+  }
+  setupAttentionFilter();
+  document.addEventListener('astro:page-load', setupAttentionFilter);
+</script>
