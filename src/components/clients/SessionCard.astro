@@ -12,6 +12,7 @@ import {
 } from '~/lib/client-workflow';
 import { durationOptions, sessionDurationHours } from '~/lib/session-duration';
 import WorkflowFields from './WorkflowFields.astro';
+import { Icon } from 'astro-icon/components';
 import AdvanceStage from './AdvanceStage.astro';
 interface Props {
   session: Session;
@@ -50,39 +51,101 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   data-type={s.session_type}
   data-wa={wa}
 >
-  <header class="mb-6">
-    <h2 class="text-2xl font-bold mb-2">צילומי {s.session_type}</h2>
-    <p class="text-gray-600">
-      סשן #{s.id} · חבילה {s.package_type} · מחיר ₪{s.session_price} · נותר לתשלום ₪{s.to_pay}
-    </p>
-    {
-      w.scheduled && (
-        <p class="text-gray-600 mt-2">
-          {w.scheduled.replace('T', ' · ')}
-          {w.location && ` · ${w.location}`}
-        </p>
-      )
-    }
-    {cancelled && <p class="mt-3 font-bold text-red-700">הסשן בוטל · {w.cancellation_reason}</p>}
-    {
-      !cancelled && deadline && (
-        <p
-          data-delivery-deadline
-          class={`mt-3 ${!delivered && deadline < today ? 'text-red-700 font-bold' : 'text-gray-700'}`}
+  <header class="relative mb-6">
+    <div data-session-actions class="absolute top-0 left-0 z-10">
+      <button
+        type="button"
+        data-session-actions-toggle
+        class="inline-flex size-12 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+        aria-label={`אפשרויות סשן ${s.id}`}
+        title="אפשרויות סשן"
+        aria-expanded="false"
+        aria-controls={`session-menu-${s.id}`}
+      >
+        <Icon name="tabler:dots-vertical" class="size-6" aria-hidden="true" />
+      </button>
+      <div
+        data-session-actions-menu
+        id={`session-menu-${s.id}`}
+        hidden
+        class="absolute top-full left-0 mt-2 w-52 rounded-lg border border-gray-200 bg-white p-1 shadow-lg"
+      >
+        <button
+          type="button"
+          data-session-status-open
+          class={`flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-start text-sm hover:bg-gray-100 ${cancelled ? 'text-gray-800' : 'text-red-700'}`}
+          aria-expanded="false"
+          aria-controls={`session-status-${s.id}`}
         >
-          מסירת תמונות עד {displayDay(deadline)}
-          {!delivered && ` · ${deliveryLabel(deadline, today)}`}
-        </p>
-      )
-    }
-    {
-      !cancelled && !deadline && (
-        <p data-delivery-deadline class="mt-3 text-amber-800">
-          יש לשמור את מועד הצילומים כדי לחשב מסירה בתוך 14 ימים.
-        </p>
-      )
-    }
+          <Icon name={cancelled ? 'tabler:restore' : 'tabler:circle-x'} class="size-5" aria-hidden="true" />
+          {cancelled ? 'החזרת הסשן לפעילות' : 'ביטול הסשן'}
+        </button>
+      </div>
+    </div>
+    <div class="pl-14">
+      <h2 class="text-2xl font-bold mb-2">צילומי {s.session_type}</h2>
+      <p class="text-gray-600">
+        סשן #{s.id} · חבילה {s.package_type} · מחיר ₪{s.session_price} · נותר לתשלום ₪{s.to_pay}
+      </p>
+      {
+        w.scheduled && (
+          <p class="text-gray-600 mt-2">
+            {w.scheduled.replace('T', ' · ')}
+            {w.location && ` · ${w.location}`}
+          </p>
+        )
+      }
+      {cancelled && <p class="mt-3 font-bold text-red-700">הסשן בוטל · {w.cancellation_reason}</p>}
+      {
+        !cancelled && deadline && (
+          <p
+            data-delivery-deadline
+            class={`mt-3 ${!delivered && deadline < today ? 'text-red-700 font-bold' : 'text-gray-700'}`}
+          >
+            מסירת תמונות עד {displayDay(deadline)}
+            {!delivered && ` · ${deliveryLabel(deadline, today)}`}
+          </p>
+        )
+      }
+      {
+        !cancelled && !deadline && (
+          <p data-delivery-deadline class="mt-3 text-amber-800">
+            יש לשמור את מועד הצילומים כדי לחשב מסירה בתוך 14 ימים.
+          </p>
+        )
+      }
+    </div>
   </header>
+  <form
+    data-session-status-form
+    id={`session-status-${s.id}`}
+    hidden
+    method="POST"
+    action="/api/client_workflow"
+    class="mb-6 rounded-xl bg-gray-50 p-4 space-y-4"
+  >
+    <WorkflowFields clientId={client.id} sessionId={s.id} action={cancelled ? 'restore' : 'cancel'} />
+    <h3 class="font-bold">{cancelled ? 'החזרת הסשן לפעילות' : 'ביטול הסשן'}</h3>
+    {
+      cancelled ? (
+        <p>הסשן יחזור לרשימת העבודה עם ההתקדמות, התשלומים והמועד הקיימים. בדקי שהמועד עדיין מתאים.</p>
+      ) : (
+        <>
+          <label>
+            סיבת הביטול
+            <textarea name="reason" maxlength="1000" required />
+          </label>
+          <p>הסשן יוסר מהעבודה הפעילה. החוזה, התשלומים והיתרה יישמרו. ביטול אינו מבצע החזר כספי או מבטל קבלות.</p>
+        </>
+      )
+    }
+    <div class="flex flex-wrap gap-3">
+      <button class={`btn-secondary ${cancelled ? '' : 'text-red-700'}`} name="confirm" value="1"
+        >{cancelled ? 'אישור החזרה לפעילות' : 'אישור ביטול הסשן'}</button
+      >
+      <button type="button" data-session-status-close class="btn-secondary">סגירה</button>
+    </div>
+  </form>
   {
     w.calendar_needs_update === '1' && (
       <aside class="rounded-xl bg-amber-50 p-4 mb-5">
@@ -433,52 +496,30 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       </details>
     )
   }
-  <details class="mt-5">
-    <summary>{cancelled ? 'החזרת הסשן לפעילות' : 'שינוי מועד או ביטול הסשן'}</summary>
-    {w.previous_scheduled && <p class="mt-3 text-gray-600">מועד קודם: {w.previous_scheduled.replace('T', ' · ')}</p>}
-    {
-      cancelled ? (
+  {
+    !cancelled && (
+      <details class="mt-5">
+        <summary>שינוי מועד הסשן</summary>
+        {w.previous_scheduled && (
+          <p class="mt-3 text-gray-600">מועד קודם: {w.previous_scheduled.replace('T', ' · ')}</p>
+        )}
         <form method="POST" action="/api/client_workflow" class="mt-4 space-y-4">
-          <WorkflowFields clientId={client.id} sessionId={s.id} action="restore" />
-          <p>הסשן יחזור לרשימת העבודה עם ההתקדמות, התשלומים והמועד הקיימים. בדקי שהמועד עדיין מתאים.</p>
+          <WorkflowFields clientId={client.id} sessionId={s.id} action="reschedule" />
+          <input type="hidden" name="previous_scheduled" value={w.scheduled || ''} />
+          <label>
+            מועד חדש (שעון ישראל)
+            <input type="datetime-local" name="scheduled" value={w.scheduled} required />
+          </label>
+          <p class="text-sm text-gray-600">
+            מועד מסירת התמונות יעודכן ל־14 ימים לאחר התאריך החדש. יש לעדכן גם את האירוע הקיים ביומן Google.
+          </p>
           <button class="btn-secondary" name="confirm" value="1">
-            אישור החזרה לפעילות
+            אישור ושמירת המועד החדש
           </button>
         </form>
-      ) : (
-        <>
-          <form method="POST" action="/api/client_workflow" class="mt-4 space-y-4">
-            <WorkflowFields clientId={client.id} sessionId={s.id} action="reschedule" />
-            <input type="hidden" name="previous_scheduled" value={w.scheduled || ''} />
-            <label>
-              מועד חדש (שעון ישראל)
-              <input type="datetime-local" name="scheduled" value={w.scheduled} required />
-            </label>
-            <p class="text-sm text-gray-600">
-              מועד מסירת התמונות יעודכן ל־14 ימים לאחר התאריך החדש. יש לעדכן גם את האירוע הקיים ביומן Google.
-            </p>
-            <button class="btn-secondary" name="confirm" value="1">
-              אישור ושמירת המועד החדש
-            </button>
-          </form>
-          <details class="mt-6 border-t pt-4">
-            <summary class="text-red-700">ביטול הסשן</summary>
-            <form method="POST" action="/api/client_workflow" class="mt-4 space-y-4">
-              <WorkflowFields clientId={client.id} sessionId={s.id} action="cancel" />
-              <label>
-                סיבת הביטול
-                <textarea name="reason" maxlength="1000" required />
-              </label>
-              <p>הסשן יוסר מהעבודה הפעילה. החוזה, התשלומים והיתרה יישמרו. ביטול אינו מבצע החזר כספי או מבטל קבלות.</p>
-              <button class="btn-secondary text-red-700" name="confirm" value="1">
-                אישור ביטול הסשן
-              </button>
-            </form>
-          </details>
-        </>
-      )
-    }
-  </details>
+      </details>
+    )
+  }
 </article>
 <style>
   .stage-switch {
@@ -532,6 +573,46 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
     document.querySelectorAll<HTMLElement>('[data-session-card]').forEach((card) => {
       if (initialized.has(card)) return;
       initialized.add(card);
+      const actions = card.querySelector<HTMLElement>('[data-session-actions]')!;
+      const toggle = card.querySelector<HTMLButtonElement>('[data-session-actions-toggle]')!;
+      const menu = card.querySelector<HTMLElement>('[data-session-actions-menu]')!;
+      const statusOpen = card.querySelector<HTMLButtonElement>('[data-session-status-open]')!;
+      const statusForm = card.querySelector<HTMLFormElement>('[data-session-status-form]')!;
+      const closeMenu = () => {
+        menu.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+      };
+      toggle.addEventListener('click', (event) => {
+        menu.hidden = !menu.hidden;
+        toggle.setAttribute('aria-expanded', String(!menu.hidden));
+        if (!menu.hidden && event.detail === 0) statusOpen.focus();
+      });
+      actions.addEventListener('focusout', (event) => {
+        if (event.relatedTarget && !actions.contains(event.relatedTarget as Node)) closeMenu();
+      });
+      actions.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeMenu();
+          toggle.focus();
+        }
+      });
+      statusOpen.addEventListener('click', () => {
+        closeMenu();
+        statusForm.hidden = false;
+        statusOpen.setAttribute('aria-expanded', 'true');
+        statusForm.querySelector<HTMLElement>('textarea, button')?.focus();
+      });
+      const closeStatus = () => {
+        statusForm.hidden = true;
+        statusForm.reset();
+        statusOpen.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      };
+      statusForm.querySelector('[data-session-status-close]')!.addEventListener('click', closeStatus);
+      statusForm.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeStatus();
+      });
+
       card.querySelectorAll<HTMLFormElement>('[data-stage-toggle]').forEach((form) => {
         form.addEventListener('submit', async (event) => {
           event.preventDefault();
@@ -692,6 +773,13 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       }
     });
   }
+  document.addEventListener('click', (event) => {
+    document.querySelectorAll<HTMLElement>('[data-session-actions]').forEach((actions) => {
+      if (actions.contains(event.target as Node)) return;
+      actions.querySelector<HTMLElement>('[data-session-actions-menu]')!.hidden = true;
+      actions.querySelector('[data-session-actions-toggle]')!.setAttribute('aria-expanded', 'false');
+    });
+  });
   init();
   document.addEventListener('astro:page-load', init);
 </script>

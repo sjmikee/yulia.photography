@@ -185,10 +185,10 @@ if (!client && !failed) Astro.response.status = 404;
       menu.hidden = true;
       toggle.setAttribute('aria-expanded', 'false');
     };
-    toggle.addEventListener('click', () => {
+    toggle.addEventListener('click', (event) => {
       menu.hidden = !menu.hidden;
       toggle.setAttribute('aria-expanded', String(!menu.hidden));
-      if (!menu.hidden) button.focus();
+      if (!menu.hidden && event.detail === 0) button.focus();
     });
     actions.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
@@ -197,7 +197,9 @@ if (!client && !failed) Astro.response.status = 404;
       }
     });
     actions.addEventListener('focusout', (event) => {
-      if (!actions.contains(event.relatedTarget as Node | null)) closeMenu();
+      // Touch browsers can blur a button without focusing the tapped target.
+      // Let the outside-click handler dismiss those taps after activation.
+      if (event.relatedTarget && !actions.contains(event.relatedTarget as Node)) closeMenu();
     });
     const onOutsideClick = (event: MouseEvent) => {
       if (!actions.contains(event.target as Node)) closeMenu();
