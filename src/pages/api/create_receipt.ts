@@ -121,24 +121,27 @@ export async function POST({ request }: { request: Request }) {
     // --- TinyURL Shortening ---
     let shortUrl = data.url.he;
     try {
-      const tinyResponse = await fetch('https://api.tinyurl.com/create', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${tinyToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          url: data.url.he,
-          domain: 'tinyurl.com',
-        }),
-      });
+      if (tinyToken) {
+        const tinyResponse = await fetch('https://api.tinyurl.com/create', {
+          signal: AbortSignal.timeout(5000),
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${tinyToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: data.url.he,
+            domain: 'tinyurl.com',
+          }),
+        });
 
-      const tinyData = await tinyResponse.json();
+        const tinyData = await tinyResponse.json();
 
-      if (tinyResponse.ok && tinyData.data && tinyData.data.tiny_url) {
-        shortUrl = tinyData.data.tiny_url;
-      } else {
-        console.error('TinyURL API error:', tinyData);
+        if (tinyResponse.ok && tinyData.data && tinyData.data.tiny_url) {
+          shortUrl = tinyData.data.tiny_url;
+        } else {
+          console.error('TinyURL API error:', tinyData);
+        }
       }
     } catch (e) {
       console.error('TinyURL fetch error:', e);

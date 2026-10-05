@@ -2,19 +2,23 @@
 export const prerender = false;
 import Layout from '~/layouts/ClientLayout.astro';
 import { sql } from '~/lib/db';
-import { businessSummary, israelToday, type ManagedSession, type Payment } from '~/lib/client-workflow';
+import { overviewQuery } from '~/lib/management-queries';
+import { businessSummary, israelToday } from '~/lib/client-workflow';
 const requested = Astro.url.searchParams.get('month') || '';
 const month = /^\d{4}-(0[1-9]|1[0-2])$/.test(requested) ? requested : israelToday().slice(0, 7);
 let summary = businessSummary([], [], month);
 let failed = false;
 const money = (value: number) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(value);
 try {
-  const [sessions, payments] = await Promise.all([
-    sql`SELECT id, session_type, package_type, to_pay, workflow FROM sessions`,
-    sql`SELECT session_id, id, stage, amount, receipt_status, paid_on::text AS paid_on FROM session_payments
-      WHERE paid_on >= ${month + '-01'}::date AND paid_on < (${month + '-01'}::date + interval '1 month')`,
-  ]);
-  summary = businessSummary(sessions as ManagedSession[], payments as Payment[], month);
+  const [result] = await sql.query(overviewQuery, [month]);
+  summary = {
+    received: Number(result.received),
+    outstanding: Number(result.outstanding),
+    cancelledBalance: Number(result.cancelled_balance),
+    completed: Number(result.completed),
+    missingDates: Number(result.missing_dates),
+    packages: (result.packages as [string, number][]).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])),
+  };
 } catch {
   failed = true;
 }

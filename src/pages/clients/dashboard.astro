@@ -3,23 +3,9 @@ export const prerender = false;
 import Layout from '~/layouts/ClientLayout.astro';
 import ManagementRow from '~/components/clients/ManagementRow.astro';
 import { sql } from '~/lib/db';
+import { dashboardQuery } from '~/lib/management-queries';
 import { managementData, israelToday, type ManagedSession, type Payment } from '~/lib/client-workflow';
 const today = israelToday();
-let data = managementData([], [], today);
-let failed = false;
-try {
-  const [sessions, payments] = await Promise.all([
-    sql`SELECT s.id, s.client_id, s.session_type, s.package_type, s.to_pay, s.contract_signed, s.workflow, c.name AS client_name
-      FROM sessions s JOIN clients c ON c.id = s.client_id
-      WHERE s.workflow->>'status' IS DISTINCT FROM 'cancelled'`,
-    sql`SELECT p.session_id, p.id, p.stage, p.amount, p.receipt_status, p.paid_on::text AS paid_on FROM session_payments p
-      JOIN sessions s ON s.id = p.session_id
-      WHERE s.workflow->>'status' IS DISTINCT FROM 'cancelled'`,
-  ]);
-  data = managementData(sessions as ManagedSession[], payments as Payment[], today);
-} catch {
-  failed = true;
-}
 const groups = [
   ['all', 'הכול'],
   ['overdue', 'מסירה באיחור'],
@@ -33,20 +19,31 @@ const groups = [
 ];
 const requested = Astro.url.searchParams.get('filter') || 'all';
 const filter = groups.some(([key]) => key === requested) ? requested : 'all';
-const filtered = data.attention.filter((row) => {
-  const key = row.next?.key;
-  if (filter === 'overdue') return row.overdue;
-  if (filter === 'today') return row.deadline === today && !row.delivered;
-  if (filter === 'contracts') return key === 'contract_sent' || key === 'signed';
-  if (filter === 'payments') return ['deposit', 'deposit_receipt', 'balance', 'balance_receipt'].includes(key || '');
-  if (filter === 'editing') return key === 'editing_done';
-  if (filter === 'delivery') return key === 'delivered';
-  if (filter === 'reviews') return key === 'review_requested';
-  if (filter === 'calendar') return key === 'calendar_added' || row.session.workflow?.calendar_needs_update === '1';
-  return true;
-});
 const requestedPage = Number(Astro.url.searchParams.get('page')) || 1;
-const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.floor(requestedPage)));
+const safePage = Number.isFinite(requestedPage) ? Math.max(1, Math.min(100000, Math.floor(requestedPage))) : 1;
+let page = 1;
+let failed = false;
+let totals = { shoots_today: 0, overdue_count: 0, due_today: 0, attention_count: 0, filtered_count: 0 };
+let upcoming = managementData([], [], today).upcoming;
+let filtered = managementData([], [], today).attention;
+try {
+  const [result] = await sql.query(dashboardQuery, [today, filter, safePage]);
+  totals = result as typeof totals;
+  page = Number(result.page);
+  const bookings = result.bookings as { section: string; session: ManagedSession; payments: Payment[] }[];
+  const rowsFor = (section: string) => {
+    const selected = bookings.filter((booking) => booking.section === section);
+    return managementData(
+      selected.map((booking) => booking.session),
+      selected.flatMap((booking) => booking.payments),
+      today
+    );
+  };
+  upcoming = rowsFor('upcoming').upcoming;
+  filtered = rowsFor('attention').attention;
+} catch {
+  failed = true;
+}
 ---
 
 <Layout title="מה על הפרק?" subtitle="הצילומים הקרובים, מסירת התמונות והשלב הבא לכל לקוח">
@@ -59,14 +56,10 @@ const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.flo
       <>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
-            ['צילומים היום', data.upcoming.filter((r) => r.day === today).length, '#upcoming'],
-            ['מסירות באיחור', data.attention.filter((r) => r.overdue).length, '?filter=overdue#attention'],
-            [
-              'מסירות להיום',
-              data.active.filter((r) => r.deadline === today && !r.delivered).length,
-              '?filter=today#attention',
-            ],
-            ['סשנים בטיפול', data.attention.length, '#attention'],
+            ['צילומים היום', totals.shoots_today, '#upcoming'],
+            ['מסירות באיחור', totals.overdue_count, '?filter=overdue#attention'],
+            ['מסירות להיום', totals.due_today, '?filter=today#attention'],
+            ['סשנים בטיפול', totals.attention_count, '#attention'],
           ].map(([label, count, href]) => (
             <a href={String(href)} class="rounded-xl bg-gray-50 p-4">
               <span class="block text-3xl font-bold">{count}</span>
@@ -77,9 +70,9 @@ const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.flo
         <section id="upcoming" class="panel">
           <h2 class="text-2xl font-bold">הצילומים הקרובים</h2>
           <p class="text-sm text-gray-600 mt-2">עד 10 הצילומים הקרובים, לפי המועד שנשמר במערכת.</p>
-          {data.upcoming.length ? (
+          {upcoming.length ? (
             <ul>
-              {data.upcoming.slice(0, 10).map((row) => (
+              {upcoming.map((row) => (
                 <ManagementRow row={row} today={today} />
               ))}
             </ul>
@@ -105,11 +98,11 @@ const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.flo
             </form>
           </div>
           <p class="text-sm text-gray-600 mt-4">
-            {filtered.length} סשנים · מסירות באיחור מופיעות ראשונות. מועד המסירה: 14 ימים לאחר יום הצילומים.
+            {totals.filtered_count} סשנים · מסירות באיחור מופיעות ראשונות. מועד המסירה: 14 ימים לאחר יום הצילומים.
           </p>
           {filtered.length ? (
             <ul>
-              {filtered.slice((page - 1) * 20, page * 20).map((row) => (
+              {filtered.map((row) => (
                 <ManagementRow row={row} today={today} />
               ))}
             </ul>
@@ -122,7 +115,7 @@ const page = Math.max(1, Math.min(Math.ceil(filtered.length / 20) || 1, Math.flo
                 הקודם
               </a>
             )}
-            {page * 20 < filtered.length && (
+            {page * 20 < totals.filtered_count && (
               <a class="underline" href={`?filter=${filter}&page=${page + 1}#attention`}>
                 הבא
               </a>

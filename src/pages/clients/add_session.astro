@@ -198,7 +198,7 @@ const selectedClient =
       const additionalPriceEl = document.getElementById('additional_price');
       const submitButton = document.getElementById('submit');
 
-      let lastFetchedPhone = '';
+      let lookupVersion = 0;
       let lookupTimeout;
       let clientId;
       const clientIdInput = document.getElementById('client_id');
@@ -225,6 +225,10 @@ const selectedClient =
         e.target.value = formatted;
 
         clearTimeout(lookupTimeout);
+        lookupVersion++;
+        clientId = null;
+        clientIdInput.value = '';
+        nameField.value = '';
         if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
         else {
           nameField.value = '';
@@ -232,8 +236,9 @@ const selectedClient =
       });
 
       async function lookupClient(phoneDigits) {
-        if (phoneDigits === lastFetchedPhone) return;
-        lastFetchedPhone = phoneDigits;
+        const version = ++lookupVersion;
+        clientId = null;
+        clientIdInput.value = '';
 
         nameField.value = 'מחפש...';
         try {
@@ -243,6 +248,7 @@ const selectedClient =
             body: JSON.stringify({ phone: phoneDigits }),
           });
           const data = await res.json();
+          if (version !== lookupVersion) return;
           if (!res.ok) {
             nameField.value = 'לא נמצא לקוח';
             clientId = null;
@@ -253,6 +259,7 @@ const selectedClient =
             clientIdInput.value = data.id;
           }
         } catch {
+          if (version !== lookupVersion) return;
           nameField.value = 'שגיאה בחיפוש';
         }
       }

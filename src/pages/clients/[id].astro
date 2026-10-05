@@ -14,8 +14,11 @@ let failed = false;
 try {
   const [clients, bookings, recordedPayments] = await Promise.all([
     sql`SELECT id, name, phone, email, notes FROM clients WHERE id = ${id}`,
-    sql`SELECT * FROM sessions WHERE client_id = ${id} ORDER BY id DESC`,
-    sql`SELECT p.*, p.paid_on::text AS paid_on FROM session_payments p JOIN sessions s ON s.id = p.session_id WHERE s.client_id = ${id} ORDER BY p.created_at`,
+    sql`SELECT id, client_id, session_type, package_type, session_price, to_pay, contract_signed,
+      CASE WHEN id = (SELECT max(id) FROM sessions WHERE client_id = ${id}) THEN workflow
+        ELSE jsonb_build_object('status', workflow->>'status') END AS workflow
+      FROM sessions WHERE client_id = ${id} ORDER BY id DESC`,
+    sql`SELECT p.*, p.paid_on::text AS paid_on FROM session_payments p JOIN sessions s ON s.id = p.session_id WHERE s.id = (SELECT max(id) FROM sessions WHERE client_id = ${id}) ORDER BY p.created_at`,
   ]);
   [client] = clients as Client[];
   sessions = bookings as Session[];
@@ -158,12 +161,17 @@ if (!client && !failed) Astro.response.status = 404;
           index === 0 ? (
             <SessionCard session={session} client={client} payments={payments} />
           ) : (
-            <details class="mb-5">
+            <details class="mb-5" data-session-history data-session-id={session.id}>
               <summary class="cursor-pointer p-4 font-bold">
                 {session.session_type} · סשן #{session.id} · יתרה ₪{session.to_pay}
                 {session.workflow?.status === 'cancelled' ? ' · בוטל' : ''}
               </summary>
-              <SessionCard session={session} client={client} payments={payments} />
+              <div id={`session-${session.id}`} data-history-content>
+                <a class="underline" data-load-history href={`/clients/session-card?session_id=${session.id}`}>
+                  טעינת פרטי הסשן
+                </a>
+                <p data-history-status role="status" />
+              </div>
             </details>
           )
         )}
@@ -231,6 +239,55 @@ if (!client && !failed) Astro.response.status = 404;
       if (event.key === 'Escape') close();
     });
   }
+  function initSessionHistory() {
+    document.querySelectorAll<HTMLDetailsElement>('[data-session-history]').forEach((details) => {
+      if (details.dataset.ready) return;
+      details.dataset.ready = '1';
+      let loading = false;
+      let loaded = false;
+      const content = details.querySelector<HTMLElement>('[data-history-content]')!;
+      const link = content.querySelector<HTMLAnchorElement>('[data-load-history]')!;
+      const status = content.querySelector<HTMLElement>('[data-history-status]')!;
+      const load = async () => {
+        if (loading || loaded || !details.open) return;
+        loading = true;
+        status.textContent = 'טוענת…';
+        try {
+          const response = await fetch(link.href, { cache: 'no-store' });
+          if (!response.ok) throw new Error('Unable to load session');
+          const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+          const card = doc.getElementById(`session-${details.dataset.sessionId}`);
+          if (!card || !details.isConnected) throw new Error('Missing session');
+          content.replaceWith(card);
+          loaded = true;
+          document.dispatchEvent(new Event('clients:session-loaded'));
+        } catch {
+          status.textContent = 'לא ניתן לטעון. לחצי על הקישור כדי לנסות שוב.';
+        } finally {
+          loading = false;
+        }
+      };
+      details.addEventListener('toggle', () => {
+        void load();
+      });
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        void load();
+      });
+      const reveal = () => {
+        if (location.hash !== `#session-${details.dataset.sessionId}`) return;
+        details.open = true;
+        void load();
+      };
+      window.addEventListener('hashchange', reveal);
+      document.addEventListener('astro:before-swap', () => window.removeEventListener('hashchange', reveal), {
+        once: true,
+      });
+      reveal();
+    });
+  }
+  initSessionHistory();
+  document.addEventListener('astro:page-load', initSessionHistory);
   initClientEditor();
   document.addEventListener('astro:page-load', initClientEditor);
 </script>

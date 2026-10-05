@@ -475,3 +475,90 @@ test('overview honors shoot corrections and invalid dates without loading the wo
   assert.equal(summary.outstanding, 1500);
   assert.equal(summary.cancelledBalance, 500);
 });
+
+for (const scenario of ['success', 'http-error', 'malformed', 'network-error', 'timeout', 'missing-token']) {
+  test(`receipt shortening: ${scenario} preserves the issued receipt and never creates a duplicate`, async () => {
+    const POST =
+      scenario === 'missing-token'
+        ? (
+            await import(
+              await load('src/pages/api/create_receipt.ts', {
+                "'../../lib/db.ts'": JSON.stringify(mockUrl),
+                'import.meta.env.MORNINGAPIKEY': "'test-key'",
+                'import.meta.env.MORNINGAPISECRET': "'test-secret'",
+                'import.meta.env.TINYTOKEN': 'undefined',
+              })
+            )
+          ).POST
+        : receipt;
+    state.record = {
+      amount: '100.00',
+      name: 'Test',
+      phone: '0501234567',
+      email: 'test@example.test',
+      paid_on: '2026-10-03',
+      receipt_status: 'pending',
+    };
+    state.claim = true;
+    state.queries = [];
+    const originalFetch = globalThis.fetch;
+    const originalError = console.error;
+    const originalTimeout = AbortSignal.timeout;
+    const full = 'https://example.test/receipt';
+    const short = 'https://tinyurl.com/test-receipt';
+    let documents = 0;
+    let shortenings = 0;
+    console.error = () => {};
+    AbortSignal.timeout = (milliseconds) => {
+      assert.equal(milliseconds, 5000);
+      return originalTimeout(scenario === 'timeout' ? 1 : milliseconds);
+    };
+    globalThis.fetch = async (url, options) => {
+      if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+      if (url.endsWith('/documents')) {
+        documents++;
+        return Response.json({ id: 'doc', number: 123, url: { he: full } });
+      }
+      shortenings++;
+      assert.equal(url, 'https://api.tinyurl.com/create');
+      assert.equal(options.method, 'POST');
+      assert.equal(options.headers.Authorization, 'Bearer test-tiny');
+      assert.deepEqual(JSON.parse(options.body), { url: full, domain: 'tinyurl.com' });
+      assert.equal(state.record.receipt_status, 'issued', 'receipt must be stored before shortening');
+      assert.equal(state.record.receipt_url, full);
+      assert.ok(options.signal instanceof AbortSignal);
+      if (scenario === 'timeout') {
+        await new Promise((resolve) => setTimeout(resolve, 15));
+        options.signal.throwIfAborted();
+      }
+      if (scenario === 'network-error') throw new Error('offline');
+      if (scenario === 'malformed') return new Response('invalid json');
+      if (scenario === 'http-error') return Response.json({ error: 'unavailable' }, { status: 503 });
+      return Response.json({ data: { tiny_url: short } });
+    };
+    const invoke = () =>
+      POST({
+        request: new Request('https://example.test/api/create_receipt', {
+          method: 'POST',
+          body: JSON.stringify({ payment_id: paymentId, payment: 1, description: 'Deposit' }),
+        }),
+      });
+    try {
+      const result = await invoke();
+      assert.equal(result.status, 200);
+      assert.equal((await result.json()).url, scenario === 'success' ? short : full);
+      assert.equal(state.record.receipt_status, 'issued');
+      assert.equal((await invoke()).status, 200);
+      assert.equal(documents, 1);
+      assert.equal(shortenings, scenario === 'missing-token' ? 0 : 1);
+      assert.equal(
+        state.queries.some((q) => q.text.includes('UPDATE sessions')),
+        false
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+      console.error = originalError;
+      AbortSignal.timeout = originalTimeout;
+    }
+  });
+}

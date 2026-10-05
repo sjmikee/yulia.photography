@@ -56,6 +56,7 @@ function setup() {
     'document',
   ])
     node(id);
+  nodes.document.querySelectorAll = () => [];
   runInNewContext(script, { document: nodes.document, focusClientField: (field) => field?.focus() });
   return { nodes, focused: () => focused };
 }

@@ -785,4 +785,5 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   });
   init();
   document.addEventListener('astro:page-load', init);
+  document.addEventListener('clients:session-loaded', init);
 </script>

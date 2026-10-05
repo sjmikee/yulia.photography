@@ -116,3 +116,15 @@ No additional database migration is required. After deployment, login opens `/cl
 - **Overview:** receipts received are summed from recorded payment amounts by `paid_on` for the selected month, including cancelled bookings. Outstanding balances are current across all months, with cancelled balances separated. Completed shoots and package counts use the saved shoot date and effective `shoot_done` state, excluding cancellations. Historical payments are not inferred from balances; undated completed shoots are reported separately. These are operational totals, not profit or refund accounting.
 
 Verification includes date arithmetic across daylight-saving changes, year/month boundaries, cancellation exclusion, correction overrides, monthly payment attribution, client validation/confirmation, and rescheduling guards. Tests mock provider/database requests and do not contact clients.
+
+## Client management efficiency
+
+No database migration is needed for these changes.
+
+- Dashboard filtering, counts and pagination run in PostgreSQL. Each response contains at most 20 work items and 10 upcoming bookings, with payments only for those bookings. Counts still cover all matching sessions. Effective stage corrections, cancellation exclusions and delivery deadlines are preserved.
+- The business overview calculates totals and package counts in PostgreSQL instead of transferring all sessions and payments to the page server.
+- Client profiles initially load full details and payments for the newest session. Older sessions retain their summaries and load their full cards when opened. Links to a specific older session automatically open and load it; failed loads offer a retry.
+- Editing the booking phone field immediately clears the selected client. Outdated lookup responses are ignored, and failed searches can retry the same number.
+- Receipt creation still sends the original receipt URL to TinyURL with the configured token and returns TinyURL's short link on success. Shortening is skipped without a token and has a five-second timeout. Failures return the original receipt URL; the issued receipt is already saved and is never recreated. Reopening an issued receipt continues to use its saved original URL, as before.
+
+The regression suite uses a local PostgreSQL engine (`@electric-sql/pglite`, development only) to compare dashboard and overview queries against the existing workflow calculations. Receipt tests mock Morning and TinyURL, including success, HTTP errors, malformed responses, network errors, timeout, missing-token and duplicate-request behavior. They do not issue real receipts or create live short links.
