@@ -564,6 +564,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   }
 </style>
 <script>
+  import { focusClientField } from '~/lib/focus-client-field';
   import { openClientApp } from '~/lib/client-app-links';
   import { safeWebUrl, deliveryDeadline, displayDay, deliveryLabel } from '~/lib/client-workflow';
   const initialized = new WeakSet();
@@ -600,7 +601,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
         closeMenu();
         statusForm.hidden = false;
         statusOpen.setAttribute('aria-expanded', 'true');
-        statusForm.querySelector<HTMLElement>('textarea, button')?.focus();
+        focusClientField(statusForm.querySelector<HTMLElement>('textarea, button'));
       });
       const closeStatus = () => {
         statusForm.hidden = true;

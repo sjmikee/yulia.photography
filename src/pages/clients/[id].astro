@@ -173,6 +173,7 @@ if (!client && !failed) Astro.response.status = 404;
 </Layout>
 
 <script>
+  import { focusClientField } from '~/lib/focus-client-field';
   function initClientEditor() {
     const button = document.querySelector<HTMLButtonElement>('#edit-client');
     const form = document.querySelector<HTMLFormElement>('#client-editor');
@@ -221,7 +222,7 @@ if (!client && !failed) Astro.response.status = 404;
       form.hidden = false;
       fieldset.disabled = false;
       button.setAttribute('aria-expanded', 'true');
-      form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
+      focusClientField(form.querySelector<HTMLInputElement>('[name="name"]'));
     });
     form.querySelector('#cancel-client-edit')?.addEventListener('click', close);
     form.addEventListener('keydown', (event) => {

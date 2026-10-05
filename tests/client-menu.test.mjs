@@ -5,7 +5,10 @@ import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 
 const page = await readFile(new URL('../src/pages/clients/[id].astro', import.meta.url), 'utf8');
-const script = ts.transpileModule(page.match(/<script>([\s\S]*?)<\/script>/)[1], {}).outputText;
+const script = ts.transpileModule(
+  page.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/import .*focus-client-field';/, ''),
+  {}
+).outputText;
 
 function setup() {
   const nodes = {};
@@ -53,7 +56,7 @@ function setup() {
     'document',
   ])
     node(id);
-  runInNewContext(script, { document: nodes.document });
+  runInNewContext(script, { document: nodes.document, focusClientField: (field) => field?.focus() });
   return { nodes, focused: () => focused };
 }
 
