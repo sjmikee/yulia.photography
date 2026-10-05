@@ -8,3 +8,9 @@
 >
     <span class="sr-only">Scroll to top</span> ↑
 </button>
+
+<style>
+  :global(body:has(#header.expanded)) #scrollToTop {
+    display: none;
+  }
+</style>
