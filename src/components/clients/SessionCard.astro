@@ -635,7 +635,9 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
             });
             if (!response.ok || !(await response.json()).saved) throw new Error('Save failed');
             saved = true;
-            const page = await fetch(location.href, { cache: 'no-store' });
+            const page = await fetch(`/clients/session-card?session_id=${card.dataset.sessionId}`, {
+              cache: 'no-store',
+            });
             if (!page.ok) throw new Error('Refresh failed');
             const doc = new DOMParser().parseFromString(await page.text(), 'text/html');
             const replacement = doc.getElementById(card.id);

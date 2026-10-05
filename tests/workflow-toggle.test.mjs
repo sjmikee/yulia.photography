@@ -33,6 +33,7 @@ for (const succeeds of [true, false]) {
       },
     };
     const card = {
+      dataset: { sessionId: '42' },
       querySelectorAll: (selector) => (selector === '[data-stage-toggle]' ? [form] : [button]),
       querySelector: () => status,
     };
@@ -53,6 +54,8 @@ for (const succeeds of [true, false]) {
           assert.equal(options.headers.Accept, 'application/json');
           return { ok: succeeds, json: async () => ({ saved: true }) };
         }
+        assert.equal(url, '/clients/session-card?session_id=42');
+        assert.equal(options.cache, 'no-store');
         // Isolate saving from card rendering: a refresh failure must not undo a saved toggle.
         return { ok: false };
       },

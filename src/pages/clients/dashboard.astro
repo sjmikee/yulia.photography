@@ -9,8 +9,12 @@ let data = managementData([], [], today);
 let failed = false;
 try {
   const [sessions, payments] = await Promise.all([
-    sql`SELECT s.*, c.name AS client_name FROM sessions s JOIN clients c ON c.id = s.client_id`,
-    sql`SELECT session_id, id, stage, amount, receipt_status, paid_on::text AS paid_on FROM session_payments`,
+    sql`SELECT s.id, s.client_id, s.session_type, s.package_type, s.to_pay, s.contract_signed, s.workflow, c.name AS client_name
+      FROM sessions s JOIN clients c ON c.id = s.client_id
+      WHERE s.workflow->>'status' IS DISTINCT FROM 'cancelled'`,
+    sql`SELECT p.session_id, p.id, p.stage, p.amount, p.receipt_status, p.paid_on::text AS paid_on FROM session_payments p
+      JOIN sessions s ON s.id = p.session_id
+      WHERE s.workflow->>'status' IS DISTINCT FROM 'cancelled'`,
   ]);
   data = managementData(sessions as ManagedSession[], payments as Payment[], today);
 } catch {

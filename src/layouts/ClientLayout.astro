@@ -14,6 +14,7 @@ Astro.response.headers.set('Cache-Control', 'private, no-store');
 ---
 
 <Layout metadata={{ title, robots: { index: false, follow: false } }}>
+  <div id="client-loading" class="client-loading" role="status" hidden>טוענת…</div>
   <LandingHeader isSticky />
   <section class="bg-gray-50 py-16 px-6 text-center" dir="rtl">
     <h1 class="text-3xl font-bold mb-4">{title}</h1>
@@ -44,7 +45,37 @@ Astro.response.headers.set('Cache-Control', 'private, no-store');
   </footer>
   <ScrollToTopButton />
 </Layout>
+<script>
+  import type { TransitionBeforePreparationEvent } from 'astro:transitions/client';
+  let navigation = 0;
+  document.addEventListener('astro:before-preparation', (event) => {
+    const indicator = document.getElementById('client-loading');
+    if (!indicator) return;
+    const current = ++navigation;
+    const transition = event as TransitionBeforePreparationEvent;
+    const loader = transition.loader;
+    indicator.hidden = false;
+    transition.loader = async () => {
+      try {
+        await loader();
+      } finally {
+        if (current === navigation) indicator.hidden = true;
+      }
+    };
+  });
+</script>
 <style>
+  .client-loading {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    padding: 0.4rem 1rem;
+    background: #262624;
+    color: white;
+    text-align: center;
+    font-size: 0.875rem;
+    pointer-events: none;
+  }
   .client-navigation {
     display: flex;
     align-items: center;

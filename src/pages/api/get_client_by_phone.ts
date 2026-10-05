@@ -7,15 +7,17 @@ export async function POST({ request }: { request: Request }) {
   if (!phone) return new Response(JSON.stringify({ error: 'Missing phone' }), { status: 400 });
 
   try {
-    const result = await sql`SELECT id, name, email FROM clients WHERE phone = ${phone} ORDER BY id DESC LIMIT 1;`;
-    if (result.length === 0) return new Response(JSON.stringify({ error: 'Client not found' }), { status: 404 });
-    const sessions =
+    // Fetch optional sessions in the same round trip as the selected client.
+    const result =
       include_sessions === true
-        ? await sql`SELECT id, session_type, package_type, workflow FROM sessions WHERE client_id = ${result[0].id} ORDER BY id DESC`
-        : undefined;
-    return new Response(JSON.stringify({ sessions, id: result[0].id, name: result[0].name, email: result[0].email }), {
-      status: 200,
-    });
+        ? await sql`SELECT c.id, c.name, c.email,
+          COALESCE((SELECT json_agg(s ORDER BY s.id DESC) FROM (
+            SELECT id, session_type, package_type, workflow FROM sessions WHERE client_id = c.id
+          ) s), '[]'::json) AS sessions
+          FROM clients c WHERE c.phone = ${phone} ORDER BY c.id DESC LIMIT 1`
+        : await sql`SELECT id, name, email FROM clients WHERE phone = ${phone} ORDER BY id DESC LIMIT 1`;
+    if (!result.length) return Response.json({ error: 'Client not found' }, { status: 404 });
+    return Response.json(result[0]);
   } catch (err) {
     console.error(err);
     return new Response(JSON.stringify({ error: 'Database error' }), { status: 500 });

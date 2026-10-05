@@ -162,7 +162,18 @@ export function managementData(sessions: ManagedSession[], payments: Payment[], 
   return { rows, active, upcoming, attention };
 }
 export function businessSummary(sessions: ManagedSession[], payments: Payment[], month: string) {
-  const { rows, active } = managementData(sessions, payments);
+  // The overview needs balances and shoot completion, not the full sorted work queue.
+  const rows = sessions.map((session) => {
+    const day = session.workflow?.scheduled?.slice(0, 10) || '';
+    const override = session.workflow?.override_shoot_done;
+    return {
+      session,
+      cancelled: isCancelled(session),
+      shot: override === '1' || (override !== '0' && !!session.workflow?.shoot_done),
+      day: validDay(day) ? day : '',
+    };
+  });
+  const active = rows.filter((row) => !row.cancelled);
   const completed = active.filter((row) => row.shot && row.day.startsWith(month));
   const packages = new Map<string, number>();
   for (const { session } of completed) {

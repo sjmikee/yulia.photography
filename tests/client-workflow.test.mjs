@@ -458,3 +458,20 @@ test('rescheduling uses a stale-date guard, retains previous date, and asks for 
   assert.ok(query.values.includes('2026-10-10T10:00'));
   assert.equal(deliveryDeadline(booking(1, { scheduled: '2026-10-20T10:00' })), '2026-11-03');
 });
+
+test('overview honors shoot corrections and invalid dates without loading the work queue', () => {
+  const summary = businessSummary(
+    [
+      booking(1, { scheduled: '2026-10-01T10:00', override_shoot_done: '1' }),
+      booking(2, { scheduled: '2026-10-02T10:00', shoot_done: 'yes', override_shoot_done: '0' }),
+      booking(3, { scheduled: '2026-02-30T10:00', override_shoot_done: '1' }),
+      booking(4, { scheduled: '2026-10-03T10:00', override_shoot_done: '1', status: 'cancelled' }),
+    ],
+    [],
+    '2026-10'
+  );
+  assert.equal(summary.completed, 1);
+  assert.equal(summary.missingDates, 1);
+  assert.equal(summary.outstanding, 1500);
+  assert.equal(summary.cancelledBalance, 500);
+});

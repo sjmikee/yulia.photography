@@ -12,12 +12,14 @@ let sessions: Session[] = [];
 let payments: Payment[] = [];
 let failed = false;
 try {
-  [client] = (await sql`SELECT id, name, phone, email, notes FROM clients WHERE id = ${id}`) as Client[];
-  if (client) {
-    sessions = (await sql`SELECT * FROM sessions WHERE client_id = ${id} ORDER BY id DESC`) as Session[];
-    payments =
-      (await sql`SELECT p.*, p.paid_on::text AS paid_on FROM session_payments p JOIN sessions s ON s.id = p.session_id WHERE s.client_id = ${id} ORDER BY p.created_at`) as Payment[];
-  }
+  const [clients, bookings, recordedPayments] = await Promise.all([
+    sql`SELECT id, name, phone, email, notes FROM clients WHERE id = ${id}`,
+    sql`SELECT * FROM sessions WHERE client_id = ${id} ORDER BY id DESC`,
+    sql`SELECT p.*, p.paid_on::text AS paid_on FROM session_payments p JOIN sessions s ON s.id = p.session_id WHERE s.client_id = ${id} ORDER BY p.created_at`,
+  ]);
+  [client] = clients as Client[];
+  sessions = bookings as Session[];
+  payments = recordedPayments as Payment[];
 } catch {
   failed = true;
 }

@@ -48,9 +48,6 @@ export const POST: APIRoute = async ({ request }) => {
   const total_price = session_price + additional_price;
   const to_pay = total_price;
 
-  const clients = await sql`SELECT id FROM clients WHERE id = ${client_id}`;
-  if (!clients.length) return new Response('Client not found', { status: 404 });
-
   const [session] = await sql`
     INSERT INTO sessions (
       client_id,
@@ -60,15 +57,18 @@ export const POST: APIRoute = async ({ request }) => {
       to_pay,
       workflow
     )
-    VALUES (
-      ${client_id},
+    SELECT
+      id,
       ${sessionType},
       ${package_type},
       ${total_price},
       ${to_pay},
       ${JSON.stringify({ duration: String(packageDurationHours(package_type)) })}::jsonb
-    ) RETURNING id
+    FROM clients WHERE id = ${client_id}
+    RETURNING id
   `;
+
+  if (!session) return new Response('Client not found', { status: 404 });
 
   return new Response(null, {
     status: 303,

@@ -10,8 +10,9 @@ let failed = false;
 const money = (value: number) => new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(value);
 try {
   const [sessions, payments] = await Promise.all([
-    sql`SELECT s.*, c.name AS client_name FROM sessions s JOIN clients c ON c.id = s.client_id`,
-    sql`SELECT session_id, id, stage, amount, receipt_status, paid_on::text AS paid_on FROM session_payments`,
+    sql`SELECT id, session_type, package_type, to_pay, workflow FROM sessions`,
+    sql`SELECT session_id, id, stage, amount, receipt_status, paid_on::text AS paid_on FROM session_payments
+      WHERE paid_on >= ${month + '-01'}::date AND paid_on < (${month + '-01'}::date + interval '1 month')`,
   ]);
   summary = businessSummary(sessions as ManagedSession[], payments as Payment[], month);
 } catch {

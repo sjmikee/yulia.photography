@@ -62,24 +62,14 @@ export async function POST(context: APIContext) {
 
     // 3) load template PDF and font via URL fetching
     const baseUrl = `${context.url.protocol}//${context.url.host}`;
-    let templateRes;
-
-    if (conf == '1') {
-      templateRes = await fetch(`${baseUrl}/contract_template_fillable.pdf`);
-    } else {
-      templateRes = await fetch(`${baseUrl}/contract_template_conf_fillable.pdf`);
-    }
-
-    if (!templateRes.ok) {
-      throw new Error(`Failed to fetch PDF: ${templateRes.status} ${templateRes.statusText}`);
-    }
-    const templateBytes = new Uint8Array(await templateRes.arrayBuffer());
-
-    const fontRes = await fetch(`${baseUrl}/fonts/NotoSansHebrew-Regular.ttf`);
-    if (!fontRes.ok) {
-      throw new Error(`Failed to fetch font: ${fontRes.status} ${fontRes.statusText}`);
-    }
-    const fontBytes = new Uint8Array(await fontRes.arrayBuffer());
+    const templatePath = conf === '1' ? '/contract_template_fillable.pdf' : '/contract_template_conf_fillable.pdf';
+    const [templateBytes, fontBytes] = await Promise.all(
+      [templatePath, '/fonts/NotoSansHebrew-Regular.ttf'].map(async (path) => {
+        const response = await fetch(`${baseUrl}${path}`);
+        if (!response.ok) throw new Error(`Failed to fetch contract asset: ${response.status}`);
+        return new Uint8Array(await response.arrayBuffer());
+      })
+    );
 
     const sessionId = booking.id;
     const price = booking.session_price?.toString() ?? 'לא נמצא';
@@ -92,7 +82,6 @@ export async function POST(context: APIContext) {
     const page2 = pdfDoc.getPages()[1];
 
     // Load Hebrew-capable font
-    pdfDoc.registerFontkit(fontkit);
     const hebrewFont = await pdfDoc.embedFont(fontBytes);
 
     // Update all text fields to use Hebrew font for appearance generation

@@ -1,0 +1,30 @@
+---
+export const prerender = false;
+export const partial = true;
+import SessionCard from '~/components/clients/SessionCard.astro';
+import { sql } from '~/lib/db';
+import { validId, type Client, type Session, type Payment } from '~/lib/client-workflow';
+
+let id: number;
+try {
+  id = validId(Astro.url.searchParams.get('session_id'));
+} catch {
+  return new Response('Invalid session', { status: 400 });
+}
+let record;
+try {
+  [record] = await sql`SELECT row_to_json(s) AS session,
+    json_build_object('id', c.id, 'name', c.name, 'phone', c.phone, 'email', c.email) AS client,
+    COALESCE((SELECT json_agg(p ORDER BY p.created_at) FROM session_payments p WHERE p.session_id = s.id), '[]'::json) AS payments
+    FROM sessions s JOIN clients c ON c.id = s.client_id WHERE s.id = ${id}`;
+} catch {
+  return new Response('Unavailable', { status: 503 });
+}
+if (!record) return new Response('Not found', { status: 404 });
+---
+
+<SessionCard
+  session={record.session as Session}
+  client={record.client as Client}
+  payments={record.payments as Payment[]}
+/>
