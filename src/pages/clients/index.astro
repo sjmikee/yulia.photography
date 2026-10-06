@@ -1,5 +1,6 @@
 ---
 export const prerender = false;
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/ClientLayout.astro';
 import type { Client } from '~/lib/client-workflow';
 import { sql } from '~/lib/db';
@@ -21,30 +22,76 @@ try {
 }
 ---
 
-<Layout title="לקוחות">
-  <form method="GET" class="panel flex flex-wrap items-end gap-3">
-    <label class="grow">חיפוש לפי שם, טלפון או מייל<input name="q" value={q} type="search" /></label>
-    <button class="btn-primary">חיפוש</button><a class="btn-secondary" href="/clients/add">הוספת לקוח</a>
+<Layout title="לקוחות" subtitle="פרטי הקשר, הצילומים וההיסטוריה של כל לקוח">
+  <form method="GET" class="panel client-search">
+    <label
+      >חיפוש לפי שם, טלפון או מייל<input
+        name="q"
+        value={q}
+        type="search"
+        placeholder="שם, טלפון או כתובת מייל"
+      /></label
+    >
+    <button class="btn-primary"><Icon name="tabler:search" width="20" height="20" aria-hidden="true" /> חיפוש</button>
   </form>
   {
     failed ? (
-      <p role="alert">לא ניתן לטעון לקוחות כרגע. נסי לרענן בעוד רגע.</p>
+      <p class="client-empty" role="alert">
+        לא ניתן לטעון לקוחות כרגע. נסי לרענן בעוד רגע.
+      </p>
     ) : (
       <>
-        {!clients.length && <p>לא נמצאו לקוחות. אפשר לשנות את החיפוש או להוסיף לקוח חדש.</p>}
-        <ul class="grid gap-4 sm:grid-cols-2 ">
+        {!clients.length && (
+          <div class="client-empty">
+            <Icon name="tabler:users" width="36" height="36" aria-hidden="true" />
+            <h2>לא נמצאו לקוחות</h2>
+            <p>{q ? 'נסי שם אחר, מספר טלפון או כתובת מייל.' : 'הוסיפי את הלקוח הראשון כדי להתחיל לתכנן צילומים.'}</p>
+            <a class="btn-secondary" href={q ? '/clients' : '/clients/add'}>
+              {q ? 'ניקוי החיפוש' : 'הוספת לקוח ראשון'}
+            </a>
+          </div>
+        )}
+        {q && clients.length > 0 && (
+          <p class="mb-4 text-sm">
+            תוצאות עבור <strong>{q}</strong>{' '}
+            <a class="underline" href="/clients">
+              ניקוי החיפוש
+            </a>
+          </p>
+        )}
+        <ul class="client-directory">
           {clients.slice(0, 30).map((c) => (
-            <li class="panel">
-              <h2 class="text-xl font-bold">
-                <a href={`/clients/${c.id}`}>{c.name}</a>
-              </h2>
-              <p dir="ltr" class="text-right mt-2">
-                {c.phone}
-              </p>
-              <p class="break-words">{c.email}</p>
-              <p class="mt-3 mb-4">{c.session_count} סשנים</p>
-              <a class="btn-secondary w-full" href={`/clients/${c.id}`}>
-                פתיחת כרטיס לקוח
+            <li class="client-record">
+              <div class="client-identity">
+                <span class="client-avatar" aria-hidden="true">
+                  {c.name
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map((part) => part[0])
+                    .join('')}
+                </span>
+                <div>
+                  <h2 class="text-xl font-bold">
+                    <a href={`/clients/${c.id}`}>{c.name}</a>
+                  </h2>
+                  <span class="client-count">
+                    {Number(c.session_count) === 1 ? 'סשן אחד' : `${c.session_count} סשנים`}
+                  </span>
+                </div>
+              </div>
+              <a class="client-contact" href={`tel:${c.phone}`}>
+                <Icon name="tabler:phone" width="17" height="17" aria-hidden="true" />
+                <bdi>{c.phone}</bdi>
+              </a>
+              {c.email && (
+                <a class="client-contact" href={`mailto:${c.email}`}>
+                  <Icon name="tabler:mail" width="17" height="17" aria-hidden="true" />
+                  <bdi>{c.email}</bdi>
+                </a>
+              )}
+              <a class="client-open" href={`/clients/${c.id}`}>
+                פתיחת כרטיס לקוח <Icon name="tabler:chevron-left" width="18" height="18" aria-hidden="true" />
               </a>
             </li>
           ))}
@@ -57,3 +104,103 @@ try {
     )
   }
 </Layout>
+
+<style>
+  .client-identity {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+  .client-identity > div {
+    min-width: 0;
+  }
+  .client-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: #233237;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  .client-count {
+    color: #626866;
+    font-size: 0.8rem;
+  }
+  .client-contact {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 36px;
+    color: #626866;
+    font-size: 0.9rem;
+  }
+  .client-contact svg {
+    flex-shrink: 0;
+  }
+  .client-contact bdi {
+    overflow-wrap: anywhere;
+  }
+  .client-contact:hover {
+    color: #e00004;
+  }
+
+  .client-search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 0.75rem;
+  }
+  .client-directory {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .client-record {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid #dedfdd;
+    border-radius: 10px;
+    padding: 1.25rem;
+    background: white;
+  }
+  .client-record h2 {
+    overflow-wrap: anywhere;
+  }
+  .client-record p {
+    color: #626866;
+  }
+  .client-open {
+    margin-top: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #dedfdd;
+    font-weight: 600;
+    color: #233237;
+    min-height: 44px;
+  }
+  .client-open:hover {
+    color: #e00004;
+    text-decoration: underline;
+  }
+  @media (max-width: 900px) {
+    .client-directory {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 540px) {
+    .client-directory {
+      grid-template-columns: 1fr;
+    }
+    .client-search {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,38 +1,12 @@
 ---
 export const prerender = false;
 
-import Layout from '~/layouts/Layout.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
-import LandingHeader from '~/components/widgets/LandingHeader.astro';
-import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
-import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
-
-const richMetadata = {
-  title: 'יוליה קורנסקי - הוספת אירוע ליומן',
-  description: 'הוספת אירוע חדש בגוגל קלנדר ללקוח קיים',
-};
-
-const metadata = {
-  title: 'יוליה קורנסקי | הוספת אירוע ליומן',
-  description: 'הוספת אירוע חדש בגוגל קלנדר ללקוח קיים',
-  ignoreTitleTemplate: true,
-};
+import Layout from '~/layouts/ClientLayout.astro';
 ---
 
-<Layout metadata={metadata}>
-  <meta name="robots" content="noindex" />
-  <RichSeo metadata={richMetadata} />
-  <LandingHeader isSticky />
-  <ScrollToTopButton />
-
-  <!-- Hero Section -->
-  <section class="bg-gray-50 py-16 px-6 text-center">
-    <h1 class="text-3xl font-bold mb-4">הוספת לקוח ליומן</h1>
-    <p class="text-lg text-gray-700 max-w-2xl mx-auto">קובעים צילומים בקליק אחד 🎯</p>
-  </section>
-
+<Layout title="הוספת לקוח ליומן" subtitle="קובעים צילומים בקליק אחד 🎯">
   <!-- Add Event Form -->
-  <section class="max-w-4xl mx-auto py-12 px-6">
+  <section class="legacy-form-section">
     <form id="calendarForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
       <label id="booking-label" class="block" hidden>
         סשן
@@ -41,77 +15,91 @@ const metadata = {
         </select>
       </label>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="tel"
-          id="phone"
-          placeholder="טלפון לקוח"
-          required
-          class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-        />
-        <input
-          type="text"
-          id="clientName"
-          placeholder="שם"
-          readonly
-          class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
-        />
-        <input
-          type="text"
-          id="clientEmail"
-          placeholder="מייל"
-          readonly
-          class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
-        />
-        <label class="block">תאריך:</label>
-        <input
-          type="date"
-          id="date"
-          placeholder="בחר תאריך"
-          required
-          class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-        />
-        <label class="block">שעה:</label>
-        <input
-          type="time"
-          id="time"
-          placeholder="בחר שעה"
-          required
-          class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-        />
+        <label
+          >טלפון לקוח<input
+            type="tel"
+            id="phone"
+            placeholder="טלפון לקוח"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          /></label
+        >
+        <label
+          >שם<input
+            type="text"
+            id="clientName"
+            placeholder="שם"
+            readonly
+            class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+          /></label
+        >
+        <label
+          >מייל<input
+            type="text"
+            id="clientEmail"
+            placeholder="מייל"
+            readonly
+            class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+          /></label
+        >
+
+        <label
+          >בחר תאריך<input
+            type="date"
+            id="date"
+            placeholder="בחר תאריך"
+            required
+            class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          /></label
+        >
+
+        <label
+          >בחר שעה<input
+            type="time"
+            id="time"
+            placeholder="בחר שעה"
+            required
+            class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          /></label
+        >
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <select
-          id="sessionType"
-          required
-          class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+        <label
+          >סוג הצילומים<select
+            id="sessionType"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          >
+            <option value="" disabled selected>בחרי סוג צילומים</option>
+            <option value="צילומים אישיים">צילומים אישיים</option>
+            <option value="צילומי תדמית">צילומי תדמית</option>
+            <option value="צילומי נשיות">צילומי נשיות</option>
+            <option value="צילומי זוגיות">צילומי זוגיות</option>
+            <option value="צילומי משפחה">צילומי משפחה</option>
+            <option value="צילומי הריון">צילומי הריון</option>
+            <option value="צילומי גיל שנה">צילומי גיל שנה</option>
+            <option value="צילומי ילדים">צילומי ילדים</option>
+            <option value="בוק בת מצווה">בוק בת מצווה</option>
+            <option value="בוק בר מצווה">בוק בר מצווה</option>
+            <option value="צילומי אירוע">צילומי אירוע</option>
+          </select></label
         >
-          <option value="" disabled selected>בחרי סוג צילומים</option>
-          <option value="צילומים אישיים">צילומים אישיים</option>
-          <option value="צילומי תדמית">צילומי תדמית</option>
-          <option value="צילומי נשיות">צילומי נשיות</option>
-          <option value="צילומי זוגיות">צילומי זוגיות</option>
-          <option value="צילומי משפחה">צילומי משפחה</option>
-          <option value="צילומי הריון">צילומי הריון</option>
-          <option value="צילומי גיל שנה">צילומי גיל שנה</option>
-          <option value="צילומי ילדים">צילומי ילדים</option>
-          <option value="בוק בת מצווה">בוק בת מצווה</option>
-          <option value="בוק בר מצווה">בוק בר מצווה</option>
-          <option value="צילומי אירוע">צילומי אירוע</option>
-        </select>
 
-        <select
-          id="duration"
-          required
-          class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+        <label
+          >משך הצילומים<select
+            id="duration"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          >
+            <option value="" disabled selected>בחרי משך</option>
+            <option value="1">1 שעות</option>
+            <option value="2">2 שעות</option>
+            <option value="3">3 שעות</option>
+            <option value="6">6 שעות</option>
+            <option value="9">9 שעות</option>
+          </select></label
         >
-          <option value="" disabled selected>בחרי משך</option>
-          <option value="1">1 שעות</option>
-          <option value="2">2 שעות</option>
-          <option value="3">3 שעות</option>
-          <option value="6">6 שעות</option>
-          <option value="9">9 שעות</option>
-        </select>
       </div>
 
       <button
@@ -122,22 +110,6 @@ const metadata = {
       </button>
     </form>
   </section>
-
-  <!-- Footer & WhatsApp -->
-
-  <footer class="bg-footer text-white py-8 text-center">
-    <button
-      aria-label="Footer Scroll to top"
-      id="scrollToTopFooter"
-      class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
-    >
-      <span class="sr-only">Footer Scroll to top</span> ↑
-    </button>
-    <p class="mb-4 font-bold">יוליה קורנסקי | yulia.photography</p>
-    <p>הוספת אירוע ליומן ❤️</p>
-  </footer>
-
-  <WhatsAppButton />
 </Layout>
 <!-- Scripts -->
 

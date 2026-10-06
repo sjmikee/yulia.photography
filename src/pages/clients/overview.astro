@@ -38,7 +38,7 @@ try {
       </p>
     ) : (
       <>
-        <div class="grid sm:grid-cols-2 gap-4">
+        <div class="overview-metrics grid sm:grid-cols-2 gap-4">
           <section class="panel">
             <>
               <h2>תשלומים שהתקבלו בחודש הנבחר</h2>
@@ -73,9 +73,14 @@ try {
           {summary.packages.length ? (
             <ul class="divide-y divide-gray-200">
               {summary.packages.map(([name, count]) => (
-                <li class="flex justify-between gap-4 py-3">
-                  <span>{name}</span>
-                  <strong>{count}</strong>
+                <li class="package-row">
+                  <div>
+                    <span>{name}</span>
+                    <strong>{count}</strong>
+                  </div>
+                  <div class="package-track" aria-hidden="true">
+                    <span style={`width: ${(count / Math.max(...summary.packages.map(([, n]) => n), 1)) * 100}%`} />
+                  </div>
                 </li>
               ))}
             </ul>
@@ -96,3 +101,43 @@ try {
     )
   }
 </Layout>
+
+<style>
+  .overview-metrics .panel {
+    margin-bottom: 0;
+  }
+  .overview-metrics {
+    margin-bottom: 1.5rem;
+  }
+  .overview-metrics .panel:first-child {
+    border-inline-start: 4px solid #233237;
+  }
+  .overview-metrics h2 {
+    font-weight: 600;
+  }
+  .overview-metrics p {
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .package-row {
+    padding: 1rem 0;
+  }
+  .package-row > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.65rem;
+  }
+  .package-track {
+    height: 6px;
+    border-radius: 3px;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+  .package-track span {
+    display: block;
+    height: 100%;
+    background: #233237;
+    border-radius: inherit;
+  }
+</style>

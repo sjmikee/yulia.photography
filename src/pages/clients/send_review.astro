@@ -1,81 +1,42 @@
 ---
 export const prerender = false;
 
-import Layout from '~/layouts/Layout.astro';
-import RichSeo from '~/components/common/RichSeo.astro';
-import LandingHeader from '~/components/widgets/LandingHeader.astro';
-import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
-import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
-
-const richMetadata = {
-  title: 'יוליה קורנסקי - שליחת קישור לביקורת גוגל',
-  description: 'שליחת קישור לכתיבת ביקורת גוגל ללקוח קיים דרך WhatsApp',
-};
-
-const metadata = {
-  title: 'יוליה קורנסקי | שליחת ביקורת גוגל',
-  description: 'שליחת קישור לכתיבת ביקורת גוגל ללקוח קיים דרך WhatsApp',
-  ignoreTitleTemplate: true,
-};
+import Layout from '~/layouts/ClientLayout.astro';
 ---
 
-<Layout metadata={metadata}>
-  <meta name="robots" content="noindex" />
-  <div class="flex flex-col min-h-screen">
-    <main class="flex-grow">
-      <RichSeo metadata={richMetadata} />
-      <LandingHeader isSticky />
-      <ScrollToTopButton />
+<Layout title="שליחת ביקורת גוגל" subtitle="שולחים קישור לכתיבת ביקורת גוגל דרך וואטסאפ 🌟">
+  <section class="legacy-form-section">
+    <form id="whatsappForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <label
+          >טלפון לקוח<input
+            type="tel"
+            id="phone"
+            placeholder="טלפון לקוח"
+            required
+            class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+          /></label
+        >
 
-      <section class="bg-gray-50 py-16 px-6 text-center">
-        <h1 class="text-3xl font-bold mb-4">שליחת ביקורת גוגל</h1>
-        <p class="text-lg text-gray-700 max-w-2xl mx-auto">שולחים קישור לכתיבת ביקורת גוגל דרך וואטסאפ 🌟</p>
-      </section>
+        <label
+          >שם הלקוח<input
+            type="text"
+            id="clientName"
+            placeholder="שם הלקוח"
+            readonly
+            class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
+          /></label
+        >
+      </div>
 
-      <section class="max-w-2xl mx-auto py-12 px-6">
-        <form id="whatsappForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="tel"
-              id="phone"
-              placeholder="טלפון לקוח"
-              required
-              class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-            />
-
-            <input
-              type="text"
-              id="clientName"
-              placeholder="שם הלקוח"
-              readonly
-              class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition"
-          >
-            שליחת קישור לביקורת
-          </button>
-        </form>
-      </section>
-    </main>
-
-    <footer class="bg-footer text-white py-8 text-center">
       <button
-        aria-label="Footer Scroll to top"
-        id="scrollToTopFooter"
-        class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+        type="submit"
+        class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition"
       >
-        <span class="sr-only">Footer Scroll to top</span> ↑
+        שליחת קישור לביקורת
       </button>
-      <p class="mb-4 font-bold">יוליה קורנסקי | yulia.photography</p>
-      <p>שליחת קישור לביקורת ❤️</p>
-    </footer>
-  </div>
-
-  <WhatsAppButton />
+    </form>
+  </section>
 </Layout>
 
 <script>

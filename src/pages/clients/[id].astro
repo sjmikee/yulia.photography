@@ -35,7 +35,17 @@ if (!client && !failed) Astro.response.status = 404;
       <p role="alert">לא ניתן לטעון את הפרופיל. יש לוודא שעדכון מסד הנתונים הושלם ולנסות שוב.</p>
     ) : client ? (
       <>
-        <section class="panel">
+        <section class="panel client-profile-contact">
+          <div class="profile-contact-details">
+            <a href={`tel:${client.phone}`}>
+              <bdi>{client.phone}</bdi>
+            </a>
+            {client.email && (
+              <a href={`mailto:${client.email}`}>
+                <bdi>{client.email}</bdi>
+              </a>
+            )}
+          </div>
           <div class="relative flex flex-wrap gap-3 mb-4 pl-14">
             <div id="client-actions" class="absolute top-0 left-0 z-10">
               <button
@@ -289,3 +299,28 @@ if (!client && !failed) Astro.response.status = 404;
   initClientEditor();
   document.addEventListener('astro:page-load', initClientEditor);
 </script>
+
+<style>
+  .profile-contact-details {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #dedfdd;
+  }
+  .profile-contact-details h2 {
+    font-weight: 700;
+  }
+  .profile-contact-details a {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #626866;
+    font-size: 0.9rem;
+  }
+  .profile-contact-details a:hover {
+    text-decoration: underline;
+    color: #233237;
+  }
+</style>

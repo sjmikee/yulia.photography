@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import { displayDay, deliveryLabel, type managementData } from '~/lib/client-workflow';
 interface Props {
   row: ReturnType<typeof managementData>['rows'][number];
@@ -8,24 +9,129 @@ const { row, today } = Astro.props;
 const { session: s } = row;
 ---
 
-<li class="border-b border-gray-200 py-5 last:border-0">
-  <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-    <div class="min-w-0 break-words">
-      <a class="font-bold text-lg underline" href={`/clients/${s.client_id}#session-${s.id}`}>{s.client_name}</a>
-      <p class="text-gray-600">{s.session_type} · חבילה {s.package_type} · סשן #{s.id}</p>
-    </div>
-    <a class="btn-secondary" href={`/clients/${s.client_id}#session-${s.id}`}>{row.next?.label || 'פתיחת הסשן'}</a>
+<li class="management-row">
+  <div class="shoot-date" aria-label={row.day ? `מועד הצילומים ${displayDay(row.day)}` : 'טרם נקבע מועד'}>
+    <Icon name="tabler:calendar-event" width="18" height="18" aria-hidden="true" />
+    <strong>{row.day ? row.day.slice(8, 10) : '—'}</strong>
+    <span
+      >{
+        row.day
+          ? new Intl.DateTimeFormat('he-IL', { month: 'short', timeZone: 'UTC' }).format(
+              new Date(`${row.day}T12:00:00Z`)
+            )
+          : 'טרם נקבע'
+      }</span
+    >
   </div>
-  <p class="mt-2">
-    {row.day ? `מועד הצילומים: ${displayDay(row.day)} · ${row.scheduled.slice(11, 16)}` : 'טרם נקבע מועד לצילומים'}
-  </p>
-  {
-    row.deadline && !row.delivered && (
-      <p class={row.overdue ? 'text-red-700 font-bold' : 'text-gray-700'}>
-        מסירת תמונות עד {displayDay(row.deadline)} · {deliveryLabel(row.deadline, today)}
-      </p>
-    )
-  }
-  {Number(s.to_pay) > 0 && <p>יתרה: ₪{s.to_pay}</p>}
-  {s.workflow?.calendar_needs_update === '1' && <p class="text-amber-800">נדרש עדכון האירוע הקיים ביומן Google</p>}
+  <div class="management-body">
+    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+      <div class="min-w-0 break-words">
+        <a class="management-name" href={`/clients/${s.client_id}#session-${s.id}`}>{s.client_name}</a>
+        <p class="text-gray-600">{s.session_type} · חבילה {s.package_type} · סשן #{s.id}</p>
+      </div>
+      <a class="management-action" href={`/clients/${s.client_id}#session-${s.id}`}
+        >{row.next?.label || 'פתיחת הסשן'}<Icon
+          name="tabler:chevron-left"
+          width="16"
+          height="16"
+          aria-hidden="true"
+        /></a
+      >
+    </div>
+    <p class="mt-2">
+      {row.day ? `מועד הצילומים: ${displayDay(row.day)} · ${row.scheduled.slice(11, 16)}` : 'טרם נקבע מועד לצילומים'}
+    </p>
+    {
+      row.deadline && !row.delivered && (
+        <p class:list={['delivery-note', { 'delivery-late': row.overdue }]}>
+          מסירת תמונות עד {displayDay(row.deadline)} · {deliveryLabel(row.deadline, today)}
+        </p>
+      )
+    }
+    {Number(s.to_pay) > 0 && <p>יתרה: ₪{s.to_pay}</p>}
+    {s.workflow?.calendar_needs_update === '1' && <p class="text-amber-800">נדרש עדכון האירוע הקיים ביומן Google</p>}
+  </div>
 </li>
+<style>
+  .management-row {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 1.1rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .management-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .shoot-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    align-self: start;
+    padding: 0.65rem 0.25rem;
+    border: 1px solid #dedfdd;
+    border-radius: 10px;
+    color: #233237;
+    background: #f5f5f5;
+  }
+  .shoot-date strong {
+    font-size: 1.65rem;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
+  .shoot-date span {
+    font-size: 0.75rem;
+  }
+  .management-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .management-name:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .management-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    border: 1px solid #dedfdd;
+    border-radius: 8px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #233237;
+  }
+  .management-action:hover {
+    background: #f5f5f5;
+    border-color: #233237;
+  }
+  .management-body > p {
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+  .delivery-note {
+    margin-top: 0.5rem;
+  }
+  .delivery-late {
+    color: #b00003;
+    font-weight: 600;
+    border-inline-start: 3px solid #e00004;
+    padding-inline-start: 0.65rem;
+  }
+  @media (max-width: 600px) {
+    .management-row {
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 0.75rem;
+    }
+    .shoot-date strong {
+      font-size: 1.4rem;
+    }
+    .management-action {
+      justify-self: start;
+    }
+  }
+</style>

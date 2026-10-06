@@ -1,5 +1,6 @@
 ---
 export const prerender = false;
+import { Icon } from 'astro-icon/components';
 import Layout from '~/layouts/ClientLayout.astro';
 import ManagementRow from '~/components/clients/ManagementRow.astro';
 import { sql } from '~/lib/db';
@@ -54,21 +55,24 @@ try {
       </p>
     ) : (
       <>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div class="dashboard-summary">
           {[
             ['צילומים היום', totals.shoots_today, '#upcoming'],
             ['מסירות באיחור', totals.overdue_count, '?filter=overdue#attention'],
             ['מסירות להיום', totals.due_today, '?filter=today#attention'],
             ['סשנים בטיפול', totals.attention_count, '#attention'],
           ].map(([label, count, href]) => (
-            <a href={String(href)} class="rounded-xl bg-gray-50 p-4">
+            <a href={String(href)} class="dashboard-stat">
               <span class="block text-3xl font-bold">{count}</span>
               <span>{label}</span>
             </a>
           ))}
         </div>
         <section id="upcoming" class="panel">
-          <h2 class="text-2xl font-bold">הצילומים הקרובים</h2>
+          <h2 class="section-title">
+            <Icon name="tabler:camera" width="23" height="23" aria-hidden="true" />
+            הצילומים הקרובים
+          </h2>
           <p class="text-sm text-gray-600 mt-2">עד 10 הצילומים הקרובים, לפי המועד שנשמר במערכת.</p>
           {upcoming.length ? (
             <ul>
@@ -82,7 +86,10 @@ try {
         </section>
         <section id="attention" class="panel">
           <div class="attention-heading">
-            <h2 class="text-2xl font-bold">דורש טיפול</h2>
+            <h2 class="section-title">
+              <Icon name="tabler:list-check" width="23" height="23" aria-hidden="true" />
+              דורש טיפול
+            </h2>
             <form id="attention-filter" method="GET" action="/clients/dashboard#attention" class="attention-filter">
               <label for="attention-category">הצגת סשנים</label>
               <select id="attention-category" name="filter">
@@ -128,6 +135,51 @@ try {
 </Layout>
 
 <style>
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .section-title svg {
+    color: #626866;
+  }
+  .dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 1.5rem;
+    background: #233237;
+    color: white;
+    border-radius: 12px;
+    padding: 0.5rem;
+  }
+  .dashboard-stat {
+    padding: 1rem 1.25rem;
+    border-inline-end: 1px solid #ffffff30;
+  }
+  .dashboard-stat:last-child {
+    border: 0;
+  }
+  .dashboard-stat:hover {
+    background: #ffffff10;
+  }
+  .dashboard-stat span:first-child {
+    margin-bottom: 0.35rem;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 600px) {
+    .dashboard-summary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .dashboard-stat {
+      padding: 0.75rem;
+    }
+    .dashboard-stat:nth-child(2) {
+      border: 0;
+    }
+  }
+
   .attention-heading {
     display: flex;
     align-items: center;
