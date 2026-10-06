@@ -417,9 +417,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
           </label>
           <label class="sm:col-span-2">
             הערות
-            <textarea name="notes" maxlength="10000">
-              {w.notes}
-            </textarea>
+            <textarea name="notes" dir="auto" maxlength="10000" set:text={(w.notes || '').trim()} />
           </label>
           <button class="btn-secondary sm:col-span-2">שמירת פרטים</button>
         </form>

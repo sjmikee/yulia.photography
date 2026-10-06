@@ -9,8 +9,8 @@ const { session: s } = row;
 ---
 
 <li class="border-b border-gray-200 py-5 last:border-0">
-  <div class="flex flex-wrap justify-between gap-3">
-    <div>
+  <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+    <div class="min-w-0 break-words">
       <a class="font-bold text-lg underline" href={`/clients/${s.client_id}#session-${s.id}`}>{s.client_name}</a>
       <p class="text-gray-600">{s.session_type} · חבילה {s.package_type} · סשן #{s.id}</p>
     </div>

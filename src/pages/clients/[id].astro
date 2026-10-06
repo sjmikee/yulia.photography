@@ -135,9 +135,7 @@ if (!client && !failed) Astro.response.status = 404;
                 <>
                   <label>
                     הערות על הלקוח
-                    <textarea name="notes" maxlength="10000">
-                      {client.notes}
-                    </textarea>
+                    <textarea name="notes" dir="auto" maxlength="10000" set:text={(client.notes || '').trim()} />
                   </label>
                   <button class="btn-secondary">שמירת הערות</button>
                 </>
