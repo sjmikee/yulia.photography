@@ -92,7 +92,7 @@ try {
             </h2>
             <form id="attention-filter" method="GET" action="/clients/dashboard#attention" class="attention-filter">
               <label for="attention-category">הצגת סשנים</label>
-              <select id="attention-category" name="filter">
+              <select autocomplete="off" id="attention-category" name="filter">
                 {groups.map(([key, label]) => (
                   <option value={key} selected={filter === key}>
                     {label}

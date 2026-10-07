@@ -100,7 +100,12 @@ export function isCancelled(session: Pick<Session, 'workflow'>): boolean {
   return session.workflow?.status === 'cancelled';
 }
 export function displayDay(day: string): string {
-  return day.slice(0, 10).split('-').reverse().join('.');
+  return new Intl.DateTimeFormat('he-IL', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(`${day.slice(0, 10)}T12:00:00Z`));
 }
 export function deliveryLabel(deadline: string, today = israelToday()): string {
   const days = Math.round((Date.parse(`${deadline}T12:00:00Z`) - Date.parse(`${today}T12:00:00Z`)) / 86400000);
@@ -193,4 +198,15 @@ export function businessSummary(sessions: ManagedSession[], payments: Payment[],
     missingDates: active.filter((row) => row.shot && !row.day).length,
     packages: [...packages].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])),
   };
+}
+
+export function displayMoney(value: string | number): string {
+  return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(Number(value));
+}
+export function displaySchedule(value: string): string {
+  return new Intl.DateTimeFormat('he-IL', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+    timeZone: 'UTC',
+  }).format(new Date(value.slice(0, 19) + 'Z'));
 }

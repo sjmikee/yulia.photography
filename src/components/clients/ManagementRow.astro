@@ -1,6 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { displayDay, deliveryLabel, type managementData } from '~/lib/client-workflow';
+import { displayMoney, displaySchedule, displayDay, deliveryLabel, type managementData } from '~/lib/client-workflow';
 interface Props {
   row: ReturnType<typeof managementData>['rows'][number];
   today: string;
@@ -39,7 +39,7 @@ const { session: s } = row;
       >
     </div>
     <p class="mt-2">
-      {row.day ? `מועד הצילומים: ${displayDay(row.day)} · ${row.scheduled.slice(11, 16)}` : 'טרם נקבע מועד לצילומים'}
+      {row.day ? `מועד הצילומים: ${displaySchedule(row.scheduled)}` : 'טרם נקבע מועד לצילומים'}
     </p>
     {
       row.deadline && !row.delivered && (
@@ -48,7 +48,7 @@ const { session: s } = row;
         </p>
       )
     }
-    {Number(s.to_pay) > 0 && <p>יתרה: ₪{s.to_pay}</p>}
+    {Number(s.to_pay) > 0 && <p>יתרה: {displayMoney(s.to_pay)}</p>}
     {s.workflow?.calendar_needs_update === '1' && <p class="text-amber-800">נדרש עדכון האירוע הקיים ביומן Google</p>}
   </div>
 </li>

@@ -10,34 +10,42 @@ import Layout from '~/layouts/ClientLayout.astro';
     <form id="calendarForm" class="space-y-6 bg-white p-8 rounded-2xl shadow-lg">
       <label id="booking-label" class="block" hidden>
         סשן
-        <select id="booking" class="border p-3 w-full rounded-lg">
+        <select autocomplete="off" name="booking" id="booking" class="border p-3 w-full rounded-lg">
           <option value="">בחרי סשן</option>
         </select>
       </label>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label
           >טלפון לקוח<input
+            autocomplete="tel"
+            name="phone"
             type="tel"
             id="phone"
-            placeholder="טלפון לקוח"
+            placeholder="050-1234567…"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
         >
         <label
           >שם<input
+            autocomplete="name"
+            name="clientName"
             type="text"
             id="clientName"
-            placeholder="שם"
+            placeholder="למשל, דנה כהן…"
             readonly
             class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
           /></label
         >
+        <p data-lookup-status role="status" aria-live="polite" class="sr-only"></p>
         <label
           >מייל<input
-            type="text"
+            autocomplete="email"
+            name="clientEmail"
+            type="email"
+            spellcheck="false"
             id="clientEmail"
-            placeholder="מייל"
+            placeholder="name@example.com…"
             readonly
             class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
           /></label
@@ -45,9 +53,10 @@ import Layout from '~/layouts/ClientLayout.astro';
 
         <label
           >בחר תאריך<input
+            autocomplete="off"
+            name="date"
             type="date"
             id="date"
-            placeholder="בחר תאריך"
             required
             class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
@@ -55,9 +64,10 @@ import Layout from '~/layouts/ClientLayout.astro';
 
         <label
           >בחר שעה<input
+            autocomplete="off"
+            name="time"
             type="time"
             id="time"
-            placeholder="בחר שעה"
             required
             class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
@@ -67,6 +77,8 @@ import Layout from '~/layouts/ClientLayout.astro';
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label
           >סוג הצילומים<select
+            autocomplete="off"
+            name="sessionType"
             id="sessionType"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
@@ -88,6 +100,8 @@ import Layout from '~/layouts/ClientLayout.astro';
 
         <label
           >משך הצילומים<select
+            autocomplete="off"
+            name="duration"
             id="duration"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
@@ -106,7 +120,7 @@ import Layout from '~/layouts/ClientLayout.astro';
         type="submit"
         class="btn-primary w-full py-3 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary-dark transition"
       >
-        הוספה
+        הוספה ליומן
       </button>
     </form>
   </section>
@@ -171,6 +185,8 @@ import Layout from '~/layouts/ClientLayout.astro';
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
         nameField.value = '';
+        const lookupStatus = form.querySelector('[data-lookup-status]');
+        if (lookupStatus) lookupStatus.textContent = '';
         emailField.value = '';
         clientEmail = '';
       }
@@ -180,7 +196,9 @@ import Layout from '~/layouts/ClientLayout.astro';
       if (phoneDigits === lastFetchedPhone) return;
       lastFetchedPhone = phoneDigits;
 
-      nameField.value = 'מחפש...';
+      nameField.value = 'מחפשת…';
+      const lookupStatus = form.querySelector('[data-lookup-status]');
+      if (lookupStatus) lookupStatus.textContent = 'מחפשת…';
       try {
         const res = await fetch('/api/get_client_by_phone', {
           method: 'POST',
@@ -191,11 +209,15 @@ import Layout from '~/layouts/ClientLayout.astro';
         if (phoneInput.value.replace(/\D/g, '') !== phoneDigits) return;
         if (!res.ok) {
           nameField.value = 'לא נמצא לקוח';
+          const lookupStatus = form.querySelector('[data-lookup-status]');
+          if (lookupStatus) lookupStatus.textContent = 'לא נמצא לקוח';
           nameField.classList.add('text-gray-400');
           emailField.value = '';
           clientEmail = '';
         } else {
           nameField.value = data.name;
+          const lookupStatus = form.querySelector('[data-lookup-status]');
+          if (lookupStatus) lookupStatus.textContent = data.name;
           emailField.value = data.email || '';
           nameField.classList.remove('text-gray-400');
           clientEmail = data.email || '';
@@ -212,6 +234,8 @@ import Layout from '~/layouts/ClientLayout.astro';
         }
       } catch {
         nameField.value = 'שגיאה בחיפוש';
+        const lookupStatus = form.querySelector('[data-lookup-status]');
+        if (lookupStatus) lookupStatus.textContent = 'שגיאה בחיפוש';
         nameField.classList.add('text-gray-400');
         emailField.value = '';
         clientEmail = '';
@@ -231,12 +255,16 @@ import Layout from '~/layouts/ClientLayout.astro';
       const duration = parseInt(durationField.value);
 
       if (!phone || !name || !date || !time || !sessionType || !duration) {
-        alert('נא למלא את כל השדות');
+        form.dispatchEvent(
+          new CustomEvent('client:form-error', { bubbles: true, detail: { message: 'נא למלא את כל השדות' } })
+        );
         return;
       }
 
-      if (['לא נמצא לקוח', 'שגיאה בחיפוש', 'מחפש...'].includes(name)) {
-        alert('לא נמצא לקוח עבור מספר זה');
+      if (['לא נמצא לקוח', 'שגיאה בחיפוש', 'מחפשת…'].includes(name)) {
+        form.dispatchEvent(
+          new CustomEvent('client:form-error', { bubbles: true, detail: { message: 'לא נמצא לקוח עבור מספר זה' } })
+        );
         return;
       }
 
@@ -255,6 +283,7 @@ import Layout from '~/layouts/ClientLayout.astro';
       const dates = `${startStr}/${endStr}`;
       const url = `${base}&text=${text}&details=${details}&dates=${dates}&add=${encodeURIComponent(email)},${encodeURIComponent(MKemail)}`;
 
+      form.dispatchEvent(new CustomEvent('client:form-saved', { bubbles: true }));
       openClientApp(url, form);
     });
   }

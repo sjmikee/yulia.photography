@@ -12,7 +12,10 @@ const phone = url.searchParams.get('phone');
 <Layout title="הוספת לקוח חדש" subtitle="הפרטים הראשונים לקראת הצילומים הבאים">
   {
     success && (
-      <section class="max-w-xs mx-auto py-4 px-6 mb-6 bg-green-600 text-white rounded-lg text-center font-semibold space-y-3">
+      <section
+        role="status"
+        class="max-w-xs mx-auto py-4 px-6 mb-6 bg-green-600 text-white rounded-lg text-center font-semibold space-y-3"
+      >
         <div>הלקוח נוסף בהצלחה!</div>
         {phone && (
           <a
@@ -28,7 +31,12 @@ const phone = url.searchParams.get('phone');
 
   {
     error && (
-      <section class="max-w-xs mx-auto py-4 px-6 mb-6 bg-red-600 text-white rounded-lg text-center font-semibold">
+      <section
+        role="alert"
+        tabindex="-1"
+        data-server-error
+        class="max-w-xs mx-auto py-4 px-6 mb-6 bg-red-600 text-white rounded-lg text-center font-semibold"
+      >
         {error}
       </section>
     )
@@ -46,7 +54,7 @@ const phone = url.searchParams.get('phone');
             type="text"
             autocomplete="name"
             name="name"
-            placeholder="שם"
+            placeholder="למשל, דנה כהן…"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
@@ -56,7 +64,7 @@ const phone = url.searchParams.get('phone');
             type="tel"
             autocomplete="tel"
             name="phone"
-            placeholder="טלפון"
+            placeholder="050-1234567…"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
@@ -66,10 +74,11 @@ const phone = url.searchParams.get('phone');
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label
           >מייל (לא חובה)<input
+            spellcheck="false"
             type="email"
             autocomplete="email"
             name="email"
-            placeholder="מייל"
+            placeholder="name@example.com…"
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
         >
@@ -94,7 +103,8 @@ const phone = url.searchParams.get('phone');
       form.dataset.ready = 'true';
       form.addEventListener('submit', () => {
         submitButton.disabled = true;
-        submitButton.textContent = 'מוסיף...';
+        submitButton.dataset.busy = 'true';
+        submitButton.textContent = 'מוסיפה…';
       });
     }
     initAddClient();

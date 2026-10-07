@@ -11,6 +11,10 @@ function setup() {
     if (!fields.has(id))
       fields.set(id, {
         value: '',
+        dispatchEvent(event) {
+          this.lastEvent = event;
+          return true;
+        },
         listeners: {},
         addEventListener(event, fn) {
           this.listeners[event] = fn;
@@ -25,7 +29,7 @@ function setup() {
     PHONE: '',
     SELECTED_CLIENT: null,
     PRICING: {},
-    alert() {},
+    CustomEvent,
     setTimeout: (fn) => {
       timer = fn;
       return 1;
@@ -67,6 +71,8 @@ test('editing a matched number immediately invalidates the client, and stale res
     },
   });
   assert.equal(prevented, true);
+  assert.equal(app.field('form').lastEvent.type, 'client:form-error');
+  assert.match(app.field('form').lastEvent.detail.message, /לקוח/);
 });
 test('out-of-order searches keep the latest client and failed searches can retry the same phone', async () => {
   const app = setup();

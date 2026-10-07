@@ -1,89 +1,98 @@
 ---
-import Layout from "~/layouts/Layout.astro";
-import RichSeo from "~/components/common/RichSeo.astro";
-import LandingHeader from "~/components/widgets/LandingHeader.astro";
-import ScrollToTopButton from "~/components/widgets/ScrollToTopButton.astro";
-import WhatsAppButton from "~/components/widgets/WhatsAppButton.astro";
+import FormBehavior from '~/components/clients/FormBehavior.astro';
+import Layout from '~/layouts/Layout.astro';
+import RichSeo from '~/components/common/RichSeo.astro';
+import LandingHeader from '~/components/widgets/LandingHeader.astro';
+import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
+import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
 const richMetadata = {
-  title: "התחברות למערכת ניהול לקוחות - יוליה קורנסקי",
-  description: "התחברות מאובטחת למערכת ניהול הלקוחות",
+  title: 'התחברות למערכת ניהול לקוחות - יוליה קורנסקי',
+  description: 'התחברות מאובטחת למערכת ניהול הלקוחות',
 };
 
 const metadata = {
-  title: "התחברות | יוליה קורנסקי",
-  description: "התחברות מאובטחת למערכת ניהול הלקוחות",
+  title: 'התחברות | יוליה קורנסקי',
+  description: 'התחברות מאובטחת למערכת ניהול הלקוחות',
   ignoreTitleTemplate: true,
 };
 
-const error = Astro.url.searchParams.get("error");
+const error = Astro.url.searchParams.get('error');
 ---
 
 <Layout metadata={metadata}>
   <meta name="robots" content="noindex" />
   <div class="flex flex-col min-h-screen">
+    <a href="#login-content" class="sr-only focus:not-sr-only focus:p-3">דילוג לתוכן</a>
     <main class="flex-grow">
-  <RichSeo metadata={richMetadata} />
-  <LandingHeader isSticky />
-  <ScrollToTopButton />
+      <RichSeo metadata={richMetadata} />
+      <LandingHeader isSticky />
+      <ScrollToTopButton />
 
-  <section class="bg-gray-50 py-16 px-6 flex flex-col items-center justify-center min-h-[80vh]">
-    <div class="bg-white shadow-lg rounded-2xl p-10 w-full max-w-md text-center">
-      <h1 class="text-3xl font-bold mb-6">התחברות למערכת</h1>
+      <section
+        id="login-content"
+        tabindex="-1"
+        class="bg-gray-50 py-16 px-6 flex flex-col items-center justify-center min-h-[80vh]"
+      >
+        <div class="bg-white shadow-lg rounded-2xl p-10 w-full max-w-md text-center">
+          <h1 class="text-3xl font-bold mb-6">התחברות למערכת</h1>
 
-      {error && (
-        <p class="text-red-600 mb-4 bg-red-50 border border-red-200 rounded p-2">
-          {error}
-        </p>
-      )}
+          {
+            error && (
+              <p role="alert" class="text-red-600 mb-4 bg-red-50 border border-red-200 rounded p-2">
+                {error}
+              </p>
+            )
+          }
 
-      <form method="POST" action="/api/login" class="text-right">
-        <div class="mb-4">
-          <label class="block font-semibold mb-2">שם משתמש</label>
-          <input
-            type="text"
-            name="username"
-            required
-            class="border border-gray-300 rounded-lg w-full p-3 focus:ring-2 focus:ring-primary"
-          />
+          <form method="POST" action="/api/login" class="text-right">
+            <div class="mb-4">
+              <label for="username" class="block font-semibold mb-2">שם משתמש</label>
+              <input
+                spellcheck="false"
+                autocomplete="username"
+                type="text"
+                id="username"
+                name="username"
+                required
+                class="border border-gray-300 rounded-lg w-full p-3 focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label for="password" class="block font-semibold mb-2">סיסמה</label>
+              <input
+                autocomplete="current-password"
+                type="password"
+                id="password"
+                name="password"
+                required
+                class="border border-gray-300 rounded-lg w-full p-3 focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <label class="flex items-center mb-6 space-x-2 space-x-reverse">
+              <input autocomplete="off" type="checkbox" name="remember" class="rounded text-primary" />
+              <span class="px-2">זכור אותי במכשיר זה</span>
+            </label>
+
+            <button type="submit" class="btn-secondary w-full text-lg py-3 font-semibold"> התחברי </button>
+          </form>
         </div>
+      </section>
+    </main>
 
-        <div class="mb-4">
-          <label class="block font-semibold mb-2">סיסמה</label>
-          <input
-            type="password"
-            name="password"
-            required
-            class="border border-gray-300 rounded-lg w-full p-3 focus:ring-2 focus:ring-primary"
-          />
-        </div>
-
-        <label class="flex items-center mb-6 space-x-2 space-x-reverse">
-          <input type="checkbox" name="remember" class="rounded text-primary" />
-          <span class="px-2">זכור אותי במכשיר זה</span>
-        </label>
-
-        <button
-          type="submit"
-          class="btn-secondary w-full text-lg py-3 font-semibold"
-        >
-          התחברי
-        </button>
-      </form>
-    </div>
-  </section>
-  </main>
-
-  <footer class="bg-footer text-white py-6 text-center">
-    <button
-        aria-label="Footer Scroll to top" 
+    <footer class="bg-footer text-white py-6 text-center">
+      <button
+        aria-label="Footer Scroll to top"
         id="scrollToTopFooter"
         class="hidden p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
-    >
+      >
         <span class="sr-only">Footer Scroll to top</span> ↑
-    </button>
-    <p class="font-bold">יוליה קורנסקי | yulia.photography</p>
-  </footer>
-</div>
+      </button>
+      <p class="font-bold">יוליה קורנסקי | yulia.photography</p>
+    </footer>
+  </div>
+  <FormBehavior />
   <WhatsAppButton />
 </Layout>

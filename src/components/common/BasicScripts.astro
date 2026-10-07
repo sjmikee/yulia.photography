@@ -262,82 +262,53 @@ import { UI } from 'astrowind:config';
 </script>
 
 <script is:inline>
-  const ButtonsObserver = {
-
+  window.clientButtonsObserver?.cleanup?.();
+  window.clientButtonsObserver = {
+    cleanup: null,
     start() {
-      const whatsappButton = document.getElementById("whatsapp");
-      const scrollToTopButton = document.getElementById("scrollToTop");
-      const FooterScrollToTopButton = document.getElementById("scrollToTopFooter");
-      const phoneNumber = "972525836940";
-      const footerElement = document.querySelector("#footer");
-      const bottomCallToActionElement = document.querySelector("#bottomCallToAction");
-
-      function toggleWhatsAppButton() {
-        if (whatsappButton)
-        {
-          if (window.scrollY < 300 || whatsappButton.dataset.hidden === "true") {
-            whatsappButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-          } else {
-            whatsappButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
-          }
-        }
-      }
-
-      function toggleScrollToTopButton() {
-        if (window.scrollY < 300 || scrollToTopButton.dataset.hidden === "true") {
-          scrollToTopButton.classList.add("scale-0", "opacity-0", "pointer-events-none");
-        } else {
-          scrollToTopButton.classList.remove("scale-0", "opacity-0", "pointer-events-none");
-        }
-      }
-
-      const whatsappObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          whatsappButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
-          toggleWhatsAppButton();
-        });
-      }, { threshold: 0.8 });
-
-      if (bottomCallToActionElement) {
-        whatsappObserver.observe(bottomCallToActionElement);
-      }
-
-      const scrollTopObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          scrollToTopButton.dataset.hidden = entry.isIntersecting ? "true" : "false";
-          toggleScrollToTopButton();
-        });
-      }, { threshold: 0.4 });
-
-      if (footerElement) {
-        scrollTopObserver.observe(footerElement);
-      }
-
-      window.addEventListener("scroll", () => {
-        toggleWhatsAppButton();
-        toggleScrollToTopButton();
+      this.cleanup?.();
+      const whatsapp = document.getElementById('whatsapp');
+      const top = document.getElementById('scrollToTop');
+      const footerTop = document.getElementById('scrollToTopFooter');
+      const controller = new AbortController();
+      const observers = [];
+      const update = (button) => {
+        if (!button) return;
+        const hidden = window.scrollY < 300 || button.dataset.hidden === 'true';
+        for (const name of ['scale-0', 'opacity-0', 'pointer-events-none']) button.classList.toggle(name, hidden);
+        button.tabIndex = hidden ? -1 : 0;
+        button.setAttribute('aria-hidden', String(hidden));
+      };
+      const observe = (button, target, threshold) => {
+        if (!button || !target) return;
+        const observer = new IntersectionObserver(entries => {
+          button.dataset.hidden = String(entries[0].isIntersecting);
+          update(button);
+        }, { threshold });
+        observer.observe(target);
+        observers.push(observer);
+      };
+      observe(whatsapp, document.querySelector('#bottomCallToAction'), 0.8);
+      observe(top, document.querySelector('#footer'), 0.4);
+      const updateAll = () => { update(whatsapp); update(top); };
+      window.addEventListener('scroll', updateAll, { passive: true, signal: controller.signal });
+      const scrollUp = () => window.scrollTo({
+        top: 0,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
       });
-
-      scrollToTopButton.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-
-      FooterScrollToTopButton?.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-
-      if(whatsappButton)
-      {
-        whatsappButton.addEventListener("click", () => {
-        window.open(`https://wa.me/${phoneNumber}`, "_blank");
-      });
-      }
+      top?.addEventListener('click', scrollUp, { signal: controller.signal });
+      footerTop?.addEventListener('click', scrollUp, { signal: controller.signal });
+      whatsapp?.addEventListener('click', () => {
+        window.open('https://wa.me/972525836940', '_blank', 'noopener');
+      }, { signal: controller.signal });
+      updateAll();
+      this.cleanup = () => { controller.abort(); observers.forEach(observer => observer.disconnect()); };
     }
   };
-
-  ButtonsObserver.start();
-
-  document.addEventListener('astro:after-swap', () => {
-    ButtonsObserver.start();
-  });
+  window.clientButtonsObserver.start();
+  if (!window.buttonsObserverListening) {
+    window.buttonsObserverListening = true;
+    document.addEventListener('astro:after-swap', () => window.clientButtonsObserver.start());
+    document.addEventListener('astro:before-swap', () => window.clientButtonsObserver.cleanup?.());
+  }
 </script>

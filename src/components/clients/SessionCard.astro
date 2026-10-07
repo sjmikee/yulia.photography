@@ -3,6 +3,8 @@ import {
   deliveryDeadline,
   deliveryLabel,
   displayDay,
+  displayMoney,
+  displaySchedule,
   isCancelled,
   stepsFor,
   type Payment,
@@ -85,12 +87,14 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
     <div class="pl-14">
       <h2 class="text-2xl font-bold mb-2">צילומי {s.session_type}</h2>
       <p class="text-gray-600">
-        סשן #{s.id} · חבילה {s.package_type} · מחיר ₪{s.session_price} · נותר לתשלום ₪{s.to_pay}
+        סשן #{s.id} · חבילה {s.package_type} · מחיר {displayMoney(s.session_price)} · נותר לתשלום {
+          displayMoney(s.to_pay)
+        }
       </p>
       {
         w.scheduled && (
           <p class="text-gray-600 mt-2">
-            {w.scheduled.replace('T', ' · ')}
+            {displaySchedule(w.scheduled)}
             {w.location && ` · ${w.location}`}
           </p>
         )
@@ -194,7 +198,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
             <p>
               {current === 'deposit'
                 ? 'לאחר קבלת ₪100 לסגירת התאריך, המשיכי ישירות להפקת הקבלה.'
-                : `לאחר קבלת היתרה בסך ₪${s.to_pay}, המשיכי להפקת הקבלה.`}
+                : `לאחר קבלת היתרה בסך ${displayMoney(s.to_pay)}, המשיכי להפקת הקבלה.`}
             </p>
             {Number(s.to_pay) >= (current === 'deposit' ? 100 : 0) && Number(s.to_pay) > 0 ? (
               <form method="POST" action="/api/client_workflow" class="space-y-4">
@@ -206,7 +210,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
                   <input type="date" name="paid_on" value={today} required />
                 </label>
                 <button class="btn-primary w-full" name="continue" value="receipt">
-                  קיבלתי ₪{current === 'deposit' ? 100 : s.to_pay} — להפקת קבלה
+                  קיבלתי {displayMoney(current === 'deposit' ? 100 : s.to_pay)} — להפקת קבלה
                 </button>
                 <button class="btn-secondary w-full" name="continue" value="done">
                   קיבלתי תשלום והקבלה טופלה — המשך
@@ -324,11 +328,26 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
               <WorkflowFields clientId={client.id} sessionId={s.id} action="delivery" />
               <label>
                 קישור לגלריית Pixieset
-                <input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" required />
+                <input
+                  name="pixieset"
+                  type="url"
+                  dir="ltr"
+                  value={w.pixieset}
+                  placeholder="https://example.com/gallery…"
+                  required
+                />
               </label>
               <label>
                 קישור זמני ל־MyAirBridge
-                <input data-airbridge type="url" dir="ltr" placeholder="https://" autocomplete="off" required />
+                <input
+                  name="airbridge"
+                  data-airbridge
+                  type="url"
+                  dir="ltr"
+                  placeholder="https://example.com/gallery…"
+                  autocomplete="off"
+                  required
+                />
               </label>
               <p class="text-sm text-gray-600">
                 קישור MyAirBridge לא נשמר. ההודעה מזכירה להוריד את התמונות בתוך שלושה ימים מההעלאה.
@@ -377,7 +396,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       </section>
     )
   }
-  <details class="mb-5">
+  <details data-panel="progress" class="mb-5">
     <summary>התקדמות הסשן · {steps.filter((step) => step.done).length} מתוך {steps.length} שלבים הושלמו</summary>
     <ol class="grid sm:grid-cols-2 gap-3 mt-4">
       {
@@ -391,7 +410,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   </details>
   {
     !cancelled && (
-      <details class="mb-5">
+      <details data-panel="details" class="mb-5">
         <summary>עריכת פרטי הסשן</summary>
         <form data-session-details method="POST" action="/api/client_workflow" class="grid sm:grid-cols-2 gap-4 mt-4">
           <WorkflowFields clientId={client.id} sessionId={s.id} action="details" />
@@ -413,7 +432,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
           </label>
           <label>
             גלריית Pixieset
-            <input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://" />
+            <input name="pixieset" type="url" dir="ltr" value={w.pixieset} placeholder="https://example.com/gallery…" />
           </label>
           <label class="sm:col-span-2">
             הערות
@@ -424,14 +443,14 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       </details>
     )
   }
-  <details class="mb-5">
+  <details data-panel="payments" class="mb-5">
     <summary>תשלומים וקבלות</summary>
-    <p class="my-4">יתרה לתשלום: ₪{s.to_pay}. תשלומים ישנים שכבר נוכו מהיתרה אין לרשום שוב.</p>
+    <p class="my-4">יתרה לתשלום: {displayMoney(s.to_pay)}. תשלומים ישנים שכבר נוכו מהיתרה אין לרשום שוב.</p>
     {
       sessionPayments.map((p) => (
         <div class="border-b border-gray-200 py-3">
           <p>
-            {p.stage === 'deposit' ? 'סגירת תאריך' : 'יתרת התשלום'} · ₪{p.amount} · {p.paid_on.slice(0, 10)}
+            {p.stage === 'deposit' ? 'סגירת תאריך' : 'יתרת התשלום'} · {displayMoney(p.amount)} · {displayDay(p.paid_on)}
           </p>
           {p.receipt_status === 'issued' && !p.receipt_url ? (
             <p class="text-gray-600 mt-2">הקבלה סומנה כטופלה ידנית.</p>
@@ -461,7 +480,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   </details>
   {
     !cancelled && (
-      <details>
+      <details data-panel="correction">
         <summary>תיקון שלב שסומן בטעות</summary>
         <p class="text-sm text-gray-600 mt-3">
           תיקון הסימון משנה את התקדמות הסשן בלבד. הוא לא משנה יתרה, רושם תשלום, מפיק קבלה או משנה את החוזה החתום.
@@ -496,11 +515,9 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
   }
   {
     !cancelled && (
-      <details class="mt-5">
+      <details data-panel="reschedule" class="mt-5">
         <summary>שינוי מועד הסשן</summary>
-        {w.previous_scheduled && (
-          <p class="mt-3 text-gray-600">מועד קודם: {w.previous_scheduled.replace('T', ' · ')}</p>
-        )}
+        {w.previous_scheduled && <p class="mt-3 text-gray-600">מועד קודם: {displaySchedule(w.previous_scheduled)}</p>}
         <form method="POST" action="/api/client_workflow" class="mt-4 space-y-4">
           <WorkflowFields clientId={client.id} sessionId={s.id} action="reschedule" />
           <input type="hidden" name="previous_scheduled" value={w.scheduled || ''} />
@@ -529,7 +546,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
     flex-shrink: 0;
     border: 0;
     direction: ltr;
-    transition: background 0.18s;
+    transition: none;
   }
   .stage-switch span {
     display: block;
@@ -632,6 +649,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
               body: new FormData(form),
             });
             if (!response.ok || !(await response.json()).saved) throw new Error('Save failed');
+
             saved = true;
             const page = await fetch(`/clients/session-card?session_id=${card.dataset.sessionId}`, {
               cache: 'no-store',
@@ -650,6 +668,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
             if (oldDetails && newDetails) newDetails.replaceWith(oldDetails);
             card.replaceWith(replacement);
             init();
+            document.dispatchEvent(new Event('clients:session-loaded'));
             replacement.querySelector<HTMLElement>('[data-toggle-status]')!.textContent = 'נשמר';
             replacement
               .querySelector<HTMLButtonElement>(`button[aria-labelledby="${button.getAttribute('aria-labelledby')}"]`)
@@ -672,6 +691,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
       async function saveAndOpen(form: HTMLFormElement, target: string, confirm: string) {
         const button = form.querySelector<HTMLButtonElement>('button')!;
         button.disabled = true;
+        button.dataset.busy = 'true';
         error.hidden = true;
         try {
           const response = await fetch('/api/client_workflow', {
@@ -680,6 +700,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
             body: new FormData(form),
           });
           if (!response.ok || !(await response.json()).saved) throw new Error('Save failed');
+          form.dispatchEvent(new CustomEvent('client:form-saved', { bubbles: true }));
           const scheduled = new FormData(form).get('scheduled');
           if (typeof scheduled === 'string') {
             const deadline = deliveryDeadline({ workflow: { scheduled } });
@@ -699,6 +720,7 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
           error.hidden = false;
         } finally {
           button.disabled = false;
+          delete button.dataset.busy;
         }
       }
       card.querySelector<HTMLFormElement>('[data-calendar-form]')?.addEventListener('submit', (event) => {
@@ -730,8 +752,22 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).f
           const message = `היי ${card.dataset.name}! התמונות שלך מוכנות ❤️\n\nגלריה לצפייה ותמונות לנייד:\n${pixieset}\n\nתמונות בגודל מלא:\n${link}\n\nחשוב להוריד את התמונות המלאות בתוך 3 ימים ממועד ההעלאה, לפני שהקישור יפוג.`;
           void saveAndOpen(form, `${card.dataset.wa}?text=${encodeURIComponent(message)}`, '[data-delivery-confirm]');
         } catch {
-          error.textContent = 'יש להזין שני קישורי HTTPS תקינים.';
-          error.hidden = false;
+          form.dispatchEvent(
+            new CustomEvent('client:form-error', {
+              bubbles: true,
+              detail: {
+                message: 'יש להזין קישור HTTPS תקין.',
+                field: ['[name="pixieset"]', '[data-airbridge]'].find((selector) => {
+                  try {
+                    safeWebUrl(form.querySelector<HTMLInputElement>(selector)!.value);
+                    return false;
+                  } catch {
+                    return true;
+                  }
+                }),
+              },
+            })
+          );
         }
       });
       if (card.dataset.currentStep === 'signed' && card.dataset.contractSigned !== 'true') {

@@ -26,10 +26,11 @@ try {
   <form method="GET" class="panel client-search">
     <label
       >חיפוש לפי שם, טלפון או מייל<input
+        autocomplete="off"
         name="q"
         value={q}
         type="search"
-        placeholder="שם, טלפון או כתובת מייל"
+        placeholder="למשל, דנה כהן…"
       /></label
     >
     <button class="btn-primary"><Icon name="tabler:search" width="20" height="20" aria-hidden="true" /> חיפוש</button>

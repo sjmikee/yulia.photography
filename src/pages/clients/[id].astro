@@ -4,6 +4,7 @@ import Layout from '~/layouts/ClientLayout.astro';
 import { Icon } from 'astro-icon/components';
 import SessionCard from '~/components/clients/SessionCard.astro';
 import type { Client, Session, Payment } from '~/lib/client-workflow';
+import { displayMoney } from '~/lib/client-workflow';
 import { sql } from '~/lib/db';
 const id = Number(Astro.params.id);
 if (!Number.isSafeInteger(id) || id <= 0) return Astro.redirect('/clients');
@@ -111,15 +112,23 @@ if (!client && !failed) Astro.response.status = 404;
               <legend class="font-bold mb-3">עריכת פרטי לקוח</legend>
               <label>
                 שם
-                <input name="name" value={client.name} maxlength="200" required />
+                <input autocomplete="name" name="name" value={client.name} maxlength="200" required />
               </label>
               <label>
                 טלפון
-                <input name="phone" type="tel" dir="ltr" value={client.phone} required />
+                <input autocomplete="tel" name="phone" type="tel" dir="ltr" value={client.phone} required />
               </label>
               <label>
                 מייל
-                <input name="email" type="email" dir="ltr" value={client.email} maxlength="254" />
+                <input
+                  spellcheck="false"
+                  autocomplete="email"
+                  name="email"
+                  type="email"
+                  dir="ltr"
+                  value={client.email}
+                  maxlength="254"
+                />
               </label>
               <p class="text-sm text-gray-600">
                 שינוי טלפון ידרוש הכנת קישור חוזה חדש אם החוזה טרם נחתם. מסמכים שכבר הונפקו לא ישתנו.
@@ -145,7 +154,13 @@ if (!client && !failed) Astro.response.status = 404;
                 <>
                   <label>
                     הערות על הלקוח
-                    <textarea name="notes" dir="auto" maxlength="10000" set:text={(client.notes || '').trim()} />
+                    <textarea
+                      autocomplete="off"
+                      name="notes"
+                      dir="auto"
+                      maxlength="10000"
+                      set:text={(client.notes || '').trim()}
+                    />
                   </label>
                   <button class="btn-secondary">שמירת הערות</button>
                 </>
@@ -171,7 +186,7 @@ if (!client && !failed) Astro.response.status = 404;
           ) : (
             <details class="mb-5" data-session-history data-session-id={session.id}>
               <summary class="cursor-pointer p-4 font-bold">
-                {session.session_type} · סשן #{session.id} · יתרה ₪{session.to_pay}
+                {session.session_type} · סשן #{session.id} · יתרה {displayMoney(session.to_pay)}
                 {session.workflow?.status === 'cancelled' ? ' · בוטל' : ''}
               </summary>
               <div id={`session-${session.id}`} data-history-content>

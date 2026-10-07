@@ -32,9 +32,11 @@ if (!record) return Astro.redirect('/clients');
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label
           >טלפון לקוח<input
+            autocomplete="tel"
+            name="phone"
             type="tel"
             id="phone"
-            placeholder="טלפון לקוח"
+            placeholder="050-1234567…"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
@@ -42,9 +44,11 @@ if (!record) return Astro.redirect('/clients');
 
         <label
           >שם הלקוח<input
+            autocomplete="name"
+            name="clientName"
             type="text"
             id="clientName"
-            placeholder="שם הלקוח"
+            placeholder="למשל, דנה כהן…"
             readonly
             class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
           /></label
@@ -52,9 +56,12 @@ if (!record) return Astro.redirect('/clients');
 
         <label
           >מייל הלקוח<input
-            type="text"
+            autocomplete="email"
+            name="clientEmail"
+            type="email"
+            spellcheck="false"
             id="clientEmail"
-            placeholder="מייל הלקוח"
+            placeholder="name@example.com…"
             readonly
             class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
           /></label
@@ -63,9 +70,11 @@ if (!record) return Astro.redirect('/clients');
 
       <label
         >סכום ששולם (₪)<input
+          autocomplete="off"
+          name="amount"
           type="number"
           id="amount"
-          placeholder="סכום ששולם (₪)"
+          placeholder="למשל, 100…"
           required
           class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
         /></label
@@ -73,9 +82,10 @@ if (!record) return Astro.redirect('/clients');
 
       <label
         >תאריך התשלום<input
+          autocomplete="off"
+          name="paymentDate"
           type="date"
           id="paymentDate"
-          placeholder="תאריך התשלום"
           required
           class="border p-3 w-full h-12 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
         /></label
@@ -83,6 +93,8 @@ if (!record) return Astro.redirect('/clients');
 
       <label
         >אמצעי תשלום<select
+          autocomplete="off"
+          name="payment"
           id="payment"
           required
           class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
@@ -97,18 +109,22 @@ if (!record) return Astro.redirect('/clients');
 
       <label
         >תיאור (לדוגמה: תשלום על סשן משפחה)<input
+          autocomplete="off"
+          name="description"
           type="text"
           id="description"
-          placeholder="תיאור (לדוגמה: תשלום על סשן משפחה)"
+          placeholder="למשל, תשלום על סשן משפחה…"
           required
           class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
         /></label
       >
       <label
         >הערות (לדוגמא: תאריך הצילומים)<input
+          autocomplete="off"
+          name="remarks"
           type="text"
           id="remarks"
-          placeholder="הערות (לדוגמא: תאריך הצילומים)"
+          placeholder="למשל, צילומים ב־12 באוקטובר…"
           class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
         /></label
       >
@@ -187,10 +203,14 @@ if (!record) return Astro.redirect('/clients');
       e.preventDefault();
 
       const digits = phoneInput.value.replace(/\D/g, '');
-      if (digits.length < 10) return alert('מספר טלפון לא תקין');
+      if (digits.length < 10)
+        return form.dispatchEvent(
+          new CustomEvent('client:form-error', { bubbles: true, detail: { message: 'מספר טלפון לא תקין' } })
+        );
 
       submitButton.disabled = true;
-      submitButton.textContent = 'שולח...';
+      submitButton.dataset.busy = 'true';
+      submitButton.textContent = 'שולחת…';
 
       let completed = false;
       try {
@@ -217,7 +237,15 @@ if (!record) return Astro.redirect('/clients');
         const data = await res.json();
 
         if (!res.ok) {
-          alert('לא ניתן לאשר את הפקת הקבלה. בדקי בפרופיל ובמערכת Morning לפני ניסיון נוסף.');
+          form.dispatchEvent(
+            new CustomEvent('client:form-error', {
+              bubbles: true,
+              detail: {
+                field: null,
+                message: 'לא ניתן לאשר את הפקת הקבלה. בדקי בפרופיל ובמערכת Morning לפני ניסיון נוסף.',
+              },
+            })
+          );
           console.error(data);
           return;
         }
@@ -226,18 +254,28 @@ if (!record) return Astro.redirect('/clients');
 
         const msg = encodeURIComponent(`היי!\n` + `הקבלה שלך מוכנה\n\n` + `לינק להורדה:\n` + `${data.url}`);
         completed = true;
+        form.dispatchEvent(new CustomEvent('client:form-saved', { bubbles: true }));
         const nextStage = document.getElementById('receiptNext');
         if (nextStage) {
           nextStage.hidden = false;
-          nextStage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          nextStage.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+            block: 'center',
+          });
         }
         const target = `https://wa.me/${waPhone}?text=${msg}`;
         openClientApp(target, document.getElementById('receiptNext'));
       } catch (error) {
         console.error(error);
-        alert('לא ניתן לאשר אם הקבלה הופקה. בדקי במערכת הקבלות לפני ניסיון נוסף.');
+        form.dispatchEvent(
+          new CustomEvent('client:form-error', {
+            bubbles: true,
+            detail: { field: null, message: 'לא ניתן לאשר אם הקבלה הופקה. בדקי במערכת הקבלות לפני ניסיון נוסף.' },
+          })
+        );
       } finally {
         submitButton.disabled = !completed;
+        delete submitButton.dataset.busy;
         submitButton.textContent = completed ? 'פתיחת הקבלה הקיימת בוואטסאפ' : 'חזרי לפרופיל ובדקי את מצב הקבלה';
       }
     });

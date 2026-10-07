@@ -98,7 +98,17 @@ export default defineConfig({
   // },
 
   vite: {
+    optimizeDeps: {
+      include: ['photoswipe', 'photoswipe/lightbox'],
+    },
     plugins: [
+      {
+        name: 'separate-vite-caches',
+        // A production build must not replace modules served by a running dev server.
+        config: (_config, { command }) => ({
+          cacheDir: path.resolve(__dirname, `./node_modules/.vite/${command}`),
+        }),
+      },
       tailwindcss(),
     ],
     resolve: {

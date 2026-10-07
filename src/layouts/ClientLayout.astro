@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Layout from './Layout.astro';
+import FormBehavior from '~/components/clients/FormBehavior.astro';
 import LandingHeader from '~/components/widgets/LandingHeader.astro';
 import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
 const { title, subtitle = 'פרטי הלקוח, הצילומים וכל מה שצריך להמשך הדרך' } = Astro.props;
@@ -52,6 +53,7 @@ Astro.response.headers.set('Cache-Control', 'private, no-store');
     </main>
     <footer class="client-footer">יוליה קורנסקי <span dir="ltr">yulia.photography</span></footer>
   </div>
+  <FormBehavior />
   <ScrollToTopButton />
 </Layout>
 <script>
@@ -64,6 +66,9 @@ Astro.response.headers.set('Cache-Control', 'private, no-store');
     const transition = event as TransitionBeforePreparationEvent;
     const loader = transition.loader;
     indicator.hidden = false;
+    queueMicrotask(() => {
+      if (event.defaultPrevented) indicator.hidden = true;
+    });
     transition.loader = async () => {
       try {
         await loader();
@@ -74,6 +79,27 @@ Astro.response.headers.set('Cache-Control', 'private, no-store');
   });
 </script>
 <style is:global>
+  .client-workspace :is(button, a, input, select, textarea, summary) {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgb(35 50 55 / 15%);
+  }
+  .client-workspace :is(h1, h2, h3) {
+    text-wrap: balance;
+  }
+  .client-workspace :is(p, summary, li) {
+    overflow-wrap: anywhere;
+  }
+  .client-workspace [data-session-card] {
+    font-variant-numeric: tabular-nums;
+  }
+  .client-workspace [data-session-history] {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 80px;
+  }
+  .client-tab:hover,
+  .client-back:hover {
+    color: var(--studio-red);
+  }
   .client-workspace {
     --studio-red: #e00004;
     --studio-ink: #262624;

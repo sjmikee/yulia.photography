@@ -1,0 +1,268 @@
+<script>
+  import type { TransitionBeforePreparationEvent } from 'astro:transitions/client';
+  import { focusClientField } from '~/lib/focus-client-field';
+  const snapshots = new Map<HTMLFormElement, string>();
+  const touched = new WeakSet<HTMLFormElement>();
+  const pending = new WeakSet<HTMLFormElement>();
+  const cancelled = new WeakSet<HTMLFormElement>();
+  const buttonLabels = new WeakMap<HTMLButtonElement, string>();
+  const restoreButtons = (form: HTMLFormElement) => {
+    form.querySelectorAll<HTMLButtonElement>('button[data-busy="true"]').forEach((button) => {
+      button.disabled = false;
+      delete button.dataset.busy;
+      const label = buttonLabels.get(button);
+      if (label) button.textContent = label;
+    });
+  };
+  const valueOf = (form: HTMLFormElement) =>
+    JSON.stringify(
+      Array.from(form.elements).flatMap((element) => {
+        if (
+          !(
+            element instanceof HTMLInputElement ||
+            element instanceof HTMLSelectElement ||
+            element instanceof HTMLTextAreaElement
+          ) ||
+          element.type === 'hidden' ||
+          element.disabled ||
+          ('readOnly' in element && element.readOnly)
+        )
+          return [];
+        return [
+          [
+            element.name || element.id,
+            element instanceof HTMLInputElement && ['checkbox', 'radio'].includes(element.type)
+              ? element.checked
+              : element.value,
+          ],
+        ];
+      })
+    );
+  const managed = (target: EventTarget | null | undefined) =>
+    target instanceof Element ? target.closest<HTMLFormElement>('.client-workspace form, #login-content form') : null;
+  const dirty = () =>
+    Array.from(snapshots).some(
+      ([form, snapshot]) =>
+        form.isConnected &&
+        touched.has(form) &&
+        form.getAttribute('method')?.toLowerCase() !== 'get' &&
+        !pending.has(form) &&
+        valueOf(form) !== snapshot
+    );
+  function initForms() {
+    for (const form of snapshots.keys()) if (!form.isConnected) snapshots.delete(form);
+    document.querySelectorAll<HTMLFormElement>('.client-workspace form, #login-content form').forEach((form) => {
+      if (snapshots.has(form)) return;
+      snapshots.set(form, valueOf(form));
+      form
+        .querySelectorAll<HTMLButtonElement>('button')
+        .forEach((button) => buttonLabels.set(button, button.textContent || ''));
+      form
+        .querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea')
+        .forEach((field) => {
+          if (!field.autocomplete) field.autocomplete = 'off';
+          if (field instanceof HTMLInputElement && field.type === 'email') field.spellcheck = false;
+        });
+    });
+  }
+  function clearErrors(form: HTMLFormElement) {
+    form.querySelectorAll('[data-field-error]').forEach((error) => error.remove());
+    form.querySelectorAll('[aria-invalid="true"]').forEach((field) => {
+      field.removeAttribute('aria-invalid');
+      const ids = (field.getAttribute('aria-describedby') || '')
+        .split(' ')
+        .filter((id) => !id.startsWith('client-error-'));
+      if (ids.length) field.setAttribute('aria-describedby', ids.join(' '));
+      else field.removeAttribute('aria-describedby');
+    });
+  }
+  let errorId = 0;
+  document.addEventListener('client:form-error', (event) => {
+    const form = managed(event.target);
+    if (!form) return;
+    const { message, field: selector } = (event as CustomEvent<{ message: string; field?: string | null }>).detail;
+    clearErrors(form);
+    const field =
+      selector === null
+        ? null
+        : form.querySelector<HTMLElement>(
+            selector || '#phone, [name="phone"], input:not([type="hidden"]):not([readonly]), select, textarea'
+          );
+    const error = document.createElement('span');
+    error.dataset.fieldError = '';
+    error.id = `client-error-${++errorId}`;
+    error.className = 'block text-sm text-red-700 mt-2';
+    error.setAttribute('aria-live', 'polite');
+    const label = field?.closest('label');
+    (label || field || form).insertAdjacentElement(label || !field ? 'beforeend' : 'afterend', error);
+    error.textContent = message;
+    if (field) {
+      field.setAttribute('aria-invalid', 'true');
+      field.setAttribute('aria-describedby', `${field.getAttribute('aria-describedby') || ''} ${error.id}`.trim());
+      focusClientField(field);
+    } else {
+      error.tabIndex = -1;
+      error.focus();
+    }
+  });
+  let validating = false;
+  document.addEventListener(
+    'invalid',
+    (event) => {
+      const form = managed(event.target);
+      const field = event.target;
+      if (
+        !form ||
+        !(
+          field instanceof HTMLInputElement ||
+          field instanceof HTMLSelectElement ||
+          field instanceof HTMLTextAreaElement
+        )
+      )
+        return;
+      event.preventDefault();
+      if (validating) return;
+      validating = true;
+      setTimeout(() => {
+        validating = false;
+      }, 0);
+      if (!field.id) field.id = `client-field-${++errorId}`;
+      form.dispatchEvent(
+        new CustomEvent('client:form-error', {
+          bubbles: true,
+          detail: {
+            field: `#${CSS.escape(field.id)}`,
+            message: field.validity.valueMissing
+              ? 'יש למלא את השדה הזה.'
+              : field.validity.typeMismatch && field instanceof HTMLInputElement && field.type === 'email'
+                ? 'יש להזין כתובת מייל תקינה, למשל name@example.com.'
+                : field.validity.typeMismatch && field instanceof HTMLInputElement && field.type === 'url'
+                  ? 'יש להזין כתובת קישור מלאה, למשל https://example.com.'
+                  : field.validationMessage,
+          },
+        })
+      );
+    },
+    true
+  );
+  document.addEventListener('focusin', (event) => {
+    const form = managed(event.target);
+    if (form && !touched.has(form)) snapshots.set(form, valueOf(form));
+  });
+  document.addEventListener('input', (event) => {
+    const form = managed(event.target);
+    if (form) {
+      touched.add(form);
+      clearErrors(form);
+    }
+  });
+  document.addEventListener('reset', (event) => {
+    const form = managed(event.target);
+    if (form)
+      setTimeout(() => {
+        snapshots.set(form, valueOf(form));
+        clearErrors(form);
+      }, 0);
+  });
+  document.addEventListener('client:form-saved', (event) => {
+    const form = managed(event.target);
+    if (form) snapshots.set(form, valueOf(form));
+  });
+  document.addEventListener(
+    'submit',
+    (event) => {
+      const form = managed(event.target);
+      if (!form) return;
+      cancelled.delete(form);
+      // Native submission owns navigation. Async handlers signal success explicitly.
+      queueMicrotask(() => {
+        if (!event.defaultPrevented && !cancelled.has(form) && form.method.toLowerCase() === 'post') {
+          pending.add(form);
+          const button = (event as SubmitEvent).submitter;
+          if (button instanceof HTMLButtonElement) button.dataset.busy = 'true';
+        }
+      });
+    },
+    true
+  );
+  document.addEventListener('astro:before-preparation', (event) => {
+    const transition = event as TransitionBeforePreparationEvent;
+    const source = managed(transition.sourceElement);
+    if (transition.formData && source) pending.add(source);
+    if (dirty() && !window.confirm('יש שינויים שלא נשמרו. לצאת מהעמוד ולוותר עליהם?')) {
+      event.preventDefault();
+      if (source) {
+        pending.delete(source);
+        cancelled.add(source);
+        restoreButtons(source);
+      }
+    }
+  });
+  window.addEventListener('beforeunload', (event) => {
+    if (dirty()) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  });
+  window.addEventListener('pageshow', () => {
+    document.querySelectorAll<HTMLFormElement>('form').forEach((form) => {
+      pending.delete(form);
+      restoreButtons(form);
+    });
+  });
+  // Details remain native keyboard controls; URL state makes expanded panels shareable.
+  function initDetails() {
+    const expanded = new Set(new URL(location.href).searchParams.getAll('panel'));
+    document.querySelectorAll<HTMLDetailsElement>('.client-workspace details').forEach((details, index) => {
+      if (details.dataset.panelReady) return;
+      details.dataset.panelReady = 'true';
+      const card = details.closest<HTMLElement>('[data-session-card]');
+      const localIndex = card ? Array.from(card.querySelectorAll('details')).indexOf(details) : index;
+      const key = details.dataset.sessionId
+        ? `history-${details.dataset.sessionId}`
+        : `${card?.id || 'client'}-${details.dataset.panel || localIndex}`;
+      if (expanded.has(key)) details.open = true;
+      details.addEventListener('toggle', () => {
+        const url = new URL(location.href);
+        const panels = new Set(url.searchParams.getAll('panel'));
+        if (details.open) panels.add(key);
+        else panels.delete(key);
+        url.searchParams.delete('panel');
+        panels.forEach((panel) => url.searchParams.append('panel', panel));
+        history.replaceState(history.state, '', url);
+      });
+    });
+  }
+  function init() {
+    initForms();
+    initDetails();
+    document.querySelector<HTMLElement>('[data-server-error]')?.focus();
+  }
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('clients:session-loaded', init);
+  init();
+</script>
+
+<style is:global>
+  :is(.client-workspace, #login-content) button[data-busy='true']::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-inline-start: 0.5em;
+    border: 2px solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    animation: client-busy 0.8s linear infinite;
+  }
+  @keyframes client-busy {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :is(.client-workspace, #login-content) button[data-busy='true']::after {
+      animation: none;
+    }
+  }
+</style>

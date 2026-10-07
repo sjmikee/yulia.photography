@@ -10,9 +10,11 @@ import Layout from '~/layouts/ClientLayout.astro';
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label
           >טלפון לקוח<input
+            autocomplete="tel"
+            name="phone"
             type="tel"
             id="phone"
-            placeholder="טלפון לקוח"
+            placeholder="050-1234567…"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
@@ -20,13 +22,16 @@ import Layout from '~/layouts/ClientLayout.astro';
 
         <label
           >שם הלקוח<input
+            autocomplete="name"
+            name="clientName"
             type="text"
             id="clientName"
-            placeholder="שם הלקוח"
+            placeholder="למשל, דנה כהן…"
             readonly
             class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
           /></label
         >
+        <p data-lookup-status role="status" aria-live="polite" class="sr-only"></p>
       </div>
 
       <button
@@ -64,6 +69,8 @@ import Layout from '~/layouts/ClientLayout.astro';
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
         nameField.value = '';
+        const lookupStatus = form.querySelector('[data-lookup-status]');
+        if (lookupStatus) lookupStatus.textContent = '';
       }
     });
 
@@ -71,7 +78,9 @@ import Layout from '~/layouts/ClientLayout.astro';
       if (phoneDigits === lastFetchedPhone) return;
       lastFetchedPhone = phoneDigits;
 
-      nameField.value = 'מחפש...';
+      nameField.value = 'מחפשת…';
+      const lookupStatus = form.querySelector('[data-lookup-status]');
+      if (lookupStatus) lookupStatus.textContent = 'מחפשת…';
       try {
         const res = await fetch('/api/get_client_by_phone', {
           method: 'POST',
@@ -81,11 +90,17 @@ import Layout from '~/layouts/ClientLayout.astro';
         const data = await res.json();
         if (!res.ok) {
           nameField.value = 'לא נמצא לקוח';
+          const lookupStatus = form.querySelector('[data-lookup-status]');
+          if (lookupStatus) lookupStatus.textContent = 'לא נמצא לקוח';
         } else {
           nameField.value = data.name;
+          const lookupStatus = form.querySelector('[data-lookup-status]');
+          if (lookupStatus) lookupStatus.textContent = data.name;
         }
       } catch {
         nameField.value = 'שגיאה בחיפוש';
+        const lookupStatus = form.querySelector('[data-lookup-status]');
+        if (lookupStatus) lookupStatus.textContent = 'שגיאה בחיפוש';
       }
     };
 
@@ -93,7 +108,10 @@ import Layout from '~/layouts/ClientLayout.astro';
       e.preventDefault();
 
       const rawPhone = phoneInput.value.replace(/\D/g, '');
-      if (!rawPhone) return alert('אנא הזיני מספר טלפון');
+      if (!rawPhone)
+        return form.dispatchEvent(
+          new CustomEvent('client:form-error', { bubbles: true, detail: { message: 'אנא הזיני מספר טלפון' } })
+        );
 
       let waPhone = rawPhone;
       if (waPhone.startsWith('0')) waPhone = '972' + waPhone.slice(1);
@@ -102,6 +120,7 @@ import Layout from '~/layouts/ClientLayout.astro';
       const message = encodeURIComponent(`אשמח אם תכתבו לי ביקורת ❤️\n${reviewLink}`);
       const waUrl = `https://wa.me/${waPhone}?text=${message}`;
 
+      form.dispatchEvent(new CustomEvent('client:form-saved', { bubbles: true }));
       openClientApp(waUrl, form);
     });
   }

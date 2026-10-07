@@ -30,9 +30,11 @@ const prepared =
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <label
           >טלפון לקוח<input
+            autocomplete="tel"
+            name="phone"
             type="tel"
             id="phone"
-            placeholder="טלפון לקוח"
+            placeholder="050-1234567…"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
           /></label
@@ -40,19 +42,25 @@ const prepared =
 
         <label
           >שם הלקוח<input
+            autocomplete="name"
+            name="clientName"
             type="text"
             id="clientName"
-            placeholder="שם הלקוח"
+            placeholder="למשל, דנה כהן…"
             readonly
             class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
           /></label
         >
+        <p data-lookup-status role="status" aria-live="polite" class="sr-only"></p>
 
         <label
           >מייל הלקוח<input
-            type="text"
+            autocomplete="email"
+            name="clientEmail"
+            type="email"
+            spellcheck="false"
             id="clientEmail"
-            placeholder="מייל הלקוח"
+            placeholder="name@example.com…"
             readonly
             class="border p-3 w-full rounded-lg bg-gray-100 text-gray-600"
           /></label
@@ -60,6 +68,8 @@ const prepared =
 
         <label
           >אישור פרסום<select
+            autocomplete="off"
+            name="conf"
             id="conf"
             required
             class="border p-3 w-full rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
@@ -129,6 +139,8 @@ const prepared =
       if (digits.length >= 10) lookupTimeout = setTimeout(() => lookupClient(digits), 400);
       else {
         nameField.value = '';
+        if (document.querySelector('[data-lookup-status]'))
+          document.querySelector('[data-lookup-status]').textContent = '';
         emailField.value = '';
       }
     });
@@ -137,7 +149,9 @@ const prepared =
       if (phoneDigits === lastFetchedPhone) return;
       lastFetchedPhone = phoneDigits;
 
-      nameField.value = 'מחפש...';
+      nameField.value = 'מחפשת…';
+      if (document.querySelector('[data-lookup-status]'))
+        document.querySelector('[data-lookup-status]').textContent = 'מחפשת…';
       try {
         const res = await fetch('/api/get_client_by_phone', {
           method: 'POST',
@@ -147,13 +161,19 @@ const prepared =
         const data = await res.json();
         if (!res.ok) {
           nameField.value = 'לא נמצא לקוח';
+          if (document.querySelector('[data-lookup-status]'))
+            document.querySelector('[data-lookup-status]').textContent = 'לא נמצא לקוח';
           emailField.value = '';
         } else {
           nameField.value = data.name;
+          if (document.querySelector('[data-lookup-status]'))
+            document.querySelector('[data-lookup-status]').textContent = data.name;
           emailField.value = data.email || '';
         }
       } catch {
         nameField.value = 'שגיאה בחיפוש';
+        if (document.querySelector('[data-lookup-status]'))
+          document.querySelector('[data-lookup-status]').textContent = 'שגיאה בחיפוש';
         emailField.value = '';
       }
     }
@@ -162,13 +182,17 @@ const prepared =
       e.preventDefault();
 
       const rawPhone = phoneInput.value.replace(/\D/g, '');
-      if (!rawPhone) return alert('אנא הזיני מספר טלפון');
+      if (!rawPhone)
+        return form.dispatchEvent(
+          new CustomEvent('client:form-error', { bubbles: true, detail: { message: 'אנא הזיני מספר טלפון' } })
+        );
 
       let waPhone = rawPhone;
       if (waPhone.startsWith('0')) waPhone = '972' + waPhone.slice(1);
 
       const button = form.querySelector('button[type="submit"]');
       button.disabled = true;
+      button.dataset.busy = 'true';
       try {
         const response = await fetch('/api/create_contract_link', {
           method: 'POST',
@@ -180,19 +204,34 @@ const prepared =
           }),
         });
         if (response.status === 409) {
-          alert('חוזה זה עדיין בטיפול. יש לבדוק את שליחת המייל ואת מצב החוזה לפני יצירת קישור חדש.');
+          form.dispatchEvent(
+            new CustomEvent('client:form-error', {
+              bubbles: true,
+              detail: {
+                field: null,
+                message: 'חוזה זה עדיין בטיפול. יש לבדוק את שליחת המייל ואת מצב החוזה לפני יצירת קישור חדש.',
+              },
+            })
+          );
           return;
         }
         if (!response.ok) throw new Error('Unable to create contract link');
         const data = await response.json();
+        form.dispatchEvent(new CustomEvent('client:form-saved', { bubbles: true }));
         const nextStage = document.getElementById('contractNext');
         if (nextStage) nextStage.hidden = false;
         const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(data.url)}`;
         document.dispatchEvent(new CustomEvent('client:open-app', { detail: { url: waUrl } }));
       } catch {
-        alert('לא ניתן ליצור קישור לחוזה. ודאי שקיימת הזמנה ונסי שוב.');
+        form.dispatchEvent(
+          new CustomEvent('client:form-error', {
+            bubbles: true,
+            detail: { field: null, message: 'לא ניתן ליצור קישור לחוזה. ודאי שקיימת הזמנה ונסי שוב.' },
+          })
+        );
       } finally {
         button.disabled = false;
+        delete button.dataset.busy;
       }
     });
   }
