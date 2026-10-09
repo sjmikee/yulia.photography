@@ -1,4 +1,6 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
 import { Icon } from 'astro-icon/components';
 import { getHomePermalink } from '~/utils/permalinks';
 
@@ -22,10 +24,14 @@ export interface Props {
   theme?: string;
 }
 
+const labels = ui(localeFromPath(Astro.url.pathname));
 const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme = 'light' } = Astro.props;
 ---
 
-<footer id="footer" class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
+<footer
+  id="footer"
+  class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}
+>
   <div class="dark:bg-dark bg-footer absolute inset-0 pointer-events-none" aria-hidden="true"></div>
   <div
     class="relative max-w-7xl mx-auto px-4 sm:px-6 text-page dark:text-slate-300 intersect-once intersect-quarter intercept-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
@@ -33,7 +39,12 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
     <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
       <div class="col-span-12 lg:col-span-4">
         <div class="mb-2">
-          <a class="inline-block font-bold text-xl focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200 rounded-lg" href={getHomePermalink()}>Yulia.photography</a>
+          <a
+            class="inline-block font-bold text-xl focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200 rounded-lg"
+            href={getHomePermalink()}
+            aria-label={localeFromPath(Astro.url.pathname) === 'ru' ? 'Главная — на иврите' : labels.home}
+            >Yulia.photography</a
+          >
         </div>
         <div class="text-sm text-page flex gap-1">
           {
@@ -74,11 +85,11 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
       }
     </div>
     <button
-      aria-label="Footer Scroll to top" 
+      aria-label={labels.top}
       id="scrollToTopFooter"
       class="p-3 bg-gray-800/30 w-13 text-white rounded-lg shadow-md border border-white/80 backdrop-blur-sm focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
     >
-        <span class="sr-only">Footer Scroll to top</span> ↑
+      <span class="sr-only">{labels.top}</span> ↑
     </button>
     <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
       {
@@ -104,7 +115,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         )
       }
 
-      <div class="text-sm  text-page mr-4 dark:text-muted">
+      <div class="text-sm text-page mr-4 dark:text-muted">
         <Fragment set:html={footNote} />
       </div>
     </div>

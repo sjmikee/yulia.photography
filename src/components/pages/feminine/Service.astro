@@ -1,0 +1,161 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { feminineMessages } from '~/i18n/feminine';
+import { getFeminine } from '~/lib/feminine';
+import { getFeminineGallery } from '~/lib/feminine-gallery';
+const locale = localeFromPath(Astro.url.pathname);
+const t = feminineMessages('service', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const {
+  packages: femininePackages,
+  journey: feminineJourney,
+  service: feminineService,
+  whatsapp: feminineWhatsApp,
+  facts: feminineFacts,
+} = getFeminine(locale);
+const { hero, studio: feminineStudioImage, outdoor: feminineOutdoorImage } = getFeminineGallery(locale);
+import SessionFacts from '~/components/photoshoots/SessionFacts.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { Image } from 'astro:assets';
+import Button from '~/components/ui/Button.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import ImageSection from '~/components/photoshoots/ImageSection.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import preview from '~/assets/feminine_gallery/feminine_pricing.jpg';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription', femininePackages[0].price),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: '~/assets/feminine_gallery/feminine_pricing.jpg',
+        width: preview.width,
+        height: preview.height,
+        alt: t('previewAlt'),
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services'), name: t('servicesLabel') },
+  { url: link('/services/feminine-photography'), name: t('serviceLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <ServiceSchema service={feminineService} />
+  <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:gap-12 md:py-12">
+    <div>
+      <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
+      <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
+        {t('heroTitle')}<br /><span class="text-accent">{t('heroAccent')}</span>
+      </h1>
+      <p class="mb-5 text-xl leading-relaxed">{t('heroIntro')}</p>
+      <p class="mb-6">
+        {t('guidanceIntro')}
+        <strong>{t('startingPricePrefix')}{femininePackages[0].price} {t('currency')}</strong>
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <Button variant="primary" class="w-full" href={feminineWhatsApp()} target="_blank" icon="tabler:brand-whatsapp"
+          >{t('dateAction')}</Button
+        >
+        <Button class="w-full" href={link('/gallery/feminine')}>{t('galleryAction')}</Button>
+      </div>
+      <p class="mt-5">
+        <a href={link('/pricing/feminine')} class="underline underline-offset-4">{t('pricingAction')}</a>
+      </p>
+    </div>
+    <Image
+      src={hero.image}
+      alt={hero.alt}
+      widths={[400, 640, 900, 1200]}
+      sizes="(min-width: 768px) 50vw, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="aspect-[4/5] w-full rounded-2xl object-cover"
+    />
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('servicesBreadcrumb'), href: link('/services') },
+      { label: t('serviceBreadcrumb') },
+    ]}
+  />
+  <Journey journey={feminineJourney} current="service" />
+  <SessionFacts title={t('factsTitle')} facts={feminineFacts} />
+  <section class="mx-auto max-w-5xl px-4 py-12">
+    <h2 class="mb-8 text-3xl font-bold">{t('processTitle')}</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">{t('planningTitle')}</h3><p>{t('planningBody')}</p>
+      </div>
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">{t('shootTitle')}</h3><p>{t('shootBody')}</p>
+      </div>
+      <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="mb-3 text-xl font-bold">{t('deliveryTitle')}</h3><p>{t('deliveryBody')}</p>
+      </div>
+    </div>
+    <p class="mt-6"><a href={link('/about')} class="underline">{t('aboutLink')}</a></p>
+  </section>
+  <ImageSection image={feminineStudioImage.image} alt={feminineStudioImage.alt}>
+    <h2 class="text-3xl font-bold">{t('differenceTitle')}</h2>
+    <p>{t('feminineBody')}</p>
+    <p>{t('boudoirBody')}</p>
+    <p>{t('boundariesBody')}</p>
+  </ImageSection>
+  <ImageSection image={feminineOutdoorImage.image} alt={feminineOutdoorImage.alt} imageFirst={false}>
+    <h2 class="text-3xl font-bold">{t('locationTitle')}</h2>
+    <p>{t('outdoorBody')}</p>
+    <p>{t('studioBody')}</p>
+    <a href={link('/gallery/feminine')} class="inline-block font-semibold underline">{t('galleryLink')}</a>
+  </ImageSection>
+  <section id="preparation" class="scroll-mt-28 mx-auto max-w-4xl space-y-5 px-4 py-12">
+    <h2 class="text-3xl font-bold">{t('clothingTitle')}</h2>
+    <p>{t('clothingBody')}</p>
+    <ul class="list-disc space-y-2 ps-6">
+      <li>{t('comfortTip')}</li>
+      <li>{t('clothingTip')}</li>
+      <li>{t('practicalTip')}</li>
+      <li>{t('inspirationTip')}</li>
+    </ul>
+    <p>{t('outfitsBody')}</p>
+  </section>
+  <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
+    <h2 class="text-3xl font-bold">{t('priceTitle')}</h2>
+    <p>
+      {t('pricePrefix')}
+      {femininePackages[0].price}
+      {t('priceSeparator')}{femininePackages[2].price}
+      {t('priceBody')}
+    </p>
+    <Button href={link('/pricing/feminine')}>{t('compareAction')}</Button>
+  </section>
+  <FAQs
+    title={t('faqTitle')}
+    columns={2}
+    items={[
+      {
+        title: t('experienceQuestion'),
+        description: t('experienceAnswer'),
+      },
+      {
+        title: t('nudityQuestion'),
+        description: t('nudityAnswer'),
+      },
+      {
+        title: t('occasionQuestion'),
+        description: t('occasionAnswer'),
+      },
+      {
+        title: t('privacyQuestion'),
+        description: t('privacyAnswer'),
+      },
+    ]}
+  />
+  <Journey journey={feminineJourney} current="service" cta />
+</Layout>

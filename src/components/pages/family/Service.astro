@@ -1,0 +1,155 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { familyMessages } from '~/i18n/family';
+import { FAMILY_PRICE_KEY, familyWhatsApp } from '~/lib/family';
+const locale = localeFromPath(Astro.url.pathname);
+const t = familyMessages('service', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { PRICES } from '~/lib/pricing';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import BreadCrumbs from '~/components/common/Breadcrumbs.astro';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [
+  { url: link('/services'), name: t('servicesLabel') },
+  { url: link('/services/family-photography'), name: t('serviceLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <!-- HERO -->
+  <Hero2
+    id="hero"
+    actions={[
+      {
+        variant: 'primary',
+        text: t('whatsappAction'),
+        href: familyWhatsApp(t('whatsappMessage')),
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+        id: 'heroWhatsapp',
+      },
+      {
+        text: t('phoneAction'),
+        href: 'tel:+972525836940',
+        id: 'heroCall',
+      },
+    ]}
+    image={{
+      src: '~/assets/family_gallery/צילומי_משפחה_במרכז_בטבע.jpg',
+      width: 6720,
+      height: 4480,
+      objectPosition: '85% center',
+      sizes: '(max-width: 767px) 110vh, 100vw',
+      alt: t('heroAlt'),
+    }}
+  >
+    <Fragment slot="title">
+      <span class="text-accent dark:text-white highlight">{t('heroTitle')}</span>
+      {t('heroAccent')}
+    </Fragment>
+
+    <Fragment slot="subtitle">
+      {t('heroIntro')}
+      <br /><br />
+      <strong>{t('startingPrice', PRICES[FAMILY_PRICE_KEY][1])}</strong>
+    </Fragment>
+  </Hero2>
+
+  <BreadCrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('servicesBreadcrumb'), href: link('/services') },
+      { label: t('serviceBreadcrumb') },
+    ]}
+  />
+
+  <!-- WHAT YOU GET -->
+  <section class="max-w-6xl mx-auto px-4 py-20">
+    <h2 class="text-center mb-12">{t('benefitsTitle')}</h2>
+
+    <div class="grid md:grid-cols-4 gap-8 text-center">
+      <div>
+        <h3>{t('momentsTitle')}</h3>
+        <p>{t('momentsBody')}</p>
+      </div>
+      <div>
+        <h3>{t('comfortTitle')}</h3>
+        <p>{t('comfortBody')}</p>
+      </div>
+      <div>
+        <h3>{t('locationTitle')}</h3>
+        <p>{t('locationBody')}</p>
+      </div>
+      <div>
+        <h3>{t('editingTitle')}</h3>
+        <p>{t('editingBody')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SESSION EXPLANATION -->
+  <section class="max-w-5xl mx-auto px-4 py-16 space-y-6">
+    <h2>{t('sessionTitle')}</h2>
+    <p>{t('sessionBody')}</p>
+    <p>{t('locationIntro')}</p>
+  </section>
+
+  <!-- PREGNANCY -->
+  <section class="max-w-5xl mx-auto px-4 py-16 space-y-4">
+    <h2>{t('pregnancyTitle')}</h2>
+    <p>
+      {t('pregnancyIntro')}
+      <a href={link('/services/pregnancy-photography')} class="underline">{t('pregnancyLink')}</a>
+      {t('pregnancyConnector')}
+      <a href={link('/pricing/pregnancy')} class="underline">{t('pregnancyPricingLink')}</a>.
+    </p>
+  </section>
+
+  <!-- PRICING BRIDGE -->
+  <section class="max-w-4xl mx-auto px-4 py-16 text-center">
+    <h2>{t('priceTitle')}</h2>
+    <p>{t('priceBody')}</p>
+    <a href={link('/pricing/family')} class="underline font-medium mt-4 inline-block"> {t('pricingAction')} </a>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 pb-16 text-center">
+    <h2>{t('birthdayTitle')}</h2>
+    <p class="mt-4">{t('birthdayBody')}</p>
+    <a href={link('/pricing/first-year')} class="underline font-medium mt-4 inline-block"> {t('birthdayAction')} </a>
+  </section>
+
+  <!-- FAQ -->
+  <FAQs
+    title={t('faqTitle')}
+    columns={1}
+    items={[
+      {
+        title: t('locationQuestion'),
+        description: t('locationAnswer'),
+      },
+      {
+        title: t('winterQuestion'),
+        description: t('winterAnswer'),
+      },
+      {
+        title: t('priceQuestion'),
+        description: t('priceAnswer', PRICES[FAMILY_PRICE_KEY][1]),
+      },
+    ]}
+  />
+
+  <WhatssapCallToAction
+    title={t('contactTitle')}
+    subtitle={t('contactSubtitle')}
+    href={familyWhatsApp(t('contactMessage'))}
+  />
+</Layout>

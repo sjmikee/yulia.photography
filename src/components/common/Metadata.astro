@@ -1,7 +1,9 @@
 ---
 import merge from 'lodash.merge';
+import { localeFromPath, isIndexablePage, languageAlternates } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
 
-import { SITE, METADATA, I18N } from 'astrowind:config';
+import { SITE, METADATA } from 'astrowind:config';
 import type { MetaData } from '~/types';
 import { getCanonical } from '~/utils/permalinks';
 
@@ -21,6 +23,7 @@ const {
   twitter = {},
 } = Astro.props;
 
+const locale = localeFromPath(Astro.url.pathname);
 const seoProps = merge(
   {
     title: '',
@@ -33,7 +36,7 @@ const seoProps = merge(
       url: canonical,
       site_name: SITE?.name,
       images: [],
-      locale: I18N?.language || 'en',
+      locale: locale === 'ru' ? 'ru_IL' : 'he_IL',
       type: 'website',
     },
     twitter: {
@@ -61,11 +64,20 @@ const seoProps = merge(
   }
 );
 
+if (locale === 'ru') {
+  seoProps.titleTemplate = ignoreTitleTemplate ? '%s' : `%s — ${ui(locale).name}`;
+  seoProps.openGraph.site_name = ui(locale).name;
+}
+if (!isIndexablePage(Astro.url.pathname)) seoProps.noindex = true;
+const alternates = languageAlternates(Astro.url.pathname);
 const resolvedOpenGraph = await adaptOpenGraphImages(seoProps?.openGraph, Astro.site);
 ---
 
+{alternates.map(({ language, path }) => <link rel="alternate" hreflang={language} href={String(getCanonical(path))} />)}
 {/* Title with optional template */}
-<title>{seoProps.titleTemplate && seoProps.title ? seoProps.titleTemplate.replace('%s', seoProps.title) : seoProps.title}</title>
+<title>
+  {seoProps.titleTemplate && seoProps.title ? seoProps.titleTemplate.replace('%s', seoProps.title) : seoProps.title}
+</title>
 
 {seoProps.description && <meta name="description" content={seoProps.description} />}
 {seoProps.canonical && <link rel="canonical" href={seoProps.canonical} />}
@@ -82,35 +94,37 @@ const resolvedOpenGraph = await adaptOpenGraphImages(seoProps?.openGraph, Astro.
 {resolvedOpenGraph?.type && <meta property="og:type" content={resolvedOpenGraph.type} />}
 {resolvedOpenGraph?.locale && <meta property="og:locale" content={resolvedOpenGraph.locale} />}
 
-{resolvedOpenGraph?.images?.map((image) => {
-  let url = typeof image === 'string' ? image : image.url;
+{
+  resolvedOpenGraph?.images?.map((image) => {
+    let url = typeof image === 'string' ? image : image.url;
 
-  if (typeof url === 'string' && url.includes('/_image?')) {
-    try {
-      const parsed = new URL(url);
-      const href = parsed.searchParams.get('href');
-      if (href) {
-        url = href;
+    if (typeof url === 'string' && url.includes('/_image?')) {
+      try {
+        const parsed = new URL(url);
+        const href = parsed.searchParams.get('href');
+        if (href) {
+          url = href;
+        }
+      } catch {
+        // Keep the original URL if parsing fails.
       }
-    } catch {
-      // Keep the original URL if parsing fails.
     }
-  }
 
-  const width = typeof image === 'object' ? image.width : undefined;
-  const height = typeof image === 'object' ? image.height : undefined;
-  const alt = typeof image === 'object' ? image.alt : undefined;
+    const width = typeof image === 'object' ? image.width : undefined;
+    const height = typeof image === 'object' ? image.height : undefined;
+    const alt = typeof image === 'object' ? image.alt : undefined;
 
-  return (
-    <>
-      <meta property="og:image" content={url} />
-      {width && <meta property="og:image:width" content={String(width)} />}
-      {height && <meta property="og:image:height" content={String(height)} />}
-      {alt && <meta property="og:image:alt" content={alt} />}
-      <meta name="twitter:image" content={url} />
-    </>
-  );
-})}
+    return (
+      <>
+        <meta property="og:image" content={url} />
+        {width && <meta property="og:image:width" content={String(width)} />}
+        {height && <meta property="og:image:height" content={String(height)} />}
+        {alt && <meta property="og:image:alt" content={alt} />}
+        <meta name="twitter:image" content={url} />
+      </>
+    );
+  })
+}
 
 {seoProps.twitter?.cardType && <meta name="twitter:card" content={seoProps.twitter.cardType} />}
 {seoProps.twitter?.site && <meta name="twitter:site" content={seoProps.twitter.site} />}

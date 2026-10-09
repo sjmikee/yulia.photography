@@ -1,5 +1,8 @@
 ---
 import { Icon } from 'astro-icon/components';
+import LanguageSwitch from '~/components/common/LanguageSwitch.astro';
+import { localeFromPath } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
 import Logo from '~/components/Logo.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
@@ -44,6 +47,7 @@ const {
   position = 'center',
 } = Astro.props;
 
+const labels = ui(localeFromPath(Astro.url.pathname));
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 ---
 
@@ -71,16 +75,20 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     ]}
   >
     <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
-      <a class="flex items-center rounded-md focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200" href={getHomePermalink()}>
+      <a
+        class="flex items-center rounded-md focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+        href={getHomePermalink()}
+        aria-label={localeFromPath(Astro.url.pathname) === 'ru' ? 'Главная — на иврите' : labels.home}
+      >
         <Logo />
       </a>
       <div class="flex items-center md:hidden">
-        <ToggleMenu />
+        <LanguageSwitch /><ToggleMenu label={labels.menu} />
       </div>
     </div>
     <nav
       class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
-      aria-label="Main navigation"
+      aria-label={labels.navigation}
     >
       <ul
         class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
@@ -96,7 +104,10 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                       class="hover:text-white md:hover:bg-primary dark:text-slate-300 dark:hover:bg-slate-600 px-4 mr-1 py-2 mt-2 mb-2 flex items-center whitespace-nowrap rounded-t-lg focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
                     >
                       {text}
-                      <Icon name="tabler:chevron-down" class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline" />
+                      <Icon
+                        name="tabler:chevron-down"
+                        class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline"
+                      />
                     </a>
                   ) : (
                     <button
@@ -104,7 +115,10 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                       class="hover:text-white md:hover:bg-primary dark:text-slate-300 dark:hover:bg-slate-600 px-4 mr-1 py-2 mt-2 mb-2 flex items-center whitespace-nowrap rounded-t-lg focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
                     >
                       {text}
-                      <Icon name="tabler:chevron-down" class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline" />
+                      <Icon
+                        name="tabler:chevron-down"
+                        class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline"
+                      />
                     </button>
                   )}
                   <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-[#030621e6]/50 rounded-sm md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-[#F5F5F5]/50 md:min-w-[200px] drop-shadow-xl transition ease-in duration-200">
@@ -117,7 +131,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                           ]}
                           href={href2}
                         >
-                          {" - " + text2}
+                          {' - ' + text2}
                         </a>
                       </li>
                     ))}
@@ -146,8 +160,9 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       ]}
     >
       <div class="items-center flex justify-between w-full md:w-auto">
-        <div class="flex">
-          {showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
+        <div class="flex items-center">
+          <div class="hidden md:block"><LanguageSwitch /></div>
+          {showToggleTheme && <ToggleTheme label={labels.theme} iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
           {
             showInstagramLink && (
               <a

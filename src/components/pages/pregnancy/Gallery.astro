@@ -1,0 +1,69 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { pregnancyMessages } from '~/i18n/pregnancy';
+import { getPregnancy } from '~/lib/pregnancy';
+const locale = localeFromPath(Astro.url.pathname);
+const t = pregnancyMessages('gallery', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const { packages: pregnancyPackages, journey: pregnancyJourney } = getPregnancy(locale);
+const pregnancyGalleryImages = getPregnancyGalleryImages(locale);
+import Layout from '~/layouts/PageLayout.astro';
+import { getPregnancyGalleryImages } from '~/lib/pregnancy-gallery';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Button from '~/components/ui/Button.astro';
+import preview from '~/assets/images/services/pregnancy-7.jpg';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: '~/assets/images/services/pregnancy-7.jpg',
+        width: preview.width,
+        height: preview.height,
+        alt: t('metaImageAlt'),
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services/pregnancy-photography'), name: t('serviceLabel') },
+  { url: link('/gallery/pregnancy'), name: t('pageLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <section class="mx-auto max-w-4xl px-4 pt-12 pb-6 text-center">
+    <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
+    <h1 class="mb-5 text-4xl font-bold md:text-5xl">{t('title')}</h1>
+    <p class="mb-5 text-xl leading-relaxed">{t('introduction')}</p>
+    <p class="mb-6">{t('inspiration')}</p>
+    <Button href={link('/pricing/pregnancy')}>{t('packagesPrefix')}{pregnancyPackages[0].price} {t('currency')}</Button>
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('serviceBreadcrumb'), href: link('/services/pregnancy-photography') },
+      { label: t('pageBreadcrumb') },
+    ]}
+  />
+  <Journey journey={pregnancyJourney} current="gallery" />
+  <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
+    <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
+    <Gallery images={pregnancyGalleryImages} />
+  </section>
+  <section class="mx-auto max-w-3xl space-y-4 px-4 py-10">
+    <h2 class="text-2xl font-bold">{t('closingTitle')}</h2>
+    <p>{t('closingBody')}</p>
+    <p>
+      {t('participationBody')}
+      <a href={link('/services/pregnancy-photography#preparation')} class="font-semibold underline"
+        >{t('preparationLink')}</a
+      >.
+    </p>
+  </section>
+  <Journey journey={pregnancyJourney} current="gallery" cta />
+</Layout>

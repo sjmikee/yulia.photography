@@ -21,9 +21,9 @@
 }
 
 @theme inline {
-    --font-sans: var(--font-heebo);
-    --font-serif: var(--font-heebo);
-    --font-heading: var(--font-heebo);
+    --font-sans: var(--site-font);
+    --font-serif: var(--site-font);
+    --font-heading: var(--site-font);
 }
 
 @utility bg-page {
@@ -143,4 +143,13 @@
   #staticHeroMobile {
       display: block;
   }
+}
+
+:root { --site-font: var(--font-heebo); }
+:root[lang="ru"] { --site-font: "Rubik Variable", Arial, sans-serif; }
+
+/* Russian headings can contain words wider than a narrow phone viewport. */
+:root[lang="ru"] :is(h1, h2, h3) {
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }

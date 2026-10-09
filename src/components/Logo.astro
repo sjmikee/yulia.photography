@@ -1,26 +1,31 @@
 ---
-import light_logo from '~/assets/images/yk_logo_light.png'
-import dark_logo from '~/assets/images/yk_logo_dark.png'
+import { localeFromPath } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+const labels = ui(localeFromPath(Astro.url.pathname));
+import light_logo from '~/assets/images/yk_logo_light.png';
+import dark_logo from '~/assets/images/yk_logo_dark.png';
 import Image from 'astro/components/Image.astro';
 ---
 
-<span class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-default whitespace-nowrap dark:text-white">
-   <Image
-      class="object-scale-down max-w-28 dark:hidden"
-      width={500}
-      height={300}
-      alt="יוליה צילום לוגו"
-      src={light_logo}
-      loading="eager"
-      fetchpriority="high"
-   />
-   <Image
-      class="object-scale-down max-w-28 hidden dark:block"
-      width={500}
-      height={300}
-      alt="יוליה צילום לוגו"
-      src={dark_logo}
-      loading="eager"
-      fetchpriority="high"
-   />
+<span
+  class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-default whitespace-nowrap dark:text-white"
+>
+  <Image
+    class="object-scale-down max-w-28 dark:hidden"
+    width={500}
+    height={300}
+    alt={labels.name}
+    src={light_logo}
+    loading="eager"
+    fetchpriority="high"
+  />
+  <Image
+    class="object-scale-down max-w-28 hidden dark:block"
+    width={500}
+    height={300}
+    alt={labels.name}
+    src={dark_logo}
+    loading="eager"
+    fetchpriority="high"
+  />
 </span>

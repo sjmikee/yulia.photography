@@ -1,3 +1,5 @@
+import type { Locale } from '~/i18n/routes';
+import russianDescriptions from '~/i18n/pregnancy/gallery-images.ru.json';
 import type { ImageMetadata } from 'astro';
 // Descriptions checked against the existing photographs, not inferred from filenames.
 export const pregnancyImageDescriptions: Record<string, string> = {
@@ -67,3 +69,12 @@ export const pregnancyGalleryImages = pregnancyGallerySelection.map((filename) =
   if (!image || !alt) throw new Error(`Missing pregnancy gallery image or description: ${filename}`);
   return { image, alt };
 });
+
+export function getPregnancyGalleryImages(locale: Locale) {
+  if (locale === 'he') return pregnancyGalleryImages;
+  return pregnancyGallerySelection.map((filename, index) => {
+    const alt = (russianDescriptions as Record<string, string>)[filename];
+    if (!alt) throw new Error(`Missing Russian pregnancy image description: ${filename}`);
+    return { image: pregnancyGalleryImages[index].image, alt };
+  });
+}

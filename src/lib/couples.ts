@@ -10,6 +10,12 @@ export const couplesLinks = {
 export const couplesWhatsApp = (message = 'היי יוליה, נשמח לשמוע על צילומי זוגיות ולבדוק תאריך שמתאים לנו.') =>
   `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
 
+export const couplesPackageFacts = [
+  { minutes: 45, photosFrom: 30, photosTo: 40 },
+  { minutes: 90, photosFrom: 40, photosTo: 50 },
+  { minutes: 120, photosFrom: 50, photosTo: 70 },
+] as const;
+
 // Preserve published regular-couples prices, quantities, durations and premium inclusions.
 export const couplesPackages: PhotoshootPackage[] = [
   {
@@ -17,7 +23,7 @@ export const couplesPackages: PhotoshootPackage[] = [
     title: 'חבילת בסיס',
     price: PRICES['זוגיות'][1],
     duration: '45 דקות',
-    photos: 'לפחות 30–40',
+    photos: `לפחות ${couplesPackageFacts[0].photosFrom}–${couplesPackageFacts[0].photosTo}`,
     fit: 'סשן קצר וממוקד למזכרת משותפת',
     extra: '',
   },
@@ -26,7 +32,7 @@ export const couplesPackages: PhotoshootPackage[] = [
     title: 'החבילה הקלאסית',
     price: PRICES['זוגיות'][2],
     duration: 'שעה וחצי',
-    photos: 'לפחות 40–50',
+    photos: `לפחות ${couplesPackageFacts[1].photosFrom}–${couplesPackageFacts[1].photosTo}`,
     fit: 'יותר זמן להתרגל למצלמה ולגוון בתמונות',
     extra: '',
   },
@@ -35,7 +41,7 @@ export const couplesPackages: PhotoshootPackage[] = [
     title: 'חבילת פרימיום',
     price: PRICES['זוגיות'][3],
     duration: 'כשעתיים',
-    photos: 'לפחות 50–70',
+    photos: `לפחות ${couplesPackageFacts[2].photosFrom}–${couplesPackageFacts[2].photosTo}`,
     fit: 'אוסף רחב יותר עם מקום להחלפת לבוש',
     extra: 'עד שתי תלבושות והפסקות לפי הצורך',
   },
@@ -104,3 +110,113 @@ export const couplesFacts = [
   { label: 'צריך ניסיון מול המצלמה?', value: 'לא. נתחיל בהליכה, בשיחה ובפעולות פשוטות יחד, עם הכוונה לאורך הצילום.' },
   { label: 'מתי מקבלים תמונות?', value: 'עד 14 ימי עסקים מיום הצילום, בגלריה דיגיטלית באיכות גבוהה להורדה.' },
 ];
+
+/** Localized presentation shares package IDs and prices with the Hebrew site. */
+export function getCouples(locale: import('~/i18n/routes').Locale) {
+  if (locale === 'he')
+    return {
+      packages: couplesPackages,
+      cards: couplesPricingCards,
+      journey: couplesJourney,
+      service: couplesService,
+      whatsapp: couplesWhatsApp,
+      facts: couplesFacts,
+    };
+  const whatsapp = (message = 'Здравствуйте, Юлия! Хотим узнать о фотосессии для пары и свободных датах.') =>
+    couplesWhatsApp(message);
+  const copy = [
+    { title: 'Базовый', duration: '45 минут', fit: 'Короткая съёмка на память о вас двоих', extra: '' },
+    {
+      title: 'Классический',
+      duration: 'Полтора часа',
+      fit: 'Больше времени привыкнуть к камере и разнообразить кадры',
+      extra: '',
+    },
+    {
+      title: 'Премиальный',
+      duration: 'Около двух часов',
+      fit: 'Большая коллекция кадров и время для смены образа',
+      extra: 'До двух образов и перерывы по необходимости',
+    },
+  ];
+  const packages = couplesPackages.map((p, index) => ({
+    ...p,
+    ...copy[index],
+    photos: `не менее ${couplesPackageFacts[index].photosFrom}–${couplesPackageFacts[index].photosTo}`,
+  }));
+  const cards: Price[] = [...packages].reverse().map((p) => ({
+    id: p.id,
+    title: p.title,
+    price: p.price,
+    subtitle: p.fit,
+    highlight: `${p.photos} фотографий в полной тщательной обработке`,
+    hasRibbon: p.id === 'classic',
+    ribbonTitle: 'Рекомендую',
+    items: [
+      { description: `Примерная продолжительность: ${p.duration}` },
+      { description: 'Подготовка к съёмке и рекомендации по одежде' },
+      { description: 'Подсказки в течение всей съёмки, в вашем темпе' },
+      { description: 'Онлайн-галерея для скачивания в высоком качестве' },
+      ...(p.extra ? [{ description: p.extra }] : []),
+    ],
+    callToAction: {
+      text: 'Узнать даты в WhatsApp',
+      href: whatsapp(`Здравствуйте, Юлия! Интересует фотосессия для пары, пакет «${p.title}». Какие даты свободны?`),
+      target: '_blank',
+      'data-lead-source': `couples-package-${p.id}`,
+    },
+  }));
+  const journey: PhotoshootJourney = {
+    label: 'Подробнее о фотосессии для пары',
+    links: [
+      { id: 'service', href: '/ru' + couplesLinks.service, label: 'Как проходит съёмка' },
+      { id: 'pricing', href: '/ru' + couplesLinks.pricing, label: 'Цены и пакеты' },
+      { id: 'gallery', href: '/ru' + couplesLinks.gallery, label: 'Галерея' },
+    ],
+    contact: {
+      title: 'Какой момент вы хотите сохранить вместе?',
+      description:
+        'Напишите, если уже выбрали дату или место, или просто задайте вопрос. Вместе подумаем о вашей съёмке — выбирать пакет до разговора не обязательно.',
+      action: {
+        text: 'Задать вопрос и узнать даты в WhatsApp',
+        href: whatsapp(),
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+        'data-lead-source': 'couples-bottom-cta',
+      },
+      phone: { href: couplesJourney.contact.phone.href, label: 'Удобнее позвонить? 052-5836940' },
+    },
+  };
+  const service: PhotoshootService = {
+    name: 'Естественная фотосессия для пары в Холоне и центре Израиля',
+    serviceType: 'Фотосессия для пары',
+    url: '/ru' + couplesLinks.service,
+    areaServed: ['Холон', 'Центр Израиля'],
+    offers: packages.map((p) => ({
+      name: p.title,
+      price: p.price,
+      description: `${p.photos} фотографий в полной обработке, помощь с позированием и онлайн-галерея для скачивания. Примерная продолжительность: ${p.duration}. Место съёмки и возможная оплата локации согласовываются заранее.`,
+      url: `/ru${couplesLinks.pricing}#${p.id}`,
+    })),
+  };
+  const facts = [
+    {
+      label: 'Кто фотографирует и где?',
+      value: 'Юлия Коренская · Холон и центр Израиля. У моря, на природе, в городе или в студии по договорённости.',
+    },
+    {
+      label: 'Сколько стоит съёмка для пары?',
+      value: `Пакеты за ${packages.map((p) => p.price).join(', ')} ₪, включая помощь с позированием и полную обработку.`,
+    },
+    {
+      label: 'Нужен опыт перед камерой?',
+      value:
+        'Нет. Начнём с прогулки, разговора и простых действий вдвоём. Я буду подсказывать на протяжении всей съёмки.',
+    },
+    {
+      label: 'Когда будут готовы фотографии?',
+      value: 'В течение 14 рабочих дней после съёмки, в онлайн-галерее для скачивания в высоком качестве.',
+    },
+  ];
+  return { packages, cards, journey, service, whatsapp, facts };
+}

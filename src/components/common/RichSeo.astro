@@ -1,4 +1,8 @@
 ---
+import { localeFromPath, basePath } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+const locale = localeFromPath(Astro.url.pathname);
+const labels = ui(locale);
 import type { MetaData, BreadcrumbType } from '~/types';
 
 export interface Props {
@@ -11,114 +15,113 @@ const name = metadata?.title;
 const description = metadata?.description;
 const site = Astro.site ?? new URL('https://yulia.photography');
 const url = new URL(Astro.url.pathname, site).href;
-const isHomePage = Astro.url.pathname === '/';
+const isHomePage = basePath(Astro.url.pathname) === '/';
 const hasBreadcrumb = breadcrumbs.length > 0;
 
 const structuredData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    ...(isHomePage ? [
-      {
-        "@type": "Person",
-        "@id": "https://yulia.photography/#person",
-        "name": "יוליה קורנסקי",
-        "jobTitle": "צלמת הריון, נשיות, משפחה וזוגיות",
-        "url": "https://yulia.photography",
-        "image": "https://yulia.photography/images/structured/yulia-photographer.png",
-        "sameAs": [
-          "https://www.instagram.com/koren_yulia/",
-          "https://www.facebook.com/profile.php?id=61577756080400"
-        ]
-      },
-      {
-        "@type": "LocalBusiness",
-        "@id": "https://yulia.photography/#business",
-        "name": " יוליה קורנסקי | צילומי זוגיות | נשיות | משפחה | הריון | ילדים",
-        "image": "https://yulia.photography/images/structured/yulia-photographer.png",
-        "url": "https://yulia.photography",
-        "telephone": "+972-52-583-6940",
-        "description": description,
-        "priceRange": "$$",
-        "founder": {
-          "@id": "https://yulia.photography/#person"
-        },
-        "address": {
-          "@type": "PostalAddress",
-          "addressRegion": "Holon",
-          "addressCountry": "IL"
-        },
-        "areaServed": [
+  '@context': 'https://schema.org',
+  '@graph': [
+    ...(isHomePage
+      ? [
           {
-            "@type": "City",
-            "name": "חולון"
+            '@type': 'Person',
+            '@id': 'https://yulia.photography/#person',
+            name: labels.name,
+            jobTitle: 'צלמת הריון, נשיות, משפחה וזוגיות',
+            url: 'https://yulia.photography',
+            image: 'https://yulia.photography/images/structured/yulia-photographer.png',
+            sameAs: [
+              'https://www.instagram.com/koren_yulia/',
+              'https://www.facebook.com/profile.php?id=61577756080400',
+            ],
           },
           {
-            "@type": "AdministrativeArea",
-            "name": "מרכז הארץ, ישראל"
-          }
-        ],
-        "sameAs": [
-          "https://www.instagram.com/koren_yulia/",
-          "https://www.facebook.com/profile.php?id=61577756080400"
-        ],
-        "hasMap": "https://www.google.com/maps?cid=2538026082512169713"
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://yulia.photography/#website",
-        "url": "https://yulia.photography",
-        "name": name,
-        "publisher": {
-          "@id": "https://yulia.photography/#business"
-        },
-        "inLanguage": "he-IL"
-      }
-    ] : []),
-    ...(hasBreadcrumb ? [
-      {
-        "@type": "BreadcrumbList",
-        "@id": url + "/#breadcrumb",
-        "itemListElement":
-        [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "item":
-            {
-              "@id": "https://yulia.photography",
-              "name": "דף הבית"
-            }
-          },
-          ...breadcrumbs.map((crumb, index) => (
-            {
-              "@type": "ListItem",
-              "position": index + 2,
-              "item":
+            '@type': 'LocalBusiness',
+            '@id': 'https://yulia.photography/#business',
+            name: ' יוליה קורנסקי | צילומי זוגיות | נשיות | משפחה | הריון | ילדים',
+            image: 'https://yulia.photography/images/structured/yulia-photographer.png',
+            url: 'https://yulia.photography',
+            telephone: '+972-52-583-6940',
+            description: description,
+            priceRange: '$$',
+            founder: {
+              '@id': 'https://yulia.photography/#person',
+            },
+            address: {
+              '@type': 'PostalAddress',
+              addressRegion: 'Holon',
+              addressCountry: 'IL',
+            },
+            areaServed: [
               {
-                "@id": "https://yulia.photography" + crumb.url,
-                "name": crumb.name
-              }
-            }
-          ))
+                '@type': 'City',
+                name: 'חולון',
+              },
+              {
+                '@type': 'AdministrativeArea',
+                name: 'מרכז הארץ, ישראל',
+              },
+            ],
+            sameAs: [
+              'https://www.instagram.com/koren_yulia/',
+              'https://www.facebook.com/profile.php?id=61577756080400',
+            ],
+            hasMap: 'https://www.google.com/maps?cid=2538026082512169713',
+          },
+          {
+            '@type': 'WebSite',
+            '@id': 'https://yulia.photography/#website',
+            url: 'https://yulia.photography',
+            name: name,
+            publisher: {
+              '@id': 'https://yulia.photography/#business',
+            },
+            inLanguage: locale,
+          },
         ]
-      }
-    ] : []),
+      : []),
+    ...(hasBreadcrumb
+      ? [
+          {
+            '@type': 'BreadcrumbList',
+            '@id': url + '/#breadcrumb',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                item: {
+                  '@id': 'https://yulia.photography',
+                  name: locale === 'ru' ? 'Главная (на иврите)' : labels.home,
+                },
+              },
+              ...breadcrumbs.map((crumb, index) => ({
+                '@type': 'ListItem',
+                position: index + 2,
+                item: {
+                  '@id': 'https://yulia.photography' + crumb.url,
+                  name: crumb.name,
+                },
+              })),
+            ],
+          },
+        ]
+      : []),
     {
-      "@type": "WebPage",
-      "@id": `${url}#webpage`,
-      "url": url,
-      "name": name,
-      "description": description,
-      "about": {
-        "@id": "https://yulia.photography/#person"
+      '@type': 'WebPage',
+      '@id': `${url}#webpage`,
+      url: url,
+      name: name,
+      description: description,
+      about: {
+        '@id': 'https://yulia.photography/#person',
       },
-      "isPartOf": {
-        "@id": "https://yulia.photography/#website"
+      isPartOf: {
+        '@id': 'https://yulia.photography/#website',
       },
-      "inLanguage": "he-IL"
-    }
-  ]
+      inLanguage: locale,
+    },
+  ],
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+<script type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />
