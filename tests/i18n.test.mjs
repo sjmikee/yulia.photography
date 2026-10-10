@@ -13,12 +13,12 @@ const routes = await loadRoutes(source);
 
 test('only complete registered page pairs receive Russian URLs; private paths and assets never do', () => {
   for (const path of Object.values(routes.translatedRoutes)) {
-    assert.equal(routes.translatedPath(path, 'ru'), '/ru' + path);
-    assert.equal(routes.translatedPath('/ru' + path + '/', 'he'), path);
-    assert.equal(routes.translatedPath(path + '#classic', 'ru'), '/ru' + path + '#classic');
+    assert.equal(routes.translatedPath(path, 'ru'), '/ru' + (path === '/' ? '' : path));
+    assert.equal(routes.translatedPath('/ru' + (path === '/' ? '' : path) + '/', 'he'), path);
+    assert.equal(routes.translatedPath(path + '#classic', 'ru'), '/ru' + (path === '/' ? '' : path) + '#classic');
   }
   for (const path of [
-    '/about',
+    '/not-translated',
     '/clients/login',
     '/api/get_price',
     '/contract?token=secret',
@@ -33,12 +33,13 @@ test('only complete registered page pairs receive Russian URLs; private paths an
   assert.equal(routes.localeFromPath('/ru/services/pregnancy-photography'), 'ru');
 });
 
-test('preview translations stay out of search and do not generate alternates to noindex pages', () => {
+test('preview translations stay out of search and do not generate alternates to noindex pages', async () => {
+  const routes = await loadRoutes(source.replace('russianIndexingEnabled = true', 'russianIndexingEnabled = false'));
   for (const path of Object.values(routes.translatedRoutes)) {
-    assert.equal(routes.isIndexablePage(path), true);
-    assert.equal(routes.isIndexablePage('/ru' + path), false);
+    assert.equal(routes.isIndexablePage(path), !/^\/(articles|category|tag)(\/|$)/.test(path));
+    assert.equal(routes.isIndexablePage('/ru' + (path === '/' ? '' : path)), false);
     assert.deepEqual(routes.languageAlternates(path), []);
-    assert.deepEqual(routes.languageAlternates('/ru' + path), []);
+    assert.deepEqual(routes.languageAlternates('/ru' + (path === '/' ? '' : path)), []);
   }
   for (const path of [
     '/clients',
@@ -52,28 +53,53 @@ test('preview translations stay out of search and do not generate alternates to 
     '/api/login',
   ]) {
     assert.equal(routes.isIndexablePage(path), false);
-    assert.equal(routes.isIndexablePage('/ru' + path), false);
+    assert.equal(routes.isIndexablePage('/ru' + (path === '/' ? '' : path)), false);
   }
 });
 
 test('release configuration generates reciprocal, equivalent language alternates', async () => {
-  const released = await loadRoutes(source.replace('russianIndexingEnabled = false', 'russianIndexingEnabled = true'));
+  const released = routes;
+  assert.equal(released.russianIndexingEnabled, true);
   for (const path of Object.values(routes.translatedRoutes)) {
+    if (!released.isIndexablePage(path)) {
+      assert.deepEqual(released.languageAlternates(path), []);
+      continue;
+    }
     assert.deepEqual(released.languageAlternates(path), [
       { language: 'he', path },
-      { language: 'ru', path: '/ru' + path },
+      { language: 'ru', path: '/ru' + (path === '/' ? '' : path) },
       { language: 'x-default', path },
     ]);
-    assert.deepEqual(released.languageAlternates('/ru' + path), released.languageAlternates(path));
+    assert.deepEqual(
+      released.languageAlternates('/ru' + (path === '/' ? '' : path)),
+      released.languageAlternates(path)
+    );
   }
   assert.deepEqual(released.languageAlternates('/ru/contract'), []);
-  assert.deepEqual(released.languageAlternates('/about'), []);
+  assert.deepEqual(released.languageAlternates('/not-translated'), []);
 });
 
-for (const type of ['pregnancy', 'couples', 'intimate', 'personal', 'feminine', 'family'])
-  for (const page of ['intimate', 'family'].includes(type)
-    ? ['service', 'pricing']
-    : ['service', 'pricing', 'gallery']) {
+for (const type of [
+  'pregnancy',
+  'couples',
+  'intimate',
+  'personal',
+  'feminine',
+  'family',
+  'first-year',
+  'home',
+  'info',
+  'overview',
+])
+  for (const page of type === 'overview'
+    ? ['services', 'pricing']
+    : type === 'info'
+      ? ['about', 'contact']
+      : type === 'home'
+        ? ['home', 'reviews']
+        : ['intimate', 'family', 'first-year'].includes(type)
+          ? ['service', 'pricing']
+          : ['service', 'pricing', 'gallery']) {
     test(`${type}/${page}: translation coverage and substitution values match`, async () => {
       const read = async (locale) =>
         JSON.parse(await readFile(new URL(`../src/i18n/${type}/${page}.${locale}.json`, import.meta.url), 'utf8'));

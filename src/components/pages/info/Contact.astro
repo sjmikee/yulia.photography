@@ -1,0 +1,96 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { infoMessages } from '~/i18n/info';
+const locale = localeFromPath(Astro.url.pathname);
+const t = infoMessages('contact', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const whatsapp = 'https://wa.me/972525836940' + (locale === 'ru' ? '?text=' + encodeURIComponent(t('inquiry')) : '');
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Features2 from '~/components/widgets/Features2.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [{ url: link('/contact'), name: t('breadcrumbName') }];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <!-- HeroText Widget ******************* -->
+
+  <HeroText tagline={t('tagline')} title={t('heading')} />
+  <Breadcrumbs items={[{ label: t('home'), href: link('/') }, { label: t('breadcrumbLabel') }]} />
+  <!-- Features2 Widget ************** -->
+
+  <Features2
+    id="contact-methods"
+    title={t('methods')}
+    items={[
+      {
+        title: t('phone'),
+        icon: 'tabler:phone',
+        callToAction: {
+          text: t('call'),
+          href: 'tel:0525836940',
+        },
+      },
+      {
+        title: t('whatsapp'),
+        icon: 'tabler:brand-whatsapp',
+        callToAction: {
+          text: t('message'),
+          href: whatsapp,
+        },
+      },
+      {
+        title: t('facebook'),
+        icon: 'tabler:brand-facebook',
+        callToAction: {
+          text: t('visit'),
+          href: 'https://www.facebook.com/profile.php?id=61577756080400',
+          target: '_blank',
+        },
+      },
+      {
+        title: t('instagram'),
+        icon: 'tabler:brand-instagram',
+        callToAction: {
+          text: '<div dir="ltr">@koren_yulia</div>',
+          href: 'https://instagram.com/koren_yulia/',
+          target: '_blank',
+        },
+      },
+      {
+        title: t('email'),
+        icon: 'tabler:mail',
+        callToAction: {
+          text: 'contact@yulia.photography',
+          href: 'mailto:contact@yulia.photography',
+        },
+      },
+      {
+        title: t('pigeon'),
+        description: t('pigeonDescription'),
+        icon: 'tabler:send',
+      },
+    ]}
+  />
+</Layout>
+
+<style>
+  :global(#contact-methods .grid > div) {
+    min-width: 0;
+  }
+  :global(#contact-methods a) {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  :global(#contact-methods svg) {
+    flex-shrink: 0;
+  }
+</style>

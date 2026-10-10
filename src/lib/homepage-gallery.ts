@@ -1,3 +1,7 @@
+import type { Locale } from '~/i18n/routes';
+import pregnancyRu from '~/i18n/pregnancy/gallery-images.ru.json';
+import feminineRu from '~/i18n/feminine/gallery-images.ru.json';
+import { feminineHomepageImages } from './feminine-gallery';
 import type { ImageMetadata } from 'astro';
 import { pregnancyImageDescriptions } from './pregnancy-gallery';
 
@@ -32,3 +36,33 @@ export const personalHomepageImages = [
   ['בחורה_יושבת_על_הריצפה_על_רקע_לבן_בסטודיו_צילומי_תדמית.jpg', 'אישה יושבת על רצפת הסטודיו על רקע לבן'],
   ['בחורה_עם_מששקפי_שמש_עומדת_מאחורי_חלון_עם_סורגים_צילומי_תדמית_.jpg', 'אישה במשקפי שמש מאחורי חלון עם סורגים'],
 ].map(([filename, alt]) => photo('solo_index', filename, alt));
+
+/** Preserve the homepage selection while localizing its photo descriptions. */
+export function getHomepageImages(locale: Locale) {
+  const localize = (images: typeof couplesHomepageImages, descriptions: string[]) =>
+    images.map((image, index) => ({ ...image, alt: locale === 'ru' ? descriptions[index] : image.alt }));
+  return {
+    couples: localize(couplesHomepageImages, [
+      'Пара у красивой двери',
+      'Крупный портрет обнимающейся пары',
+      'Фотосессия пары у моря',
+      'Пара на лестнице',
+    ]),
+    pregnancy: localize(
+      pregnancyHomepageImages,
+      ['Inbal-17.jpg', 'rotem&bar-15.jpg', 'Inbal_Orig-4.jpg', 'Zehava&Idan-15.jpg'].map(
+        (key) => (pregnancyRu as Record<string, string>)[key]
+      )
+    ),
+    personal: localize(personalHomepageImages, [
+      'Мужчина в проходе в старом Яффо',
+      'Женщина у кирпичной стены в солнечном свете',
+      'Женщина сидит на полу студии на белом фоне',
+      'Женщина в солнечных очках за окном с решёткой',
+    ]),
+    feminine: feminineHomepageImages.map((image) => ({
+      ...image,
+      alt: locale === 'ru' ? (feminineRu as Record<string, string>)[image.filename] : image.alt,
+    })),
+  };
+}

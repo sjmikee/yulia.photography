@@ -44,7 +44,7 @@ const privatePage = Astro.url.pathname === '/clients' || Astro.url.pathname.star
     <CustomStyles />
     <ApplyColorMode />
     <Metadata {...metadata} />
-    <RichSeo metadata={richMetadata} breadcrumbs={breadcrumbs} />
+    <RichSeo metadata={{ ...metadata, ...richMetadata }} breadcrumbs={breadcrumbs} />
     <SiteVerification />
 
     <!-- Comment the line below to disable View Transitions -->

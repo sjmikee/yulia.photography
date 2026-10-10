@@ -1,0 +1,283 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { firstYearMessages } from '~/i18n/first-year';
+import { FIRST_YEAR_PRICE_KEY, firstYearWhatsApp } from '~/lib/first-year';
+const locale = localeFromPath(Astro.url.pathname);
+const t = firstYearMessages('pricing', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Prices from '~/components/widgets/Pricing.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
+
+const session_type = FIRST_YEAR_PRICE_KEY;
+const metadata = {
+  title: t('metaTitle', PRICES[session_type][1]),
+  description: t('metaDescription', PRICES[session_type][1], PRICES[session_type][2], PRICES[session_type][3]),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [
+  { url: link('/pricing'), name: t('pricesLabel') },
+  { url: link('/pricing/first-year'), name: t('pageLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <!-- HeroText Widget ******************* -->
+
+  <HeroText
+    tagline={t('tagline')}
+    title={t('title')}
+    subtitle={t('subtitle', PRICES[session_type][1])}
+    content={t('introduction')}
+    callToAction={{ text: t('compareAction'), href: '#packages' }}
+    callToAction2={{ text: t('dateAction'), href: firstYearWhatsApp(t('contactMessage')), target: '_blank' }}
+  />
+
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('pricesBreadcrumb'), href: link('/pricing') },
+      { label: t('pageBreadcrumb') },
+    ]}
+  />
+
+  <section class="mx-auto max-w-4xl px-4 py-8 text-start">
+    <h2 class="mb-4 text-2xl font-bold">{t('overviewTitle')}</h2>
+    <p class="mb-4">
+      <strong
+        >{t('pricePrefix')}
+        {PRICES[session_type][1]}
+        {t('priceSeparator')}{PRICES[session_type][3]}
+        {t('currency')}</strong
+      >
+      {t('basicPricePrefix')}
+      {PRICES[session_type][1]}
+      {t('basicPriceSuffix')}
+      {PRICES[session_type][2]}
+      {t('classicPriceSuffix')}
+      {PRICES[session_type][3]}
+      {t('premiumPriceSuffix')}
+    </p>
+    <p class="mb-4">{t('studioNote')}</p>
+
+    <p class="mb-4">{t('choiceIntro')}</p>
+    <p>
+      {t('serviceIntro')}
+      <a href={link('/services/first-year-photography')} class="font-semibold underline">{t('serviceLink')}</a>.
+    </p>
+  </section>
+
+  <!-- Pricing Widget ******************* -->
+
+  <Prices
+    id="packages"
+    title={t('packagesTitle')}
+    subtitle=""
+    tagline={t('packagesTagline')}
+    prices={[
+      {
+        title: t('premiumName'),
+        subtitle: t('premiumSubtitle'),
+        price: PRICES[session_type][3],
+        period: t('premiumPeriod'),
+        items: [
+          {
+            description: t('premiumPreparation'),
+          },
+          {
+            description: t('premiumDuration'),
+          },
+          {
+            description: t('premiumOutfits'),
+          },
+          {
+            description: t('premiumPhotos'),
+          },
+          {
+            description: t('premiumGallery'),
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: t('premiumAction'),
+          href: firstYearWhatsApp(t('premiumMessage')),
+        },
+      },
+      {
+        title: t('classicName'),
+        subtitle: t('classicSubtitle'),
+        price: PRICES[session_type][2],
+        period: t('classicPeriod'),
+        items: [
+          {
+            description: t('classicPreparation'),
+          },
+          {
+            description: t('classicDuration'),
+          },
+          {
+            description: t('classicPhotos'),
+          },
+          {
+            description: t('classicGallery'),
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: t('classicAction'),
+          href: firstYearWhatsApp(t('classicMessage')),
+        },
+        hasRibbon: true,
+        ribbonTitle: t('ribbon'),
+      },
+      {
+        title: t('basicName'),
+        subtitle: t('basicSubtitle'),
+        price: PRICES[session_type][1],
+        period: t('basicPeriod'),
+        items: [
+          {
+            description: t('basicPreparation'),
+          },
+          {
+            description: t('basicDuration'),
+          },
+          {
+            description: t('basicPhotos'),
+          },
+          {
+            description: t('basicGallery'),
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: t('basicAction'),
+          href: firstYearWhatsApp(t('basicMessage')),
+        },
+      },
+    ]}
+  />
+
+  <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-start">
+    <h2 class="text-2xl font-bold">{t('selectionTitle')}</h2>
+    <p>
+      <strong>{t('basicLabel')}</strong>
+      {t('basicBody')}
+      <strong>{t('classicLabel')}</strong>
+      {t('classicBody')}
+      <strong>{t('premiumLabel')}</strong>
+      {t('premiumBody')}
+    </p>
+    <h2 class="text-2xl font-bold">{t('priceFactorsTitle')}</h2>
+    <p>{t('priceFactorsBody')}</p>
+    <h2 class="text-2xl font-bold">{t('locationTitle')}</h2>
+    <p>{t('locationBody')}</p>
+    <h2 class="text-2xl font-bold">{t('cakeTitle')}</h2>
+    <p>{t('cakeBody')}</p>
+    <h2 class="text-2xl font-bold">{t('timingTitle')}</h2>
+    <p>{t('timingBody')}</p>
+    <p>
+      {t('familyPrompt')}
+      <a href={link('/services/family-photography')} class="font-semibold underline">{t('familyLink')}</a>.
+    </p>
+  </section>
+
+  <!-- Steps Widget ****************** -->
+
+  <Steps
+    title={t('processTitle')}
+    tagline={t('processTagline')}
+    isReversed={locale === 'he'}
+    items={[
+      {
+        title: t('stepContact'),
+        icon: 'tabler:number-1',
+      },
+      {
+        title: t('stepBooking'),
+        icon: 'tabler:number-2',
+      },
+      {
+        title: t('stepDeposit'),
+        icon: 'tabler:number-3',
+      },
+      {
+        title: t('stepShoot'),
+        icon: 'tabler:number-4',
+      },
+      {
+        title: t('stepEditing'),
+        icon: 'tabler:number-5',
+      },
+      {
+        title: t('stepDelivery'),
+        icon: 'tabler:number-6',
+      },
+      {
+        title: t('stepEnjoy'),
+        icon: 'tabler:number-7',
+      },
+      {
+        title: t('stepTag'),
+        icon: 'tabler:number-8',
+      },
+    ]}
+    image={{ src: '~/assets/images/pricing/first_year_pricing.jpg', alt: t('imageAlt') }}
+  />
+
+  <!-- FAQs Widget ******************* -->
+
+  <FAQs
+    title={t('faqTitle')}
+    subtitle={t('faqSubtitle')}
+    columns={1}
+    items={[
+      {
+        title: t('basicQuestion'),
+        description: t('basicAnswer', PRICES[session_type][1]),
+      },
+      {
+        title: t('deliveryQuestion'),
+        description: t('deliveryAnswer'),
+      },
+      {
+        title: t('childrenQuestion'),
+        description: t('childrenAnswer'),
+      },
+      {
+        title: t('locationQuestion'),
+        description: t('locationAnswer'),
+      },
+      {
+        title: t('clothingQuestion'),
+        description: t('clothingAnswer'),
+      },
+      {
+        title: t('weatherQuestion'),
+        description: t('weatherAnswer'),
+      },
+      {
+        title: t('bookingQuestion'),
+        description: t('bookingAnswer'),
+      },
+      {
+        title: t('depositQuestion'),
+        description: t('depositAnswer'),
+      },
+    ]}
+  />
+
+  <!-- CallToAction Widget *********** -->
+
+  <WhatssapCallToAction
+    title={t('contactTitle')}
+    subtitle={t('contactSubtitle')}
+    href={firstYearWhatsApp(t('contactMessage'))}
+  />
+</Layout>

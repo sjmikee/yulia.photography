@@ -1,8 +1,29 @@
 export type Locale = 'he' | 'ru';
 
-// Turn on only when the complete Russian site has passed its release review.
-export const russianIndexingEnabled = false;
+// Russian public pages passed parity review; indexing approved for release.
+export const russianIndexingEnabled = true;
 export const translatedRoutes = {
+  home: '/',
+  articles: '/articles',
+  articleCategoryTips: '/category/tips',
+  articleTagPhoto: '/tag/photo',
+  articleTagTips: '/tag/tips',
+  articleTagFamily: '/tag/family',
+  articleTagCouples: '/tag/couples',
+  articleTagSingle: '/tag/single',
+  articleTagPortrait: '/tag/portrait',
+  article0: '/how-to-choose-family-photographer',
+  article1: '/how-to-prepare-kids-to-family-photoshot',
+  article2: '/natural-couple-photos',
+  article3: '/prepare-to-family-photoshot',
+  article4: '/why-everbody-needs-a-personal-photoshot',
+
+  privacy: '/privacy',
+  accessibility: '/terms',
+  services: '/services',
+  pricing: '/pricing',
+  about: '/about',
+  contact: '/contact',
   pregnancyService: '/services/pregnancy-photography',
   pregnancyPricing: '/pricing/pregnancy',
   pregnancyGallery: '/gallery/pregnancy',
@@ -19,6 +40,8 @@ export const translatedRoutes = {
   feminineGallery: '/gallery/feminine',
   familyService: '/services/family-photography',
   familyPricing: '/pricing/family',
+  firstYearService: '/services/first-year-photography',
+  firstYearPricing: '/pricing/first-year',
 } as const;
 
 export function localeFromPath(path: string): Locale {
@@ -35,7 +58,7 @@ export function translatedPath(path: string, locale: Locale): string | undefined
   if (pathname.includes('?')) return undefined;
   const base = basePath(pathname);
   if (!(Object.values(translatedRoutes) as string[]).includes(base)) return undefined;
-  return `${locale === 'ru' ? '/ru' : ''}${base}${hash ? `#${hash}` : ''}`;
+  return `${locale === 'ru' ? '/ru' : ''}${locale === 'ru' && base === '/' ? '' : base}${hash ? `#${hash}` : ''}`;
 }
 
 export function isIndexablePage(path: string): boolean {

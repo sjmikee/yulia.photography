@@ -1,4 +1,7 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+import { blogLink } from '~/i18n/blog';
+const locale = localeFromPath(Astro.url.pathname);
 import { getPermalink } from '~/utils/permalinks';
 
 import { APP_BLOG } from 'astrowind:config';
@@ -29,7 +32,7 @@ const { tags, class: className = 'text-sm', title = undefined, isCategory = fals
               tag.title
             ) : (
               <a
-                href={getPermalink(tag.slug, isCategory ? 'category' : 'tag')}
+                href={blogLink(getPermalink(tag.slug, isCategory ? 'category' : 'tag'), locale)}
                 class="text-muted dark:text-slate-300 hover:text-primary dark:hover:text-gray-200 focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
               >
                 {tag.title}

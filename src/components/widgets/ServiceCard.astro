@@ -1,4 +1,6 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+const isRussian = localeFromPath(Astro.url.pathname) === 'ru';
 import Image from '~/components/common/Image.astro';
 
 const {
@@ -13,58 +15,78 @@ const {
 
 <article class="group not-prose border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md transition">
   {
-          image && (
-            <a
-              href={href}
-              class="block w-full h-64 md:h-72 lg:h-80 object-cover m-auto max-w-5xl"
-              aria-label={typeof title === 'string' ? `מעבר לשירות ${title}` : 'מעבר לשירות'}
-            >
-              {typeof image === 'string' ? (
-                <Fragment set:html={image} />
-              ) : (
-                <Image
-                  class="w-full h-64 md:h-72 lg:h-80 object-cover"
-                  style={image?.position ? `object-position: ${image.position};` : undefined}
-                  widths={[400, 768, 1024, 2040, 3840]}
-                  sizes="100vw"
-                  loading="eager"
-                  width={4123}
-                  height={6185}
-                  fetchpriority="high"
-                  {...image}
-                />
-              )}
-            </a>
-          )
+    image && (
+      <a
+        href={href}
+        class="block w-full h-64 md:h-72 lg:h-80 object-cover m-auto max-w-5xl"
+        aria-label={
+          typeof title === 'string'
+            ? isRussian
+              ? `Подробнее: ${title.replace(/<[^>]*>/g, '').trim()}`
+              : `מעבר לשירות ${title}`
+            : isRussian
+              ? 'Подробнее'
+              : 'מעבר לשירות'
         }
+      >
+        {typeof image === 'string' ? (
+          <Fragment set:html={image} />
+        ) : (
+          <Image
+            class="w-full h-64 md:h-72 lg:h-80 object-cover"
+            style={image?.position ? `object-position: ${image.position};` : undefined}
+            widths={[400, 768, 1024, 2040, 3840]}
+            sizes="100vw"
+            loading="eager"
+            width={4123}
+            height={6185}
+            fetchpriority="high"
+            {...image}
+          />
+        )}
+      </a>
+    )
+  }
 
   <div class="p-6">
-    {title && (
-      <h2 class="text-xl font-semibold mb-2">
-        <a href={href} class="hover:underline">
-          <Fragment set:html={title} />
-        </a>
-      </h2>
-    )}
+    {
+      title && (
+        <h2 class="text-xl font-semibold mb-2">
+          <a href={href} class="hover:underline">
+            <Fragment set:html={title} />
+          </a>
+        </h2>
+      )
+    }
 
-    {subtitle && (
-      <p class="text-gray-600 mb-4 leading-relaxed">
-        <Fragment set:html={subtitle} />
-      </p>
-    )}
+    {
+      subtitle && (
+        <p class="text-gray-600 mb-4 leading-relaxed">
+          <Fragment set:html={subtitle} />
+        </p>
+      )
+    }
 
-    {content && (
-      <div class="mb-4">
-        <Fragment set:html={content} />
-      </div>
-    )}
+    {
+      content && (
+        <div class="mb-4">
+          <Fragment set:html={content} />
+        </div>
+      )
+    }
 
     <a
       href={href}
       class="inline-block text-sm font-medium text-gray-800 hover:underline"
-      aria-label={typeof title === 'string' ? `מידע נוסף על ${title}` : 'מידע נוסף'}
+      aria-label={typeof title === 'string'
+        ? isRussian
+          ? `Подробнее: ${title.replace(/<[^>]*>/g, '').trim()}`
+          : `מידע נוסף על ${title}`
+        : isRussian
+          ? 'Подробнее'
+          : 'מידע נוסף'}
     >
-      למידע נוסף →
+      {isRussian ? 'Подробнее →' : 'למידע נוסף →'}
     </a>
   </div>
 </article>

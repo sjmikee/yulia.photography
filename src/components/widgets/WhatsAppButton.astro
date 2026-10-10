@@ -1,17 +1,21 @@
 ---
 import { localeFromPath } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
-const russianMessage = Astro.url.pathname.includes('family')
-  ? 'Здравствуйте, Юлия! Нас интересует семейная фотосессия. Какие даты свободны?'
-  : Astro.url.pathname.includes('feminine')
-    ? 'Здравствуйте, Юлия! Хочу узнать о женской и будуарной съёмке и свободных датах.'
-    : /\/(?:services\/personal-photography|pricing\/personal|gallery\/solo)\/?$/.test(Astro.url.pathname)
-      ? 'Здравствуйте, Юлия! Хочу узнать об индивидуальной фотосессии и свободных датах.'
-      : Astro.url.pathname.includes('intimate')
-        ? 'Здравствуйте, Юлия! Хотим узнать об интимной фотосессии для пары и обсудить, подойдёт ли она нам.'
-        : Astro.url.pathname.includes('couples')
-          ? 'Здравствуйте, Юлия! Хотим узнать о фотосессии для пары и свободных датах.'
-          : 'Здравствуйте, Юлия! Хочу узнать о съёмке беременности и свободных датах.';
+const russianMessage = Astro.url.pathname.includes('first-year')
+  ? 'Здравствуйте, Юлия! Нас интересует фотосессия на первый день рождения. Какие даты свободны?'
+  : Astro.url.pathname.includes('family')
+    ? 'Здравствуйте, Юлия! Нас интересует семейная фотосессия. Какие даты свободны?'
+    : Astro.url.pathname.includes('feminine')
+      ? 'Здравствуйте, Юлия! Хочу узнать о женской и будуарной съёмке и свободных датах.'
+      : /\/(?:services\/personal-photography|pricing\/personal|gallery\/solo)\/?$/.test(Astro.url.pathname)
+        ? 'Здравствуйте, Юлия! Хочу узнать об индивидуальной фотосессии и свободных датах.'
+        : Astro.url.pathname.includes('intimate')
+          ? 'Здравствуйте, Юлия! Хотим узнать об интимной фотосессии для пары и обсудить, подойдёт ли она нам.'
+          : Astro.url.pathname.includes('couples')
+            ? 'Здравствуйте, Юлия! Хотим узнать о фотосессии для пары и свободных датах.'
+            : Astro.url.pathname.includes('pregnancy')
+              ? 'Здравствуйте, Юлия! Хочу узнать о съёмке беременности и свободных датах.'
+              : 'Здравствуйте, Юлия! Хочу узнать о фотосессии и свободных датах.';
 const labels = ui(localeFromPath(Astro.url.pathname));
 import { Icon } from 'astro-icon/components';
 ---

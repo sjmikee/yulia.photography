@@ -41,9 +41,8 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         <div class="mb-2">
           <a
             class="inline-block font-bold text-xl focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200 rounded-lg"
-            href={getHomePermalink()}
-            aria-label={localeFromPath(Astro.url.pathname) === 'ru' ? 'Главная — на иврите' : labels.home}
-            >Yulia.photography</a
+            href={localeFromPath(Astro.url.pathname) === 'ru' ? '/ru' : getHomePermalink()}
+            aria-label={localeFromPath(Astro.url.pathname) === 'ru' ? 'Главная' : labels.home}>Yulia.photography</a
           >
         </div>
         <div class="text-sm text-page flex gap-1">

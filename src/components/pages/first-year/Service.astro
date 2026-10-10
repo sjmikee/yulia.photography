@@ -1,0 +1,201 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { firstYearMessages } from '~/i18n/first-year';
+import { FIRST_YEAR_PRICE_KEY, firstYearWhatsApp } from '~/lib/first-year';
+const locale = localeFromPath(Astro.url.pathname);
+const t = firstYearMessages('service', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+import Layout from '~/layouts/PageLayout.astro';
+import Hero2 from '~/components/widgets/Hero2.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
+import { Image } from 'astro:assets';
+import image_1 from '~/assets/family_gallery/ילד_ולידה_יושבים_מחובקים_ביער_צילומי_משפחה.jpg';
+import image_2 from '~/assets/family_gallery/צילומי_משפחה_בטבע.jpg';
+import image_3 from '~/assets/family_gallery/צילומי_משפחה_במרכז_בטבע.jpg';
+import image_4 from '~/assets/couples_landing/family_2025-05.jpg';
+import image_5 from '~/assets/couples_landing/family_2025-01.jpg';
+import image_6 from '~/assets/images/blog/צילומי-משפחה-אבא-ובן-מחייכים.jpg';
+import image_7 from '~/assets/images/blog/צילומי-משפחה-אמא-ובת.jpg';
+import osher_review from '~/assets/reviewers/osher_review.jpg';
+import inbal_review from '~/assets/reviewers/inbal_review.jpg';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [
+  { url: link('/services'), name: t('servicesLabel') },
+  { url: link('/services/first-year-photography'), name: t('serviceLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <Hero2
+    id="hero"
+    actions={[
+      {
+        variant: 'primary',
+        text: t('whatsappAction'),
+        href: firstYearWhatsApp(t('whatsappMessage')),
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+      },
+      { text: t('phoneAction'), href: 'tel:+972525836940' },
+    ]}
+    image={{
+      src: '~/assets/images/pricing/first_year_pricing.jpg',
+      alt: t('heroAlt'),
+      width: 6720,
+      height: 4480,
+      objectPosition: '35% center',
+      sizes: '(max-width: 767px) 110vh, 100vw',
+    }}
+  >
+    <Fragment slot="title"
+      ><span class="text-accent dark:text-white highlight">{t('heroTitle')}</span> {t('heroAccent')}</Fragment
+    >
+    <Fragment slot="subtitle"
+      >{t('heroIntro')}<br /><br /><strong>{t('startingPricePrefix')}{PRICES[FIRST_YEAR_PRICE_KEY][1]}₪</strong
+      ></Fragment
+    >
+  </Hero2>
+
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('servicesBreadcrumb'), href: link('/services') },
+      { label: t('serviceBreadcrumb') },
+    ]}
+  />
+
+  <section class="max-w-5xl mx-auto px-4 py-16 space-y-6">
+    <h2>{t('introductionTitle')}</h2><p>{t('introductionBody')}</p><p>{t('preparationIntro')}</p>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 py-10">
+    <h2 class="text-center mb-10">{t('benefitsTitle')}</h2>
+    <div class="grid md:grid-cols-4 gap-8 text-center">
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_1} alt={t('childrenAlt')} class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">{t('rhythmTitle')}</h3>
+        <p>{t('rhythmBody')}</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_2} alt={t('coupleOutdoorAlt')} class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">{t('familyTitle')}</h3>
+        <p>{t('familyBody')}</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_3} alt={t('motherChildAlt')} class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">{t('playTitle')}</h3>
+        <p>{t('playBody')}</p>
+      </div>
+      <div class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_4} alt={t('couplePortraitAlt')} class="rounded-lg mb-3" loading="eager" />
+        <h3 class="font-extrabold">{t('naturalTitle')}</h3>
+        <p>{t('naturalBody')}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-10">
+    <div class="grid gap-8 text-center">
+      <article class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_5} alt={t('coupleSeatedAlt')} class="rounded-lg shadow" loading="lazy" /><h2
+          class="font-extrabold text-accent py-5"
+        >
+          {t('sessionTitle')}
+        </h2><p>{t('sessionBody')}</p><p>{t('sessionGoal')}</p>
+      </article>
+      <article class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_6} alt={t('fatherSonAlt')} class="rounded-lg shadow" loading="lazy" /><h2
+          class="font-extrabold text-accent py-5"
+        >
+          {t('participationTitle')}
+        </h2><p>{t('participationBody')}</p>
+      </article>
+      <article class="bg-gray-100 p-4 rounded-xl shadow">
+        <Image src={image_7} alt={t('motherDaughterAlt')} class="rounded-lg shadow" loading="lazy" /><h2
+          class="font-extrabold text-accent py-5"
+        >
+          {t('preparationTitle')}
+        </h2><p>{t('preparationBody')}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 py-16 text-center">
+    <h2>{t('priceTitle')}</h2><p>{t('priceBody')}</p><a
+      href={link('/pricing/first-year')}
+      class="underline font-medium mt-4 inline-block">{t('pricingAction')}</a>
+  </section>
+
+  <section class="bg-gray-50 py-16 px-6" id="reviews">
+    <h2 class="text-3xl font-bold text-center mb-10">{t('reviewsTitle')}</h2>{
+      locale === 'ru' && <p class="text-center mb-6 text-sm">{t('reviewNote')}</p>
+    }<div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+      <blockquote class="bg-white p-6 rounded-2xl shadow">
+        <p><span class="text-yellow-400 text-lg">★★★★★</span><br />{t('osherQuote')}</p><footer
+          class="mt-4 font-bold flex items-center"
+        >
+          <Image
+            src={osher_review}
+            alt={t('osherAlt')}
+            class="w-10 h-10 rounded-full me-3"
+            width={40}
+            height={40}
+          /><span class="mx-2">{t('osherName')}</span>
+        </footer>
+      </blockquote><blockquote class="bg-white p-6 rounded-2xl shadow">
+        <p><span class="text-yellow-400 text-lg">★★★★★</span><br />{t('inbalQuote')}</p><footer
+          class="mt-4 font-bold flex items-center"
+        >
+          <Image
+            src={inbal_review}
+            alt={t('inbalAlt')}
+            class="w-10 h-10 rounded-full me-3"
+            width={40}
+            height={40}
+          /><span class="mx-2">{t('inbalName')}</span>
+        </footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <CallToAction
+    id="birthdayCallToAction"
+    actions={[
+      {
+        variant: 'primary',
+        text: t('whatsappLabel'),
+        href: firstYearWhatsApp(t('contactMessage')),
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+      },
+    ]}
+    ><Fragment slot="title">{t('celebrationTitle')}</Fragment><Fragment slot="subtitle">{t('celebrationBody')}</Fragment
+    ><Fragment slot="bg"><div class="absolute inset-0 bg-page dark:bg-slate-900"></div></Fragment></CallToAction
+  >
+
+  <FAQs
+    title={t('faqTitle')}
+    columns={1}
+    items={[
+      { title: t('childrenQuestion'), description: t('childrenAnswer') },
+      { title: t('participationQuestion'), description: t('participationAnswer') },
+      { title: t('locationQuestion'), description: t('locationAnswer') },
+    ]}
+  />
+
+  <WhatssapCallToAction
+    title={t('contactTitle')}
+    subtitle={t('contactSubtitle')}
+    href={firstYearWhatsApp(t('contactMessage'))}
+  />
+</Layout>

@@ -1,0 +1,117 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { overviewMessages } from '~/i18n/overview';
+const locale = localeFromPath(Astro.url.pathname);
+const t = overviewMessages('services', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceCard from '~/components/widgets/ServiceCard.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [{ url: link('/services'), name: t('breadcrumbName') }];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <!-- Hero -->
+  <section class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">
+    <h1 class="text-3xl md:text-4xl font-semibold mb-4">{t('heading')}</h1>
+    <p class="text-gray-600 leading-relaxed">{t('intro')}</p>
+  </section>
+
+  <Breadcrumbs items={[{ label: t('home'), href: link('/') }, { label: t('breadcrumbLabel') }]} />
+
+  <!-- Services list -->
+  <section class="max-w-6xl mx-auto px-4 pb-20 py-10">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <ServiceCard
+        href={link('/services/pregnancy-photography')}
+        image={{
+          src: '~/assets/images/services/pregnancy-hero.jpg',
+          alt: t('pregnancyAlt'),
+        }}
+      >
+        <Fragment slot="title"> {t('pregnancyTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('pregnancyDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/services/personal-photography')}
+        image={{
+          src: '~/assets/images/services/personal-hero.jpg',
+          alt: t('personalAlt'),
+          position: 'center 15%',
+        }}
+      >
+        <Fragment slot="title"> {t('personalTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('personalDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/services/family-photography')}
+        image={{
+          src: '~/assets/family_gallery/צילומי_משפחה_במרכז_בטבע.jpg',
+          alt: t('familyAlt'),
+          position: 'center 15%',
+        }}
+      >
+        <Fragment slot="title"> {t('familyTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('familyDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/services/couples-photography')}
+        image={{
+          src: '~/assets/images/services/couples-hero.jpg',
+          alt: t('couplesAlt'),
+          position: 'center 15%',
+        }}
+      >
+        <Fragment slot="title"> {t('couplesTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('couplesDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/services/feminine-photography')}
+        image={{
+          src: '~/assets/feminine_gallery/feminine_pricing.jpg',
+          alt: t('feminineAlt'),
+        }}
+      >
+        <Fragment slot="title">{t('feminineTitle')}</Fragment>
+        <Fragment slot="subtitle"> {t('feminineDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/services/intimate-couples-photography')}
+        image={{
+          src: '~/assets/images/pricing/couples_intimate_pricing_2.jpg',
+          alt: t('intimateAlt'),
+        }}
+      >
+        <Fragment slot="title">{t('intimateTitle')}</Fragment>
+        <Fragment slot="subtitle"> {t('intimateDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/services/first-year-photography')}
+        image={{
+          src: '~/assets/images/pricing/first_year_pricing.jpg',
+          alt: t('firstYearAlt'),
+        }}
+      >
+        <Fragment slot="title">{t('firstYearTitle')}</Fragment>
+        <Fragment slot="subtitle"> {t('firstYearDescription')} </Fragment>
+      </ServiceCard>
+    </div>
+  </section>
+</Layout>

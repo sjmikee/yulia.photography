@@ -1,4 +1,7 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+const locale = localeFromPath(Astro.url.pathname);
+const isRussian = locale === 'ru';
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import { blogCategoryRobots, getStaticPathsBlogCategory } from '~/utils/blog';
 
@@ -21,7 +24,7 @@ const { page, category } = Astro.props as Props;
 const currentPage = page.currentPage ?? 1;
 
 const metadata = {
-  title: `'${category.title}' קטגוריה  ${currentPage > 1 ? ` — עמוד ${currentPage}` : ''}`,
+  title: `${isRussian ? 'Категория' : 'קטגוריה'}: ${category.title}${currentPage > 1 ? ` — ${isRussian ? 'Страница' : 'עמוד'} ${currentPage}` : ''}`,
   robots: {
     index: blogCategoryRobots?.index,
     follow: blogCategoryRobots?.follow,
@@ -35,5 +38,12 @@ const metadata = {
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
   </section>
-  <WhatssapCallToAction />
+  <WhatssapCallToAction
+    title={isRussian ? 'Хотите обсудить съёмку?' : undefined}
+    subtitle={isRussian ? 'Напишите мне — помогу выбрать подходящий вариант.' : undefined}
+    href={isRussian
+      ? 'https://wa.me/972525836940?text=' +
+        encodeURIComponent('Здравствуйте, Юлия! Прочитали вашу статью и хотим обсудить фотосессию.')
+      : undefined}
+  />
 </Layout>

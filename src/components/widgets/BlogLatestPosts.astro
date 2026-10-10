@@ -1,4 +1,8 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+import { blogLink } from '~/i18n/blog';
+const locale = localeFromPath(Astro.url.pathname);
+const isRussian = locale === 'ru';
 import { APP_BLOG } from 'astrowind:config';
 
 import Grid from '~/components/blog/Grid.astro';
@@ -19,8 +23,8 @@ export interface Props extends Widget {
 
 const {
   title = await Astro.slots.render('title'),
-  linkText = 'לכל הפוסטים',
-  linkUrl = getBlogPermalink(),
+  linkText = isRussian ? 'Все статьи' : 'לכל הפוסטים',
+  linkUrl = blogLink(getBlogPermalink(), locale),
   information = await Astro.slots.render('information'),
   count = 4,
 
@@ -30,7 +34,7 @@ const {
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
 
-const posts = APP_BLOG.isEnabled ? await findLatestPosts({ count }) : [];
+const posts = APP_BLOG.isEnabled ? await findLatestPosts({ count, locale }) : [];
 ---
 
 {
@@ -44,7 +48,11 @@ const posts = APP_BLOG.isEnabled ? await findLatestPosts({ count }) : [];
               set:html={title}
             />
             {APP_BLOG.list.isEnabled && linkText && linkUrl && (
-              <Button variant="link" href={linkUrl} class="focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200 rounded-lg">
+              <Button
+                variant="link"
+                href={linkUrl}
+                class="focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200 rounded-lg"
+              >
                 {' '}
                 {linkText} »
               </Button>

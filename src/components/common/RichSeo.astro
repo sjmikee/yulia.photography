@@ -15,6 +15,7 @@ const name = metadata?.title;
 const description = metadata?.description;
 const site = Astro.site ?? new URL('https://yulia.photography');
 const url = new URL(Astro.url.pathname, site).href;
+const homeUrl = new URL(locale === 'ru' ? '/ru' : '/', site).href.replace(/\/$/, '');
 const isHomePage = basePath(Astro.url.pathname) === '/';
 const hasBreadcrumb = breadcrumbs.length > 0;
 
@@ -27,8 +28,11 @@ const structuredData = {
             '@type': 'Person',
             '@id': 'https://yulia.photography/#person',
             name: labels.name,
-            jobTitle: 'צלמת הריון, נשיות, משפחה וזוגיות',
-            url: 'https://yulia.photography',
+            jobTitle:
+              locale === 'ru'
+                ? 'Фотограф беременности, женских портретов, семей и пар'
+                : 'צלמת הריון, נשיות, משפחה וזוגיות',
+            url: homeUrl,
             image: 'https://yulia.photography/images/structured/yulia-photographer.png',
             sameAs: [
               'https://www.instagram.com/koren_yulia/',
@@ -38,9 +42,12 @@ const structuredData = {
           {
             '@type': 'LocalBusiness',
             '@id': 'https://yulia.photography/#business',
-            name: ' יוליה קורנסקי | צילומי זוגיות | נשיות | משפחה | הריון | ילדים',
+            name:
+              locale === 'ru'
+                ? 'Юлия Коренская | Фотосессии для пар, женщин, семей, беременных и детей'
+                : ' יוליה קורנסקי | צילומי זוגיות | נשיות | משפחה | הריון | ילדים',
             image: 'https://yulia.photography/images/structured/yulia-photographer.png',
-            url: 'https://yulia.photography',
+            url: homeUrl,
             telephone: '+972-52-583-6940',
             description: description,
             priceRange: '$$',
@@ -55,11 +62,11 @@ const structuredData = {
             areaServed: [
               {
                 '@type': 'City',
-                name: 'חולון',
+                name: locale === 'ru' ? 'Холон' : 'חולון',
               },
               {
                 '@type': 'AdministrativeArea',
-                name: 'מרכז הארץ, ישראל',
+                name: locale === 'ru' ? 'Центр Израиля' : 'מרכז הארץ, ישראל',
               },
             ],
             sameAs: [
@@ -71,7 +78,7 @@ const structuredData = {
           {
             '@type': 'WebSite',
             '@id': 'https://yulia.photography/#website',
-            url: 'https://yulia.photography',
+            url: homeUrl,
             name: name,
             publisher: {
               '@id': 'https://yulia.photography/#business',
@@ -90,8 +97,8 @@ const structuredData = {
                 '@type': 'ListItem',
                 position: 1,
                 item: {
-                  '@id': 'https://yulia.photography',
-                  name: locale === 'ru' ? 'Главная (на иврите)' : labels.home,
+                  '@id': homeUrl,
+                  name: labels.home,
                 },
               },
               ...breadcrumbs.map((crumb, index) => ({

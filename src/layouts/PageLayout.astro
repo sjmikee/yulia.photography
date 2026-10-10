@@ -6,7 +6,7 @@ import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
 import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
 import { navigation } from '~/i18n/navigation';
-import { localeFromPath, russianIndexingEnabled } from '~/i18n/routes';
+import { localeFromPath } from '~/i18n/routes';
 
 import type { MetaData, BreadcrumbType } from '~/types';
 
@@ -28,15 +28,6 @@ const isContactPage = pathname === '/contact' || pathname === '/ru/contact';
     <Header {...headerData} isSticky showToggleTheme showInstagramLink />
   </slot>
   <main>
-    {
-      locale === 'ru' && !russianIndexingEnabled && (
-        <aside class="mx-auto max-w-6xl px-4 py-3 text-sm text-muted border-b border-gray-200">
-          Русская версия готовится: сейчас доступны съёмка беременности, обычная и интимная съёмка для пары,
-          индивидуальные портреты, женская, будуарная и семейная съёмка — описание, цены и галереи. Остальные разделы
-          пока на иврите.
-        </aside>
-      )
-    }
     <slot />
   </main>
   <slot name="footer">
