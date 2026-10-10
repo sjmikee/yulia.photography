@@ -2,6 +2,7 @@ import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { HTMLAttributes, ImageMetadata } from 'astro/types';
 
 export interface Post {
+  locale?: 'he' | 'ru';
   /** A unique ID number that identifies a post. */
   id: string;
 

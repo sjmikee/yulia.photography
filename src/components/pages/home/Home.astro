@@ -1,0 +1,196 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { homeMessages } from '~/i18n/home';
+const locale = localeFromPath(Astro.url.pathname);
+const t = homeMessages('home', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+import Layout from '~/layouts/PageLayout.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import StaticHero from '~/components/widgets/StaticHero.astro';
+import ContentGrid from '~/components/widgets/ContentGrid.astro';
+import { getHomepageImages } from '~/lib/homepage-gallery';
+const {
+  couples: couplesHomepageImages,
+  pregnancy: pregnancyHomepageImages,
+  personal: personalHomepageImages,
+  feminine: feminineHomepageImages,
+} = getHomepageImages(locale);
+import Reviews from '~/components/widgets/reviews.astro';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata} richMetadata={metadata}>
+  <!-- Hero Widget ******************* -->
+  <StaticHero />
+
+  <h1 class="sr-only">{t('heading')}</h1>
+
+  <Hero
+    id="hero"
+    actions={[
+      {
+        variant: 'primary',
+        text: t('call'),
+        href: 'tel:0525836940',
+        target: '_blank',
+        icon: 'tabler:phone',
+      },
+      { text: t('reviews'), href: '#reviews' },
+    ]}
+    image={{ src: '~/assets/images/hero.jpg', alt: t('heroAlt') }}
+  >
+    <Fragment slot="title">
+      {t('heroTitle')}
+      <br />
+      <span class="text-accent dark:text-white highlight">{t('heroEmphasis')}</span>
+    </Fragment>
+
+    <Fragment slot="subtitle"> {t('heroSubtitle')} </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+    </Fragment>
+  </Hero>
+
+  <!-- ContentGrid Widget ******* -->
+  <ContentGrid
+    contentArray={[
+      {
+        galleryImages: couplesHomepageImages,
+        galleryLayout: 'grid',
+        title: t('couplesTitle'),
+        subTitle: t('couplesSubtitle'),
+        text: t('couplesDescription'),
+        actions: [
+          { text: t('couplesService'), href: link('/services/couples-photography'), icon: 'tabler:camera' },
+          { text: t('couplesPricing'), href: link('/pricing/couples'), icon: 'tabler:currency-shekel' },
+          { text: t('couplesGallery'), href: link('/gallery/couples'), icon: 'tabler:library-photo' },
+        ],
+      },
+      {
+        galleryImages: pregnancyHomepageImages,
+        galleryLayout: 'grid',
+        title: t('pregnancyTitle'),
+        subTitle: t('pregnancySubtitle'),
+        text: t('pregnancyDescription'),
+        actions: [
+          { text: t('pregnancyService'), href: link('/services/pregnancy-photography'), icon: 'tabler:camera' },
+          { text: t('pregnancyPricing'), href: link('/pricing/pregnancy'), icon: 'tabler:currency-shekel' },
+          { text: t('pregnancyGallery'), href: link('/gallery/pregnancy'), icon: 'tabler:library-photo' },
+        ],
+      },
+      {
+        galleryImages: feminineHomepageImages,
+        galleryLayout: 'grid',
+        title: t('feminineTitle'),
+        subTitle: t('feminineSubtitle'),
+        text: t('feminineDescription'),
+        actions: [
+          { text: t('feminineService'), href: link('/services/feminine-photography'), icon: 'tabler:camera' },
+          { text: t('femininePricing'), href: link('/pricing/feminine'), icon: 'tabler:currency-shekel' },
+          { text: t('feminineGallery'), href: link('/gallery/feminine'), icon: 'tabler:library-photo' },
+        ],
+      },
+      {
+        galleryImages: personalHomepageImages,
+        galleryLayout: 'grid',
+        title: t('personalTitle'),
+        subTitle: t('personalSubtitle'),
+        text: t('personalDescription'),
+        actions: [
+          { text: t('personalService'), href: link('/services/personal-photography'), icon: 'tabler:camera' },
+          { text: t('personalPricing'), href: link('/pricing/personal'), icon: 'tabler:currency-shekel' },
+          { text: t('personalGallery'), href: link('/gallery/solo'), icon: 'tabler:library-photo' },
+        ],
+      },
+    ]}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+    </Fragment>
+  </ContentGrid>
+
+  <!-- Reviews section -->
+  <div>
+    <Reviews />
+  </div>
+  <!-- HighlightedPosts Widget ******* -->
+
+  <BlogLatestPosts title={t('articlesTitle')} information={t('articlesDescription')}>
+    <Fragment slot="bg"><div class="absolute inset-0 bg-page dark:bg-slate-900"></div></Fragment>
+  </BlogLatestPosts>
+
+  <!-- FAQs Widget ******************* -->
+
+  <FAQs
+    title={t('faqTitle')}
+    subtitle={t('faqSubtitle')}
+    tagline={t('faqTagline')}
+    classes={{ container: 'max-w-5xl' }}
+    items={[
+      {
+        title: t('faq1Question'),
+        description: t('faq1Answer'),
+      },
+      {
+        title: t('faq2Question'),
+        description: t('faq2Answer'),
+      },
+      {
+        title: t('faq3Question'),
+        description: t('faq3Answer'),
+      },
+      {
+        title: t('faq4Question'),
+        description: t('faq4Answer'),
+      },
+      {
+        title: t('faq5Question'),
+        description: t('faq5Answer'),
+      },
+      {
+        title: t('faq6Question'),
+        description: t('faq6Answer'),
+      },
+      {
+        title: t('faq7Question'),
+        description: t('faq7Answer'),
+      },
+      {
+        title: t('faq8Question'),
+        description: t('faq8Answer'),
+      },
+      {
+        title: t('faq9Question'),
+        description: t('faq9Answer'),
+      },
+      {
+        title: t('faq10Question'),
+        description: t('faq10Answer'),
+      },
+    ]}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+    </Fragment>
+  </FAQs>
+
+  <!-- CallToAction Widget *********** -->
+
+  <WhatssapCallToAction
+    title={t('ctaTitle')}
+    subtitle={t('ctaSubtitle')}
+    href={locale === 'ru'
+      ? 'https://wa.me/972525836940?text=' +
+        encodeURIComponent('Здравствуйте, Юлия! Хочу узнать о фотосессии и свободных датах.')
+      : undefined}
+  />
+</Layout>

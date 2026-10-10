@@ -1,0 +1,128 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { overviewMessages } from '~/i18n/overview';
+const locale = localeFromPath(Astro.url.pathname);
+const t = overviewMessages('pricing', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+import Layout from '~/layouts/PageLayout.astro';
+import { PRICES } from '~/lib/pricing';
+const pregnancyPrice = PRICES['הריון'][1];
+const femininePrice = PRICES['נשיות'][1];
+const familyPrice = PRICES['משפחה'][1];
+import ServiceCard from '~/components/widgets/ServiceCard.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [{ url: link('/pricing'), name: t('breadcrumbName') }];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <HeroText tagline={t('tagline')} title={t('heading')} content={t('intro')} />
+
+  <Breadcrumbs items={[{ label: t('home'), href: link('/') }, { label: t('breadcrumbLabel') }]} />
+
+  <!-- Services list -->
+  <section class="max-w-6xl mx-auto px-4 pb-20 py-10">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <ServiceCard
+        href={link('/pricing/pregnancy')}
+        image={{
+          src: '~/assets/images/pricing/pregnancy_pricing.jpg',
+          alt: t('pregnancyAlt'),
+          position: 'center 25%',
+        }}
+      >
+        <Fragment slot="title"> {t('pregnancyTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('pregnancyDescription', pregnancyPrice)} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/couples')}
+        image={{
+          src: '~/assets/images/pricing/couples_pricing.jpg',
+          alt: t('couplesAlt'),
+          position: 'center 25%',
+        }}
+      >
+        <Fragment slot="title"> {t('couplesTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('couplesDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/couples-intimate')}
+        image={{
+          src: '~/assets/images/pricing/couples_intimate_pricing.jpg',
+          alt: t('intimateAlt'),
+          position: 'center 25%',
+        }}
+      >
+        <Fragment slot="title"> {t('intimateTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('intimateDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/feminine')}
+        image={{
+          src: '~/assets/feminine_gallery/feminine_pricing.jpg',
+          alt: t('feminineAlt'),
+        }}
+      >
+        <Fragment slot="title"> {t('feminineTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('feminineDescription', femininePrice)} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/first-year')}
+        image={{
+          src: '~/assets/images/pricing/first_year_pricing.jpg',
+          alt: t('firstYearAlt'),
+        }}
+      >
+        <Fragment slot="title"> {t('firstYearTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('firstYearDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/personal')}
+        image={{
+          src: '~/assets/images/pricing/personal_pricing.jpg',
+          alt: t('personalAlt'),
+          position: 'center 15%',
+        }}
+      >
+        <Fragment slot="title"> {t('personalTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('personalDescription')} </Fragment>
+      </ServiceCard>
+      <ServiceCard
+        href={link('/pricing/family')}
+        image={{
+          src: '~/assets/family_gallery/צילומי_משפחה_במרכז_בטבע.jpg',
+          alt: t('familyAlt'),
+          position: 'center 15%',
+        }}
+      >
+        <Fragment slot="title">{t('familyTitle')}</Fragment>
+        <Fragment slot="subtitle">{t('familyDescription', familyPrice)}</Fragment>
+      </ServiceCard>
+    </div>
+  </section>
+
+  <WhatssapCallToAction
+    title={t('ctaTitle')}
+    subtitle={t('ctaSubtitle')}
+    href={locale === 'ru' ? 'https://wa.me/972525836940?text=' + encodeURIComponent(t('inquiry')) : undefined}
+  />
+</Layout>

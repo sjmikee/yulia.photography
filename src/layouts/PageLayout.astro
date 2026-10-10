@@ -5,7 +5,8 @@ import Footer from '~/components/widgets/Footer.astro';
 import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
 import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
 
-import { headerData, footerData } from '~/navigation';
+import { navigation } from '~/i18n/navigation';
+import { localeFromPath } from '~/i18n/routes';
 
 import type { MetaData, BreadcrumbType } from '~/types';
 
@@ -17,7 +18,9 @@ export interface Props {
 
 const { metadata, richMetadata, breadcrumbs } = Astro.props;
 const { pathname } = new URL(Astro.request.url);
-const isContactPage = pathname === '/contact';
+const locale = localeFromPath(pathname);
+const { header: headerData, footer: footerData } = navigation(locale);
+const isContactPage = pathname === '/contact' || pathname === '/ru/contact';
 ---
 
 <Layout metadata={metadata} richMetadata={richMetadata} breadcrumbs={breadcrumbs}>
@@ -31,10 +34,5 @@ const isContactPage = pathname === '/contact';
     <Footer {...footerData} />
   </slot>
   <ScrollToTopButton />
-  {
-    !isContactPage && (
-      <WhatsAppButton />
-    )
-  }
-  
+  {!isContactPage && <WhatsAppButton />}
 </Layout>

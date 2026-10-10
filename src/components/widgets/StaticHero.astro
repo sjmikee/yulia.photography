@@ -1,33 +1,37 @@
 ---
 import Image from '~/components/common/Image.astro';
-import staticHero from '~/assets/images/static_hero.jpg'
-import staticHeroM from '~/assets/images/static_hero_v.jpg'
+import staticHero from '~/assets/images/static_hero.jpg';
+import staticHeroM from '~/assets/images/static_hero_v.jpg';
 import { Icon } from 'astro-icon/components';
 ---
+
 <section class="relative w-full z-[-1] overflow-hidden" style="height: calc(var(--vh, 1vh) * 100)">
-    <div class="fixed top-0 left-0 w-full h-full" style="height: calc(var(--vh, 1vh) * 100)">
-        <Image
-            class="object-cover h-full"
-            src={ staticHero }
-            alt="Static Hero Image"
-            id="staticHeroDesktop"
-            widths={[400, 768, 1024, 2040, 3840]}
-            sizes="100vw"
-            loading={'eager'}
-        />
-        <Image
-            class="object-cover h-full"
-            src={ staticHeroM }
-            alt="Static Hero Image"
-            id="staticHeroMobile"
-            widths={[400, 768, 1024, 2040, 3840]}
-            sizes="100vw"
-            loading={'eager'}
-        />
-    </div>
-    <div class="absolute bottom-40 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <Icon name={"tabler:arrow-down-dashed"} class="w-10 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block text-white drop-shadow-lg" />
-    </div>
+  <div class="fixed top-0 left-0 w-full h-full" style="height: calc(var(--vh, 1vh) * 100)">
+    <Image
+      class="object-cover h-full"
+      src={staticHero}
+      alt=""
+      id="staticHeroDesktop"
+      widths={[400, 768, 1024, 2040, 3840]}
+      sizes="100vw"
+      loading={'eager'}
+    />
+    <Image
+      class="object-cover h-full"
+      src={staticHeroM}
+      alt=""
+      id="staticHeroMobile"
+      widths={[400, 768, 1024, 2040, 3840]}
+      sizes="100vw"
+      loading={'eager'}
+    />
+  </div>
+  <div class="absolute bottom-40 left-1/2 transform -translate-x-1/2 animate-bounce">
+    <Icon
+      name={'tabler:arrow-down-dashed'}
+      class="w-10 h-10 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block text-white drop-shadow-lg"
+    />
+  </div>
 </section>
 <script is:inline>
   const stableVH = window.innerHeight * 0.01;

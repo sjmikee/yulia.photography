@@ -1,0 +1,64 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+const locale = localeFromPath(Astro.url.pathname);
+const he = translatedPath(Astro.url.pathname, 'he');
+const ru = translatedPath(Astro.url.pathname, 'ru');
+---
+
+{
+  he && ru && (
+    <div aria-label={ui(locale).language} class="flex shrink-0 items-center gap-1 text-sm" dir="ltr">
+      <a
+        href={he}
+        lang="he"
+        hreflang="he"
+        dir="rtl"
+        aria-current={locale === 'he' ? 'page' : undefined}
+        class:list={[
+          'rounded px-2 py-3 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2',
+          { 'font-bold underline': locale === 'he' },
+        ]}
+        data-language-switch
+        data-astro-reload
+      >
+        עברית
+      </a>
+      <span aria-hidden="true">|</span>
+      <a
+        href={ru}
+        lang="ru"
+        hreflang="ru"
+        aria-current={locale === 'ru' ? 'page' : undefined}
+        class:list={[
+          'rounded px-2 py-3 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2',
+          { 'font-bold underline': locale === 'ru' },
+        ]}
+        data-language-switch
+        data-astro-reload
+      >
+        Русский
+      </a>
+    </div>
+  )
+}
+<script>
+  function preserveSection() {
+    const hash = window.location.hash;
+    // Both translations share these section IDs. Do not copy query parameters.
+    const section = /^#(?:preparation|reviews|packages|basic|classic|premium|booking|privacy)$/.test(hash) ? hash : '';
+
+    document.querySelectorAll<HTMLAnchorElement>('a[data-language-switch]').forEach((link) => {
+      link.hash = section;
+    });
+  }
+  document.addEventListener('astro:page-load', preserveSection);
+  window.addEventListener('hashchange', preserveSection);
+  document.addEventListener(
+    'click',
+    (event) => {
+      if (event.target instanceof Element && event.target.closest('a[data-language-switch]')) preserveSection();
+    },
+    true
+  );
+</script>

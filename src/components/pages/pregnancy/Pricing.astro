@@ -1,0 +1,229 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { pregnancyMessages } from '~/i18n/pregnancy';
+import { getPregnancy, pregnancyChildSupplement } from '~/lib/pregnancy';
+const locale = localeFromPath(Astro.url.pathname);
+const t = pregnancyMessages('pricing', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const {
+  packages: pregnancyPackages,
+  journey: pregnancyJourney,
+  service: pregnancyService,
+  whatsapp: pregnancyWhatsApp,
+  cards: pregnancyPricingCards,
+} = getPregnancy(locale);
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import PricingCards from '~/components/ui/PricingCards.astro';
+import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import preview from '~/assets/images/pricing/pregnancy_pricing.jpg';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+
+const displayedPackages = [...pregnancyPackages].sort((a, b) => b.price - a.price);
+const metadata = {
+  title: t('metaTitle', pregnancyPackages[0].price),
+  description: t('metaDescription', pregnancyPackages[0].price, pregnancyPackages[1].price, pregnancyPackages[2].price),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: '~/assets/images/pricing/pregnancy_pricing.jpg',
+        width: preview.width,
+        height: preview.height,
+        alt: t('metaImageAlt'),
+      },
+    ],
+  },
+};
+
+const breadcrumbs = [
+  { url: link('/pricing'), name: t('pricesLabel') },
+  { url: link('/pricing/pregnancy'), name: t('pageLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <ServiceSchema service={pregnancyService} />
+
+  <HeroText
+    tagline={t('byline')}
+    title={t('heroTitle')}
+    subtitle={t('heroSubtitle', pregnancyPackages[0].price)}
+    content={t('heroDescription')}
+    callToAction={{ text: t('compareAction'), href: '#packages' }}
+    callToAction2={{ text: t('dateAction'), href: pregnancyWhatsApp(), target: '_blank' }}
+  />
+
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('pricesBreadcrumb'), href: link('/pricing') },
+      { label: t('pageBreadcrumb') },
+    ]}
+  />
+  <section class="mx-auto max-w-4xl px-4 py-8 text-start">
+    <h2 class="mb-4 text-2xl font-bold">{t('overviewTitle')}</h2>
+    <p class="mb-4">
+      <strong
+        >{t('rangePrefix')}
+        {pregnancyPackages[0].price}
+        {t('rangeSeparator')}{pregnancyPackages[2].price}
+        {t('currencySentence')}</strong
+      >
+      {t('packageComparisonPrefix')}
+      {pregnancyPackages[0].photos}
+      {t('photosPricePrefix')}{pregnancyPackages[0].price}
+      {t('basicPriceSuffix')}
+      {pregnancyPackages[1].photos}
+      {t('classicPhotosPricePrefix')}{pregnancyPackages[1].price}
+      {t('classicPriceSuffix')}
+      {pregnancyPackages[2].photos}
+      {t('premiumPhotosPricePrefix')}{pregnancyPackages[2].price}
+      {t('premiumPriceSuffix')}
+    </p>
+    <p class="mb-4">{t('extrasBody', pregnancyChildSupplement)}</p>
+
+    <p class="mb-4">{t('choiceBody')}</p>
+    <p>
+      {t('galleryLinkPrefix')}
+      <a href={link('/gallery/pregnancy')} class="font-semibold underline">{t('galleryLink')}</a>
+      {t('serviceLinkPrefix')}
+      <a href={link('/services/pregnancy-photography')} class="font-semibold underline">{t('serviceLink')}</a>.
+    </p>
+  </section>
+
+  <Journey journey={pregnancyJourney} current="pricing" />
+
+  <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+    <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
+    <p class="mb-8 text-center">{t('packagesIntroduction')}</p>
+    <p class="mb-4 text-center text-sm">{t('durationNote')}</p>
+    <PackageComparison packages={displayedPackages} label={t('comparisonLabel')} caption={t('comparisonCaption')} />
+    <div class="mt-8"><PricingCards prices={pregnancyPricingCards} /></div>
+  </section>
+
+  <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-start">
+    <h2 class="text-2xl font-bold">{t('selectionTitle')}</h2>
+    <p>
+      <strong>{t('basicHeading')}</strong>
+      {pregnancyPackages[0].photos}
+      {t('basicDescription')}
+      <strong>{t('classicHeading')}</strong>
+      {pregnancyPackages[1].photos}
+      {t('classicDescription')}
+      <strong>{t('premiumHeading')}</strong>
+      {pregnancyPackages[2].photos}
+      {t('premiumDescription')}
+    </p>
+    <h2 class="text-2xl font-bold">{t('inclusionsTitle')}</h2>
+    <p>{t('inclusionsBody', pregnancyChildSupplement)}</p>
+    <p>{t('examplePrefix')} {pregnancyPackages[0].price + pregnancyChildSupplement} {t('exampleSuffix')}</p>
+    <h2 class="text-2xl font-bold">{t('locationsTitle')}</h2>
+    <p>{t('locationsBody')}</p>
+    <p>{t('participationBody')}</p>
+  </section>
+
+  <!-- Steps Widget ****************** -->
+
+  <Steps
+    title={t('stepsTitle')}
+    tagline={t('stepsTagline')}
+    isReversed={locale === 'he'}
+    items={[
+      {
+        title: t('stepIntroduction'),
+        icon: 'tabler:number-1',
+      },
+      {
+        title: t('stepBooking'),
+        icon: 'tabler:number-2',
+      },
+      {
+        title: t('stepDeposit'),
+        icon: 'tabler:number-3',
+      },
+      {
+        title: t('stepShoot'),
+        icon: 'tabler:number-4',
+      },
+      {
+        title: t('stepEditing'),
+        icon: 'tabler:number-5',
+      },
+      {
+        title: t('stepDelivery'),
+        icon: 'tabler:number-6',
+      },
+      {
+        title: t('stepEnjoy'),
+        icon: 'tabler:number-7',
+      },
+      {
+        title: t('stepRecommend'),
+        icon: 'tabler:number-8',
+      },
+    ]}
+    image={{ src: '~/assets/images/pricing/pregnancy_pricing.jpg', alt: t('stepsImageAlt') }}
+  />
+
+  <!-- FAQs Widget ******************* -->
+
+  <FAQs
+    title={t('faqTitle')}
+    subtitle={t('faqSubtitle')}
+    columns={1}
+    items={[
+      {
+        title: t('basicQuestion'),
+        description: t(
+          'basicAnswer',
+          pregnancyPackages[0].price,
+          pregnancyPackages[0].photos,
+          pregnancyPackages[0].duration
+        ),
+      },
+      {
+        title: t('deliveryQuestion'),
+        description: t('deliveryAnswer'),
+      },
+      {
+        title: t('timingQuestion'),
+        description: t('timingAnswer'),
+      },
+      {
+        title: t('locationQuestion'),
+        description: t('locationAnswer'),
+      },
+      {
+        title: t('outfitQuestion'),
+        description: t('outfitAnswer'),
+      },
+      {
+        title: t('weatherQuestion'),
+        description: t('weatherAnswer'),
+      },
+      {
+        title: t('bookingQuestion'),
+        description: t('bookingAnswer'),
+      },
+      {
+        title: t('depositQuestion'),
+        description: t('depositAnswer'),
+      },
+    ]}
+  />
+  <section class="mx-auto max-w-3xl px-4 pb-8 text-start">
+    <p>
+      {t('closingBody')}
+      <a href={link('/services/pregnancy-photography')} class="font-semibold underline"> {t('serviceAction')} </a>
+    </p>
+  </section>
+
+  <!-- CallToAction Widget *********** -->
+
+  <Journey journey={pregnancyJourney} current="pricing" cta />
+</Layout>

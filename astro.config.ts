@@ -6,7 +6,7 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
@@ -17,33 +17,25 @@ import { readingTimeRemarkPlugin, responsiveTablesRehypePlugin, lazyImagesRehype
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Keep URLs marked noindex out of the XML sitemap. A sitemap should contain
-// only canonical URLs that we want search engines to crawl and index.
-const sitemapExcludedPaths = new Set(['/articles', '/contract', '/thank_you', '/landing/couples']);
-const isIndexableSitemapPage = (page: string) => {
-  const pathname = new URL(page).pathname.replace(/\/$/, '') || '/';
-
-  return !(
-    sitemapExcludedPaths.has(pathname) ||
-    pathname.startsWith('/clients') ||
-    pathname.startsWith('/category/') ||
-    pathname.startsWith('/tag/')
-  );
-};
+import { isIndexablePage } from './src/i18n/routes';
+const isIndexableSitemapPage = (page: string) => isIndexablePage(new URL(page).pathname);
 
 export default defineConfig({
   output: 'static',
+  i18n: { defaultLocale: 'he', locales: ['he', 'ru'], routing: { prefixDefaultLocale: false } },
   // Preserve the HTML whitespace behavior used before Astro 7.
   compressHTML: true,
   adapter: vercel({}),
 
-  fonts: [{
-          provider: fontProviders.google(),
-          name: "Heebo",
-          weights: [400, 500, "bold"],
-          subsets: ["hebrew", "latin"],
-          cssVariable: "--font-heebo"
-  }],
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: 'Heebo',
+      weights: [400, 500, 'bold'],
+      subsets: ['hebrew', 'latin'],
+      cssVariable: '--font-heebo',
+    },
+  ],
 
   integrations: [
     sitemap({ filter: isIndexableSitemapPage }),
@@ -84,7 +76,7 @@ export default defineConfig({
   ],
 
   image: {
-    domains: ['cdn.pixabay.com','yulia.photography'],
+    domains: ['cdn.pixabay.com', 'yulia.photography'],
   },
 
   markdown: {

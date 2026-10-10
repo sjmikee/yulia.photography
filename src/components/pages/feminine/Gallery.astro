@@ -1,0 +1,58 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { feminineMessages } from '~/i18n/feminine';
+import { getFeminine } from '~/lib/feminine';
+import { getFeminineGallery } from '~/lib/feminine-gallery';
+const locale = localeFromPath(Astro.url.pathname);
+const t = feminineMessages('gallery', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const { packages: femininePackages, journey: feminineJourney } = getFeminine(locale);
+const { images: feminineGalleryImages } = getFeminineGallery(locale);
+import Layout from '~/layouts/PageLayout.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import Button from '~/components/ui/Button.astro';
+import preview from '~/assets/feminine_gallery/feminine_pricing.jpg';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: '~/assets/feminine_gallery/feminine_pricing.jpg',
+        width: preview.width,
+        height: preview.height,
+        alt: t('previewAlt'),
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services/feminine-photography'), name: t('serviceLabel') },
+  { url: link('/gallery/feminine'), name: t('pageLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <section class="mx-auto max-w-4xl px-4 pt-12 pb-6 text-center">
+    <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
+    <h1 class="mb-5 text-4xl font-bold md:text-5xl">{t('title')}</h1>
+    <p class="mb-5 text-xl leading-relaxed">{t('introduction')}</p>
+    <Button href={link('/pricing/feminine')}>{t('pricesPrefix')}{femininePackages[0].price} {t('currency')}</Button>
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('serviceBreadcrumb'), href: link('/services/feminine-photography') },
+      { label: t('pageBreadcrumb') },
+    ]}
+  />
+  <Journey journey={feminineJourney} current="gallery" />
+  <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
+    <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
+    <Gallery images={feminineGalleryImages} />
+  </section>
+  <Journey journey={feminineJourney} current="gallery" cta />
+</Layout>

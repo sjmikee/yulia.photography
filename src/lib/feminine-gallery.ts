@@ -1,3 +1,5 @@
+import type { Locale } from '~/i18n/routes';
+import russianAlts from '~/i18n/feminine/gallery-images.ru.json';
 import type { ImageMetadata } from 'astro';
 
 // All photographs in feminine_gallery, in curated display order; descriptions visually checked.
@@ -60,3 +62,19 @@ export const feminineStudioImage = selectedImage('בחורה_בסטודיו_יו
 export const feminineOutdoorImage = selectedImage('Hela-115.jpg');
 
 export const feminineHomepageImages = [...feminineFeaturedImages, selectedImage('Hela-133.jpg')];
+
+export function getFeminineGallery(locale: Locale) {
+  const localize = (image: (typeof feminineGalleryImages)[number]) => {
+    if (locale === 'he') return image;
+    const alt = (russianAlts as Record<string, string>)[image.filename];
+    if (!alt) throw new Error(`Missing Russian feminine image description: ${image.filename}`);
+    return { ...image, alt };
+  };
+  return {
+    images: feminineGalleryImages.map(localize),
+    featured: feminineFeaturedImages.map(localize),
+    hero: localize(feminineHeroImage),
+    studio: localize(feminineStudioImage),
+    outdoor: localize(feminineOutdoorImage),
+  };
+}

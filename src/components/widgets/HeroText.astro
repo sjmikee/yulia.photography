@@ -1,6 +1,8 @@
 ---
 import type { CallToAction } from '~/types';
 import Button from '~/components/ui/Button.astro';
+import { localeFromPath } from '~/i18n/routes';
+const isRussian = localeFromPath(Astro.url.pathname) === 'ru';
 
 export interface Props {
   title?: string;
@@ -38,7 +40,10 @@ const {
         {
           title && (
             <h1
-              class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+              class:list={[
+                'md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
+                isRussian ? 'text-3xl sm:text-5xl hyphens-auto [overflow-wrap:anywhere]' : 'text-5xl',
+              ]}
               set:html={title}
             />
           )
@@ -79,8 +84,10 @@ const {
             }
           </div>
         </div>
-        <div class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-        {content && <Fragment set:html={content} />}
+        <div
+          class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+        >
+          {content && <Fragment set:html={content} />}
         </div>
       </div>
     </div>

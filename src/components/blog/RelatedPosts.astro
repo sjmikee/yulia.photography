@@ -1,4 +1,8 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+import { blogLink } from '~/i18n/blog';
+const locale = localeFromPath(Astro.url.pathname);
+const isRussian = locale === 'ru';
 import { APP_BLOG } from 'astrowind:config';
 
 import { getRelatedPosts } from '~/utils/blog';
@@ -22,9 +26,9 @@ const relatedPosts = post.tags ? await getRelatedPosts(post, 4) : [];
         container:
           'pt-0 lg:pt-0 md:pt-0 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
       }}
-      title="שווה לקרוא"
-      linkText="לכל הפוסטים"
-      linkUrl={getBlogPermalink()}
+      title={isRussian ? 'Ещё стоит прочитать' : 'שווה לקרוא'}
+      linkText={isRussian ? 'Все статьи' : 'לכל הפוסטים'}
+      linkUrl={blogLink(getBlogPermalink(), locale)}
       postIds={relatedPosts.map((post) => post.id)}
     />
   ) : null

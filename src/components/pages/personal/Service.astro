@@ -1,0 +1,182 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { personalMessages } from '~/i18n/personal';
+import { getPersonal } from '~/lib/personal';
+const locale = localeFromPath(Astro.url.pathname);
+const t = personalMessages('service', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const {
+  packages: personalPackages,
+  journey: personalJourney,
+  service: personalService,
+  whatsapp: personalWhatsApp,
+  facts: personalFacts,
+} = getPersonal(locale);
+const personalGalleryImages = getPersonalGalleryImages(locale);
+const hero = personalGalleryImages[0];
+const personalFeaturedImages = personalGalleryImages.slice(0, 3);
+import { Image } from 'astro:assets';
+import Layout from '~/layouts/PageLayout.astro';
+import Button from '~/components/ui/Button.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import ImageSection from '~/components/photoshoots/ImageSection.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import SessionFacts from '~/components/photoshoots/SessionFacts.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { getPersonalGalleryImages } from '~/lib/personal-gallery';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription', personalPackages[0].price),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/solo_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services'), name: t('servicesLabel') },
+  { url: link('/services/personal-photography'), name: t('serviceLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <ServiceSchema service={personalService} />
+  <LeadTracking service="personal">
+    <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:gap-12 md:py-12">
+      <div>
+        <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
+        <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
+          {t('heroTitle')}<br /><span class="text-accent">{t('heroAccent')}</span>
+        </h1>
+        <p class="mb-5 text-xl leading-relaxed">{t('heroIntro')}</p>
+        <p class="mb-6">
+          {t('guidanceIntro')}
+          <strong>{t('startingPricePrefix')}{personalPackages[0].price} {t('currencySentence')}</strong>
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <Button
+            class="w-full"
+            variant="primary"
+            href={personalWhatsApp()}
+            target="_blank"
+            icon="tabler:brand-whatsapp"
+            data-lead-source="personal-service-hero">{t('dateAction')}</Button
+          >
+          <Button class="w-full" href={link('/pricing/personal')}>{t('pricingAction')}</Button>
+        </div>
+        <p class="mt-5 text-sm">{t('preparationNote')}</p>
+      </div>
+      <Image
+        src={hero.image}
+        alt={hero.alt}
+        widths={[400, 640, 900, 1200]}
+        sizes="(min-width: 768px) 50vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[4/5] w-full rounded-2xl object-cover"
+      />
+    </section>
+    <Breadcrumbs
+      items={[
+        { label: t('homeLabel'), href: link('/') },
+        { label: t('servicesBreadcrumb'), href: link('/services') },
+        { label: t('serviceBreadcrumb') },
+      ]}
+    />
+    <Journey journey={personalJourney} current="service" />
+    <SessionFacts title={t('factsTitle')} facts={personalFacts} />
+    <section class="mx-auto max-w-5xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">{t('galleryTitle')}</h2>
+      <p>{t('galleryIntro')}</p>
+      <Gallery images={personalFeaturedImages} />
+      <Button href={link('/gallery/solo')}>{t('galleryAction')}</Button>
+    </section>
+    <ImageSection image={personalFeaturedImages[2].image} alt={personalFeaturedImages[2].alt}>
+      <h2 class="text-3xl font-bold">{t('posingTitle')}</h2>
+      <p>{t('posingBody')}</p>
+      <p>{t('guidanceBody')}</p>
+      <p><a href={link('/about')} class="underline">{t('aboutLink')}</a></p>
+    </ImageSection>
+    <section class="mx-auto max-w-5xl px-4 py-12">
+      <h2 class="mb-8 text-3xl font-bold">{t('audienceTitle')}</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('personalTitle')}</h3><p>{t('personalBody')}</p>
+        </article>
+        <article class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('profileTitle')}</h3><p>{t('profileBody')}</p>
+        </article>
+        <article class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('professionalTitle')}</h3><p>{t('professionalBody')}</p>
+        </article>
+      </div>
+    </section>
+    <ImageSection image={personalFeaturedImages[1].image} alt={personalFeaturedImages[1].alt} imageFirst={false}>
+      <h2 class="text-3xl font-bold">{t('locationTitle')}</h2>
+      <p>{t('locationBody')}</p>
+      <p>{t('studioBody')}</p>
+      <p>{t('clothingBody')}</p>
+    </ImageSection>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-12">
+      <h2 class="text-3xl font-bold">{t('processTitle')}</h2>
+      <ol class="list-decimal space-y-4 ps-6">
+        <li>
+          <strong>{t('planningTitle')}</strong>
+          {t('planningBody')}
+        </li>
+        <li><strong>{t('shootTitle')}</strong> {t('shootBody')}</li>
+        <li>
+          <strong>{t('deliveryTitle')}</strong>
+          {t('deliveryBody')}
+        </li>
+      </ol>
+      <Button href={link('/pricing/personal')}
+        >{t('pricesPrefix')}{personalPackages.map((p) => p.price).join(', ')} {t('pricesSuffix')}</Button
+      >
+    </section>
+    <FAQs
+      title={t('faqTitle')}
+      columns={2}
+      items={[
+        {
+          title: t('experienceQuestion'),
+          description: t('experienceAnswer'),
+        },
+        {
+          title: t('audienceQuestion'),
+          description: t('audienceAnswer'),
+        },
+        {
+          title: t('profileQuestion'),
+          description: t('profileAnswer'),
+        },
+        {
+          title: t('feminineQuestion'),
+          description: t('feminineAnswer'),
+        },
+        {
+          title: t('giftQuestion'),
+          description: t('giftAnswer'),
+        },
+        {
+          title: t('priceQuestion'),
+          description: t('priceAnswer', personalPackages.map((p) => p.price).join(', ')),
+        },
+      ]}
+    />
+    <p class="mx-auto max-w-4xl px-4 text-center">
+      {t('femininePrompt')}
+      <a class="underline" href={link('/services/feminine-photography')}>{t('feminineLink')}</a>.
+    </p>
+    <Journey journey={personalJourney} current="service" cta />
+  </LeadTracking>
+</Layout>

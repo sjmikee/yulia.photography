@@ -1,0 +1,172 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { intimateMessages } from '~/i18n/intimate';
+import { getIntimate } from '~/lib/couples-intimate';
+const locale = localeFromPath(Astro.url.pathname);
+const t = intimateMessages('service', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const {
+  packages: intimatePackages,
+  journey: intimateJourney,
+  service: intimateService,
+  whatsapp: intimateWhatsApp,
+  facts: intimateFacts,
+} = getIntimate(locale);
+const couplesFeaturedImages = getCouplesGalleryImages(locale).slice(0, 3);
+const hero = couplesFeaturedImages[0];
+import { Image } from 'astro:assets';
+import Layout from '~/layouts/PageLayout.astro';
+import Button from '~/components/ui/Button.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import ImageSection from '~/components/photoshoots/ImageSection.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import SessionFacts from '~/components/photoshoots/SessionFacts.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { getCouplesGalleryImages } from '~/lib/couples-gallery';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription', intimatePackages[0].price),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/couples_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services'), name: t('servicesLabel') },
+  { url: link('/services/intimate-couples-photography'), name: t('serviceLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <ServiceSchema service={intimateService} />
+  <LeadTracking service="couples_intimate">
+    <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:gap-12 md:py-12">
+      <div>
+        <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
+        <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
+          {t('heroTitle')}<br /><span class="text-accent">{t('heroAccent')}</span>
+        </h1>
+        <p class="mb-5 text-xl leading-relaxed">{t('heroIntro')}</p>
+        <p class="mb-6">
+          {t('guidanceIntro')}
+          <strong>{t('startingPricePrefix')}{intimatePackages[0].price} {t('currencySentence')}</strong>
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <Button
+            class="w-full"
+            variant="primary"
+            href={intimateWhatsApp()}
+            target="_blank"
+            icon="tabler:brand-whatsapp"
+            data-lead-source="intimate-hero">{t('dateAction')}</Button
+          >
+          <Button class="w-full" href={link('/pricing/couples-intimate')}>{t('pricingAction')}</Button>
+        </div>
+        <p class="mt-5 text-sm">{t('comfortNote')}</p>
+      </div>
+      <figure>
+        <Image
+          src={hero.image}
+          alt={hero.alt}
+          widths={[400, 640, 900, 1200]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          class="aspect-[4/5] w-full rounded-2xl object-cover"
+        />
+        <figcaption class="mt-3 text-sm text-muted">{t('heroCaption')}</figcaption>
+      </figure>
+    </section>
+    <Breadcrumbs
+      items={[
+        { label: t('homeLabel'), href: link('/') },
+        { label: t('servicesBreadcrumb'), href: link('/services') },
+        { label: t('serviceBreadcrumb') },
+      ]}
+    />
+    <Journey journey={intimateJourney} current="service" />
+    <SessionFacts title={t('factsTitle')} facts={intimateFacts} />
+    <section class="mx-auto max-w-5xl px-4 py-12">
+      <h2 class="mb-8 text-3xl font-bold">{t('processTitle')}</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('planningTitle')}</h3><p>{t('planningBody')}</p>
+        </div>
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('startTitle')}</h3><p>{t('startBody')}</p>
+        </div>
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('deliveryTitle')}</h3><p>{t('deliveryBody')}</p>
+        </div>
+      </div>
+      <p class="mt-6"><a href={link('/about')} class="underline">{t('aboutLink')}</a></p>
+    </section>
+    <ImageSection image={couplesFeaturedImages[1].image} alt={couplesFeaturedImages[1].alt}>
+      <h2 class="text-3xl font-bold">{t('intimacyTitle')}</h2>
+      <p>{t('intimacyBody')}</p>
+      <p>{t('boudoirBody')}</p>
+      <p>
+        {t('couplesPrompt')}
+        <a class="font-semibold underline" href={link('/services/couples-photography')}>{t('couplesLink')}</a>.
+      </p>
+    </ImageSection>
+    <section id="privacy" class="scroll-mt-28 mx-auto max-w-4xl space-y-5 px-4 py-12">
+      <h2 class="text-3xl font-bold">{t('privacyTitle')}</h2>
+      <p>{t('privacyPreparation')}</p>
+      <p>{t('privacyLocation')}</p>
+      <Button href={link('/gallery/couples')}>{t('galleryAction')}</Button>
+    </section>
+    <ImageSection image={couplesFeaturedImages[2].image} alt={couplesFeaturedImages[2].alt} imageFirst={false}>
+      <h2 class="text-3xl font-bold">{t('locationTitle')}</h2>
+      <p>{t('locationBody')}</p>
+      <p>{t('rentalBody')}</p>
+      <h3 class="text-xl font-bold">{t('clothingTitle')}</h3>
+      <p>{t('clothingBody')}</p>
+    </ImageSection>
+    <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
+      <h2 class="text-3xl font-bold">{t('priceTitle')}</h2>
+      <p>{t('pricesPrefix')}{intimatePackages.map((p) => p.price).join(', ')} {t('pricesSuffix')}</p>
+      <Button href={link('/pricing/couples-intimate')}>{t('compareAction')}</Button>
+    </section>
+    <FAQs
+      title={t('faqTitle')}
+      columns={2}
+      items={[
+        {
+          title: t('nudityQuestion'),
+          description: t('nudityAnswer'),
+        },
+        {
+          title: t('hesitationQuestion'),
+          description: t('hesitationAnswer'),
+        },
+        {
+          title: t('experienceQuestion'),
+          description: t('experienceAnswer'),
+        },
+        {
+          title: t('giftQuestion'),
+          description: t('giftAnswer'),
+        },
+        {
+          title: t('styleQuestion'),
+          description: t('styleAnswer'),
+        },
+        {
+          title: t('locationQuestion'),
+          description: t('locationAnswer'),
+        },
+      ]}
+    />
+    <Journey journey={intimateJourney} current="service" cta />
+  </LeadTracking>
+</Layout>

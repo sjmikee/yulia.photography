@@ -1,4 +1,7 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+import { ui } from '~/i18n/ui';
+const labels = ui(localeFromPath(Astro.url.pathname));
 import type { PhotoshootPackage } from '~/lib/photoshoots';
 interface Props {
   packages: PhotoshootPackage[];
@@ -8,21 +11,21 @@ interface Props {
 const { packages, label, caption } = Astro.props;
 ---
 
-<p class="mb-3 text-sm md:hidden">אפשר לגלול את הטבלה לצדדים כדי לראות את כל הפרטים.</p>
+<p class="mb-3 text-sm md:hidden">{labels.tableHint}</p>
 <div
   class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700"
   tabindex="0"
   role="region"
   aria-label={label}
 >
-  <table class="w-full min-w-[560px] text-right">
+  <table class="w-full min-w-[560px] text-start">
     <caption class="sr-only">{caption}</caption>
     <thead class="bg-gray-50 dark:bg-slate-800">
       <tr>
-        <th scope="col" class="p-4">החבילה</th>
-        <th scope="col" class="p-4">תמונות בעריכה מלאה</th>
-        <th scope="col" class="p-4">מחיר</th>
-        <th scope="col" class="p-4">משך צילום משוער</th>
+        <th scope="col" class="p-4">{labels.package}</th>
+        <th scope="col" class="p-4">{labels.photos}</th>
+        <th scope="col" class="p-4">{labels.price}</th>
+        <th scope="col" class="p-4">{labels.duration}</th>
       </tr>
     </thead>
     <tbody
@@ -35,7 +38,9 @@ const { packages, label, caption } = Astro.props;
               </a>
             </th>
             <td class="p-4 font-bold text-accent">{p.photos}</td>
-            <td class="p-4 whitespace-nowrap">{p.price} ש״ח</td>
+            <td class="p-4 whitespace-nowrap">
+              {p.price} {labels.currency}
+            </td>
             <td class="p-4 text-sm">{p.duration}</td>
           </tr>
         ))

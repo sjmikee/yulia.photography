@@ -1,0 +1,67 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { personalMessages } from '~/i18n/personal';
+import { getPersonal } from '~/lib/personal';
+const locale = localeFromPath(Astro.url.pathname);
+const t = personalMessages('gallery', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const { packages: personalPackages, journey: personalJourney } = getPersonal(locale);
+const personalGalleryImages = getPersonalGalleryImages(locale);
+const hero = personalGalleryImages[0];
+import Layout from '~/layouts/PageLayout.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Button from '~/components/ui/Button.astro';
+import { getPersonalGalleryImages } from '~/lib/personal-gallery';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/solo_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services/personal-photography'), name: t('serviceLabel') },
+  { url: link('/gallery/solo'), name: t('pageLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <LeadTracking service="personal">
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-12 text-center">
+      <p class="font-semibold text-accent">{t('byline')}</p>
+      <h1 class="text-4xl font-bold md:text-5xl">{t('title')}</h1>
+      <p class="text-xl leading-relaxed">{t('introduction')}</p>
+      <p>{t('guidanceIntro')}</p>
+      <Button href={link('/pricing/personal')}>{t('pricesPrefix')}{personalPackages[0].price} {t('currency')}</Button>
+    </section>
+    <Breadcrumbs
+      items={[
+        { label: t('homeLabel'), href: link('/') },
+        { label: t('serviceBreadcrumb'), href: link('/services/personal-photography') },
+        { label: t('pageBreadcrumb') },
+      ]}
+    />
+    <Journey journey={personalJourney} current="gallery" />
+    <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
+      <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
+      <Gallery images={personalGalleryImages} />
+    </section>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-12 text-center">
+      <h2 class="text-3xl font-bold">{t('reassuranceTitle')}</h2>
+      <p>{t('reassuranceBody')}</p>
+      <Button href={link('/services/personal-photography')}>{t('serviceLink')}</Button>
+    </section>
+    <Journey journey={personalJourney} current="gallery" cta />
+  </LeadTracking>
+</Layout>

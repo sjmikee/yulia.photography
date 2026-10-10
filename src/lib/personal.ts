@@ -10,6 +10,12 @@ export const personalLinks = {
 export const personalWhatsApp = (message = 'היי יוליה, אשמח לשמוע על צילומי בוק אישי ולבדוק תאריך שמתאים לי.') =>
   `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
 
+export const personalPackageFacts = [
+  { minutes: 45, photosFrom: 30, photosTo: 40 },
+  { minutes: 90, photosFrom: 40, photosTo: 50 },
+  { minutes: 120, photosFrom: 50, photosTo: 70 },
+] as const;
+
 // Preserve published personal prices, quantities, durations and premium inclusions.
 export const personalPackages: PhotoshootPackage[] = [
   {
@@ -17,7 +23,7 @@ export const personalPackages: PhotoshootPackage[] = [
     title: 'חבילת בסיס',
     price: PRICES['בוק-אישי'][1],
     duration: '45 דקות',
-    photos: 'לפחות 30–40',
+    photos: `לפחות ${personalPackageFacts[0].photosFrom}–${personalPackageFacts[0].photosTo}`,
     fit: 'סשן קצר וממוקד למזכרת אישית או לתמונות פרופיל',
     extra: '',
   },
@@ -26,7 +32,7 @@ export const personalPackages: PhotoshootPackage[] = [
     title: 'החבילה הקלאסית',
     price: PRICES['בוק-אישי'][2],
     duration: 'שעה וחצי',
-    photos: 'לפחות 40–50',
+    photos: `לפחות ${personalPackageFacts[1].photosFrom}–${personalPackageFacts[1].photosTo}`,
     fit: 'יותר זמן להתרגל למצלמה ולגוון בתמונות',
     extra: '',
   },
@@ -35,7 +41,7 @@ export const personalPackages: PhotoshootPackage[] = [
     title: 'חבילת פרימיום',
     price: PRICES['בוק-אישי'][3],
     duration: 'כשעתיים',
-    photos: 'לפחות 50–70',
+    photos: `לפחות ${personalPackageFacts[2].photosFrom}–${personalPackageFacts[2].photosTo}`,
     fit: 'אוסף רחב יותר עם מקום להחלפת לבוש',
     extra: 'עד שתי תלבושות והפסקות לפי הצורך',
   },
@@ -104,3 +110,114 @@ export const personalFacts = [
   { label: 'צריך ניסיון מול המצלמה?', value: 'לא. הסשן כולל הכוונה אישית, מההכנה ועד הצילום עצמו.' },
   { label: 'מתי מקבלים תמונות?', value: 'עד 14 ימי עסקים מיום הצילום, בגלריה דיגיטלית באיכות גבוהה להורדה.' },
 ];
+
+/** Localized presentation shares package IDs and prices with the Hebrew site. */
+export function getPersonal(locale: import('~/i18n/routes').Locale) {
+  if (locale === 'he')
+    return {
+      packages: personalPackages,
+      cards: personalPricingCards,
+      journey: personalJourney,
+      service: personalService,
+      whatsapp: personalWhatsApp,
+      facts: personalFacts,
+    };
+  const whatsapp = (message = 'Здравствуйте, Юлия! Хочу узнать об индивидуальной фотосессии и свободных датах.') =>
+    personalWhatsApp(message);
+  const copy = [
+    { title: 'Базовый', duration: '45 минут', fit: 'Короткая съёмка для себя или новых фото профиля', extra: '' },
+    {
+      title: 'Классический',
+      duration: 'Полтора часа',
+      fit: 'Больше времени привыкнуть к камере и разнообразить кадры',
+      extra: '',
+    },
+    {
+      title: 'Премиальный',
+      duration: 'Около двух часов',
+      fit: 'Большая коллекция кадров и время для смены образа',
+      extra: 'До двух образов и перерывы по необходимости',
+    },
+  ];
+  const packages = personalPackages.map((p, index) => ({
+    ...p,
+    ...copy[index],
+    photos: `не менее ${personalPackageFacts[index].photosFrom}–${personalPackageFacts[index].photosTo}`,
+  }));
+  const cards: Price[] = [...packages].reverse().map((p) => ({
+    id: p.id,
+    title: p.title,
+    price: p.price,
+    subtitle: p.fit,
+    highlight: `${p.photos} фотографий в полной тщательной обработке`,
+    hasRibbon: p.id === 'classic',
+    ribbonTitle: 'Рекомендую',
+    items: [
+      { description: `Примерная продолжительность: ${p.duration}` },
+      { description: 'Подготовка к съёмке и рекомендации по одежде' },
+      { description: 'Подсказки в течение всей съёмки, в вашем темпе' },
+      { description: 'Онлайн-галерея для скачивания в высоком качестве' },
+      ...(p.extra ? [{ description: p.extra }] : []),
+    ],
+    callToAction: {
+      text: 'Узнать даты в WhatsApp',
+      href: whatsapp(
+        `Здравствуйте, Юлия! Интересует индивидуальная фотосессия, пакет «${p.title}». Какие даты свободны?`
+      ),
+      target: '_blank',
+      'data-lead-source': `personal-package-${p.id}`,
+    },
+  }));
+  const journey: PhotoshootJourney = {
+    label: 'Подробнее об индивидуальной фотосессии',
+    links: [
+      { id: 'service', href: '/ru' + personalLinks.service, label: 'Как проходит съёмка' },
+      { id: 'pricing', href: '/ru' + personalLinks.pricing, label: 'Цены и пакеты' },
+      { id: 'gallery', href: '/ru' + personalLinks.gallery, label: 'Галерея' },
+    ],
+    contact: {
+      title: 'Ваш новый портрет начинается с разговора',
+      description:
+        'Какие фотографии вам хотелось бы получить? Пришлите вдохновение из галереи или расскажите, для чего нужны снимки. Вместе превратим идею в съёмку с вашим характером.',
+      action: {
+        text: 'Задать вопрос и узнать даты в WhatsApp',
+        href: whatsapp(),
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+        'data-lead-source': 'personal-bottom-cta',
+      },
+      phone: { href: personalJourney.contact.phone.href, label: 'Удобнее позвонить? 052-5836940' },
+    },
+  };
+  const service: PhotoshootService = {
+    name: 'Индивидуальная фотосессия в центре Израиля',
+    serviceType: 'Индивидуальная фотосессия',
+    url: '/ru' + personalLinks.service,
+    areaServed: ['Центр Израиля'],
+    offers: packages.map((p) => ({
+      name: p.title,
+      price: p.price,
+      description: `${p.photos} фотографий в полной обработке, помощь с позированием и онлайн-галерея для скачивания. Примерная продолжительность: ${p.duration}. Место съёмки и возможная оплата локации согласовываются заранее.`,
+      url: `/ru${personalLinks.pricing}#${p.id}`,
+    })),
+  };
+  const facts = [
+    {
+      label: 'Кто фотографирует и где?',
+      value: 'Юлия Коренская · Центр Израиля. У моря, на природе, в городе или в студии по договорённости.',
+    },
+    {
+      label: 'Сколько стоит индивидуальная съёмка?',
+      value: `Пакеты за ${packages.map((p) => p.price).join(', ')} ₪, включая помощь с позированием и полную обработку.`,
+    },
+    {
+      label: 'Нужен опыт перед камерой?',
+      value: 'Нет. Индивидуальные подсказки входят в съёмку, от подготовки до работы перед камерой.',
+    },
+    {
+      label: 'Когда будут готовы фотографии?',
+      value: 'В течение 14 рабочих дней после съёмки, в онлайн-галерее для скачивания в высоком качестве.',
+    },
+  ];
+  return { packages, cards, journey, service, whatsapp, facts };
+}

@@ -1,4 +1,7 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+const locale = localeFromPath(Astro.url.pathname);
+const isRussian = locale === 'ru';
 import { Icon } from 'astro-icon/components';
 import { getPermalink } from '~/utils/permalinks';
 import Button from '~/components/ui/Button.astro';
@@ -10,7 +13,12 @@ export interface Props {
   nextText?: string;
 }
 
-const { prevUrl, nextUrl, prevText = 'יותר חדש', nextText = 'יותר ישן' } = Astro.props;
+const {
+  prevUrl,
+  nextUrl,
+  prevText = isRussian ? 'Новые статьи' : 'יותר חדש',
+  nextText = isRussian ? 'Предыдущие статьи' : 'יותר ישן',
+} = Astro.props;
 ---
 
 {

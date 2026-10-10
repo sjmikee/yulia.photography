@@ -1,0 +1,50 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { infoMessages } from '~/i18n/info';
+const locale = localeFromPath(Astro.url.pathname);
+const t = infoMessages('about', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const whatsapp = 'https://wa.me/972525836940' + (locale === 'ru' ? '?text=' + encodeURIComponent(t('inquiry')) : '');
+import Hero from '~/components/widgets/Hero.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [{ url: link('/about'), name: t('breadcrumbName') }];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <!-- Hero Widget ******************* -->
+
+  <HeroText title={t('heading')} />
+  <Breadcrumbs items={[{ label: t('home'), href: link('/') }, { label: t('breadcrumbLabel') }]} />
+
+  <Hero
+    tagline={t('tagline')}
+    image={{
+      src: '~/assets/images/about_photo.jpg',
+      alt: t('photoAlt'),
+    }}
+  >
+    <Fragment slot="title"> {t('intro')} <br /> </Fragment>
+
+    <Fragment slot="subtitle">
+      {t('approach')}
+      <br /><br />
+      {t('experience')}
+      <br /><br />
+      {t('family')}
+      <br /><br />
+      {t('sessions')}
+    </Fragment>
+  </Hero>
+
+  <WhatssapCallToAction title={t('ctaTitle')} subtitle={t('ctaSubtitle')} href={whatsapp} />
+</Layout>

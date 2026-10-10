@@ -1,27 +1,38 @@
 ---
-import CallToAction from "./CallToAction.astro"
+import { localeFromPath } from '~/i18n/routes';
+import CallToAction from './CallToAction.astro';
+interface Props {
+  title?: string;
+  subtitle?: string;
+  href?: string;
+}
+const {
+  title = 'עדיין מתלבטים?',
+  subtitle = 'תדברו איתי ואעזור לכם לקבל את ההחלטה הנכונה',
+  href = 'https://wa.me/972525836940',
+} = Astro.props;
 ---
 
 <CallToAction
-    id="bottomCallToAction"
-    actions={[
-      {
-        variant: 'primary',
-        text: 'ווטסאפ',
-        href: 'https://wa.me/972525836940',
-        target: '_blank',
-        icon: 'tabler:brand-whatsapp',
-      },
-    ]}
-  >
-    <Fragment slot="title">
-      עדיין מתלבטים?
-    </Fragment>
+  id="bottomCallToAction"
+  actions={[
+    {
+      variant: 'primary',
+      text: localeFromPath(Astro.url.pathname) === 'ru' ? 'WhatsApp' : 'ווטסאפ',
+      href,
+      target: '_blank',
+      icon: 'tabler:brand-whatsapp',
+    },
+  ]}
+>
+  <Fragment slot="title">
+    {title}
+  </Fragment>
 
-    <Fragment slot="subtitle">
-      תדברו איתי ואעזור לכם לקבל את ההחלטה הנכונה
-    </Fragment>
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
-    </Fragment>
+  <Fragment slot="subtitle">
+    {subtitle}
+  </Fragment>
+  <Fragment slot="bg">
+    <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
+  </Fragment>
 </CallToAction>

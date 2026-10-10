@@ -1,0 +1,101 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { couplesMessages } from '~/i18n/couples';
+import { getCouples } from '~/lib/couples';
+const locale = localeFromPath(Astro.url.pathname);
+const t = couplesMessages('gallery', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const { packages: couplesPackages } = getCouples(locale);
+const couplesGalleryImages = getCouplesGalleryImages(locale);
+const hero = couplesGalleryImages[0];
+import Layout from '~/layouts/PageLayout.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import Button from '~/components/ui/Button.astro';
+import type { PhotoshootJourney } from '~/lib/photoshoots';
+import { intimatePackages } from '~/lib/couples-intimate';
+import { getCouplesGalleryImages } from '~/lib/couples-gallery';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/couples_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services/couples-photography'), name: t('serviceLabel') },
+  { url: link('/gallery/couples'), name: t('pageLabel') },
+];
+const journey: PhotoshootJourney = {
+  label: t('journeyLabel'),
+  links: [
+    { id: 'couples-service', href: link('/services/couples-photography'), label: t('serviceLink') },
+    { id: 'couples-pricing', href: link('/pricing/couples'), label: t('pricingLink') },
+    { id: 'intimate-service', href: link('/services/intimate-couples-photography'), label: t('intimateServiceLink') },
+    { id: 'intimate-pricing', href: link('/pricing/couples-intimate'), label: t('intimatePricingLink') },
+  ],
+  contact: {
+    title: t('contactTitle'),
+    description: t('contactBody'),
+    action: {
+      text: t('contactAction'),
+      href: `https://wa.me/972525836940?text=${encodeURIComponent(t('whatsappMessage'))}`,
+      target: '_blank',
+      icon: 'tabler:brand-whatsapp',
+    },
+    phone: { href: 'tel:+972525836940', label: t('phoneLabel') },
+  },
+};
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <section class="mx-auto max-w-4xl px-4 pt-12 pb-6 text-center">
+    <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
+    <h1 class="mb-5 text-4xl font-bold md:text-5xl">{t('title')}</h1>
+    <p class="mb-5 text-xl leading-relaxed">{t('introduction')}</p>
+    <p>{t('guidanceIntro')}</p>
+  </section>
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('serviceBreadcrumb'), href: link('/services/couples-photography') },
+      { label: t('pageBreadcrumb') },
+    ]}
+  />
+  <Journey journey={journey} current="gallery" />
+  <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
+    <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
+    <Gallery images={couplesGalleryImages} />
+  </section>
+  <section class="mx-auto max-w-5xl px-4 py-12">
+    <h2 class="mb-8 text-center text-3xl font-bold">{t('optionsTitle')}</h2>
+    <div class="grid gap-6 md:grid-cols-2">
+      <article class="space-y-5 rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="text-2xl font-bold">{t('couplesTitle')}</h3>
+        <p>{t('couplesBody')}</p>
+        <p><a class="underline" href={link('/services/couples-photography')}>{t('couplesAction')}</a></p>
+        <Button href={link('/pricing/couples')}
+          >{t('couplesPricePrefix')}{couplesPackages[0].price} {t('currency')}</Button
+        >
+      </article>
+      <article class="space-y-5 rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <h3 class="text-2xl font-bold">{t('intimateTitle')}</h3>
+        <p>{t('intimateBody')}</p>
+        <p><a class="underline" href={link('/services/intimate-couples-photography')}>{t('intimateAction')}</a></p>
+        <Button href={link('/pricing/couples-intimate')}
+          >{t('intimatePricePrefix')}{intimatePackages[0].price} {t('intimateCurrency')}</Button
+        >
+      </article>
+    </div>
+  </section>
+  <Journey journey={journey} current="gallery" cta />
+</Layout>

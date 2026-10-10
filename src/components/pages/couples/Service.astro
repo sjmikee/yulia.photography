@@ -1,0 +1,195 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { couplesMessages } from '~/i18n/couples';
+import { getCouples } from '~/lib/couples';
+const locale = localeFromPath(Astro.url.pathname);
+const t = couplesMessages('service', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+const {
+  packages: couplesPackages,
+  journey: couplesJourney,
+  service: couplesService,
+  whatsapp: couplesWhatsApp,
+  facts: couplesFacts,
+} = getCouples(locale);
+const couplesGalleryImages = getCouplesGalleryImages(locale);
+const hero = couplesGalleryImages[0];
+const couplesFeaturedImages = couplesGalleryImages.slice(0, 3);
+import { Image } from 'astro:assets';
+import Layout from '~/layouts/PageLayout.astro';
+import Button from '~/components/ui/Button.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import ImageSection from '~/components/photoshoots/ImageSection.astro';
+import Journey from '~/components/photoshoots/Journey.astro';
+import SessionFacts from '~/components/photoshoots/SessionFacts.astro';
+import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
+import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
+import Gallery from '~/components/photoshoots/Gallery.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import { getCouplesGalleryImages } from '~/lib/couples-gallery';
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription', couplesPackages[0].price),
+  ignoreTitleTemplate: true,
+  openGraph: {
+    images: [
+      {
+        url: `~/assets/couples_gallery/${hero.filename}`,
+        width: hero.image.width,
+        height: hero.image.height,
+        alt: hero.alt,
+      },
+    ],
+  },
+};
+const breadcrumbs = [
+  { url: link('/services'), name: t('servicesLabel') },
+  { url: link('/services/couples-photography'), name: t('serviceLabel') },
+];
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <ServiceSchema service={couplesService} />
+  <LeadTracking service="couples">
+    <section class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-8 md:grid-cols-2 md:gap-12 md:py-12">
+      <div>
+        <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
+        <h1 class="mb-5 text-4xl font-bold leading-tight md:text-5xl">
+          {t('heroTitle')}<br /><span class="text-accent">{t('heroAccent')}</span>
+        </h1>
+        <p class="mb-5 text-xl leading-relaxed">{t('heroIntro')}</p>
+        <p class="mb-6">
+          {t('guidanceIntro')}
+          <strong>{t('startingPricePrefix')}{couplesPackages[0].price} {t('currencySentence')}</strong>
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <Button
+            class="w-full"
+            variant="primary"
+            href={couplesWhatsApp()}
+            target="_blank"
+            icon="tabler:brand-whatsapp"
+            data-lead-source="couples-service-hero">{t('dateAction')}</Button
+          >
+          <Button class="w-full" href={link('/pricing/couples')}>{t('pricingAction')}</Button>
+        </div>
+        <p class="mt-5 text-sm">{t('noCommitment')}</p>
+      </div>
+      <Image
+        src={hero.image}
+        alt={hero.alt}
+        widths={[400, 640, 900, 1200]}
+        sizes="(min-width: 768px) 50vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[4/5] w-full rounded-2xl object-cover"
+      />
+    </section>
+    <Breadcrumbs
+      items={[
+        { label: t('homeLabel'), href: link('/') },
+        { label: t('servicesBreadcrumb'), href: link('/services') },
+        { label: t('serviceBreadcrumb') },
+      ]}
+    />
+    <Journey journey={couplesJourney} current="service" />
+    <SessionFacts title={t('factsTitle')} facts={couplesFacts} />
+    <section class="mx-auto max-w-5xl space-y-5 px-4 py-10">
+      <h2 class="text-3xl font-bold">{t('galleryTitle')}</h2>
+      <p>{t('galleryIntro')}</p>
+      <Gallery images={couplesFeaturedImages} />
+      <Button href={link('/gallery/couples')}>{t('galleryAction')}</Button>
+    </section>
+    <ImageSection image={couplesFeaturedImages[1].image} alt={couplesFeaturedImages[1].alt}>
+      <h2 class="text-3xl font-bold">{t('posingTitle')}</h2>
+      <p>{t('posingBody')}</p>
+      <p>{t('guidanceBody')}</p>
+      <p><a class="underline" href={link('/about')}>{t('aboutLink')}</a></p>
+    </ImageSection>
+    <section class="mx-auto max-w-5xl px-4 py-12">
+      <h2 class="mb-8 text-3xl font-bold">{t('audienceTitle')}</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('togetherTitle')}</h3><p>{t('togetherBody')}</p>
+        </div>
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('engagementTitle')}</h3><p>{t('engagementBody')}</p>
+        </div>
+        <div class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+          <h3 class="mb-3 text-xl font-bold">{t('giftTitle')}</h3><p>{t('giftBody')}</p>
+        </div>
+      </div>
+    </section>
+    <ImageSection image={couplesFeaturedImages[2].image} alt={couplesFeaturedImages[2].alt} imageFirst={false}>
+      <h2 class="text-3xl font-bold">{t('locationsTitle')}</h2>
+      <p>{t('locationsBody')}</p>
+      <p>{t('studioBody')}</p>
+      <h3 class="text-xl font-bold">{t('clothingTitle')}</h3>
+      <p>{t('clothingBody')}</p>
+    </ImageSection>
+    <section class="mx-auto max-w-4xl space-y-5 px-4 py-12">
+      <h2 class="text-3xl font-bold">{t('processTitle')}</h2>
+      <ol class="list-decimal space-y-4 ps-6">
+        <li>
+          <strong>{t('planningTitle')}</strong>
+          {t('planningBody')}
+        </li>
+        <li>
+          <strong>{t('shootTitle')}</strong>
+          {t('shootBody')}
+        </li>
+        <li>
+          <strong>{t('deliveryTitle')}</strong>
+          {t('deliveryBody')}
+        </li>
+      </ol>
+    </section>
+    <section id="reviews" class="mx-auto max-w-3xl px-4 py-10">
+      <h2 class="mb-4 text-3xl font-bold">{t('reviewTitle')}</h2>
+      <p class="mb-6 text-sm text-muted">{t('reviewNote')}</p>
+      <blockquote class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
+        <p>{t('reviewQuote')}</p><footer class="mt-4 font-semibold">{t('reviewName')}</footer>
+      </blockquote>
+    </section>
+    <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
+      <h2 class="text-3xl font-bold">{t('priceTitle')}</h2>
+      <p>{t('pricesPrefix')}{couplesPackages.map((p) => p.price).join(', ')} {t('pricesSuffix')}</p>
+      <Button href={link('/pricing/couples')}>{t('compareAction')}</Button>
+    </section>
+    <FAQs
+      title={t('faqTitle')}
+      columns={2}
+      items={[
+        {
+          title: t('cameraQuestion'),
+          description: t('cameraAnswer'),
+        },
+        {
+          title: t('engagementQuestion'),
+          description: t('engagementAnswer'),
+        },
+        {
+          title: t('proposalQuestion'),
+          description: t('proposalAnswer'),
+        },
+        {
+          title: t('weatherQuestion'),
+          description: t('weatherAnswer'),
+        },
+        {
+          title: t('intimateQuestion'),
+          description: t('intimateAnswer'),
+        },
+        {
+          title: t('morePhotosQuestion'),
+          description: t('morePhotosAnswer'),
+        },
+      ]}
+    />
+    <p class="mx-auto max-w-4xl px-4 text-center">
+      {t('intimatePrompt')}
+      <a class="underline" href={link('/services/intimate-couples-photography')}>{t('intimateLink')}</a>.
+    </p>
+    <Journey journey={couplesJourney} current="service" cta />
+  </LeadTracking>
+</Layout>

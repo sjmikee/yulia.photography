@@ -1,0 +1,236 @@
+---
+import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { familyMessages } from '~/i18n/family';
+import { FAMILY_PRICE_KEY, familyWhatsApp, familyExtraChildPrice } from '~/lib/family';
+const locale = localeFromPath(Astro.url.pathname);
+const t = familyMessages('pricing', locale);
+const link = (path: string) => translatedPath(path, locale) ?? path;
+import Layout from '~/layouts/PageLayout.astro';
+import HeroText from '~/components/widgets/HeroText.astro';
+import Prices from '~/components/widgets/Pricing.astro';
+import FAQs from '~/components/widgets/FAQs.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { PRICES } from '~/lib/pricing';
+
+const metadata = {
+  title: t('metaTitle'),
+  description: t('metaDescription'),
+  ignoreTitleTemplate: true,
+};
+
+const breadcrumbs = [
+  { url: link('/pricing'), name: t('pricesLabel') },
+  { url: link('/pricing/family'), name: t('pageLabel') },
+];
+
+const session_type = FAMILY_PRICE_KEY;
+---
+
+<Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <!-- HeroText Widget ******************* -->
+
+  <HeroText
+    tagline={t('tagline')}
+    title={t('title')}
+    subtitle={t('subtitle')}
+    content={t('introduction', familyExtraChildPrice)}
+  />
+
+  <Breadcrumbs
+    items={[
+      { label: t('homeLabel'), href: link('/') },
+      { label: t('pricesBreadcrumb'), href: link('/pricing') },
+      { label: t('pageBreadcrumb') },
+    ]}
+  />
+
+  <!-- Pricing Widget ******************* -->
+
+  <Prices
+    title={t('packagesTitle')}
+    subtitle=""
+    tagline={t('packagesTagline')}
+    prices={[
+      {
+        title: t('premiumName'),
+        subtitle: t('premiumSubtitle'),
+        price: PRICES[session_type][3],
+        period: t('premiumPeriod'),
+        items: [
+          {
+            description: t('premiumPreparation'),
+          },
+          {
+            description: t('premiumDuration'),
+          },
+          {
+            description: t('premiumOutfits'),
+          },
+          {
+            description: t('premiumPhotos'),
+          },
+          {
+            description: t('premiumGallery'),
+          },
+          {
+            description: t('premiumSupplement', familyExtraChildPrice),
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: t('premiumAction'),
+          href: familyWhatsApp(t('premiumMessage')),
+        },
+      },
+      {
+        title: t('classicName'),
+        subtitle: t('classicSubtitle'),
+        price: PRICES[session_type][2],
+        period: t('classicPeriod'),
+        items: [
+          {
+            description: t('classicPreparation'),
+          },
+          {
+            description: t('classicDuration'),
+          },
+          {
+            description: t('classicPhotos'),
+          },
+          {
+            description: t('classicGallery'),
+          },
+          {
+            description: t('classicSupplement', familyExtraChildPrice),
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: t('classicAction'),
+          href: familyWhatsApp(t('classicMessage')),
+        },
+        hasRibbon: true,
+        ribbonTitle: t('ribbon'),
+      },
+      {
+        title: t('basicName'),
+        subtitle: t('basicSubtitle'),
+        price: PRICES[session_type][1],
+        period: t('basicPeriod'),
+        items: [
+          {
+            description: t('basicPreparation'),
+          },
+          {
+            description: t('basicDuration'),
+          },
+          {
+            description: t('basicPhotos'),
+          },
+          {
+            description: t('basicGallery'),
+          },
+          {
+            description: t('basicSupplement', familyExtraChildPrice),
+          },
+        ],
+        callToAction: {
+          target: '_blank',
+          text: t('basicAction'),
+          href: familyWhatsApp(t('basicMessage')),
+        },
+      },
+    ]}
+  />
+
+  <!-- Steps Widget ****************** -->
+
+  <Steps
+    title={t('processTitle')}
+    tagline={t('processTagline')}
+    isReversed={locale === 'he'}
+    items={[
+      {
+        title: t('stepContact'),
+        icon: 'tabler:number-1',
+      },
+      {
+        title: t('stepBooking'),
+        icon: 'tabler:number-2',
+      },
+      {
+        title: t('stepDeposit'),
+        icon: 'tabler:number-3',
+      },
+      {
+        title: t('stepShoot'),
+        icon: 'tabler:number-4',
+      },
+      {
+        title: t('stepEditing'),
+        icon: 'tabler:number-5',
+      },
+      {
+        title: t('stepDelivery'),
+        icon: 'tabler:number-6',
+      },
+      {
+        title: t('stepEnjoy'),
+        icon: 'tabler:number-7',
+      },
+      {
+        title: t('stepTag'),
+        icon: 'tabler:number-8',
+      },
+    ]}
+    image={{ src: '~/assets/images/pricing/couples_pricing.jpg', alt: t('imageAlt') }}
+  />
+
+  <!-- FAQs Widget ******************* -->
+
+  <FAQs
+    title={t('faqTitle')}
+    subtitle={t('faqSubtitle')}
+    columns={1}
+    items={[
+      {
+        title: t('participantsQuestion'),
+        description: t('participantsAnswer', familyExtraChildPrice),
+      },
+      {
+        title: t('childrenQuestion'),
+        description: t('childrenAnswer'),
+      },
+      {
+        title: t('locationQuestion'),
+        description: t('locationAnswer'),
+      },
+      {
+        title: t('clothingQuestion'),
+        description: t('clothingAnswer'),
+      },
+      {
+        title: t('weatherQuestion'),
+        description: t('weatherAnswer'),
+      },
+      {
+        title: t('bookingQuestion'),
+        description: t('bookingAnswer'),
+      },
+      {
+        title: t('depositQuestion'),
+        description: t('depositAnswer'),
+      },
+    ]}
+  />
+
+  <!-- CallToAction Widget *********** -->
+
+  <WhatssapCallToAction
+    title={t('contactTitle')}
+    subtitle={t('contactSubtitle')}
+    href={familyWhatsApp(t('contactMessage'))}
+  />
+</Layout>

@@ -1,4 +1,8 @@
 ---
+import { localeFromPath } from '~/i18n/routes';
+import { blogLink } from '~/i18n/blog';
+const locale = localeFromPath(Astro.url.pathname);
+const isRussian = locale === 'ru';
 import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
@@ -6,7 +10,7 @@ import PostTags from '~/components/blog/Tags.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
 
 import { getPermalink } from '~/utils/permalinks';
-import { getFormattedDate } from '~/utils/utils';
+import { articleDate } from '~/i18n/blog';
 
 import type { Post } from '~/types';
 
@@ -28,7 +32,7 @@ const { post, url } = Astro.props;
       <div class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center">
         <p>
           <Icon name="tabler:clock" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
-          <time datetime={String(post.publishDate)} class="inline-block">{getFormattedDate(post.publishDate)}</time>
+          <time datetime={String(post.publishDate)} class="inline-block">{articleDate(post.publishDate, locale)}</time>
           {
             post.author && (
               <>
@@ -43,7 +47,10 @@ const { post, url } = Astro.props;
               <>
                 {' '}
                 ·{' '}
-                <a class="hover:underline inline-block focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200" href={getPermalink(post.category.slug, 'category')}>
+                <a
+                  class="hover:underline inline-block focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
+                  href={blogLink(getPermalink(post.category.slug, 'category'), locale)}
+                >
                   {post.category.title}
                 </a>
               </>
@@ -52,7 +59,8 @@ const { post, url } = Astro.props;
           {
             post.readingTime && (
               <>
-                &nbsp;·  זמן קריאה: <span>{post.readingTime}</span> דקות
+                &nbsp;· {isRussian ? 'Время чтения:' : 'זמן קריאה:'} <span>{post.readingTime}</span>{' '}
+                {isRussian ? 'мин.' : 'דקות'}
               </>
             )
           }
@@ -65,7 +73,10 @@ const { post, url } = Astro.props;
         {post.title}
       </h1>
       <p
-        class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400 text-justify"
+        class:list={[
+          'max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400',
+          isRussian ? 'text-start' : 'text-justify',
+        ]}
       >
         {post.excerpt}
       </p>
@@ -79,7 +90,6 @@ const { post, url } = Astro.props;
             sizes="(max-width: 900px) 400px, 900px"
             alt={post?.excerpt || ''}
             width={900}
-            
             loading="eager"
             decoding="async"
           />

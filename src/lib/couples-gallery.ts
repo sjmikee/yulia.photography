@@ -1,3 +1,5 @@
+import type { Locale } from '~/i18n/routes';
+import russianAlts from '~/i18n/couples/gallery-images.ru.json';
 import type { ImageMetadata } from 'astro';
 // Curated shared couples gallery. Add new photographs explicitly when ready for publication.
 // Explicit selection and descriptions visually checked; do not auto-publish new folder contents.
@@ -111,3 +113,12 @@ export const couplesGalleryImages = selection.map(({ filename, alt }) => {
 });
 export const couplesFeaturedImages = couplesGalleryImages.slice(0, 3);
 export const couplesHeroImage = couplesGalleryImages[0];
+
+export function getCouplesGalleryImages(locale: Locale) {
+  if (locale === 'he') return couplesGalleryImages;
+  return couplesGalleryImages.map((image) => {
+    const alt = (russianAlts as Record<string, string>)[image.filename];
+    if (!alt) throw new Error(`Missing Russian couples image description: ${image.filename}`);
+    return { ...image, alt };
+  });
+}

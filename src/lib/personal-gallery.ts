@@ -1,3 +1,5 @@
+import type { Locale } from '~/i18n/routes';
+import russianAlts from '~/i18n/personal/gallery-images.ru.json';
 import type { ImageMetadata } from 'astro';
 // 25 visually curated portraits: varied people, settings and moods, with fewer repeated poses.
 const selection = [
@@ -110,3 +112,12 @@ export const personalGalleryImages = selection.map(({ filename, alt }) => {
 });
 export const personalFeaturedImages = personalGalleryImages.slice(0, 3);
 export const personalHeroImage = personalGalleryImages[0];
+
+export function getPersonalGalleryImages(locale: Locale) {
+  if (locale === 'he') return personalGalleryImages;
+  return personalGalleryImages.map((image) => {
+    const alt = (russianAlts as Record<string, string>)[image.filename];
+    if (!alt) throw new Error(`Missing Russian personal image description: ${image.filename}`);
+    return { ...image, alt };
+  });
+}
