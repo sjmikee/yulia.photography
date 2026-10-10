@@ -5,9 +5,19 @@ export async function createContractToken(
   phone: string,
   conf: string,
   invitationId: string,
-  expiresAt: number
+  expiresAt: number,
+  locale: 'he' | 'ru' = 'he'
 ) {
-  return signToken({ purpose: 'contract', sessionId, phone, conf, invitationId, expiresAt });
+  return signToken({
+    purpose: 'contract',
+    sessionId,
+    phone,
+    conf,
+    invitationId,
+    expiresAt,
+    locale,
+    contractVersion: '1',
+  });
 }
 
 export async function verifyContractToken(token: string) {
@@ -22,7 +32,17 @@ export async function verifyContractToken(token: string) {
     !['0', '1'].includes(String(payload.conf))
   )
     return null;
+  // Existing invitations predate localization and remain Hebrew. Partial or
+  // unknown language/version claims are rejected rather than silently downgraded.
+  const legacy = payload.locale === undefined && payload.contractVersion === undefined;
+  if (
+    !legacy &&
+    (typeof payload.locale !== 'string' || !['he', 'ru'].includes(payload.locale) || payload.contractVersion !== '1')
+  )
+    return null;
   return {
+    locale: (legacy ? 'he' : payload.locale) as 'he' | 'ru',
+    contractVersion: '1',
     invitationId: payload.invitationId,
     sessionId: Number(payload.sessionId),
     phone: payload.phone,

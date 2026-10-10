@@ -1,0 +1,281 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import Logo from '~/components/Logo.astro';
+import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
+import { contractMessages } from '~/i18n/contract';
+interface Props {
+  locale: 'he' | 'ru';
+}
+const { locale } = Astro.props;
+const t = contractMessages(locale);
+const metadata = {
+  title: t.title,
+  description: t.description,
+  ignoreTitleTemplate: true,
+  robots: { index: false, follow: false },
+};
+---
+
+<Layout metadata={metadata}>
+  <header class="max-w-6xl mx-auto px-6 py-3">
+    <a href={locale === 'ru' ? '/ru' : '/'} aria-label={t.home}><Logo /></a>
+  </header>
+  <main>
+    <section class="bg-gray-50 py-12 px-6 text-center text-gray-900">
+      <h1 class="text-3xl font-bold mb-4">{t.heading}</h1>
+      <p class="text-lg max-w-2xl mx-auto">{t.intro}</p>
+    </section>
+    <section class="max-w-6xl mx-auto pt-10 px-4">
+      <h2 class="text-2xl font-bold text-center mb-4">{t.document}</h2>
+      <a
+        id="contract-pdf-link"
+        class="hidden underline block text-center mb-4"
+        target="_blank"
+        rel="noopener noreferrer">{t.openPdf}</a
+      >
+      <div id="pdf-container" class="w-full h-[600px] border rounded-lg shadow overflow-auto" aria-label={t.document}>
+        <p class="text-center py-8" role="status">{t.loading}</p>
+      </div>
+    </section>
+    <section id="contract-details" class="max-w-4xl mx-auto py-12 px-4 sm:px-6">
+      <h2 class="text-2xl font-bold text-center mb-6">{t.details}</h2>
+      <form
+        method="POST"
+        action="/api/submit_contract"
+        accept-charset="UTF-8"
+        class="bg-white text-gray-900 p-4 sm:p-6 rounded-xl shadow"
+      >
+        <fieldset id="contract-fields" disabled class="space-y-4 min-w-0">
+          <input type="hidden" name="token" id="contract-token" />
+          <label class="block"
+            >{t.name}<input
+              name="name"
+              autocomplete="name"
+              required
+              maxlength="100"
+              class="border rounded p-2 w-full block"
+            /></label
+          >
+          <label class="block"
+            >{t.address}<input
+              name="address"
+              id="address-input"
+              autocomplete="street-address"
+              required
+              maxlength="100"
+              class="border rounded p-2 w-full block"
+            /></label
+          >
+          <label class="block"
+            >{t.email}<input
+              type="email"
+              name="email"
+              autocomplete="email"
+              dir="ltr"
+              required
+              class="border rounded p-2 w-full block"
+            /></label
+          >
+          <label class="block"
+            >{t.phone}<input
+              type="tel"
+              name="phone"
+              id="phone-input"
+              dir="ltr"
+              readonly
+              class="border rounded p-2 w-full block bg-gray-100"
+            /></label
+          >
+          <label class="block"
+            >{t.id}<input
+              name="id"
+              inputmode="numeric"
+              dir="ltr"
+              required
+              maxlength="30"
+              class="border rounded p-2 w-full block"
+            /></label
+          >
+          <label class="block"
+            >{t.price}<input
+              id="price-input"
+              dir="ltr"
+              readonly
+              class="border rounded p-2 w-full block bg-gray-100"
+            /></label
+          >
+          <label class="block"
+            >{t.duration}<input
+              id="duration-input"
+              readonly
+              class="border rounded p-2 w-full block bg-gray-100"
+            /></label
+          >
+          <div>
+            <label for="signature" class="block">{t.signature}</label><canvas
+              id="signature"
+              aria-label={t.signature}
+              class="border rounded w-full max-w-md h-40 touch-none"></canvas>
+          </div>
+          <button type="button" id="clear-signature" class="btn-secondary">{t.clear}</button>
+          <input type="hidden" name="signature" id="signature-input" />
+          <button type="submit" id="submit" class="btn-primary">{t.submit}</button>
+        </fieldset>
+        <p id="contract-error" class="text-red-700 mt-4" role="alert"></p>
+      </form>
+    </section>
+  </main>
+  <footer class="bg-footer text-white py-8 text-center px-4">
+    <p class="mb-4 font-bold">{t.brand} | yulia.photography</p><p>{t.footer}</p>
+  </footer>
+  <WhatsAppButton />
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js" is:inline></script>
+  <script type="module" is:inline define:vars={{ t, locale }}>
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.min.mjs';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.5.136/build/pdf.worker.min.mjs';
+    async function initContract() {
+      const form = document.querySelector('form[action="/api/submit_contract"]');
+      if (!form || form.dataset.initialized) return;
+      form.dataset.initialized = 'true';
+      const container = document.getElementById('pdf-container');
+      const fields = document.getElementById('contract-fields');
+      const errorText = document.getElementById('contract-error');
+      const unavailable = (code) => {
+        document.getElementById('contract-details').hidden = true;
+        document.getElementById('contract-pdf-link').classList.add('hidden');
+        container.textContent = t.messages[code] || t.messages.invalid;
+        container.setAttribute('role', 'status');
+      };
+      const token = new URLSearchParams(window.location.search).get('token') || '';
+      let invitation;
+      try {
+        const response = await fetch(`/api/get_price?token=${encodeURIComponent(token)}`, { cache: 'no-store' });
+        invitation = await response.json();
+        if (!response.ok) {
+          unavailable(invitation.code);
+          return;
+        }
+      } catch {
+        container.textContent = t.network;
+        return;
+      }
+      // The signed invitation, not a changed URL or form field, chooses the language.
+      if (invitation.locale !== locale) {
+        const target = new URL(invitation.locale === 'ru' ? '/ru/contract' : '/contract', location.origin);
+        target.searchParams.set('token', token);
+        location.replace(target.href);
+        return;
+      }
+      document.getElementById('contract-token').value = token;
+      document.getElementById('phone-input').value = invitation.phone;
+      document.getElementById('price-input').value = `${invitation.price} ₪`;
+      document.getElementById('duration-input').value = invitation.duration_label;
+      try {
+        const pdf = await pdfjsLib.getDocument(invitation.template).promise;
+        container.replaceChildren();
+        // Sequential rendering keeps the contract pages in their intended order.
+        for (let n = 1; n <= pdf.numPages; n++) {
+          const page = await pdf.getPage(n);
+          const ratio = window.devicePixelRatio || 1;
+          const scale = (container.clientWidth - 24) / page.getViewport({ scale: 1 }).width;
+          const viewport = page.getViewport({ scale: scale * ratio });
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          canvas.style.cssText = `display:block;margin:0 auto 20px;width:${viewport.width / ratio}px;max-width:100%;height:auto`;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+          container.appendChild(canvas);
+        }
+        const link = document.getElementById('contract-pdf-link');
+        link.href = invitation.template;
+        link.classList.remove('hidden');
+      } catch {
+        container.textContent = t.loadFailed;
+        return;
+      }
+      const canvas = document.getElementById('signature');
+      const resize = () => {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext('2d').scale(ratio, ratio);
+      };
+      resize();
+      const pad = new window.SignaturePad(canvas);
+      const onResize = () => {
+        resize();
+        pad.clear();
+      };
+      window.addEventListener('resize', onResize);
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          window.removeEventListener('resize', onResize);
+          pad.off();
+        },
+        { once: true }
+      );
+      document.getElementById('clear-signature').addEventListener('click', () => pad.clear());
+      fields.disabled = false;
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        errorText.textContent = '';
+        if (pad.isEmpty()) {
+          errorText.textContent = t.signFirst;
+          return;
+        }
+        const button = document.getElementById('submit');
+        document.getElementById('signature-input').value = pad.toDataURL();
+        const body = new FormData(form);
+        fields.disabled = true;
+        button.textContent = t.sending;
+        try {
+          const response = await fetch(form.action, { method: 'POST', body });
+          if (!response.ok) {
+            const error = await response.json();
+            if (t.messages[error.code]) {
+              unavailable(error.code);
+              return;
+            }
+            throw new Error('Contract submission failed');
+          }
+          location.assign(locale === 'ru' ? '/ru/thank_you' : '/thank_you');
+        } catch {
+          errorText.textContent = t.failed;
+          fields.disabled = false;
+          button.textContent = t.submit;
+        }
+      });
+    }
+    initContract();
+  </script>
+  <script is:inline>
+    window.initAutocomplete = function () {
+      const input = document.getElementById('address-input');
+
+      // Create the first session token
+      let sessionToken = new google.maps.places.AutocompleteSessionToken();
+
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        fields: ['formatted_address', 'geometry', 'name'],
+        sessionToken,
+      });
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+
+        if (place.formatted_address) {
+          input.value = place.formatted_address;
+        }
+
+        // Reset token for next user typing session
+        sessionToken = new google.maps.places.AutocompleteSessionToken();
+        autocomplete.setOptions({ sessionToken });
+      });
+    };
+  </script>
+
+  <script
+    src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyCN7CiFeaMo1JYYXYW6kvHAM1xndEEPNTs&libraries=places&loading=async&language=${locale}&region=IL&callback=initAutocomplete`}
+    defer></script>
+</Layout>

@@ -319,3 +319,29 @@ test(
     }
   }
 );
+
+test(
+  'contract and confirmation routes localize privately without indexing or analytics',
+  { skip: !built && 'Run npm run build first' },
+  async () => {
+    const sitemap = await read('sitemap-0.xml');
+    for (const locale of ['he', 'ru']) {
+      for (const route of ['contract', 'thank_you']) {
+        const path = `${locale === 'ru' ? 'ru/' : ''}${route}`;
+        const html = await read(`${path}/index.html`);
+        assert.ok(tag(html, 'html', 'lang', locale));
+        assert.ok(tag(html, 'meta', 'name', 'robots').includes('noindex,nofollow'));
+        assert.ok(tag(html, 'meta', 'name', 'referrer').includes('no-referrer'));
+        assert.doesNotMatch(html, /googletagmanager.com/);
+        assert.ok(!sitemap.includes(`https://yulia.photography/${path}`));
+        if (locale === 'ru') {
+          const visible = html
+            .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '')
+            .replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, '')
+            .replace(/<[^>]+>/g, '');
+          assert.doesNotMatch(visible, /[\u0590-\u05ff]/);
+        }
+      }
+    }
+  }
+);

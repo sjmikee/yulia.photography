@@ -137,3 +137,17 @@ See [Russian release review](./russian-release-review.md) for the 38-page invent
 ## Russian indexing release — 10 October 2026
 
 Owner approved enabling Russian search indexing and removing the preparation notice. `russianIndexingEnabled` is now true and the notice is removed from the shared page layout. Eligible Russian content pages enter the generated sitemap and receive `index,follow`; both language versions expose reciprocal Hebrew/Russian and Hebrew x-default alternates, with self-canonicals. Article listings, categories and tags retain the existing Hebrew-equivalent `noindex,follow` policy and remain crawlable. Robots.txt already allows public crawling. The owner chose to leave RSS and the generic 404 Hebrew-only. This change prepares the production build; it does not itself deploy it.
+
+## Contract flow milestone — 10 October 2026
+
+Owner approved the Russian contract translations and requested the same Rubik font
+as the Russian website. Both two-page templates now use Rubik with the original
+logo, background and red dividers. Eight text fields and both signature placeholders
+match the Hebrew schema; signature positions match the existing submission handler.
+
+The Hebrew management page now offers contract language selection. Signed invitations
+bind language/version and consent; Russian clients receive `/ru/contract`, localized
+fields, duration, status messages, email and `/ru/thank_you`. The server selects the
+PDF and font from the verified invitation, preserving single-use and uncertain-delivery
+protections. Old invitations remain Hebrew. No database migration or deployment was
+performed. Contract pages stay out of search/sitemaps and do not load analytics.

@@ -79,6 +79,12 @@ const prepared =
             <option value="0">לא</option>
           </select></label
         >
+        <label
+          >שפת החוזה<select name="locale" id="contract-locale" class="border p-3 w-full rounded-lg">
+            <option value="he">עברית</option>
+            <option value="ru">רוסית</option>
+          </select></label
+        >
       </div>
 
       <button
@@ -200,6 +206,7 @@ const prepared =
           body: JSON.stringify({
             phone: rawPhone,
             conf: conf.value,
+            locale: document.getElementById('contract-locale').value,
             ...(SESSION_ID ? { session_id: Number(SESSION_ID) } : {}),
           }),
         });

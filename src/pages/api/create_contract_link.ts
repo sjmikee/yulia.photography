@@ -5,7 +5,9 @@ import { createContractToken } from '../../lib/contract-token';
 
 export const POST: APIRoute = async ({ request, url }) => {
   try {
-    const { phone, conf, session_id } = await request.json();
+    const { phone, conf, session_id, locale = 'he' } = await request.json();
+    if (!['he', 'ru'].includes(locale))
+      return new Response(JSON.stringify({ error: 'Invalid language' }), { status: 400 });
     if (typeof phone !== 'string' || !/^05\d{8}$/.test(phone) || !['0', '1'].includes(conf)) {
       return new Response(JSON.stringify({ error: 'Invalid details' }), { status: 400 });
     }
@@ -31,10 +33,17 @@ export const POST: APIRoute = async ({ request, url }) => {
         JSON.stringify({ error: 'A contract is processing. Check its delivery before issuing another link.' }),
         { status: 409 }
       );
-    const link = new URL('/contract', url.origin);
+    const link = new URL(locale === 'ru' ? '/ru/contract' : '/contract', url.origin);
     link.searchParams.set(
       'token',
-      await createContractToken(sessionId, phone, conf, invitation.id, new Date(invitation.expires_at).getTime())
+      await createContractToken(
+        sessionId,
+        phone,
+        conf,
+        invitation.id,
+        new Date(invitation.expires_at).getTime(),
+        locale
+      )
     );
     await sql`UPDATE sessions SET workflow = workflow || ${JSON.stringify({ contract_prepared: new Date().toISOString() })}::jsonb WHERE id = ${sessionId}`;
     return new Response(JSON.stringify({ url: link.toString() }), {

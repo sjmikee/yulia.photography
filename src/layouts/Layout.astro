@@ -31,7 +31,9 @@ export interface Props {
 const { metadata = {}, richMetadata = {}, breadcrumbs = [] } = Astro.props;
 const language = localeFromPath(Astro.url.pathname);
 const textDirection = language === 'ru' ? 'ltr' : 'rtl';
-const privatePage = Astro.url.pathname === '/clients' || Astro.url.pathname.startsWith('/clients/');
+const managementPage = Astro.url.pathname === '/clients' || Astro.url.pathname.startsWith('/clients/');
+const contractPage = /^\/(?:ru\/)?(?:contract|thank_you)\/?$/.test(Astro.url.pathname);
+const privatePage = managementPage || contractPage;
 ---
 
 <!doctype html>
@@ -39,6 +41,7 @@ const privatePage = Astro.url.pathname === '/clients' || Astro.url.pathname.star
   <head>
     {!privatePage && <GtmHead />}
     <CommonMeta />
+    {contractPage && <meta name="referrer" content="no-referrer" />}
     <Favicons />
     {language === 'he' && <Font cssVariable="--font-heebo" preload />}
     <CustomStyles />
@@ -56,6 +59,6 @@ const privatePage = Astro.url.pathname === '/clients' || Astro.url.pathname.star
     <slot />
 
     <BasicScripts />
-    {privatePage && <AppLinks />}
+    {managementPage && <AppLinks />}
   </body>
 </html>

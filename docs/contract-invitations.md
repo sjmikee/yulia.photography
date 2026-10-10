@@ -7,7 +7,7 @@ No additional columns are needed for this implementation.
 
 ## Issuing and signing
 
-- The authenticated contract-link API creates an invitation with the database's default 30-day expiry. The signed token includes its UUID, booking ID, phone, consent selection and expiry.
+- The authenticated contract-link API creates an invitation with the database's default 30-day expiry. The signed token includes its UUID, booking ID, phone, consent selection, language, contract version and expiry.
 - Creating a replacement revokes older pending invitations for that booking. Issuance is serialized by locking the booking row.
 - Links created before this change have no invitation ID and must be replaced through the existing Send Contract page.
 - Price lookup checks the invitation record as well as the token. Used, processing, revoked and expired invitations cannot load the form.
@@ -49,3 +49,21 @@ Run `node --test tests/security.test.mjs`, `npm run check:astro`,
 The regression tests mock database and email operations; they never send real
 contracts or write to Neon. A successful production build does not verify that
 the table was created in the same Neon branch/database used by Vercel.
+
+## Russian contracts
+
+On Send Contract, choose Hebrew (default) or Russian under שפת החוזה. The signed
+invitation controls the language of the form, duration, PDF variant, email and
+confirmation. Changing URL/form parameters cannot override it. Existing invitations
+without locale/version remain Hebrew; unsupported claims are rejected.
+
+Russian templates and filled fields use the site's Rubik font. Both publication
+variants preserve the approved terms. Signing records `contract_language` and
+`contract_version` in the session workflow and in the PDF metadata. No schema
+migration is needed. Contract and confirmation pages in both languages are noindex,
+excluded from the sitemap, suppress analytics and use a no-referrer policy.
+
+Validation includes real PDF filling/flattening with mocked email/database calls,
+legacy/tampered token coverage, localized lookup/issuance, mobile/desktop rendering,
+both consent variants, signature validation, all invitation states, PDF failure and
+language redirects. No live email or production database operations were performed.

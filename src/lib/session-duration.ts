@@ -14,7 +14,17 @@ export function packageDurationHours(packageType: number): number | undefined {
   return packages[packageType]?.hours;
 }
 
-export function packageDurationLabel(packageType: number): string {
+const russianLabels: Record<number, string> = {
+  1: 'От одного до двух часов',
+  2: 'От двух до трёх часов',
+  3: 'Три часа',
+  4: 'До трёх часов',
+  5: 'До шести часов',
+  6: 'До девяти часов',
+};
+
+export function packageDurationLabel(packageType: number, locale: 'he' | 'ru' = 'he'): string {
+  if (locale === 'ru') return russianLabels[packageType] || '';
   return packages[packageType]?.label || '';
 }
 

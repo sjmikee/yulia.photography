@@ -1,0 +1,31 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import Logo from '~/components/Logo.astro';
+import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
+import { contractMessages } from '~/i18n/contract';
+interface Props {
+  locale: 'he' | 'ru';
+}
+const { locale } = Astro.props;
+const t = contractMessages(locale);
+const metadata = {
+  title: t.title,
+  description: t.description,
+  ignoreTitleTemplate: true,
+  robots: { index: false, follow: false },
+};
+---
+
+<Layout metadata={metadata}>
+  <header class="max-w-6xl mx-auto px-6 py-3">
+    <a href={locale === 'ru' ? '/ru' : '/'} aria-label={t.home}><Logo /></a>
+  </header>
+  <main class="min-h-[65vh] bg-gray-50 text-gray-900 py-16 px-6 text-center">
+    <h1 class="text-3xl font-bold mb-4">{t.thanks}</h1>
+    <p class="text-lg max-w-2xl mx-auto">{t.success}</p>
+  </main>
+  <footer class="bg-footer text-white py-8 px-4 text-center">
+    <p class="mb-4 font-bold">{t.brand} | yulia.photography</p><p>{t.footer}</p>
+  </footer>
+  <WhatsAppButton />
+</Layout>
