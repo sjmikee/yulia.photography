@@ -1,0 +1,13 @@
+---
+import SpeedInsights from '@vercel/speed-insights/astro';
+---
+
+<script is:inline>
+  // Keep private pages excluded even after Astro's client-side navigation.
+  window.speedInsightsBeforeSend = (event) => {
+    const isPrivate = (pathname) => /^\/(?:ru\/)?(?:clients(?:\/|$)|(?:contract|thank_you)\/?$)/.test(pathname);
+    const url = new URL(event.url, window.location.origin);
+    return isPrivate(url.pathname) || isPrivate(window.location.pathname) ? null : event;
+  };
+</script>
+<SpeedInsights />
