@@ -1,0 +1,45 @@
+<script>
+  import { contactContext, contactMethod, isPublicPage, measurementId } from '~/lib/contact-tracking';
+
+  // One delegated listener also covers controls added by Astro page navigation.
+  document.addEventListener(
+    'click',
+    (event) => {
+      if (!['yulia.photography', 'www.yulia.photography'].includes(window.location.hostname)) return;
+      if (!isPublicPage(window.location.pathname) || !(event.target instanceof Element)) return;
+      const control = event.target.closest<HTMLElement>('a[href], button[data-whatsapp-url]');
+      if (!control) return;
+      const method = contactMethod(control.dataset.whatsappUrl || control.getAttribute('href') || '');
+      if (!method) return;
+      const context = contactContext(window.location.pathname);
+      const placement =
+        control.dataset.leadSource ||
+        (control.id === 'whatsapp'
+          ? 'floating'
+          : control.closest('header')
+            ? 'header'
+            : control.closest('footer')
+              ? 'footer'
+              : 'content');
+      const analytics = window as Window & { dataLayer?: unknown[] };
+      analytics.dataLayer ??= [];
+      // Use the Google tag already installed by GTM; do not initialize a second tag.
+      // No link URLs, prefilled messages, customer data, query strings or tokens are sent.
+      function sendContact() {
+        // Google tag commands use an Arguments object, not a plain event object.
+        // eslint-disable-next-line prefer-rest-params -- Required by the Google tag command queue format.
+        analytics.dataLayer!.push(arguments);
+      }
+      const send = sendContact as (...args: unknown[]) => void;
+      send('event', 'contact_click', {
+        send_to: measurementId,
+        ...context,
+        contact_method: method,
+        button_location: placement,
+        page_location: window.location.origin + window.location.pathname,
+        page_referrer: document.referrer ? new URL(document.referrer).origin : '',
+      });
+    },
+    { capture: true }
+  );
+</script>

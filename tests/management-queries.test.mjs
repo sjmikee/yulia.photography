@@ -162,6 +162,7 @@ test('PostgreSQL dashboard pagination and overview aggregates match the existing
       const result = (await db.query(overviewQuery, [month])).rows[0];
       const actual = {
         received: Number(result.received),
+        confirmedBookings: Number(result.confirmed_bookings),
         outstanding: Number(result.outstanding),
         cancelledBalance: Number(result.cancelled_balance),
         completed: result.completed,

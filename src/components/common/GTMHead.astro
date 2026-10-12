@@ -4,6 +4,8 @@
 <!-- Google Tag Manager -->
 <script is:inline>
 window.addEventListener('load', function() {
+    if (!['yulia.photography', 'www.yulia.photography'].includes(window.location.hostname)) return;
+    if (/^\/(?:ru\/)?(?:clients(?:\/|$)|(?:contract|thank_you)\/?$)/.test(window.location.pathname)) return;
     (function(w,d,s,l,i){
         w[l]=w[l]||[];
         w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});

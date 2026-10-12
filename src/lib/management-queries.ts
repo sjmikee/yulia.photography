@@ -95,6 +95,8 @@ export const overviewQuery = `${datedSessions}, classified AS (
   FROM completed GROUP BY session_type, package_type
 )
 SELECT
+  (SELECT count(DISTINCT session_id)::int FROM session_payments WHERE stage = 'deposit' AND amount > 0
+    AND paid_on >= ($1 || '-01')::date AND paid_on < (($1 || '-01')::date + interval '1 month')) AS confirmed_bookings,
   (SELECT COALESCE(sum(amount), 0) FROM session_payments
     WHERE paid_on >= ($1 || '-01')::date AND paid_on < (($1 || '-01')::date + interval '1 month')) AS received,
   COALESCE(sum(to_pay) FILTER (WHERE NOT cancelled), 0) AS outstanding,

@@ -12,6 +12,7 @@ const money = (value: number) => new Intl.NumberFormat('he-IL', { style: 'curren
 try {
   const [result] = await sql.query(overviewQuery, [month]);
   summary = {
+    confirmedBookings: Number(result.confirmed_bookings),
     received: Number(result.received),
     outstanding: Number(result.outstanding),
     cancelledBalance: Number(result.cancelled_balance),
@@ -39,6 +40,13 @@ try {
     ) : (
       <>
         <div class="overview-metrics grid sm:grid-cols-2 gap-4">
+          <section class="panel">
+            <h2>הזמנות שאושרו בחודש הנבחר</h2>
+            <p class="text-3xl font-bold my-3">{summary.confirmedBookings}</p>
+            <p class="text-sm text-gray-600">
+              לפי תאריך קבלת המקדמה שנרשמה במערכת; כל סשן נספר פעם אחת. כולל הזמנות שבוטלו בהמשך.
+            </p>
+          </section>
           <section class="panel">
             <>
               <h2>תשלומים שהתקבלו בחודש הנבחר</h2>

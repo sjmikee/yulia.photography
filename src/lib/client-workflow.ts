@@ -188,6 +188,11 @@ export function businessSummary(sessions: ManagedSession[], payments: Payment[],
   const sumBalance = (items: typeof rows) =>
     items.reduce((sum, row) => sum + Math.round(Number(row.session.to_pay) * 100), 0) / 100;
   return {
+    confirmedBookings: new Set(
+      payments
+        .filter((p) => p.stage === 'deposit' && Number(p.amount) > 0 && p.paid_on.slice(0, 7) === month)
+        .map((p) => p.session_id)
+    ).size,
     received:
       payments
         .filter((p) => p.paid_on.slice(0, 7) === month)

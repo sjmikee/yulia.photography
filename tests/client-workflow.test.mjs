@@ -397,6 +397,27 @@ test('overview uses payment dates, keeps cancelled receipts and separates their 
   assert.equal(summary.missingDates, 1);
   assert.deepEqual(summary.packages, [['family · חבילה 1', 1]]);
 });
+test('confirmed bookings require an actual positive deposit, deduplicate sessions, and use payment month', () => {
+  const sessions = [booking(1, { override_deposit: '1' }), booking(2, { status: 'cancelled' })];
+  const payment = (session_id, stage, amount, paid_on = '2026-10-01') => ({ session_id, stage, amount, paid_on });
+  assert.equal(businessSummary(sessions, [], '2026-10').confirmedBookings, 0);
+  assert.equal(
+    businessSummary(
+      sessions,
+      [
+        payment(1, 'deposit', 100),
+        payment(1, 'deposit', 100),
+        payment(1, 'balance', 900),
+        payment(2, 'deposit', 100),
+        payment(3, 'balance', 900),
+        payment(4, 'deposit', 0),
+        payment(5, 'deposit', 100, '2026-09-30'),
+      ],
+      '2026-10'
+    ).confirmedBookings,
+    2
+  );
+});
 test('client edits normalize phones and require explicit confirmation before mutation', async () => {
   const form = new FormData();
   for (const [key, value] of Object.entries({ name: ' Test ', phone: '+972 50-123-4567', email: 'a@example.test' }))

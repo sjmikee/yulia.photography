@@ -16,6 +16,7 @@ import BasicScripts from '~/components/common/BasicScripts.astro';
 import GtmHead from '~/components/common/GTMHead.astro';
 import GtmBody from '~/components/common/GTMBody.astro';
 import SpeedInsights from '~/components/common/SpeedInsights.astro';
+import ContactTracking from '~/components/common/ContactTracking.astro';
 import { Font } from 'astro:assets';
 
 // Comment the line below to disable View Transitions
@@ -61,6 +62,7 @@ const privatePage = managementPage || contractPage;
 
     <BasicScripts />
     {!privatePage && <SpeedInsights />}
+    {!privatePage && <ContactTracking />}
     {managementPage && <AppLinks />}
   </body>
 </html>
