@@ -5,7 +5,8 @@ const locale = localeFromPath(Astro.url.pathname);
 const t = infoMessages('about', locale);
 const link = (path: string) => translatedPath(path, locale) ?? path;
 const whatsapp = 'https://wa.me/972525836940' + (locale === 'ru' ? '?text=' + encodeURIComponent(t('inquiry')) : '');
-import Hero from '~/components/widgets/Hero.astro';
+import { Image } from 'astro:assets';
+import portrait from '~/assets/images/about_photo.jpg';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
@@ -26,25 +27,55 @@ const breadcrumbs = [{ url: link('/about'), name: t('breadcrumbName') }];
   <HeroText title={t('heading')} />
   <Breadcrumbs items={[{ label: t('home'), href: link('/') }, { label: t('breadcrumbLabel') }]} />
 
-  <Hero
-    tagline={t('tagline')}
-    image={{
-      src: '~/assets/images/about_photo.jpg',
-      alt: t('photoAlt'),
-    }}
-  >
-    <Fragment slot="title"> {t('intro')} <br /> </Fragment>
-
-    <Fragment slot="subtitle">
-      {t('approach')}
-      <br /><br />
-      {t('experience')}
-      <br /><br />
-      {t('family')}
-      <br /><br />
-      {t('sessions')}
-    </Fragment>
-  </Hero>
+  <section class="about-story">
+    <Image
+      src={portrait}
+      alt={t('photoAlt')}
+      widths={[480, 800, 1200]}
+      sizes="(min-width: 800px) 48vw, 100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div>
+      <h2>{t('intro')}</h2><p>{t('approach')}</p><p>{t('experience')}</p><p>{t('family')}</p><p>{t('sessions')}</p>
+    </div>
+  </section>
 
   <WhatssapCallToAction title={t('ctaTitle')} subtitle={t('ctaSubtitle')} href={whatsapp} />
 </Layout>
+
+<style>
+  .about-story {
+    max-width: 1200px;
+    margin: 2rem auto 4rem;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .about-story img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+  .about-story h2 {
+    font-size: 2rem;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+  }
+  .about-story p {
+    margin-top: 1.25rem;
+    line-height: 1.85;
+  }
+  @media (max-width: 799px) {
+    .about-story {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .about-story img {
+      aspect-ratio: 3/2;
+    }
+  }
+</style>

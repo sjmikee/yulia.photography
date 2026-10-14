@@ -36,13 +36,19 @@ const breadcrumbs = [
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
+  <section class="gallery-heading"><h1 class="mb-5 text-4xl font-bold md:text-5xl">{t('title')}</h1></section>
+  <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
+    <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
+    <Gallery eager images={pregnancyGalleryImages} />
+  </section>
   <section class="mx-auto max-w-4xl px-4 pt-12 pb-6 text-center">
     <p class="mb-3 font-semibold text-accent">{t('byline')}</p>
-    <h1 class="mb-5 text-4xl font-bold md:text-5xl">{t('title')}</h1>
+
     <p class="mb-5 text-xl leading-relaxed">{t('introduction')}</p>
     <p class="mb-6">{t('inspiration')}</p>
     <Button href={link('/pricing/pregnancy')}>{t('packagesPrefix')}{pregnancyPackages[0].price} {t('currency')}</Button>
   </section>
+
   <Breadcrumbs
     items={[
       { label: t('homeLabel'), href: link('/') },
@@ -51,10 +57,7 @@ const breadcrumbs = [
     ]}
   />
   <Journey journey={pregnancyJourney} current="gallery" />
-  <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
-    <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
-    <Gallery images={pregnancyGalleryImages} />
-  </section>
+
   <section class="mx-auto max-w-3xl space-y-4 px-4 py-10">
     <h2 class="text-2xl font-bold">{t('closingTitle')}</h2>
     <p>{t('closingBody')}</p>
@@ -67,3 +70,16 @@ const breadcrumbs = [
   </section>
   <Journey journey={pregnancyJourney} current="gallery" cta />
 </Layout>
+
+<style>
+  .gallery-heading {
+    padding: 2rem 1.5rem 0.5rem;
+    text-align: center;
+    max-width: 1000px;
+    margin: auto;
+  }
+  .gallery-heading h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.2;
+  }
+</style>

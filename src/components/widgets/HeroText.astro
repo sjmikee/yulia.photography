@@ -1,9 +1,6 @@
 ---
 import type { CallToAction } from '~/types';
 import Button from '~/components/ui/Button.astro';
-import { localeFromPath } from '~/i18n/routes';
-const isRussian = localeFromPath(Astro.url.pathname) === 'ru';
-
 export interface Props {
   title?: string;
   subtitle?: string;
@@ -12,7 +9,6 @@ export interface Props {
   callToAction?: string | CallToAction;
   callToAction2?: string | CallToAction;
 }
-
 const {
   title = await Astro.slots.render('title'),
   subtitle = await Astro.slots.render('subtitle'),
@@ -23,73 +19,77 @@ const {
 } = Astro.props;
 ---
 
-<section class="relative md:-mt-[76px] not-prose">
-  <div class="absolute inset-0 pointer-events-none" aria-hidden="true"></div>
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
-    <div class="py-12 md:py-20 pb-8 md:pb-8">
-      <div class="text-center max-w-5xl mx-auto">
-        {
-          tagline && (
-            <p
-              class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-              set:html={tagline}
-            />
-          )
-        }
-        {
-          title && (
-            <h1
-              class:list={[
-                'md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
-                isRussian ? 'text-3xl sm:text-5xl hyphens-auto [overflow-wrap:anywhere]' : 'text-5xl',
-              ]}
-              set:html={title}
-            />
-          )
-        }
-        <div class="max-w-3xl mx-auto">
-          {
-            subtitle && (
-              <p
-                class="text-xl text-muted mb-6 dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-                set:html={subtitle}
-              />
-            )
-          }
-          <div
-            class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-          >
-            {
-              callToAction && (
-                <div class="flex w-full sm:w-auto pb-5">
-                  {typeof callToAction === 'string' ? (
-                    <Fragment set:html={callToAction} />
-                  ) : (
-                    <Button variant="primary" {...callToAction} class="w-full sm:mb-0" />
-                  )}
-                </div>
-              )
-            }
-            {
-              callToAction2 && (
-                <div class="flex w-full sm:w-auto pb-5">
-                  {typeof callToAction2 === 'string' ? (
-                    <Fragment set:html={callToAction2} />
-                  ) : (
-                    <Button {...callToAction2} class="w-full sm:mb-0" />
-                  )}
-                </div>
-              )
-            }
-          </div>
-        </div>
-        <div
-          class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-        >
-          {content && <Fragment set:html={content} />}
-        </div>
+<section
+  class="page-introduction intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+>
+  {tagline && <p class="intro-context" set:html={tagline} />}
+  {title && <h1 set:html={title} />}
+  {subtitle && <p class="intro-description" set:html={subtitle} />}
+  {
+    (callToAction || callToAction2) && (
+      <div class="intro-actions">
+        {[callToAction, callToAction2].map(
+          (action, index) =>
+            action &&
+            (typeof action === 'string' ? (
+              <Fragment set:html={action} />
+            ) : (
+              <Button variant={index === 0 ? 'primary' : 'secondary'} {...action} />
+            ))
+        )}
       </div>
-    </div>
-  </div>
+    )
+  }
+  {content && <div class="intro-note" set:html={content} />}
 </section>
+<style>
+  .page-introduction {
+    max-width: 1000px;
+    margin: auto;
+    padding: 3rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .intro-context {
+    font-size: 0.85rem;
+    color: var(--aw-color-text-muted);
+    margin-bottom: 1rem;
+  }
+  h1 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.2;
+    font-weight: 500;
+  }
+  .intro-description {
+    max-width: 60ch;
+    margin: 1.25rem auto 0;
+    font-size: 1.1rem;
+    line-height: 1.75;
+  }
+  .intro-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .intro-note {
+    max-width: 70ch;
+    margin: 1.25rem auto 0;
+    font-size: 0.9rem;
+    color: var(--aw-color-text-muted);
+  }
+  @media (max-width: 599px) {
+    .page-introduction {
+      padding-top: 2rem;
+    }
+    .intro-actions {
+      gap: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .intro-actions :global(.btn) {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+    }
+  }
+</style>

@@ -46,7 +46,9 @@ const ru = translatedPath(Astro.url.pathname, 'ru');
   function preserveSection() {
     const hash = window.location.hash;
     // Both translations share these section IDs. Do not copy query parameters.
-    const section = /^#(?:preparation|reviews|packages|basic|classic|premium|booking|privacy)$/.test(hash) ? hash : '';
+    const section = /^#(?:sessions|preparation|reviews|packages|basic|classic|premium|booking|privacy)$/.test(hash)
+      ? hash
+      : '';
 
     document.querySelectorAll<HTMLAnchorElement>('a[data-language-switch]').forEach((link) => {
       link.hash = section;

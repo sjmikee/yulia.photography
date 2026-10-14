@@ -7,7 +7,9 @@ const link = (path: string) => translatedPath(path, locale) ?? path;
 const whatsapp = 'https://wa.me/972525836940' + (locale === 'ru' ? '?text=' + encodeURIComponent(t('inquiry')) : '');
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
-import Features2 from '~/components/widgets/Features2.astro';
+import Button from '~/components/ui/Button.astro';
+import { homeMessages } from '~/i18n/home';
+const home = homeMessages('home', locale);
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
 const metadata = {
@@ -20,77 +22,75 @@ const breadcrumbs = [{ url: link('/contact'), name: t('breadcrumbName') }];
 ---
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
-  <!-- HeroText Widget ******************* -->
-
-  <HeroText tagline={t('tagline')} title={t('heading')} />
+  <HeroText title={t('heading')} subtitle={home('ctaSubtitle')} />
+  <section class="contact-panel" aria-label={t('methods')}>
+    <div class="contact-primary">
+      <h2>{t('whatsapp')}</h2>
+      <p>{home('location')}</p>
+      <Button variant="primary" href={whatsapp} target="_blank" icon="tabler:brand-whatsapp">{home('inquire')}</Button>
+    </div>
+    <div class="contact-alternatives">
+      <div><h2>{t('phone')}</h2><a href="tel:+972525836940" dir="ltr">052-583-6940</a></div>
+      <div><h2>{t('email')}</h2><a href="mailto:contact@yulia.photography" dir="ltr">contact@yulia.photography</a></div>
+      <div class="contact-social">
+        <a href="https://instagram.com/koren_yulia/" target="_blank" rel="noopener noreferrer">{t('instagram')}</a>
+        <a href="https://www.facebook.com/profile.php?id=61577756080400" target="_blank" rel="noopener noreferrer"
+          >{t('facebook')}</a
+        >
+      </div>
+    </div>
+  </section>
   <Breadcrumbs items={[{ label: t('home'), href: link('/') }, { label: t('breadcrumbLabel') }]} />
-  <!-- Features2 Widget ************** -->
-
-  <Features2
-    id="contact-methods"
-    title={t('methods')}
-    items={[
-      {
-        title: t('phone'),
-        icon: 'tabler:phone',
-        callToAction: {
-          text: t('call'),
-          href: 'tel:0525836940',
-        },
-      },
-      {
-        title: t('whatsapp'),
-        icon: 'tabler:brand-whatsapp',
-        callToAction: {
-          text: t('message'),
-          href: whatsapp,
-        },
-      },
-      {
-        title: t('facebook'),
-        icon: 'tabler:brand-facebook',
-        callToAction: {
-          text: t('visit'),
-          href: 'https://www.facebook.com/profile.php?id=61577756080400',
-          target: '_blank',
-        },
-      },
-      {
-        title: t('instagram'),
-        icon: 'tabler:brand-instagram',
-        callToAction: {
-          text: '<div dir="ltr">@koren_yulia</div>',
-          href: 'https://instagram.com/koren_yulia/',
-          target: '_blank',
-        },
-      },
-      {
-        title: t('email'),
-        icon: 'tabler:mail',
-        callToAction: {
-          text: 'contact@yulia.photography',
-          href: 'mailto:contact@yulia.photography',
-        },
-      },
-      {
-        title: t('pigeon'),
-        description: t('pigeonDescription'),
-        icon: 'tabler:send',
-      },
-    ]}
-  />
 </Layout>
-
 <style>
-  :global(#contact-methods .grid > div) {
-    min-width: 0;
+  .contact-panel {
+    max-width: 1000px;
+    margin: 2rem auto 4rem;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
   }
-  :global(#contact-methods a) {
-    max-width: 100%;
+  .contact-primary {
+    background: var(--site-surface);
+    padding: 3rem;
+    border-radius: 3px;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .contact-primary p {
+    margin-bottom: 2rem;
+    color: var(--aw-color-text-muted);
+  }
+  .contact-alternatives {
+    align-self: center;
+    display: grid;
+    gap: 2rem;
+  }
+  .contact-alternatives h2 {
+    font-size: 1rem;
+    color: var(--aw-color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .contact-alternatives a {
+    text-decoration: underline;
+    text-underline-offset: 5px;
     overflow-wrap: anywhere;
-    white-space: normal;
   }
-  :global(#contact-methods svg) {
-    flex-shrink: 0;
+  .contact-social {
+    display: flex;
+    gap: 1.5rem;
+  }
+  @media (max-width: 699px) {
+    .contact-panel {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      margin-top: 1rem;
+    }
+    .contact-primary {
+      padding: 2rem;
+    }
   }
 </style>

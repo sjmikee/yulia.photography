@@ -11,40 +11,55 @@ interface Props {
 const { packages, label, caption } = Astro.props;
 ---
 
-<p class="mb-3 text-sm md:hidden">{labels.tableHint}</p>
-<div
-  class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700"
-  tabindex="0"
-  role="region"
-  aria-label={label}
->
-  <table class="w-full min-w-[560px] text-start">
-    <caption class="sr-only">{caption}</caption>
-    <thead class="bg-gray-50 dark:bg-slate-800">
-      <tr>
-        <th scope="col" class="p-4">{labels.package}</th>
-        <th scope="col" class="p-4">{labels.photos}</th>
-        <th scope="col" class="p-4">{labels.price}</th>
-        <th scope="col" class="p-4">{labels.duration}</th>
-      </tr>
-    </thead>
-    <tbody
-      >{
-        packages.map((p) => (
-          <tr class="border-t border-gray-200 dark:border-gray-700">
-            <th scope="row" class="p-4">
-              <a href={`#${p.id}`} class="underline">
-                {p.title}
-              </a>
-            </th>
-            <td class="p-4 font-bold text-accent">{p.photos}</td>
-            <td class="p-4 whitespace-nowrap">
-              {p.price} {labels.currency}
-            </td>
-            <td class="p-4 text-sm">{p.duration}</td>
-          </tr>
-        ))
-      }</tbody
-    >
-  </table>
-</div>
+<details class="package-comparison">
+  <summary>{label}</summary>
+  <p class="mb-3 text-sm md:hidden">{labels.tableHint}</p>
+  <div
+    class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700"
+    tabindex="0"
+    role="region"
+    aria-label={label}
+  >
+    <table class="w-full min-w-[560px] text-start">
+      <caption class="sr-only">{caption}</caption>
+      <thead class="bg-gray-50 dark:bg-slate-800">
+        <tr>
+          <th scope="col" class="p-4">{labels.package}</th>
+          <th scope="col" class="p-4">{labels.photos}</th>
+          <th scope="col" class="p-4">{labels.price}</th>
+          <th scope="col" class="p-4">{labels.duration}</th>
+        </tr>
+      </thead>
+      <tbody
+        >{
+          packages.map((p) => (
+            <tr class="border-t border-gray-200 dark:border-gray-700">
+              <th scope="row" class="p-4">
+                <a href={`#${p.id}`} class="underline">
+                  {p.title}
+                </a>
+              </th>
+              <td class="p-4 font-bold text-accent">{p.photos}</td>
+              <td class="p-4 whitespace-nowrap">
+                {p.price} {labels.currency}
+              </td>
+              <td class="p-4 text-sm">{p.duration}</td>
+            </tr>
+          ))
+        }</tbody
+      >
+    </table>
+  </div>
+</details>
+<style>
+  .package-comparison {
+    margin-block: 1rem 2rem;
+  }
+  summary {
+    cursor: pointer;
+    width: fit-content;
+    padding: 0.6rem 0;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+</style>

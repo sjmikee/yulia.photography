@@ -1,151 +1,91 @@
 ---
 import { Icon } from 'astro-icon/components';
+import Logo from '~/components/Logo.astro';
 import LanguageSwitch from '~/components/common/LanguageSwitch.astro';
+import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import { localeFromPath } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
-import Logo from '~/components/Logo.astro';
-import ToggleTheme from '~/components/common/ToggleTheme.astro';
-import ToggleMenu from '~/components/common/ToggleMenu.astro';
-import Button from '~/components/ui/Button.astro';
-
-import { getHomePermalink } from '~/utils/permalinks';
-import { trimSlash } from '~/utils/permalinks';
-import type { CallToAction } from '~/types';
-
-interface Link {
+interface MenuLink {
   text?: string;
   href?: string;
-  ariaLabel?: string;
-  icon?: string;
+  links?: MenuLink[];
 }
-
-interface MenuLink extends Link {
-  links?: Array<MenuLink>;
-}
-
-export interface Props {
-  id?: string;
-  links?: Array<MenuLink>;
-  actions?: Array<CallToAction>;
+interface Props {
+  links?: MenuLink[];
+  actions?: unknown[];
+  position?: string;
   isSticky?: boolean;
-  isDark?: boolean;
-  isFullWidth?: boolean;
   showToggleTheme?: boolean;
   showInstagramLink?: boolean;
-  position?: string;
 }
-
-const {
-  id = 'header',
-  links = [],
-  actions = [],
-  isSticky = false,
-  isDark = false,
-  isFullWidth = false,
-  showToggleTheme = false,
-  showInstagramLink = false,
-  position = 'center',
-} = Astro.props;
-
-const labels = ui(localeFromPath(Astro.url.pathname));
-const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+const { links = [], isSticky = false, showToggleTheme = false, showInstagramLink = false } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+const labels = ui(locale);
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const home = locale === 'ru' ? '/ru' : '/';
+const inquiry = locale === 'ru' ? 'Обсудить съёмку' : 'בואו נדבר';
+const message =
+  locale === 'ru' ? 'Здравствуйте, Юлия! Хочу обсудить фотосессию.' : 'היי יוליה, אשמח לשמוע על סשן צילום.';
 ---
 
-<header
-  data-locale={localeFromPath(Astro.url.pathname)}
-  class:list={[
-    { sticky: isSticky, relative: !isSticky, dark: isDark },
-    'top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out',
-  ]}
-  {...isSticky ? { 'data-aw-sticky-header': true } : {}}
-  {...id ? { id } : {}}
->
-  <div class="absolute inset-0 bg-page"></div>
-  <div
-    class:list={[
-      'relative text-default py-3 px-3 md:px-6 mx-auto w-full',
-      {
-        'md:flex md:justify-between': position !== 'center',
-      },
-      {
-        'md:grid md:grid-cols-3 md:items-center': position === 'center',
-      },
-      {
-        'max-w-7xl': !isFullWidth,
-      },
-    ]}
-  >
-    <div class:list={[{ 'mr-auto rtl:mr-0 rtl:ml-auto': position === 'right' }, 'flex justify-between']}>
-      <a
-        class="flex items-center rounded-md focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
-        href={localeFromPath(Astro.url.pathname) === 'ru' ? '/ru' : getHomePermalink()}
-        aria-label={localeFromPath(Astro.url.pathname) === 'ru' ? 'Главная' : labels.home}
-      >
-        <Logo />
-      </a>
-      <div class="flex items-center md:hidden">
-        <LanguageSwitch /><ToggleMenu label={labels.menu} />
-      </div>
+<site-navigation class:list={['site-header', { 'is-sticky': isSticky }]}>
+  <header class="header-inner">
+    <a class="brand" href={home} aria-label={locale === 'ru' ? 'Главная' : labels.home}><Logo /></a>
+    <div class="mobile-language">
+      <LanguageSwitch />{
+        showInstagramLink && (
+          <a
+            class="instagram-link"
+            href="https://www.instagram.com/koren_yulia/"
+            aria-label="Instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="tabler:brand-instagram" aria-hidden="true" />
+          </a>
+        )
+      }
     </div>
-    <nav
-      class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
-      aria-label={labels.navigation}
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label={labels.menu}
+      aria-expanded="false"
+      aria-controls="site-navigation-menu"
     >
-      <ul
-        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
-      >
+      <Icon name="tabler:menu-2" class="menu-icon" aria-hidden="true" />
+      <Icon name="tabler:x" class="close-icon" aria-hidden="true" />
+    </button>
+    <nav id="site-navigation-menu" aria-label={labels.navigation}>
+      <ul class="nav-links">
         {
-          links.map(({ text, href, links }) => (
-            <li class={links?.length ? 'dropdown' : ''}>
-              {links?.length ? (
-                <>
-                  {href ? (
-                    <a
-                      href={href}
-                      class="hover:text-white md:hover:bg-primary dark:text-slate-300 dark:hover:bg-slate-600 px-4 mr-1 py-2 mt-2 mb-2 flex items-center whitespace-nowrap rounded-t-lg focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
-                    >
-                      {text}
-                      <Icon
-                        name="tabler:chevron-down"
-                        class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline"
-                      />
-                    </a>
-                  ) : (
-                    <button
-                      type="button"
-                      class="hover:text-white md:hover:bg-primary dark:text-slate-300 dark:hover:bg-slate-600 px-4 mr-1 py-2 mt-2 mb-2 flex items-center whitespace-nowrap rounded-t-lg focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200"
-                    >
-                      {text}
-                      <Icon
-                        name="tabler:chevron-down"
-                        class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline"
-                      />
-                    </button>
-                  )}
-                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-[#030621e6]/50 rounded-sm md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-[#F5F5F5]/50 md:min-w-[200px] drop-shadow-xl transition ease-in duration-200">
-                    {links.map(({ text: text2, href: href2 }) => (
+          links.map(({ text, href, links: children }) => (
+            <li>
+              {children?.length ? (
+                <details class="nav-group">
+                  <summary>
+                    {text}
+                    <Icon name="tabler:chevron-down" aria-hidden="true" />
+                  </summary>
+                  <ul class="nav-children">
+                    {href && (
                       <li>
-                        <a
-                          class:list={[
-                            'first:rounded-t last:rounded-b hover:bg-primary hover:text-white dark:text-slate-300 dark:hover:bg-slate-400/50 py-2 px-15 md:px-5 block whitespace-no-wrap focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200',
-                            { 'aw-link-active': href2 === currentPath },
-                          ]}
-                          href={href2}
-                        >
-                          {' - ' + text2}
+                        <a href={href} aria-current={current === href ? 'page' : undefined}>
+                          {locale === 'ru' ? `Все: ${text}` : `לכל ${text}`}
+                        </a>
+                      </li>
+                    )}
+                    {children.map((child) => (
+                      <li>
+                        <a href={child.href} aria-current={current === child.href ? 'page' : undefined}>
+                          {child.text}
                         </a>
                       </li>
                     ))}
                   </ul>
-                </>
+                </details>
               ) : (
-                <a
-                  class:list={[
-                    'hover:text-white dark:text-slate-300 dark:hover:bg-slate-600 px-4 ml-1 py-2 mt-2 mb-2 flex items-center whitespace-nowrap hover:bg-primary rounded-lg focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200',
-                    { 'aw-link-active': href === currentPath },
-                  ]}
-                  href={href}
-                >
+                <a class="nav-link" href={href} aria-current={current === href ? 'page' : undefined}>
                   {text}
                 </a>
               )}
@@ -153,68 +93,414 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           ))
         }
       </ul>
-    </nav>
-    <div
-      class:list={[
-        { 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-        'hidden md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end',
-      ]}
-    >
-      <div class="items-center flex justify-between w-full md:w-auto">
-        <div class="flex items-center">
-          <div class="hidden md:block"><LanguageSwitch /></div>
-          {showToggleTheme && <ToggleTheme label={labels.theme} iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
-          {
-            showInstagramLink && (
-              <a
-                class="text-muted dark:text-slate-300 hover:bg-primary hover:text-white dark:hover:bg-slate-600 focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-primary dark:focus-visible:ring-gray-200 transition ease-in duration-200 rounded-lg text-sm p-2.5 inline-flex items-center"
-                aria-label="Instagram Link"
-                href="https://www.instagram.com/koren_yulia/"
-                target="_blank"
-              >
-                <Icon name="tabler:brand-instagram" class="w-6 h-6" />
-              </a>
-            )
-          }
-        </div>
-        {
-          actions?.length ? (
-            <span class="ml-4 rtl:ml-0 rtl:mr-4">
-              {actions.map((btnProps) => (
-                <Button {...btnProps} class="ml-2 py-2.5 px-5.5 md:px-6 font-semibold shadow-none text-sm w-auto" />
-              ))}
-            </span>
-          ) : (
-            ''
-          )
-        }
+      <div class="mobile-contact">
+        <a
+          class="btn-primary"
+          href={`https://wa.me/972525836940?text=${encodeURIComponent(message)}`}
+          target="_blank"
+          rel="noopener noreferrer">{inquiry}</a
+        >
       </div>
+    </nav>
+    <div class="header-tools">
+      <LanguageSwitch />
+      {
+        showInstagramLink && (
+          <a
+            class="instagram-link"
+            href="https://www.instagram.com/koren_yulia/"
+            aria-label="Instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="tabler:brand-instagram" aria-hidden="true" />
+          </a>
+        )
+      }
+      {showToggleTheme && <ToggleTheme label={labels.theme} iconClass="w-4 h-4" />}
+      <a
+        class="header-inquiry"
+        href={`https://wa.me/972525836940?text=${encodeURIComponent(message)}`}
+        target="_blank"
+        rel="noopener noreferrer">{inquiry}</a
+      >
     </div>
-  </div>
-</header>
-
+  </header>
+</site-navigation>
+<script>
+  class SiteNavigation extends HTMLElement {
+    controller?: AbortController;
+    cleanup?: () => void;
+    connectedCallback() {
+      if (this.controller) return;
+      this.controller = new AbortController();
+      const { signal } = this.controller;
+      const toggle = this.querySelector<HTMLButtonElement>('.menu-toggle');
+      const groups = [...this.querySelectorAll<HTMLDetailsElement>('details')];
+      const header = this.querySelector<HTMLElement>('.header-inner');
+      const resize = new ResizeObserver(() => {
+        this.style.setProperty('--navigation-header-height', `${this.getBoundingClientRect().height}px`);
+      });
+      resize.observe(this);
+      let previousOverflow: string | undefined;
+      const unlock = () => {
+        if (previousOverflow !== undefined) document.body.style.overflow = previousOverflow;
+        previousOverflow = undefined;
+      };
+      this.cleanup = () => {
+        unlock();
+        resize.disconnect();
+      };
+      const close = (restoreFocus = false) => {
+        unlock();
+        this.classList.remove('menu-open');
+        toggle?.setAttribute('aria-expanded', 'false');
+        groups.forEach((group) => {
+          group.open = false;
+        });
+        if (restoreFocus) toggle?.focus();
+      };
+      toggle?.addEventListener(
+        'click',
+        () => {
+          const open = this.classList.toggle('menu-open');
+          toggle.setAttribute('aria-expanded', String(open));
+          if (open) {
+            previousOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+          } else close();
+        },
+        { signal }
+      );
+      groups.forEach((group) =>
+        group.addEventListener(
+          'toggle',
+          () => {
+            if (group.open)
+              groups.forEach((other) => {
+                if (other !== group) other.open = false;
+              });
+          },
+          { signal }
+        )
+      );
+      this.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key === 'Tab' && this.classList.contains('menu-open')) {
+            const focusable = [...(header?.querySelectorAll<HTMLElement>('a, button, summary') || [])].filter(
+              (element) => element.getClientRects().length > 0
+            );
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last?.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first?.focus();
+            }
+          }
+          if (event.key !== 'Escape') return;
+          const openGroup = groups.find((group) => group.open);
+          if (openGroup) {
+            openGroup.open = false;
+            openGroup.querySelector('summary')?.focus();
+          } else if (this.classList.contains('menu-open')) close(true);
+        },
+        { signal }
+      );
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (event.target instanceof Node && !this.contains(event.target)) close();
+        },
+        { signal }
+      );
+      this.addEventListener(
+        'click',
+        (event) => {
+          if (event.target instanceof Element && event.target.closest('a')) close();
+        },
+        { signal }
+      );
+      const breakpoint = window.matchMedia('(min-width: 1100px)');
+      breakpoint.addEventListener('change', () => close(), { signal });
+    }
+    disconnectedCallback() {
+      this.cleanup?.();
+      this.controller?.abort();
+      this.controller = undefined;
+    }
+  }
+  if (!customElements.get('site-navigation')) customElements.define('site-navigation', SiteNavigation);
+</script>
 <style>
+  .site-header {
+    display: block;
+    z-index: 50;
+    background: color-mix(in srgb, var(--aw-color-bg-page) 78%, transparent);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--site-border);
+  }
+  .is-sticky {
+    position: sticky;
+    top: 0;
+  }
+  .header-inner {
+    min-height: 88px;
+    padding: 0 clamp(1.25rem, 3vw, 3rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    max-width: 1800px;
+    margin: auto;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .brand :global(span) {
+    display: block;
+    margin: 0;
+    line-height: 0;
+  }
+  .brand :global(img) {
+    max-width: 105px;
+  }
+  nav {
+    min-width: 0;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.15rem, 1vw, 1rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-link,
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1rem 0.5rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary svg {
+    width: 12px;
+    height: 12px;
+  }
+  details[open] summary svg {
+    transform: rotate(180deg);
+  }
+  .nav-group {
+    position: relative;
+  }
+  .nav-children {
+    position: absolute;
+    inset-inline-start: 0;
+    top: 100%;
+    min-width: 230px;
+    max-width: 310px;
+    padding: 0.65rem;
+    margin: 0;
+    background: color-mix(in srgb, var(--aw-color-bg-page) 78%, transparent);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--site-border);
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgb(0 0 0 / 0.06);
+    list-style: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    details[open] .nav-children,
+    .menu-open nav {
+      animation: menu-reveal 0.25s ease-out;
+    }
+  }
+  @keyframes menu-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .nav-children a {
+    display: block;
+    font-size: 0.9rem;
+    padding: 0.7rem 0.8rem;
+    border-radius: 6px;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+  .nav-children a:hover,
+  .nav-children a[aria-current] {
+    background: var(--aw-color-accent);
+    color: white;
+  }
+  .nav-link:hover,
+  summary:hover,
+  .nav-link[aria-current] {
+    color: var(--aw-color-accent);
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+  .header-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-shrink: 0;
+  }
+  .instagram-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    transition: color 160ms ease;
+  }
+  .instagram-link:hover {
+    color: var(--aw-color-accent);
+  }
+  .instagram-link svg {
+    width: 21px;
+    height: 21px;
+  }
+  .header-inquiry {
+    padding: 0.7rem 1.1rem;
+    background: var(--aw-color-accent);
+    color: white;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .header-inquiry:hover {
+    opacity: 0.85;
+  }
+  .mobile-language,
+  .menu-toggle,
+  .mobile-contact {
+    display: none;
+  }
+  @media (max-width: 1099px) {
+    :global(body:has(site-navigation.menu-open) #scrollToTop),
+    :global(body:has(site-navigation.menu-open) #whatsapp) {
+      display: none;
+    }
+    .header-inner {
+      min-height: 78px;
+      gap: 0.6rem;
+    }
+    .brand :global(img) {
+      max-width: 90px;
+    }
+    .header-tools {
+      display: none;
+    }
+    .mobile-language {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-inline-start: auto;
+    }
+    .menu-toggle {
+      display: grid;
+      place-items: center;
+      height: 44px;
+      width: 44px;
+      cursor: pointer;
+    }
+    .menu-toggle svg {
+      width: 24px;
+      height: 24px;
+    }
+    .close-icon,
+    .menu-open .menu-icon {
+      display: none;
+    }
+    .menu-open .close-icon {
+      display: block;
+    }
+    nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      inset-inline: 0;
+      height: calc(100dvh - var(--navigation-header-height, 88px) + 1px);
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: var(--aw-color-bg-page);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--site-border);
+      padding: 1rem 1.5rem max(2rem, env(safe-area-inset-bottom));
+      box-shadow: 0 16px 24px rgb(0 0 0 / 0.05);
+    }
+    .menu-open nav {
+      display: flex;
+      flex-direction: column;
+    }
+    .nav-links {
+      display: block;
+    }
+    .nav-links > li {
+      border-bottom: 1px solid var(--site-border);
+    }
+    .nav-link,
+    summary {
+      padding: 1rem 0.25rem;
+      font-size: 1rem;
+      justify-content: space-between;
+    }
+    .nav-children {
+      position: static;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-radius: 0;
+      min-width: 0;
+      max-width: none;
+      border: 0;
+      box-shadow: none;
+      padding: 0 0.75rem 0.75rem;
+    }
+    .nav-children a {
+      padding: 0.7rem 0.65rem;
+    }
+    .mobile-contact {
+      display: block;
+      padding-top: 2rem;
+      margin-top: auto;
+    }
+  }
   @media (max-width: 359px) {
-    header :global(img) {
-      max-width: 88px;
+    .header-inner {
+      padding-inline: 0.75rem;
+      gap: 0.25rem;
     }
-    header :global(a[data-language-switch]) {
-      padding-inline: 6px;
+    .brand :global(img) {
+      max-width: 75px;
     }
-  }
-
-  @media (min-width: 768px) {
-    header > div.relative {
-      grid-template-columns: auto minmax(0, 1fr) auto;
-    }
-  }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    header > div.relative {
-      grid-template-columns: auto minmax(0, 1fr);
-    }
-    header nav {
-      grid-column: 1 / -1;
-      grid-row: 2;
+    .mobile-language :global(a) {
+      padding-inline: 0.35rem;
     }
   }
 </style>

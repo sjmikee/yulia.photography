@@ -1,0 +1,132 @@
+/* Public presentation only; client management and contracts keep their own UI. */
+.public-site {
+  --aw-color-primary: #e00004;
+  --aw-color-secondary: #b90004;
+  --aw-color-accent: #e00004;
+  --aw-color-text-heading: #262624;
+  --aw-color-text-default: #262624;
+  --aw-color-text-muted: #626662;
+  --aw-color-bg-page: #f5f5f5;
+  --aw-color-bg-header: #f5f5f5;
+  --aw-color-bg-footer: #233237;
+  --site-surface: #ececeb;
+  --site-border: #d8ddda;
+  letter-spacing: normal;
+  line-height: 1.65;
+}
+.dark .public-site {
+  --aw-color-primary: #e00004;
+  --aw-color-secondary: #ff3538;
+  --aw-color-accent: #ff5356;
+  --aw-color-text-heading: #f0f3f0;
+  --aw-color-text-default: #e1e7e3;
+  --aw-color-text-muted: #b1beb7;
+  --aw-color-bg-page: #192326;
+  --aw-color-bg-header: #192326;
+  --site-surface: #233237;
+  --site-border: #455557;
+}
+.public-site :is(h1, h2, h3) {
+  text-wrap: balance;
+  letter-spacing: -0.025em;
+}
+.public-site h1 {
+  font-weight: 500;
+}
+.public-site :is(h2, h3) {
+  font-weight: 500;
+}
+.public-site :is(a, button, summary):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+}
+.public-site :is(a, button, summary) {
+  touch-action: manipulation;
+}
+.public-site :is(section, [id]) {
+  scroll-margin-top: 110px;
+}
+.public-site .btn {
+  border-radius: 6px;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  box-shadow: none;
+  font-weight: 500;
+}
+.public-site .btn-primary {
+  color: #fff;
+  background: #e00004;
+  border-color: #e00004;
+}
+.public-site .btn-primary:hover {
+  background: #b90004;
+  border-color: #b90004;
+}
+.dark .public-site .btn-primary {
+  color: #fff;
+  background: #e00004;
+  border-color: #e00004;
+}
+.public-site .btn-secondary {
+  border-color: color-mix(in srgb, var(--aw-color-accent) 45%, transparent);
+}
+.public-site .btn-secondary:hover {
+  background: var(--site-surface);
+  color: var(--aw-color-text-heading);
+  border-color: var(--aw-color-text-heading);
+}
+.public-site photoshoot-gallery a {
+  border-radius: 6px;
+}
+.public-site .skip-link {
+  position: fixed;
+  top: 0.5rem;
+  inset-inline-start: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--aw-color-bg-page);
+  transform: translateY(-200%);
+}
+.public-site .skip-link:focus {
+  transform: translateY(0);
+}
+.public-site #reviews {
+  background: var(--site-surface);
+  padding-block: 4rem;
+}
+.public-site #reviews blockquote {
+  box-shadow: 0 12px 36px rgb(35 50 55 / 0.04);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--aw-color-bg-page) 70%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: 2px solid var(--aw-color-accent);
+}
+.public-site #reviews .text-yellow-400 {
+  color: var(--aw-color-accent);
+}
+.public-site #reviews > div {
+  padding-block: 0;
+}
+.public-site #footer {
+  border: 0;
+}
+.public-site #footer a:focus-visible {
+  outline-color: white;
+}
+@media (prefers-reduced-motion: reduce) {
+  .public-site *,
+  .public-site *::before,
+  .public-site *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Older widgets use fade utilities. Public content must never wait invisibly for scrolling. */
+.public-site .intersect-once {
+  opacity: 1 !important;
+  animation: none !important;
+}

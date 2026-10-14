@@ -1,7 +1,6 @@
 ---
 import { localeFromPath } from '~/i18n/routes';
 import { ui } from '~/i18n/ui';
-const labels = ui(localeFromPath(Astro.url.pathname));
 import { Icon } from 'astro-icon/components';
 import Button from '~/components/ui/Button.astro';
 import type { Price } from '~/types';
@@ -9,73 +8,146 @@ interface Props {
   prices: Price[];
 }
 const { prices } = Astro.props;
+const labels = ui(localeFromPath(Astro.url.pathname));
 ---
 
-<div class="flex items-stretch justify-center">
-  <div class="grid grid-cols-3 gap-4 dark:text-white sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-    {
-      prices &&
-        prices.map(
-          ({ title, subtitle, price, period, items, callToAction, hasRibbon = false, ribbonTitle, id, highlight }) => (
-            <div class="col-span-3 mx-auto flex w-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter">
-              {price != null && (
-                <div
-                  id={id}
-                  class="relative scroll-mt-24 rounded-lg backdrop-blur-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow-sm px-6 py-8 flex w-full max-w-sm flex-col justify-between text-center"
-                >
-                  {hasRibbon && ribbonTitle && (
-                    <div class="absolute right-[-5px] 2xl:right-[-8px] rtl:right-auto rtl:left-[-8px] 2xl:rtl:left-[-10px] top-[-5px] 2xl:top-[-10px] z-1 h-[100px] w-[100px] overflow-hidden text-start">
-                      <span class="absolute top-[19px] right-[-21px] rtl:right-auto rtl:left-[-21px] block w-full rotate-45 rtl:-rotate-45 bg-green-700 text-center text-[10px] font-bold uppercase leading-5 text-white shadow-[0_3px_10px_-5px_rgba(0,0,0,0.3)] before:absolute before:left-0 before:top-full before:z-[-1] before:border-[3px] before:border-r-transparent before:border-b-transparent before:border-l-green-800 before:border-t-green-800 before:content-[''] after:absolute after:right-0 after:top-full after:z-[-1] after:border-[3px] after:border-l-transparent after:border-b-transparent after:border-r-green-800 after:border-t-green-800 after:content-['']">
-                        {ribbonTitle}
-                      </span>
-                    </div>
-                  )}
-                  <div class="px-2 py-0">
-                    {title && (
-                      <h3 class="text-center text-xl font-semibold uppercase leading-6 tracking-wider mb-2">{title}</h3>
-                    )}
-                    {highlight && <p class="mb-3 text-2xl font-bold text-accent">{highlight}</p>}
-                    {subtitle && <p class="font-light sm:text-lg text-gray-600 dark:text-slate-400">{subtitle}</p>}
-                    <div class="my-8">
-                      <div class="flex items-center justify-center text-center mb-5">
-                        <span class="text-4xl font-extrabold px-1">{price}</span>
-                        <span class="text-xl"> {labels.currency} </span>
-                      </div>
-                      {period && (
-                        <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">{period}</span>
-                      )}
-                    </div>
-                    {items && (
-                      <ul class="my-8 md:my-10 space-y-2 text-left">
-                        {items.map(
-                          ({ description, icon, classes }) =>
-                            description && (
-                              <li class="mb-1.5 flex items-start gap-3 leading-7  text-start">
-                                <div class="shrink-0 rounded-full bg-green-700 mt-1">
-                                  <Icon name={icon ? icon : 'tabler:check'} class="w-5 h-5 font-bold p-1 text-white" />
-                                </div>
-                                <span class={classes?.description}>{description}</span>
-                              </li>
-                            )
-                        )}
-                      </ul>
-                    )}
-                  </div>
-                  {callToAction && (
-                    <div class={`flex justify-center`}>
-                      {typeof callToAction === 'string' ? (
-                        <Fragment set:html={callToAction} />
-                      ) : (
-                        callToAction &&
-                        callToAction.href && <Button {...(hasRibbon ? { variant: 'primary' } : {})} {...callToAction} />
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )
+<div class="package-grid">
+  {
+    prices?.map(
+      ({ title, subtitle, price, period, items, callToAction, hasRibbon = false, ribbonTitle, id, highlight }) =>
+        price != null && (
+          <article
+            id={id}
+            class:list={[
+              'package intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
+              { 'package-featured': hasRibbon },
+            ]}
+          >
+            {hasRibbon && ribbonTitle && <p class="package-recommendation">{ribbonTitle}</p>}
+            {title && <h3>{title}</h3>}
+            <p class="package-price">
+              <span>{price}</span> {labels.currency}
+            </p>
+            {period && <p class="package-period">{period}</p>}
+            {highlight && <p class="package-highlight">{highlight}</p>}
+            {subtitle && <p class="package-subtitle">{subtitle}</p>}
+            {items && (
+              <ul>
+                {items.map(
+                  ({ description, icon, classes }) =>
+                    description && (
+                      <li>
+                        <Icon name={icon || 'tabler:check'} aria-hidden="true" />
+                        <span class={classes?.description}>{description}</span>
+                      </li>
+                    )
+                )}
+              </ul>
+            )}
+            {callToAction && (
+              <div class="package-action">
+                {typeof callToAction === 'string' ? (
+                  <Fragment set:html={callToAction} />
+                ) : (
+                  callToAction.href && <Button variant={hasRibbon ? 'primary' : 'secondary'} {...callToAction} />
+                )}
+              </div>
+            )}
+          </article>
         )
-    }
-  </div>
+    )
+  }
 </div>
+<style>
+  .package-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+  }
+  .package {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border: 1px solid var(--site-border, #d8ddda);
+    border-radius: 10px;
+    background: var(--aw-color-bg-page);
+    text-align: start;
+  }
+  .package-featured {
+    border-color: var(--aw-color-accent);
+    background: color-mix(in srgb, var(--aw-color-accent) 3%, var(--aw-color-bg-page));
+  }
+  .package-recommendation {
+    font-size: 0.75rem;
+    position: absolute;
+    top: -0.75rem;
+    inset-inline-start: 1.5rem;
+    background: var(--aw-color-accent);
+    color: white;
+    padding: 0.15rem 0.65rem;
+    border-radius: 2px;
+  }
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+  .package-price {
+    margin: 1rem 0;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .package-price span {
+    font-size: 2.6rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .package-period,
+  .package-subtitle {
+    font-size: 0.9rem;
+    color: var(--aw-color-text-muted);
+  }
+  .package-highlight {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  ul {
+    list-style: none;
+    padding: 1.5rem 0;
+    margin: 1.25rem 0 0;
+    border-top: 1px solid var(--site-border, #d8ddda);
+  }
+  li {
+    display: flex;
+    gap: 0.65rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  li svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+  .package-action {
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+  .package-action :global(.btn) {
+    width: 100%;
+  }
+  @media (max-width: 899px) {
+    .package-grid {
+      grid-template-columns: 1fr;
+      max-width: 600px;
+      margin: auto;
+      gap: 1.75rem;
+    }
+    .package {
+      padding: 1.5rem;
+    }
+  }
+</style>

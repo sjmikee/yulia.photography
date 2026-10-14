@@ -4,6 +4,7 @@ import Header from '~/components/widgets/Header.astro';
 import Footer from '~/components/widgets/Footer.astro';
 import ScrollToTopButton from '~/components/widgets/ScrollToTopButton.astro';
 import WhatsAppButton from '~/components/widgets/WhatsAppButton.astro';
+import ScrollMotion from '~/components/common/ScrollMotion.astro';
 
 import { navigation } from '~/i18n/navigation';
 import { localeFromPath } from '~/i18n/routes';
@@ -24,10 +25,11 @@ const isContactPage = pathname === '/contact' || pathname === '/ru/contact';
 ---
 
 <Layout metadata={metadata} richMetadata={richMetadata} breadcrumbs={breadcrumbs}>
+  <a class="skip-link" href="#main-content">{locale === 'ru' ? 'Перейти к содержимому' : 'דילוג לתוכן'}</a>
   <slot name="header">
     <Header {...headerData} isSticky showToggleTheme showInstagramLink />
   </slot>
-  <main>
+  <main id="main-content" tabindex="-1">
     <slot />
   </main>
   <slot name="footer">
@@ -35,4 +37,5 @@ const isContactPage = pathname === '/contact' || pathname === '/ru/contact';
   </slot>
   <ScrollToTopButton />
   {!isContactPage && <WhatsAppButton />}
+  <ScrollMotion />
 </Layout>
