@@ -24,6 +24,9 @@ const { page, category } = Astro.props as Props;
 const currentPage = page.currentPage ?? 1;
 
 const metadata = {
+  description: isRussian
+    ? `Статьи в категории «${category.title}»: советы Юлии Коренской по подготовке к фотосессии и естественным фотографиям.`
+    : `מאמרים בקטגוריית ${category.title}: טיפים של יוליה קורנסקי להכנה לצילומים ולתמונות טבעיות.`,
   title: `${isRussian ? 'Категория' : 'קטגוריה'}: ${category.title}${currentPage > 1 ? ` — ${isRussian ? 'Страница' : 'עמוד'} ${currentPage}` : ''}`,
   robots: {
     index: blogCategoryRobots?.index,

@@ -1,7 +1,10 @@
 ---
 import { localeFromPath, translatedPath } from '~/i18n/routes';
+import { getCouplesSessionImages } from '~/lib/couples-gallery';
 import { overviewMessages } from '~/i18n/overview';
 const locale = localeFromPath(Astro.url.pathname);
+const couplesImage = getCouplesSessionImages(locale, 'couples')[0];
+const intimateImage = getCouplesSessionImages(locale, 'intimate')[0];
 const t = overviewMessages('pricing', locale);
 const link = (path: string) => translatedPath(path, locale) ?? path;
 import Layout from '~/layouts/PageLayout.astro';
@@ -32,45 +35,6 @@ const breadcrumbs = [{ url: link('/pricing'), name: t('breadcrumbName') }];
   <section class="max-w-6xl mx-auto px-4 pb-20 py-10">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <ServiceCard
-        href={link('/pricing/pregnancy')}
-        image={{
-          src: '~/assets/images/pricing/pregnancy_pricing.jpg',
-          alt: t('pregnancyAlt'),
-          position: 'center 25%',
-        }}
-      >
-        <Fragment slot="title"> {t('pregnancyTitle')} </Fragment>
-
-        <Fragment slot="subtitle"> {t('pregnancyDescription', pregnancyPrice)} </Fragment>
-      </ServiceCard>
-
-      <ServiceCard
-        href={link('/pricing/couples')}
-        image={{
-          src: '~/assets/images/pricing/couples_pricing.jpg',
-          alt: t('couplesAlt'),
-          position: 'center 25%',
-        }}
-      >
-        <Fragment slot="title"> {t('couplesTitle')} </Fragment>
-
-        <Fragment slot="subtitle"> {t('couplesDescription')} </Fragment>
-      </ServiceCard>
-
-      <ServiceCard
-        href={link('/pricing/couples-intimate')}
-        image={{
-          src: '~/assets/images/pricing/couples_intimate_pricing.jpg',
-          alt: t('intimateAlt'),
-          position: 'center 25%',
-        }}
-      >
-        <Fragment slot="title"> {t('intimateTitle')} </Fragment>
-
-        <Fragment slot="subtitle"> {t('intimateDescription')} </Fragment>
-      </ServiceCard>
-
-      <ServiceCard
         href={link('/pricing/feminine')}
         image={{
           src: '~/assets/feminine_gallery/feminine_pricing.jpg',
@@ -83,15 +47,29 @@ const breadcrumbs = [{ url: link('/pricing'), name: t('breadcrumbName') }];
       </ServiceCard>
 
       <ServiceCard
-        href={link('/pricing/first-year')}
+        href={link('/pricing/couples')}
         image={{
-          src: '~/assets/images/pricing/first_year_pricing.jpg',
-          alt: t('firstYearAlt'),
+          src: couplesImage.image,
+          alt: couplesImage.alt,
+          position: '25% center',
         }}
       >
-        <Fragment slot="title"> {t('firstYearTitle')} </Fragment>
+        <Fragment slot="title"> {t('couplesTitle')} </Fragment>
 
-        <Fragment slot="subtitle"> {t('firstYearDescription')} </Fragment>
+        <Fragment slot="subtitle"> {t('couplesDescription')} </Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/couples-intimate')}
+        image={{
+          src: intimateImage.image,
+          alt: intimateImage.alt,
+          position: 'center 30%',
+        }}
+      >
+        <Fragment slot="title"> {t('intimateTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('intimateDescription')} </Fragment>
       </ServiceCard>
 
       <ServiceCard
@@ -106,6 +84,20 @@ const breadcrumbs = [{ url: link('/pricing'), name: t('breadcrumbName') }];
 
         <Fragment slot="subtitle"> {t('personalDescription')} </Fragment>
       </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/pregnancy')}
+        image={{
+          src: '~/assets/images/pricing/pregnancy_pricing.jpg',
+          alt: t('pregnancyAlt'),
+          position: 'center 25%',
+        }}
+      >
+        <Fragment slot="title"> {t('pregnancyTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('pregnancyDescription', pregnancyPrice)} </Fragment>
+      </ServiceCard>
+
       <ServiceCard
         href={link('/pricing/family')}
         image={{
@@ -116,6 +108,18 @@ const breadcrumbs = [{ url: link('/pricing'), name: t('breadcrumbName') }];
       >
         <Fragment slot="title">{t('familyTitle')}</Fragment>
         <Fragment slot="subtitle">{t('familyDescription', familyPrice)}</Fragment>
+      </ServiceCard>
+
+      <ServiceCard
+        href={link('/pricing/first-year')}
+        image={{
+          src: '~/assets/images/pricing/first_year_pricing.jpg',
+          alt: t('firstYearAlt'),
+        }}
+      >
+        <Fragment slot="title"> {t('firstYearTitle')} </Fragment>
+
+        <Fragment slot="subtitle"> {t('firstYearDescription')} </Fragment>
       </ServiceCard>
     </div>
   </section>

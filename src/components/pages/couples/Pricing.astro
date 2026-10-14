@@ -12,9 +12,8 @@ const {
   whatsapp: couplesWhatsApp,
   cards: couplesPricingCards,
 } = getCouples(locale);
-const couplesGalleryImages = getCouplesGalleryImages(locale);
-const hero = couplesGalleryImages[0];
-const couplesFeaturedImages = couplesGalleryImages.slice(0, 3);
+const couplesFeaturedImages = getCouplesSessionImages(locale, 'couples');
+const hero = couplesFeaturedImages[0];
 import Layout from '~/layouts/PageLayout.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
@@ -25,7 +24,7 @@ import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
 import Gallery from '~/components/photoshoots/Gallery.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import { getCouplesGalleryImages } from '~/lib/couples-gallery';
+import { getCouplesSessionImages } from '~/lib/couples-gallery';
 // Keep the established pricing URL, title and H1.
 const metadata = {
   title: t('metaTitle'),

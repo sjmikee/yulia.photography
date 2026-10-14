@@ -28,6 +28,9 @@ const currentPage = page.currentPage ?? 1;
 // const allTags = await findTags();
 
 const metadata = {
+  description: isRussian
+    ? `Советы фотографа Юлии Коренской: как подготовиться к фотосессии, выбрать одежду и помочь детям освоиться перед камерой.`
+    : `טיפים לצילומים מיוליה קורנסקי: איך להתכונן לסשן, לבחור בגדים ולעזור לילדים להרגיש בנוח מול המצלמה.`,
   title: `${isRussian ? 'Советы' : 'טיפים'}${currentPage > 1 ? ` — ${isRussian ? 'Страница' : 'עמוד'} ${currentPage}` : ''}`,
   robots: {
     index: blogListRobots?.index && currentPage === 1,

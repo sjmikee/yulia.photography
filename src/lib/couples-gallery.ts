@@ -122,3 +122,22 @@ export function getCouplesGalleryImages(locale: Locale) {
     return { ...image, alt };
   });
 }
+
+// Separate editorial selections for the session pages; keep the full gallery order intact.
+const sessionSelections = {
+  couples: ['צילומי_זוגיות_צילומי_טראש.jpg', 'זוג_יושבים_ברכב_צילומי_זוגיות.jpg', 'צילומי_זוגיות_בים_במרכז.jpg'],
+  intimate: [
+    'צילום_מקרוב_זוג_יפה_מתחבק_צלמת_זוגיות_מקצועית.jpg',
+    'צילומי_זוגיות_במרכז_בטבע.jpg',
+    'זוג_מתחבק_ליד_קיר_לבנים_בנמל_קיסריה_צילומי_טראש.jpg',
+  ],
+} as const;
+
+export function getCouplesSessionImages(locale: Locale, session: keyof typeof sessionSelections) {
+  const images = getCouplesGalleryImages(locale);
+  return sessionSelections[session].map((filename) => {
+    const image = images.find((entry) => entry.filename === filename);
+    if (!image) throw new Error(`Missing couples session image: ${filename}`);
+    return image;
+  });
+}

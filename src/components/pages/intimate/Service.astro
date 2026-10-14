@@ -12,7 +12,7 @@ const {
   whatsapp: intimateWhatsApp,
   facts: intimateFacts,
 } = getIntimate(locale);
-const couplesFeaturedImages = getCouplesGalleryImages(locale).slice(0, 3);
+const couplesFeaturedImages = getCouplesSessionImages(locale, 'intimate');
 const hero = couplesFeaturedImages[0];
 import { Image } from 'astro:assets';
 import Layout from '~/layouts/PageLayout.astro';
@@ -24,7 +24,7 @@ import SessionFacts from '~/components/photoshoots/SessionFacts.astro';
 import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import { getCouplesGalleryImages } from '~/lib/couples-gallery';
+import { getCouplesSessionImages } from '~/lib/couples-gallery';
 const metadata = {
   title: t('metaTitle'),
   description: t('metaDescription', intimatePackages[0].price),

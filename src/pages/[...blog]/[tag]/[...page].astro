@@ -24,6 +24,9 @@ const { page, tag } = Astro.props as Props;
 const currentPage = page.currentPage ?? 1;
 
 const metadata = {
+  description: isRussian
+    ? `Статьи по теме «${tag.title}»: идеи и советы фотографа Юлии Коренской для вашей следующей фотосессии.`
+    : `מאמרים בנושא ${tag.title}: רעיונות וטיפים של הצלמת יוליה קורנסקי לקראת סשן הצילום הבא שלכם.`,
   title: `${isRussian ? 'Статьи по теме' : 'פוסטים לפי תג'}: ${tag.title}${currentPage > 1 ? ` — ${isRussian ? 'Страница' : 'עמוד'} ${currentPage}` : ''}`,
   robots: {
     index: blogTagRobots?.index,

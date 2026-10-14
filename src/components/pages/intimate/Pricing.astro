@@ -12,7 +12,7 @@ const {
   whatsapp: intimateWhatsApp,
   cards: intimatePricingCards,
 } = getIntimate(locale);
-const couplesFeaturedImages = getCouplesGalleryImages(locale).slice(0, 3);
+const couplesFeaturedImages = getCouplesSessionImages(locale, 'intimate');
 const hero = couplesFeaturedImages[0];
 import Layout from '~/layouts/PageLayout.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
@@ -24,7 +24,7 @@ import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
 import Gallery from '~/components/photoshoots/Gallery.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import { getCouplesGalleryImages } from '~/lib/couples-gallery';
+import { getCouplesSessionImages } from '~/lib/couples-gallery';
 // Keep the established pricing URL, title and H1 while improving the buying information.
 const metadata = {
   title: t('metaTitle'),

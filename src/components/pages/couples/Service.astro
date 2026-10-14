@@ -12,9 +12,8 @@ const {
   whatsapp: couplesWhatsApp,
   facts: couplesFacts,
 } = getCouples(locale);
-const couplesGalleryImages = getCouplesGalleryImages(locale);
-const hero = couplesGalleryImages[0];
-const couplesFeaturedImages = couplesGalleryImages.slice(0, 3);
+const couplesFeaturedImages = getCouplesSessionImages(locale, 'couples');
+const hero = couplesFeaturedImages[0];
 import { Image } from 'astro:assets';
 import Layout from '~/layouts/PageLayout.astro';
 import Button from '~/components/ui/Button.astro';
@@ -26,7 +25,7 @@ import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
 import Gallery from '~/components/photoshoots/Gallery.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import { getCouplesGalleryImages } from '~/lib/couples-gallery';
+import { getCouplesSessionImages } from '~/lib/couples-gallery';
 const metadata = {
   title: t('metaTitle'),
   description: t('metaDescription', couplesPackages[0].price),
@@ -82,7 +81,7 @@ const breadcrumbs = [
         sizes="(min-width: 768px) 50vw, 100vw"
         loading="eager"
         fetchpriority="high"
-        class="aspect-[4/5] w-full rounded-2xl object-cover"
+        class="aspect-[4/5] w-full rounded-2xl object-cover object-[25%_center]"
       />
     </section>
     <Breadcrumbs
