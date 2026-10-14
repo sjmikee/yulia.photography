@@ -11,8 +11,8 @@ interface Props {
 const { packages, label, caption } = Astro.props;
 ---
 
-<details class="package-comparison">
-  <summary>{label}</summary>
+<section class="package-comparison" aria-label={label}>
+  <h3>{label}</h3>
   <p class="mb-3 text-sm md:hidden">{labels.tableHint}</p>
   <div
     class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700"
@@ -50,16 +50,14 @@ const { packages, label, caption } = Astro.props;
       >
     </table>
   </div>
-</details>
+</section>
 <style>
   .package-comparison {
     margin-block: 1rem 2rem;
   }
-  summary {
-    cursor: pointer;
+  h3 {
     width: fit-content;
     padding: 0.6rem 0;
-    text-decoration: underline;
-    text-underline-offset: 5px;
+    font-size: 1.25rem;
   }
 </style>

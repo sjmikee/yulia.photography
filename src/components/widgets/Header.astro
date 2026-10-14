@@ -143,32 +143,46 @@ const message =
       });
       resize.observe(this);
       let previousOverflow: string | undefined;
+      let closeTimer: ReturnType<typeof setTimeout> | undefined;
       const unlock = () => {
         if (previousOverflow !== undefined) document.body.style.overflow = previousOverflow;
         previousOverflow = undefined;
       };
       this.cleanup = () => {
+        clearTimeout(closeTimer);
         unlock();
         resize.disconnect();
       };
-      const close = (restoreFocus = false) => {
+      const finishClose = () => {
+        this.classList.remove('menu-closing');
         unlock();
-        this.classList.remove('menu-open');
-        toggle?.setAttribute('aria-expanded', 'false');
         groups.forEach((group) => {
           group.open = false;
         });
+      };
+      const close = (restoreFocus = false) => {
+        if (this.classList.contains('menu-open')) {
+          this.classList.add('menu-closing');
+          this.classList.remove('menu-open');
+          toggle?.setAttribute('aria-expanded', 'false');
+          clearTimeout(closeTimer);
+          closeTimer = setTimeout(finishClose, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 250);
+        } else if (!this.classList.contains('menu-closing')) finishClose();
         if (restoreFocus) toggle?.focus();
       };
       toggle?.addEventListener(
         'click',
         () => {
-          const open = this.classList.toggle('menu-open');
-          toggle.setAttribute('aria-expanded', String(open));
-          if (open) {
-            previousOverflow = document.body.style.overflow;
+          if (this.classList.contains('menu-open')) {
+            close();
+          } else {
+            clearTimeout(closeTimer);
+            this.classList.remove('menu-closing');
+            this.classList.add('menu-open');
+            toggle.setAttribute('aria-expanded', 'true');
+            previousOverflow ??= document.body.style.overflow;
             document.body.style.overflow = 'hidden';
-          } else close();
+          }
         },
         { signal }
       );
@@ -325,8 +339,7 @@ const message =
     list-style: none;
   }
   @media (prefers-reduced-motion: no-preference) {
-    details[open] .nav-children,
-    .menu-open nav {
+    details[open] .nav-children {
       animation: menu-reveal 0.25s ease-out;
     }
   }
@@ -401,9 +414,21 @@ const message =
     display: none;
   }
   @media (max-width: 1099px) {
-    :global(body:has(site-navigation.menu-open) #scrollToTop),
-    :global(body:has(site-navigation.menu-open) #whatsapp) {
+    :global(body:has(site-navigation:is(.menu-open, .menu-closing)) #scrollToTop),
+    :global(body:has(site-navigation:is(.menu-open, .menu-closing)) #whatsapp) {
       display: none;
+    }
+    .site-header {
+      /* A backdrop filter would make the fixed menu relative to the header. */
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: var(--aw-color-bg-page);
+    }
+    .brand,
+    .mobile-language,
+    .menu-toggle {
+      position: relative;
+      z-index: 2;
     }
     .header-inner {
       min-height: 78px;
@@ -440,26 +465,38 @@ const message =
       display: block;
     }
     nav {
-      display: none;
-      position: absolute;
-      top: 100%;
-      inset-inline: 0;
-      height: calc(100dvh - var(--navigation-header-height, 88px) + 1px);
-      overflow: auto;
-      overscroll-behavior: contain;
-      background: var(--aw-color-bg-page);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--site-border);
-      padding: 1rem 1.5rem max(2rem, env(safe-area-inset-bottom));
-      box-shadow: 0 16px 24px rgb(0 0 0 / 0.05);
-    }
-    .menu-open nav {
       display: flex;
       flex-direction: column;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      height: 100dvh;
+      overflow: hidden;
+      background: var(--aw-color-bg-page);
+      padding: calc(var(--navigation-header-height, 78px) + 1rem) max(1.5rem, env(safe-area-inset-right))
+        max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition:
+        opacity 250ms ease,
+        transform 250ms ease,
+        visibility 0s linear 250ms;
+    }
+    .menu-open nav {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition-delay: 0s;
     }
     .nav-links {
       display: block;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
     .nav-links > li {
       border-bottom: 1px solid var(--site-border);
@@ -486,9 +523,17 @@ const message =
       padding: 0.7rem 0.65rem;
     }
     .mobile-contact {
-      display: block;
-      padding-top: 2rem;
-      margin-top: auto;
+      display: flex;
+      justify-content: flex-end;
+      direction: ltr;
+      flex-shrink: 0;
+      padding-top: 1.5rem;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      nav {
+        transition: none;
+        transform: none;
+      }
     }
   }
   @media (max-width: 359px) {

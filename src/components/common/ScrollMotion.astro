@@ -11,56 +11,83 @@
     const direction = document.documentElement.dir === 'rtl' ? -1 : 1;
     const candidates = Array.from(
       main.querySelectorAll<HTMLElement>(
-        'h2, .section-intro, article:not(:has(section)), photoshoot-gallery > a, .selected-work > a, .home-about > img, .about-story > img, #reviews .intersect-once'
+        'h2, .section-intro > p, .home-about > div > p, .home-process li, #reviews blockquote, .home-cta > p, .pricing-invitation > div'
       )
-    );
+    ).filter((element) => !element.querySelector('img, picture, video'));
     const candidateSet = new Set(candidates);
     const targets = candidates
       .filter((element) => {
-        // Animate a card or its heading, never both at once.
         let parent = element.parentElement;
         while (parent && !candidateSet.has(parent)) parent = parent.parentElement;
         return !parent;
       })
       .map((element, index) => ({
         element,
-        heading: element.matches('h2, .section-intro'),
-        distance: index % 2 === 0 ? 40 : 28,
-        originalTranslate: element.style.translate,
-        x: 0,
-        y: 0,
+        heading: element.matches('h2'),
+        alternate: index % 2 === 0 ? 1 : -1,
+        original: {
+          translate: element.style.translate,
+          rotate: element.style.rotate,
+          scale: element.style.scale,
+          transformOrigin: element.style.transformOrigin,
+        },
+        top: 0,
+        left: 0,
+        width: 0,
+        height: 0,
       }));
     const byElement = new Map(targets.map((target) => [target.element, target]));
     const active = new Set<(typeof targets)[number]>();
     let frame = 0;
 
+    function reset() {
+      targets.forEach(({ element, original }) => Object.assign(element.style, original));
+    }
+
+    function measure() {
+      // Measure the resting layout, never the previous frame's transformed box.
+      // This keeps the choreography stable as images and fonts finish loading.
+      reset();
+      for (const target of targets) {
+        const rect = target.element.getBoundingClientRect();
+        target.top = rect.top + window.scrollY;
+        target.left = rect.left;
+        target.width = rect.width;
+        target.height = rect.height;
+      }
+      schedule();
+    }
+
     function update() {
       frame = 0;
       if (reducedMotion.matches) return;
-      const height = window.innerHeight;
-      const width = document.documentElement.clientWidth;
-      // Read all geometry before writing styles. Subtract our previous translation
-      // so movement never feeds back into the next scroll measurement.
-      const positions = Array.from(active, (target) => {
-        const rect = target.element.getBoundingClientRect();
-        const top = rect.top - target.y;
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = document.documentElement.clientWidth;
+      for (const target of active) {
+        const { element, heading, top, left, width, height } = target;
+        if (!width || !height) continue;
         const progress = Math.max(
           -1,
-          Math.min(1, (top + rect.height / 2 - height / 2) / (height / 2 + rect.height / 2))
+          Math.min(1, (top - window.scrollY + height / 2 - viewportHeight / 2) / (viewportHeight / 2 + height / 2))
         );
-        const distance = compact.matches ? target.distance * 0.55 : target.distance;
-        const desiredX = target.heading ? progress * direction * (compact.matches ? 12 : 28) : 0;
-        // Keep sideways motion inside the viewport, including on narrow screens.
-        const x = Math.max(
-          Math.min(0, -(rect.left - target.x)),
-          Math.min(Math.max(0, width - (rect.right - target.x)), desiredX)
-        );
-        return { target, x, y: target.heading ? 0 : progress * distance };
-      });
-      for (const { target, x, y } of positions) {
-        target.x = x;
-        target.y = y;
-        target.element.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`;
+        const sweep = Math.sin((progress * Math.PI) / 2);
+        const center = Math.cos((progress * Math.PI) / 2);
+        const rotation = heading ? -sweep * direction * (compact.matches ? 0.8 : 2) : 0;
+        const radians = (Math.abs(rotation) * Math.PI) / 180;
+        const rotatedWidth = width * Math.cos(radians) + height * Math.sin(radians);
+        const desiredScale = heading ? 1 + center * (compact.matches ? 0.035 : 0.1) : 1;
+        // Keep even long, rotated Hebrew/Russian headings inside the viewport.
+        const scale = Math.min(desiredScale, (viewportWidth - 24) / rotatedWidth);
+        const edge = (rotatedWidth * scale - width) / 2;
+        const desiredX = heading ? sweep * direction * (compact.matches ? 22 : 72) : 0;
+        const x = Math.max(12 - left + edge, Math.min(viewportWidth - 12 - left - width - edge, desiredX));
+        const y = heading
+          ? -center * (compact.matches ? 3 : 8)
+          : sweep * target.alternate * (compact.matches ? 10 : 24);
+        element.style.transformOrigin = 'center';
+        element.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`;
+        element.style.rotate = `${rotation.toFixed(3)}deg`;
+        element.style.scale = scale.toFixed(4);
       }
     }
 
@@ -78,29 +105,30 @@
         }
         schedule();
       },
-      { rootMargin: '120px 0px' }
+      { rootMargin: '160px 0px' }
     );
-    targets.forEach(({ element }) => observer.observe(element));
-
-    function reset() {
+    const resize = new ResizeObserver(measure);
+    resize.observe(main);
+    targets.forEach(({ element }) => {
+      observer.observe(element);
+      resize.observe(element);
+    });
+    const onPreferenceChange = () => {
       cancelAnimationFrame(frame);
       frame = 0;
-      for (const target of targets) {
-        target.element.style.translate = target.originalTranslate;
-        target.x = target.y = 0;
-      }
-    }
-    const onPreferenceChange = () => {
       if (reducedMotion.matches) reset();
-      else schedule();
+      else measure();
     };
     window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
+    window.addEventListener('resize', measure);
     reducedMotion.addEventListener('change', onPreferenceChange);
+    measure();
     cleanup = () => {
       observer.disconnect();
+      resize.disconnect();
+      cancelAnimationFrame(frame);
       window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
+      window.removeEventListener('resize', measure);
       reducedMotion.removeEventListener('change', onPreferenceChange);
       reset();
     };

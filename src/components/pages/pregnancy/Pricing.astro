@@ -57,15 +57,6 @@ const breadcrumbs = [
     callToAction={{ text: t('compareAction'), href: '#packages' }}
     callToAction2={{ text: t('dateAction'), href: pregnancyWhatsApp(), target: '_blank' }}
   />
-  <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
-    <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
-    <p class="mb-8 text-center">{t('packagesIntroduction')}</p>
-    <p class="mb-4 text-center text-sm">{t('durationNote')}</p>
-
-    <div class="mt-8"><PricingCards prices={pregnancyPricingCards} /></div>
-    <PackageComparison packages={displayedPackages} label={t('comparisonLabel')} caption={t('comparisonCaption')} />
-  </section>
-
   <Breadcrumbs
     items={[
       { label: t('homeLabel'), href: link('/') },
@@ -73,6 +64,17 @@ const breadcrumbs = [
       { label: t('pageBreadcrumb') },
     ]}
   />
+  <Journey journey={pregnancyJourney} current="pricing" />
+  <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+    <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
+    <p class="mb-8 text-center">{t('packagesIntroduction')}</p>
+    <p class="mb-4 text-center text-sm">{t('durationNote')}</p>
+
+    <PackageComparison packages={displayedPackages} label={t('comparisonLabel')} caption={t('comparisonCaption')} />
+
+    <div class="mt-8"><PricingCards prices={pregnancyPricingCards} /></div>
+  </section>
+
   <section class="mx-auto max-w-4xl px-4 py-8 text-start">
     <h2 class="mb-4 text-2xl font-bold">{t('overviewTitle')}</h2>
     <p class="mb-4">
@@ -103,8 +105,6 @@ const breadcrumbs = [
       <a href={link('/services/pregnancy-photography')} class="font-semibold underline">{t('serviceLink')}</a>.
     </p>
   </section>
-
-  <Journey journey={pregnancyJourney} current="pricing" />
 
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-start">
     <h2 class="text-2xl font-bold">{t('selectionTitle')}</h2>

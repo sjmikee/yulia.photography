@@ -63,17 +63,6 @@ const breadcrumbs = [
         'data-lead-source': 'intimate-hero',
       }}
     />
-    <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
-      <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
-      <p class="mb-8 text-center">{t('packagesNote')}</p>
-
-      <div class="mt-8"><PricingCards prices={intimatePricingCards} /></div>
-      <PackageComparison
-        packages={[...intimatePackages].reverse()}
-        label={t('comparisonLabel')}
-        caption={t('comparisonCaption')}
-      />
-    </section>
     <Breadcrumbs
       items={[
         { label: t('homeLabel'), href: link('/') },
@@ -81,6 +70,19 @@ const breadcrumbs = [
         { label: t('pageBreadcrumb') },
       ]}
     />
+    <Journey journey={intimateJourney} current="pricing" />
+    <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+      <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
+      <p class="mb-8 text-center">{t('packagesNote')}</p>
+
+      <PackageComparison
+        packages={[...intimatePackages].reverse()}
+        label={t('comparisonLabel')}
+        caption={t('comparisonCaption')}
+      />
+
+      <div class="mt-8"><PricingCards prices={intimatePricingCards} /></div>
+    </section>
     <section class="mx-auto max-w-4xl space-y-4 px-4 py-8">
       <h2 class="text-2xl font-bold">{t('overviewTitle')}</h2>
       <p>
@@ -94,7 +96,6 @@ const breadcrumbs = [
       </p>
       <p>{t('locationIntro')}</p>
     </section>
-    <Journey journey={intimateJourney} current="pricing" />
 
     <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
       <h2 class="text-2xl font-bold">{t('selectionTitle')}</h2>
