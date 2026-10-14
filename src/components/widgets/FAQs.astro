@@ -1,33 +1,87 @@
 ---
-import Headline from '~/components/ui/Headline.astro';
-import ItemGrid from '~/components/ui/ItemGrid.astro';
-import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
 import type { Faqs as Props } from '~/types';
-
-const {
-  title = '',
-  subtitle = '',
-  tagline = '',
-  items = [],
-  columns = 2,
-
-  id,
-  isDark = false,
-  classes = {},
-  bg = await Astro.slots.render('bg'),
-} = Astro.props;
+const { title = '', subtitle = '', items = [], id } = Astro.props;
 ---
 
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
-  <Headline title={title} subtitle={subtitle} tagline={tagline} />
-  <ItemGrid
-    items={items}
-    columns={columns}
-    defaultIcon="tabler:chevron-left"
-    classes={{
-      container: `${columns === 1 ? 'max-w-4xl' : ''} gap-y-8 md:gap-y-12`,
-      panel: 'max-w-none',
-      icon: 'shrink-0 mt-1 w-6 h-6 text-primary',
-    }}
-  />
-</WidgetWrapper>
+<section class="faq-section" id={id}>
+  <div class="faq-introduction"><h2 set:html={title} />{subtitle && <p set:html={subtitle} />}</div>
+  <div class="faq-list">
+    {
+      items.map(({ title: question, description }) => (
+        <details>
+          <>
+            <summary>
+              <>
+                <span set:html={question} />
+                <span class="faq-symbol" aria-hidden="true">
+                  +
+                </span>
+              </>
+            </summary>
+            <div class="faq-answer" set:html={description} />
+          </>
+        </details>
+      ))
+    }
+  </div>
+</section>
+<style>
+  .faq-section {
+    max-width: 1152px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 4rem;
+    padding: 4.5rem 1.5rem;
+  }
+  h2 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.3;
+  }
+  .faq-introduction p {
+    margin-top: 1.25rem;
+    color: var(--aw-color-text-muted);
+    line-height: 1.8;
+  }
+  details {
+    border-bottom: 1px solid var(--site-border, #d8ddda);
+  }
+  details:first-child {
+    border-top: 1px solid var(--site-border, #d8ddda);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 500;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-symbol {
+    color: var(--aw-color-accent);
+    font-size: 1.4rem;
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+  details[open] .faq-symbol {
+    color: var(--aw-color-accent);
+    transform: rotate(45deg);
+  }
+  .faq-answer {
+    padding: 0 0 1.5rem;
+    line-height: 1.85;
+    color: var(--aw-color-text-muted);
+  }
+  @media (max-width: 767px) {
+    .faq-section {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding-block: 3rem;
+    }
+  }
+</style>

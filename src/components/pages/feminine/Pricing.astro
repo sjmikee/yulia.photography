@@ -55,6 +55,17 @@ const breadcrumbs = [
     callToAction={{ text: t('compareAction'), href: '#packages' }}
     callToAction2={{ text: t('dateAction'), href: feminineWhatsApp(), target: '_blank' }}
   />
+  <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
+    <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
+    <p class="mb-8 text-center">{t('packagesNote')}</p>
+
+    <div class="mt-8"><PricingCards prices={femininePricingCards} /></div>
+    <PackageComparison
+      packages={[...femininePackages].reverse()}
+      label={t('comparisonLabel')}
+      caption={t('comparisonCaption')}
+    />
+  </section>
   <Breadcrumbs
     items={[
       { label: t('homeLabel'), href: link('/') },
@@ -87,16 +98,7 @@ const breadcrumbs = [
     </p>
   </section>
   <Journey journey={feminineJourney} current="pricing" />
-  <section id="packages" class="scroll-mt-28 mx-auto max-w-6xl px-4 py-12">
-    <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
-    <p class="mb-8 text-center">{t('packagesNote')}</p>
-    <PackageComparison
-      packages={[...femininePackages].reverse()}
-      label={t('comparisonLabel')}
-      caption={t('comparisonCaption')}
-    />
-    <div class="mt-8"><PricingCards prices={femininePricingCards} /></div>
-  </section>
+
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
     <h2 class="text-2xl font-bold">{t('selectionTitle')}</h2>
     <p>

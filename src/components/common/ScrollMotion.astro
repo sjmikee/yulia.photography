@@ -1,0 +1,111 @@
+<script>
+  let cleanup = () => {};
+
+  function startScrollMotion() {
+    cleanup();
+    const main = document.querySelector('.public-site #main-content');
+    if (!main || !('IntersectionObserver' in window)) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const compact = window.matchMedia('(max-width: 699px)');
+    const direction = document.documentElement.dir === 'rtl' ? -1 : 1;
+    const candidates = Array.from(
+      main.querySelectorAll<HTMLElement>(
+        'h2, .section-intro, article:not(:has(section)), photoshoot-gallery > a, .selected-work > a, .home-about > img, .about-story > img, #reviews .intersect-once'
+      )
+    );
+    const candidateSet = new Set(candidates);
+    const targets = candidates
+      .filter((element) => {
+        // Animate a card or its heading, never both at once.
+        let parent = element.parentElement;
+        while (parent && !candidateSet.has(parent)) parent = parent.parentElement;
+        return !parent;
+      })
+      .map((element, index) => ({
+        element,
+        heading: element.matches('h2, .section-intro'),
+        distance: index % 2 === 0 ? 40 : 28,
+        originalTranslate: element.style.translate,
+        x: 0,
+        y: 0,
+      }));
+    const byElement = new Map(targets.map((target) => [target.element, target]));
+    const active = new Set<(typeof targets)[number]>();
+    let frame = 0;
+
+    function update() {
+      frame = 0;
+      if (reducedMotion.matches) return;
+      const height = window.innerHeight;
+      const width = document.documentElement.clientWidth;
+      // Read all geometry before writing styles. Subtract our previous translation
+      // so movement never feeds back into the next scroll measurement.
+      const positions = Array.from(active, (target) => {
+        const rect = target.element.getBoundingClientRect();
+        const top = rect.top - target.y;
+        const progress = Math.max(
+          -1,
+          Math.min(1, (top + rect.height / 2 - height / 2) / (height / 2 + rect.height / 2))
+        );
+        const distance = compact.matches ? target.distance * 0.55 : target.distance;
+        const desiredX = target.heading ? progress * direction * (compact.matches ? 12 : 28) : 0;
+        // Keep sideways motion inside the viewport, including on narrow screens.
+        const x = Math.max(
+          Math.min(0, -(rect.left - target.x)),
+          Math.min(Math.max(0, width - (rect.right - target.x)), desiredX)
+        );
+        return { target, x, y: target.heading ? 0 : progress * distance };
+      });
+      for (const { target, x, y } of positions) {
+        target.x = x;
+        target.y = y;
+        target.element.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`;
+      }
+    }
+
+    function schedule() {
+      if (!frame && !reducedMotion.matches) frame = requestAnimationFrame(update);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const target = byElement.get(entry.target as HTMLElement);
+          if (!target) continue;
+          if (entry.isIntersecting) active.add(target);
+          else active.delete(target);
+        }
+        schedule();
+      },
+      { rootMargin: '120px 0px' }
+    );
+    targets.forEach(({ element }) => observer.observe(element));
+
+    function reset() {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      for (const target of targets) {
+        target.element.style.translate = target.originalTranslate;
+        target.x = target.y = 0;
+      }
+    }
+    const onPreferenceChange = () => {
+      if (reducedMotion.matches) reset();
+      else schedule();
+    };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    reducedMotion.addEventListener('change', onPreferenceChange);
+    cleanup = () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      reducedMotion.removeEventListener('change', onPreferenceChange);
+      reset();
+    };
+  }
+
+  document.addEventListener('astro:page-load', startScrollMotion);
+  document.addEventListener('astro:before-swap', () => cleanup());
+</script>

@@ -38,13 +38,19 @@ const breadcrumbs = [
 
 <Layout metadata={metadata} richMetadata={metadata} breadcrumbs={breadcrumbs}>
   <LeadTracking service="personal">
+    <section class="gallery-heading"><h1 class="text-4xl font-bold md:text-5xl">{t('title')}</h1></section>
+    <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
+      <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
+      <Gallery eager images={personalGalleryImages} />
+    </section>
     <section class="mx-auto max-w-4xl space-y-5 px-4 py-12 text-center">
       <p class="font-semibold text-accent">{t('byline')}</p>
-      <h1 class="text-4xl font-bold md:text-5xl">{t('title')}</h1>
+
       <p class="text-xl leading-relaxed">{t('introduction')}</p>
       <p>{t('guidanceIntro')}</p>
       <Button href={link('/pricing/personal')}>{t('pricesPrefix')}{personalPackages[0].price} {t('currency')}</Button>
     </section>
+
     <Breadcrumbs
       items={[
         { label: t('homeLabel'), href: link('/') },
@@ -53,10 +59,7 @@ const breadcrumbs = [
       ]}
     />
     <Journey journey={personalJourney} current="gallery" />
-    <section class="mx-auto max-w-6xl px-4 py-8" aria-label={t('galleryLabel')}>
-      <p class="mb-5 text-center text-sm">{t('galleryHint')}</p>
-      <Gallery images={personalGalleryImages} />
-    </section>
+
     <section class="mx-auto max-w-4xl space-y-5 px-4 py-12 text-center">
       <h2 class="text-3xl font-bold">{t('reassuranceTitle')}</h2>
       <p>{t('reassuranceBody')}</p>
@@ -65,3 +68,16 @@ const breadcrumbs = [
     <Journey journey={personalJourney} current="gallery" cta />
   </LeadTracking>
 </Layout>
+
+<style>
+  .gallery-heading {
+    padding: 2rem 1.5rem 0.5rem;
+    text-align: center;
+    max-width: 1000px;
+    margin: auto;
+  }
+  .gallery-heading h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.2;
+  }
+</style>
