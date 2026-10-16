@@ -71,7 +71,7 @@ const message =
                     {href && (
                       <li>
                         <a href={href} aria-current={current === href ? 'page' : undefined}>
-                          {locale === 'ru' ? `Все: ${text}` : `לכל ${text}`}
+                          {locale === 'ru' ? `Все: ${text}` : text === 'מחירון' ? 'לכל המחירונים' : `לכל ${text}`}
                         </a>
                       </li>
                     )}
