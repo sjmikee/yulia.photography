@@ -6,127 +6,55 @@
     const main = document.querySelector('.public-site #main-content');
     if (!main || !('IntersectionObserver' in window)) return;
 
-    // Touch devices stay static: skip observers and per-scroll work entirely.
+    // Keep touch devices and reduced-motion browsing completely static.
     const motion = window.matchMedia(
       '(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
     );
     motion.addEventListener('change', startScrollMotion);
     cleanup = () => motion.removeEventListener('change', startScrollMotion);
     if (!motion.matches) return;
-    const direction = document.documentElement.dir === 'rtl' ? -1 : 1;
-    const candidates = Array.from(
-      main.querySelectorAll<HTMLElement>(
-        'h2, .section-intro > p, .home-about > div > p, .home-process li, #reviews blockquote, .home-cta > p, .pricing-invitation > div'
-      )
-    ).filter((element) => !element.querySelector('img, picture, video'));
-    const candidateSet = new Set(candidates);
-    const targets = candidates
-      .filter((element) => {
-        let parent = element.parentElement;
-        while (parent && !candidateSet.has(parent)) parent = parent.parentElement;
-        return !parent;
-      })
-      .map((element, index) => ({
-        element,
-        heading: element.matches('h2'),
-        alternate: index % 2 === 0 ? 1 : -1,
-        original: {
-          translate: element.style.translate,
-          rotate: element.style.rotate,
-          scale: element.style.scale,
-          transformOrigin: element.style.transformOrigin,
-        },
-        top: 0,
-        left: 0,
-        width: 0,
-        height: 0,
-      }));
-    const byElement = new Map(targets.map((target) => [target.element, target]));
-    const active = new Set<(typeof targets)[number]>();
-    let frame = 0;
 
-    function reset() {
-      targets.forEach(({ element, original }) => Object.assign(element.style, original));
-    }
-
-    function measure() {
-      // Measure the resting layout, never the previous frame's transformed box.
-      // This keeps the choreography stable as images and fonts finish loading.
-      reset();
-      for (const target of targets) {
-        const rect = target.element.getBoundingClientRect();
-        target.top = rect.top + window.scrollY;
-        target.left = rect.left;
-        target.width = rect.width;
-        target.height = rect.height;
-      }
-      schedule();
-    }
-
-    function update() {
-      frame = 0;
-      if (!motion.matches) return;
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = document.documentElement.clientWidth;
-      for (const target of active) {
-        const { element, heading, top, left, width, height } = target;
-        if (!width || !height) continue;
-        const progress = Math.max(
-          -1,
-          Math.min(1, (top - window.scrollY + height / 2 - viewportHeight / 2) / (viewportHeight / 2 + height / 2))
-        );
-        const sweep = Math.sin((progress * Math.PI) / 2);
-        const center = Math.cos((progress * Math.PI) / 2);
-        const rotation = heading ? -sweep * direction * 2 : 0;
-        const radians = (Math.abs(rotation) * Math.PI) / 180;
-        const rotatedWidth = width * Math.cos(radians) + height * Math.sin(radians);
-        const desiredScale = heading ? 1 + center * 0.1 : 1;
-        // Keep even long, rotated Hebrew/Russian headings inside the viewport.
-        const scale = Math.min(desiredScale, (viewportWidth - 24) / rotatedWidth);
-        const edge = (rotatedWidth * scale - width) / 2;
-        const desiredX = heading ? sweep * direction * 72 : 0;
-        const x = Math.max(12 - left + edge, Math.min(viewportWidth - 12 - left - width - edge, desiredX));
-        const y = heading ? -center * 8 : sweep * target.alternate * 24;
-        element.style.transformOrigin = 'center';
-        element.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`;
-        element.style.rotate = `${rotation.toFixed(3)}deg`;
-        element.style.scale = scale.toFixed(4);
-      }
-    }
-
-    function schedule() {
-      if (!frame && motion.matches) frame = requestAnimationFrame(update);
-    }
-
+    // Animate only complete, outermost sections. Their text and photography
+    // stay together, and nested widgets never receive a second animation.
+    const sections = Array.from(main.querySelectorAll<HTMLElement>('section')).filter(
+      (section) => !section.parentElement?.closest('section')
+    );
+    const animations = new Set<Animation>();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          const target = byElement.get(entry.target as HTMLElement);
-          if (!target) continue;
-          if (entry.isIntersecting) active.add(target);
-          else active.delete(target);
+          if (!entry.isIntersecting) continue;
+          observer.unobserve(entry.target);
+          // Anchor navigation and keyboard focus should reveal content immediately.
+          if (entry.target.contains(document.activeElement) || entry.boundingClientRect.top < 0) continue;
+          const animation = entry.target.animate(
+            [
+              { opacity: 0.7, transform: 'scale(0.985)', transformOrigin: 'center top' },
+              { opacity: 1, transform: 'scale(1)', transformOrigin: 'center top' },
+            ],
+            { duration: 850, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+          );
+          animations.add(animation);
+          animation.onfinish = () => animations.delete(animation);
         }
-        schedule();
       },
-      { rootMargin: '160px 0px' }
+      { threshold: 0, rootMargin: '0px 0px -48px 0px' }
     );
-    const resize = new ResizeObserver(measure);
-    resize.observe(main);
-    targets.forEach(({ element }) => {
-      observer.observe(element);
-      resize.observe(element);
+    // The opening view is ready immediately, including restored scroll positions.
+    // Content remains visible even without JavaScript or before the observer runs.
+    sections.forEach((section) => {
+      if (section.getBoundingClientRect().top >= window.innerHeight) observer.observe(section);
     });
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', measure);
-    measure();
+    const finishOnFocus = () => {
+      animations.forEach((animation) => animation.finish());
+    };
+    main.addEventListener('focusin', finishOnFocus);
     cleanup = () => {
       observer.disconnect();
-      resize.disconnect();
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', measure);
+      animations.forEach((animation) => animation.cancel());
+      animations.clear();
+      main.removeEventListener('focusin', finishOnFocus);
       motion.removeEventListener('change', startScrollMotion);
-      reset();
     };
   }
 

@@ -15,6 +15,9 @@ const metadata = {
   title: t('metaTitle'),
   description: t('metaDescription'),
   ignoreTitleTemplate: true,
+  openGraph: {
+    images: [{ url: '~/assets/images/static_hero.jpg', alt: t('metaTitle') }],
+  },
 };
 
 const breadcrumbs = [{ url: link('/services'), name: t('breadcrumbName') }];

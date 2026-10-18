@@ -1,4 +1,4 @@
-import { isUnpicCompatible, unpicOptimizer, astroAsseetsOptimizer } from './images-optimization';
+import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { MetaDataOpenGraph as OpenGraph } from '~/types';
 
@@ -48,64 +48,33 @@ export const findImage = async (
     : null;
 };
 
-/** */
-export const adaptOpenGraphImages = async (
-  openGraph: OpenGraph = {},
-  astroSite?: URL
-): Promise<OpenGraph> => {
-  if (!openGraph?.images?.length) {
-    return openGraph;
-  }
+/** Resolve sharing images once, retaining their translated descriptions and real dimensions. */
+export const adaptOpenGraphImages = async (openGraph: OpenGraph = {}, astroSite?: URL): Promise<OpenGraph> => {
+  const images = await Promise.all(
+    (openGraph.images ?? []).map(async (image) => {
+      const source = await findImage(image.url);
+      if (!source) throw new Error(`Sharing image not found: ${image.url}`);
 
-  const images = openGraph.images;
-  const defaultWidth = 1200;
-  const defaultHeight = 626;
-
-  const adaptedImages = await Promise.all(
-    images.map(async (image) => {
-      if (image?.url) {
-        const resolvedImage = (await findImage(image.url)) as ImageMetadata | string | undefined;
-        if (!resolvedImage) {
-          return {
-            url: '',
-          };
-        }
-
-        let _image;
-
-        if (
-          typeof resolvedImage === 'string' &&
-          (resolvedImage.startsWith('http://') || resolvedImage.startsWith('https://')) &&
-          isUnpicCompatible(resolvedImage)
-        ) {
-          _image = (await unpicOptimizer(resolvedImage, [defaultWidth], defaultWidth, defaultHeight, 'jpg'))[0];
-        } else if (resolvedImage) {
-          const dimensions =
-            typeof resolvedImage !== 'string' && resolvedImage?.width <= defaultWidth
-              ? [resolvedImage?.width, resolvedImage?.height]
-              : [defaultWidth, defaultHeight];
-          _image = (
-            await astroAsseetsOptimizer(resolvedImage, [dimensions[0]], dimensions[0], dimensions[1], 'jpg')
-          )[0];
-        }
-
-        if (typeof _image === 'object') {
-          return {
-            url: 'src' in _image && typeof _image.src === 'string' ? String(new URL(_image.src, astroSite)) : '',
-            width: 'width' in _image && typeof _image.width === 'number' ? _image.width : undefined,
-            height: 'height' in _image && typeof _image.height === 'number' ? _image.height : undefined,
-          };
-        }
-        return {
-          url: '',
-        };
+      // Public and remote files already have stable URLs; do not route them through /_image.
+      if (typeof source === 'string') {
+        return { ...image, url: new URL(source, astroSite).href };
       }
 
+      // Keep the whole photograph visible, including vertical portraits.
+      const width = Math.min(1200, source.width);
+      const result = await getImage({
+        src: source,
+        width,
+        format: 'jpg',
+        quality: 85,
+      });
       return {
-        url: '',
+        url: new URL(result.src, astroSite).href,
+        width: Number(result.attributes.width),
+        height: Number(result.attributes.height),
+        alt: image.alt,
       };
     })
   );
-
-  return { ...openGraph, ...(adaptedImages ? { images: adaptedImages } : {}) };
+  return { ...openGraph, images };
 };
