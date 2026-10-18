@@ -75,12 +75,16 @@ const breadcrumbs = [{ url: link('/contact'), name: t('breadcrumbName') }];
     margin-bottom: 0.5rem;
   }
   .contact-alternatives a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     text-decoration: underline;
     text-underline-offset: 5px;
     overflow-wrap: anywhere;
   }
   .contact-social {
     display: flex;
+    flex-wrap: wrap;
     gap: 1.5rem;
   }
   @media (max-width: 699px) {

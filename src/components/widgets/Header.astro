@@ -50,6 +50,8 @@ const message =
       class="menu-toggle"
       type="button"
       aria-label={labels.menu}
+      data-open-label={labels.menu}
+      data-close-label={labels.closeMenu}
       aria-expanded="false"
       aria-controls="site-navigation-menu"
     >
@@ -165,6 +167,7 @@ const message =
           this.classList.add('menu-closing');
           this.classList.remove('menu-open');
           toggle?.setAttribute('aria-expanded', 'false');
+          toggle?.setAttribute('aria-label', toggle.dataset.openLabel || '');
           clearTimeout(closeTimer);
           closeTimer = setTimeout(finishClose, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 250);
         } else if (!this.classList.contains('menu-closing')) finishClose();
@@ -180,6 +183,7 @@ const message =
             this.classList.remove('menu-closing');
             this.classList.add('menu-open');
             toggle.setAttribute('aria-expanded', 'true');
+            toggle.setAttribute('aria-label', toggle.dataset.closeLabel || '');
             previousOverflow ??= document.body.style.overflow;
             document.body.style.overflow = 'hidden';
           }
@@ -451,6 +455,7 @@ const message =
       place-items: center;
       height: 44px;
       width: 44px;
+      flex-shrink: 0;
       cursor: pointer;
     }
     .menu-toggle svg {
@@ -534,6 +539,11 @@ const message =
         transition: none;
         transform: none;
       }
+    }
+  }
+  @media (max-width: 399px) {
+    .mobile-language .instagram-link {
+      display: none;
     }
   }
   @media (max-width: 359px) {
