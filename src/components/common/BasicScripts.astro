@@ -304,7 +304,7 @@ import { UI } from 'astrowind:config';
       top?.addEventListener('click', scrollUp, { signal: controller.signal });
       footerTop?.addEventListener('click', scrollUp, { signal: controller.signal });
       whatsapp?.addEventListener('click', () => {
-        window.open(whatsapp.dataset.whatsappUrl || 'https://wa.me/972525836940', '_blank', 'noopener');
+        window.open(whatsapp.dataset.whatsappUrl || ('https://wa.me/972525836940?text=' + encodeURIComponent('היי יוליה, אשמח לשמוע על סשן צילום ולבדוק תאריך פנוי.')), '_blank', 'noopener');
       }, { signal: controller.signal });
       updateAll();
       this.cleanup = () => { controller.abort(); observers.forEach(observer => observer.disconnect()); };

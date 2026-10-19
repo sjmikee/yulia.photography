@@ -8,9 +8,8 @@ export const pregnancyLinks = {
   pricing: '/pricing/pregnancy',
   gallery: '/gallery/pregnancy',
 };
-export const pregnancyWhatsApp = (
-  message = 'היי יוליה, אשמח לבדוק תאריך לצילומי הריון. אני בשבוע __ ומעדיפה צילומים ב__.'
-) => `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
+export const pregnancyWhatsApp = (message = 'היי יוליה, אשמח לשמוע על צילומי הריון ולבדוק תאריך פנוי.') =>
+  `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
 
 // Shared quantities are independent of the language used to describe a package.
 export const pregnancyPackageFacts = [
@@ -70,7 +69,7 @@ export const pregnancyPricingCards: Price[] = [...pregnancyPackages]
     ],
     callToAction: {
       text: `לבדיקת תאריך — ${p.title}`,
-      href: pregnancyWhatsApp(`היי יוליה, אשמח לפרטים ולבדיקת תאריך לצילומי הריון — ${p.title}. אני בשבוע __.`),
+      href: pregnancyWhatsApp(`היי יוליה, אשמח לפרטים ולבדיקת תאריך לצילומי הריון — ${p.title}.`),
       target: '_blank',
     },
   }));
@@ -112,9 +111,8 @@ export function getPregnancy(locale: Locale) {
       whatsapp: pregnancyWhatsApp,
       cards: pregnancyPricingCards,
     };
-  const whatsapp = (
-    message = 'Здравствуйте, Юлия! Хочу узнать о съёмке беременности и свободных датах. Сейчас у меня __ недель, хотелось бы съёмку в __.'
-  ) => `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
+  const whatsapp = (message = 'Здравствуйте, Юлия! Хочу узнать о съёмке беременности и свободных датах.') =>
+    `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
   const copy = [
     { title: 'Базовый', duration: '45 минут', fit: 'Небольшая коллекция памятных кадров в спокойном темпе', extra: '' },
     {
@@ -154,9 +152,7 @@ export function getPregnancy(locale: Locale) {
       ],
       callToAction: {
         text: `Узнать даты — ${p.title}`,
-        href: whatsapp(
-          `Здравствуйте, Юлия! Интересует съёмка беременности, пакет «${p.title}». Какие даты свободны? Сейчас у меня __ недель.`
-        ),
+        href: whatsapp(`Здравствуйте, Юлия! Интересует съёмка беременности, пакет «${p.title}». Какие даты свободны?`),
         target: '_blank',
       },
     }));

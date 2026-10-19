@@ -4,7 +4,7 @@ import { infoMessages } from '~/i18n/info';
 const locale = localeFromPath(Astro.url.pathname);
 const t = infoMessages('contact', locale);
 const link = (path: string) => translatedPath(path, locale) ?? path;
-const whatsapp = 'https://wa.me/972525836940' + (locale === 'ru' ? '?text=' + encodeURIComponent(t('inquiry')) : '');
+const whatsapp = 'https://wa.me/972525836940?text=' + encodeURIComponent(t('inquiry'));
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import Button from '~/components/ui/Button.astro';

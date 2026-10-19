@@ -9,7 +9,8 @@ interface Props {
 const {
   title = 'עדיין מתלבטים?',
   subtitle = 'תדברו איתי ואעזור לכם לקבל את ההחלטה הנכונה',
-  href = 'https://wa.me/972525836940',
+  href = 'https://wa.me/972525836940?text=' +
+    encodeURIComponent('היי יוליה, אשמח לשמוע על סשן צילום ולבדוק תאריך פנוי.'),
 } = Astro.props;
 ---
 

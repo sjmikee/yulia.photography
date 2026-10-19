@@ -8,9 +8,8 @@ export const feminineLinks = {
   pricing: '/pricing/feminine',
   gallery: '/gallery/feminine',
 };
-export const feminineWhatsApp = (
-  message = 'היי יוליה, אשמח לבדוק תאריך לצילומי נשיות. מעדיפה צילומים ב__ בסגנון __.'
-) => `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
+export const feminineWhatsApp = (message = 'היי יוליה, אשמח לשמוע על צילומי נשיות ולבדוק תאריך פנוי.') =>
+  `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
 
 export const femininePackageFacts = [
   { minutes: 45, photosFrom: 20, photosTo: 25 },
@@ -120,9 +119,8 @@ export function getFeminine(locale: Locale) {
       cards: femininePricingCards,
       facts: feminineFacts,
     };
-  const whatsapp = (
-    message = 'Здравствуйте, Юлия! Хочу узнать о женской и будуарной съёмке и свободных датах. Хотелось бы съёмку в __, в стиле __.'
-  ) => `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
+  const whatsapp = (message = 'Здравствуйте, Юлия! Хочу узнать о женской и будуарной съёмке и свободных датах.') =>
+    `https://wa.me/972525836940?text=${encodeURIComponent(message)}`;
   const copy = [
     { title: 'Базовый', duration: '45 минут', fit: 'Небольшая коллекция памятных кадров в спокойном темпе', extra: '' },
     {

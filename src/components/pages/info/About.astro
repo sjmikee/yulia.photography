@@ -4,7 +4,7 @@ import { infoMessages } from '~/i18n/info';
 const locale = localeFromPath(Astro.url.pathname);
 const t = infoMessages('about', locale);
 const link = (path: string) => translatedPath(path, locale) ?? path;
-const whatsapp = 'https://wa.me/972525836940' + (locale === 'ru' ? '?text=' + encodeURIComponent(t('inquiry')) : '');
+const whatsapp = 'https://wa.me/972525836940?text=' + encodeURIComponent(t('inquiry'));
 import { Image } from 'astro:assets';
 import portrait from '~/assets/images/about_photo.jpg';
 import WhatssapCallToAction from '~/components/widgets/WhatssapCallToAction.astro';

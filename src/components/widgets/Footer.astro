@@ -94,7 +94,8 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
       <a
         href={localeFromPath(Astro.url.pathname) === 'ru'
           ? `https://wa.me/972525836940?text=${encodeURIComponent('Здравствуйте, Юлия! Хочу узнать о фотосессии и свободных датах.')}`
-          : 'https://wa.me/972525836940'}
+          : 'https://wa.me/972525836940?text=' +
+            encodeURIComponent('היי יוליה, אשמח לשמוע על סשן צילום ולבדוק תאריך פנוי.')}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={labels.whatsapp}
