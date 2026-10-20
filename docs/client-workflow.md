@@ -48,6 +48,8 @@ The old receipt URL without a payment selection now opens client search. Select 
 
 ## Receipt recovery (only if a receipt is stuck)
 
+Morning authentication uses `POST https://api.morning.co/idp/v1/oauth/token` with the OAuth `client_credentials` JSON body and the returned `accessToken`. The existing `MORNINGAPIKEY` and `MORNINGAPISECRET` settings supply `client_id` and `client_secret`; no renamed settings are needed. The former `/api/v1/account/token` endpoint returns an empty HTTP 404. Authentication has a ten-second timeout, and empty or non-JSON authentication failures report their HTTP status without claiming the payment. See [Morning's official API schema](https://developers.morning.co/docs/openapi.bundled.json).
+
 The app claims a payment before asking Morning to create its receipt. A second click or retry cannot create another receipt for that payment. Explicit Morning rejections (HTTP 400, 401, 403, 404 or 422) return the payment to `pending`, show Morning's error message and allow a corrected retry. Timeouts, rate limits, server failures, malformed responses and lost connections leave the payment `processing` because a receipt may already exist. Payments stuck before this fix still need the reconciliation below.
 
 1. Wait for the original server request to finish. Check the client and payment in Morning and the server logs.

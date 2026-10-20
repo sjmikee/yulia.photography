@@ -86,10 +86,20 @@ test('receipt uses recorded amount/client, serializes duplicate calls and never 
   const originalFetch = globalThis.fetch;
   let documents = 0;
   globalThis.fetch = async (url, options) => {
-    if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+    if (url === 'https://api.morning.co/idp/v1/oauth/token') {
+      assert.equal(options.headers['Content-Type'], 'application/json');
+      assert.deepEqual(JSON.parse(options.body), {
+        grant_type: 'client_credentials',
+        client_id: 'test-key',
+        client_secret: 'test-secret',
+      });
+      assert.ok(options.signal instanceof AbortSignal);
+      return Response.json({ accessToken: 'test' });
+    }
     if (url.endsWith('/documents')) {
       documents++;
       const body = JSON.parse(options.body);
+      assert.equal(options.headers.Authorization, 'Bearer test');
       assert.equal(body.payment[0].price, 100);
       assert.equal(body.payment[0].date, '2026-10-03');
       assert.equal(body.client.phone, '0501234567');
@@ -119,7 +129,7 @@ test('uncertain provider outcome stays locked and prevents another receipt', asy
   const originalError = console.error;
   console.error = () => {};
   globalThis.fetch = async (url) => {
-    if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+    if (url === 'https://api.morning.co/idp/v1/oauth/token') return Response.json({ accessToken: 'test' });
     throw new Error('Connection lost after provider may have created document');
   };
   try {
@@ -134,7 +144,7 @@ test('uncertain provider outcome stays locked and prevents another receipt', asy
 test('receipt sends optional email and payment app in the provider format', async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url, options) => {
-    if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+    if (url === 'https://api.morning.co/idp/v1/oauth/token') return Response.json({ accessToken: 'test' });
     if (url.endsWith('/documents')) {
       const body = JSON.parse(options.body);
       assert.deepEqual(body.client.emails, []);
@@ -153,7 +163,15 @@ test('receipt sends optional email and payment app in the provider format', asyn
     globalThis.fetch = originalFetch;
   }
 });
-for (const scenario of ['unauthorized', 'missing-token', 'malformed', 'network']) {
+for (const scenario of [
+  'unauthorized',
+  'revoked',
+  'subscription',
+  'empty-404',
+  'missing-token',
+  'malformed',
+  'network',
+]) {
   test(`Morning authentication ${scenario} leaves the deposit pending and reports a retryable error`, async () => {
     state.record.receipt_status = 'pending';
     state.claim = true;
@@ -161,18 +179,28 @@ for (const scenario of ['unauthorized', 'missing-token', 'malformed', 'network']
     const originalError = console.error;
     console.error = () => {};
     globalThis.fetch = async (url) => {
-      assert.ok(url.endsWith('/account/token'), 'must not send a document request');
+      assert.ok(url === 'https://api.morning.co/idp/v1/oauth/token', 'must not send a document request');
       if (scenario === 'network') throw new Error('Connection failed');
+      if (scenario === 'empty-404') return new Response(null, { status: 404 });
+      if (scenario === 'revoked') return Response.json({ error: 'invalid_grant' }, { status: 400 });
+      if (scenario === 'subscription') return Response.json({ error: 'unauthorized_client' }, { status: 400 });
       if (scenario === 'malformed') return new Response('not json');
       if (scenario === 'missing-token') return Response.json({});
-      return Response.json({ errorMessage: 'Invalid credentials' }, { status: 401 });
+      return Response.json(
+        { error: 'invalid_client', error_description: 'Invalid client credentials' },
+        { status: 401 }
+      );
     };
     try {
       const response = await invokeReceipt();
       assert.ok(response.status >= 400);
       const result = await response.json();
       assert.equal(result.retryable, true);
-      if (scenario === 'unauthorized') assert.equal(result.error, 'Invalid credentials');
+      if (scenario === 'unauthorized') assert.match(result.error, /API key or secret/);
+      if (scenario === 'revoked') assert.match(result.error, /expired, revoked/);
+      if (scenario === 'subscription') assert.match(result.error, /subscription with API access/);
+      if (scenario === 'empty-404') assert.match(result.error, /HTTP 404/);
+      if (scenario === 'network') assert.match(result.error, /connect to Morning authentication/);
       assert.equal(state.record.receipt_status, 'pending');
       assert.equal(state.claim, true);
     } finally {
@@ -190,7 +218,7 @@ for (const status of [400, 401, 403, 404, 422, 408, 429, 500, 502]) {
     console.error = () => {};
     let documents = 0;
     globalThis.fetch = async (url) => {
-      if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+      if (url === 'https://api.morning.co/idp/v1/oauth/token') return Response.json({ accessToken: 'test' });
       documents++;
       return Response.json({ errorCode: 1000, errorMessage: 'Provider explanation' }, { status });
     };
@@ -619,11 +647,12 @@ for (const scenario of ['success', 'http-error', 'malformed', 'network-error', '
     let shortenings = 0;
     console.error = () => {};
     AbortSignal.timeout = (milliseconds) => {
+      if (milliseconds === 10000) return originalTimeout(milliseconds);
       assert.equal(milliseconds, 5000);
       return originalTimeout(scenario === 'timeout' ? 1 : milliseconds);
     };
     globalThis.fetch = async (url, options) => {
-      if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+      if (url === 'https://api.morning.co/idp/v1/oauth/token') return Response.json({ accessToken: 'test' });
       if (url.endsWith('/documents')) {
         documents++;
         return Response.json({ id: 'doc', number: 123, url: { he: full } });

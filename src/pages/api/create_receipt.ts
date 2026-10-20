@@ -4,6 +4,7 @@ import { sql } from '../../lib/db.ts';
 
 export async function POST({ request }: { request: Request }) {
   let documentRequestStarted = false;
+  let phase = 'payment lookup';
   try {
     const { payment_id, payment, appType, description, remarks } = await request.json();
     if (
@@ -41,28 +42,38 @@ export async function POST({ request }: { request: Request }) {
     }
 
     const jwt_body = {
-      id: apiKey,
-      secret: apiSecret,
+      grant_type: 'client_credentials',
+      client_id: apiKey,
+      client_secret: apiSecret,
     };
 
-    const jwt_response = await fetch('https://api.greeninvoice.co.il/api/v1/account/token', {
+    phase = 'Morning authentication';
+    const jwt_response = await fetch('https://api.morning.co/idp/v1/oauth/token', {
       method: 'POST',
+      signal: AbortSignal.timeout(10000),
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(jwt_body),
     });
 
-    const jwt_data = await jwt_response.json();
+    // Gateways can return an empty or HTML error body. Preserve the HTTP status
+    // instead of hiding it behind a JSON parse exception.
+    const jwt_data = await jwt_response.json().catch(() => null);
 
     if (!jwt_response.ok) {
-      console.error('GreenInvoice API token error:', jwt_data);
-      return Response.json(
-        { error: jwt_data.errorMessage || 'Morning authentication failed', retryable: true },
-        { status: 401 }
-      );
+      console.error('Morning authentication failed:', jwt_response.status, jwt_data?.error);
+      const reason =
+        jwt_data?.error === 'invalid_client'
+          ? 'Morning rejected the API key or secret. Check the Morning API credentials.'
+          : jwt_data?.error === 'invalid_grant'
+            ? 'The Morning API key is expired, revoked or awaiting activation.'
+            : jwt_data?.error === 'unauthorized_client'
+              ? 'The Morning account does not have an active subscription with API access.'
+              : `Morning authentication failed (HTTP ${jwt_response.status}). Please try again later.`;
+      return Response.json({ error: reason, retryable: true }, { status: 502 });
     }
-    if (typeof jwt_data.token !== 'string' || !jwt_data.token) {
+    if (typeof jwt_data?.accessToken !== 'string' || !jwt_data.accessToken) {
       return Response.json({ error: 'Morning did not return an access token', retryable: true }, { status: 502 });
     }
 
@@ -99,15 +110,17 @@ export async function POST({ request }: { request: Request }) {
     };
 
     // Claim before calling the provider. Unknown outcomes remain locked for manual reconciliation.
+    phase = 'payment claim';
     const claimed = await sql`UPDATE session_payments SET receipt_status = 'processing'
       WHERE id = ${payment_id}::uuid AND receipt_status = 'pending' RETURNING id`;
     if (!claimed.length) return new Response(JSON.stringify({ error: 'Receipt already requested' }), { status: 409 });
 
     documentRequestStarted = true;
+    phase = 'Morning receipt creation';
     const response = await fetch('https://api.greeninvoice.co.il/api/v1/documents', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${jwt_data.token}`,
+        Authorization: `Bearer ${jwt_data.accessToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
@@ -177,12 +190,14 @@ export async function POST({ request }: { request: Request }) {
       { status: 200 }
     );
   } catch (err) {
-    console.error(err);
+    console.error(`Receipt failed during ${phase}:`, err);
     return new Response(
       JSON.stringify({
         error: documentRequestStarted
           ? 'Unable to confirm receipt outcome. Check Morning before retrying.'
-          : 'Could not prepare the receipt request. Check the Morning connection and try again.',
+          : phase === 'Morning authentication'
+            ? 'Could not connect to Morning authentication. Please try again later.'
+            : 'Could not read or update the saved payment. Please refresh the client profile and try again.',
         retryable: !documentRequestStarted,
       }),
       { status: 500 }
