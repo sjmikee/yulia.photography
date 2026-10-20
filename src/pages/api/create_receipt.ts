@@ -3,6 +3,7 @@ export const prerender = false;
 import { sql } from '../../lib/db.ts';
 
 export async function POST({ request }: { request: Request }) {
+  let documentRequestStarted = false;
   try {
     const { payment_id, payment, appType, description, remarks } = await request.json();
     if (
@@ -36,7 +37,7 @@ export async function POST({ request }: { request: Request }) {
     const apiSecret = import.meta.env.MORNINGAPISECRET;
 
     if (!apiKey || !apiSecret) {
-      return new Response(JSON.stringify({ error: 'Missing Morning API keys' }), { status: 500 });
+      return Response.json({ error: 'Missing Morning API keys', retryable: true }, { status: 500 });
     }
 
     const jwt_body = {
@@ -56,7 +57,13 @@ export async function POST({ request }: { request: Request }) {
 
     if (!jwt_response.ok) {
       console.error('GreenInvoice API token error:', jwt_data);
-      return new Response(JSON.stringify({ error: jwt_data }), { status: 401 });
+      return Response.json(
+        { error: jwt_data.errorMessage || 'Morning authentication failed', retryable: true },
+        { status: 401 }
+      );
+    }
+    if (typeof jwt_data.token !== 'string' || !jwt_data.token) {
+      return Response.json({ error: 'Morning did not return an access token', retryable: true }, { status: 502 });
     }
 
     const body = {
@@ -68,7 +75,7 @@ export async function POST({ request }: { request: Request }) {
       vatType: 0,
       client: {
         name: name,
-        emails: { email },
+        emails: email ? [email] : [],
         phone: phone,
       },
       income: [
@@ -86,7 +93,7 @@ export async function POST({ request }: { request: Request }) {
           type: payment,
           price: amount,
           currency: 'ILS',
-          ...(payment === 10 && appType ? { appType } : {}),
+          ...(payment === 10 && appType ? { appType: Number(appType) } : {}),
         },
       ],
     };
@@ -96,6 +103,7 @@ export async function POST({ request }: { request: Request }) {
       WHERE id = ${payment_id}::uuid AND receipt_status = 'pending' RETURNING id`;
     if (!claimed.length) return new Response(JSON.stringify({ error: 'Receipt already requested' }), { status: 409 });
 
+    documentRequestStarted = true;
     const response = await fetch('https://api.greeninvoice.co.il/api/v1/documents', {
       method: 'POST',
       headers: {
@@ -109,7 +117,20 @@ export async function POST({ request }: { request: Request }) {
 
     if (!response.ok) {
       console.error('GreenInvoice API error:', data);
-      return new Response(JSON.stringify({ error: data }), { status: 400 });
+      // Explicit validation/auth rejections cannot create a document. Timeouts,
+      // rate limits and server failures remain locked until reconciled in Morning.
+      const retryable = [400, 401, 403, 404, 422].includes(response.status);
+      if (retryable) {
+        await sql`UPDATE session_payments SET receipt_status = 'pending'
+          WHERE id = ${payment_id}::uuid AND receipt_status = 'processing'`;
+      }
+      return Response.json(
+        {
+          error: typeof data.errorMessage === 'string' ? data.errorMessage : 'Morning rejected the receipt request',
+          retryable,
+        },
+        { status: 502 }
+      );
     }
 
     // Payments already reduced this exact session's balance when recorded.
@@ -158,7 +179,12 @@ export async function POST({ request }: { request: Request }) {
   } catch (err) {
     console.error(err);
     return new Response(
-      JSON.stringify({ error: 'Unable to confirm receipt outcome. Check Morning before retrying.' }),
+      JSON.stringify({
+        error: documentRequestStarted
+          ? 'Unable to confirm receipt outcome. Check Morning before retrying.'
+          : 'Could not prepare the receipt request. Check the Morning connection and try again.',
+        retryable: !documentRequestStarted,
+      }),
       { status: 500 }
     );
   }

@@ -48,7 +48,7 @@ The old receipt URL without a payment selection now opens client search. Select 
 
 ## Receipt recovery (only if a receipt is stuck)
 
-The app claims a payment before asking Morning to create its receipt. A second click or retry cannot create another receipt for that payment. If Morning or the network fails after the request starts, the payment remains `processing` because a receipt may already exist.
+The app claims a payment before asking Morning to create its receipt. A second click or retry cannot create another receipt for that payment. Explicit Morning rejections (HTTP 400, 401, 403, 404 or 422) return the payment to `pending`, show Morning's error message and allow a corrected retry. Timeouts, rate limits, server failures, malformed responses and lost connections leave the payment `processing` because a receipt may already exist. Payments stuck before this fix still need the reconciliation below.
 
 1. Wait for the original server request to finish. Check the client and payment in Morning and the server logs.
 2. Inspect the affected record:

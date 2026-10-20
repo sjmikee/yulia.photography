@@ -213,6 +213,7 @@ if (!record) return Astro.redirect('/clients');
       submitButton.textContent = 'שולחת…';
 
       let completed = false;
+      let retryable = false;
       try {
         const selectedOption = payment.options[payment.selectedIndex];
         const appType = selectedOption.dataset.app || null;
@@ -237,12 +238,15 @@ if (!record) return Astro.redirect('/clients');
         const data = await res.json();
 
         if (!res.ok) {
+          retryable = data.retryable === true;
           form.dispatchEvent(
             new CustomEvent('client:form-error', {
               bubbles: true,
               detail: {
                 field: null,
-                message: 'לא ניתן לאשר את הפקת הקבלה. בדקי בפרופיל ובמערכת Morning לפני ניסיון נוסף.',
+                message: retryable
+                  ? `הקבלה לא הופקה. ${typeof data.error === 'string' ? data.error : ''} אפשר לתקן ולנסות שוב.`
+                  : 'לא ניתן לאשר את הפקת הקבלה. בדקי בפרופיל ובמערכת Morning לפני ניסיון נוסף.',
               },
             })
           );
@@ -274,9 +278,13 @@ if (!record) return Astro.redirect('/clients');
           })
         );
       } finally {
-        submitButton.disabled = !completed;
+        submitButton.disabled = !completed && !retryable;
         delete submitButton.dataset.busy;
-        submitButton.textContent = completed ? 'פתיחת הקבלה הקיימת בוואטסאפ' : 'חזרי לפרופיל ובדקי את מצב הקבלה';
+        submitButton.textContent = completed
+          ? 'פתיחת הקבלה הקיימת בוואטסאפ'
+          : retryable
+            ? 'ניסיון נוסף להפקת קבלה'
+            : 'חזרי לפרופיל ובדקי את מצב הקבלה';
       }
     });
   }

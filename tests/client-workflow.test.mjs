@@ -39,6 +39,7 @@ export async function sql(strings, ...values) {
  const text = strings.join('?'); state.queries.push({text, values});
  if (text.includes('SELECT p.*')) return state.record ? [{...state.record}] : [];
  if (text.includes("SET receipt_status = 'processing'")) { if (!state.claim) return []; state.claim = false; state.record.receipt_status = 'processing'; return [{id: 'p'}]; }
+ if (text.includes("SET receipt_status = 'pending'")) { state.record.receipt_status = 'pending'; state.claim = true; return []; }
  if (text.includes("receipt_status = 'issued'")) { state.record.receipt_status = 'issued'; state.record.receipt_url = values[2]; return []; }
  if (text.includes('SELECT id FROM session_payments')) return [{id: 'test-payment'}];
  if (text.includes('SELECT contract_signed')) return [{contract_signed: state.signed}];
@@ -57,11 +58,18 @@ const receiptUrl = await load('src/pages/api/create_receipt.ts', {
 });
 const { POST: receipt } = await import(receiptUrl);
 const paymentId = '11111111-1111-4111-8111-111111111111';
-const invokeReceipt = () =>
+const invokeReceipt = (details = {}) =>
   receipt({
     request: new Request('https://example.test/api/create_receipt', {
       method: 'POST',
-      body: JSON.stringify({ payment_id: paymentId, payment: 1, description: 'Deposit', amount: 9999, phone: 'wrong' }),
+      body: JSON.stringify({
+        payment_id: paymentId,
+        payment: 1,
+        description: 'Deposit',
+        amount: 9999,
+        phone: 'wrong',
+        ...details,
+      }),
     }),
   });
 test('receipt uses recorded amount/client, serializes duplicate calls and never deducts balance twice', async () => {
@@ -85,6 +93,7 @@ test('receipt uses recorded amount/client, serializes duplicate calls and never 
       assert.equal(body.payment[0].price, 100);
       assert.equal(body.payment[0].date, '2026-10-03');
       assert.equal(body.client.phone, '0501234567');
+      assert.deepEqual(body.client.emails, ['test@example.test']);
       return Response.json({ id: 'doc', number: 123, url: { he: 'https://example.test/receipt' } });
     }
     return Response.json({ data: { tiny_url: 'https://example.test/short' } });
@@ -122,6 +131,85 @@ test('uncertain provider outcome stays locked and prevents another receipt', asy
     console.error = originalError;
   }
 });
+test('receipt sends optional email and payment app in the provider format', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url, options) => {
+    if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+    if (url.endsWith('/documents')) {
+      const body = JSON.parse(options.body);
+      assert.deepEqual(body.client.emails, []);
+      assert.equal(body.payment[0].type, 10);
+      assert.equal(body.payment[0].appType, 3);
+      return Response.json({ id: 'doc', number: 123, url: { he: 'https://example.test/receipt' } });
+    }
+    return Response.json({ data: { tiny_url: 'https://example.test/short' } });
+  };
+  try {
+    state.record.email = null;
+    state.record.receipt_status = 'pending';
+    state.claim = true;
+    assert.equal((await invokeReceipt({ payment: 10, appType: '3' })).status, 200);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+for (const scenario of ['unauthorized', 'missing-token', 'malformed', 'network']) {
+  test(`Morning authentication ${scenario} leaves the deposit pending and reports a retryable error`, async () => {
+    state.record.receipt_status = 'pending';
+    state.claim = true;
+    const originalFetch = globalThis.fetch;
+    const originalError = console.error;
+    console.error = () => {};
+    globalThis.fetch = async (url) => {
+      assert.ok(url.endsWith('/account/token'), 'must not send a document request');
+      if (scenario === 'network') throw new Error('Connection failed');
+      if (scenario === 'malformed') return new Response('not json');
+      if (scenario === 'missing-token') return Response.json({});
+      return Response.json({ errorMessage: 'Invalid credentials' }, { status: 401 });
+    };
+    try {
+      const response = await invokeReceipt();
+      assert.ok(response.status >= 400);
+      const result = await response.json();
+      assert.equal(result.retryable, true);
+      if (scenario === 'unauthorized') assert.equal(result.error, 'Invalid credentials');
+      assert.equal(state.record.receipt_status, 'pending');
+      assert.equal(state.claim, true);
+    } finally {
+      globalThis.fetch = originalFetch;
+      console.error = originalError;
+    }
+  });
+}
+for (const status of [400, 401, 403, 404, 422, 408, 429, 500, 502]) {
+  test(`Morning ${status} response allows retry only for a definite rejection`, async () => {
+    state.record.receipt_status = 'pending';
+    state.claim = true;
+    const originalFetch = globalThis.fetch;
+    const originalError = console.error;
+    console.error = () => {};
+    let documents = 0;
+    globalThis.fetch = async (url) => {
+      if (url.endsWith('/account/token')) return Response.json({ token: 'test' });
+      documents++;
+      return Response.json({ errorCode: 1000, errorMessage: 'Provider explanation' }, { status });
+    };
+    try {
+      const response = await invokeReceipt();
+      assert.equal(response.status, 502);
+      const data = await response.json();
+      const retryable = [400, 401, 403, 404, 422].includes(status);
+      assert.equal(data.retryable, retryable);
+      assert.equal(data.error, 'Provider explanation');
+      assert.equal(state.record.receipt_status, retryable ? 'pending' : 'processing');
+      assert.equal((await invokeReceipt()).status, retryable ? 502 : 409);
+      assert.equal(documents, retryable ? 2 : 1);
+    } finally {
+      globalThis.fetch = originalFetch;
+      console.error = originalError;
+    }
+  });
+}
 const endpointUrl = await load('src/pages/api/client_workflow.ts', {
   "'~/lib/db'": JSON.stringify(mockUrl),
   "'~/lib/client-workflow'": JSON.stringify(workflowUrl),
