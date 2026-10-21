@@ -19,7 +19,6 @@ import Layout from '~/layouts/PageLayout.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import Journey from '~/components/photoshoots/Journey.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
-import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
 import PricingCards from '~/components/ui/PricingCards.astro';
 import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
@@ -67,13 +66,7 @@ const breadcrumbs = [
     <h2 class="mb-4 text-center text-3xl font-bold">{t('packagesTitle')}</h2>
     <p class="mb-8 text-center">{t('packagesNote')}</p>
 
-    <PackageComparison
-      packages={[...femininePackages].reverse()}
-      label={t('comparisonLabel')}
-      caption={t('comparisonCaption')}
-    />
-
-    <div class="mt-8"><PricingCards prices={femininePricingCards} /></div>
+    <PricingCards prices={femininePricingCards} />
   </section>
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-start">
     <h2 class="text-2xl font-bold">{t('overviewTitle')}</h2>

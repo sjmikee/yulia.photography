@@ -19,7 +19,6 @@ import Layout from '~/layouts/PageLayout.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import Journey from '~/components/photoshoots/Journey.astro';
-import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
 import PricingCards from '~/components/ui/PricingCards.astro';
 import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import LeadTracking from '~/components/photoshoots/LeadTracking.astro';
@@ -81,13 +80,7 @@ const breadcrumbs = [
         {t('packagesNote')}
       </p>
 
-      <PackageComparison
-        packages={[...personalPackages].reverse()}
-        label={t('comparisonLabel')}
-        caption={t('comparisonCaption')}
-      />
-
-      <div class="mt-8"><PricingCards prices={personalPricingCards} /></div>
+      <PricingCards prices={personalPricingCards} />
     </section>
 
     <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">

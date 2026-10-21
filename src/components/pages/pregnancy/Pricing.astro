@@ -15,7 +15,6 @@ const {
 import Layout from '~/layouts/PageLayout.astro';
 import HeroText from '~/components/widgets/HeroText.astro';
 import PricingCards from '~/components/ui/PricingCards.astro';
-import PackageComparison from '~/components/photoshoots/PackageComparison.astro';
 import Journey from '~/components/photoshoots/Journey.astro';
 import ServiceSchema from '~/components/photoshoots/ServiceSchema.astro';
 import preview from '~/assets/images/pricing/pregnancy_pricing.jpg';
@@ -23,7 +22,6 @@ import FAQs from '~/components/widgets/FAQs.astro';
 import Steps from '~/components/widgets/Steps.astro';
 import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
 
-const displayedPackages = [...pregnancyPackages].sort((a, b) => b.price - a.price);
 const metadata = {
   title: t('metaTitle', pregnancyPackages[0].price),
   description: t('metaDescription', pregnancyPackages[0].price, pregnancyPackages[1].price, pregnancyPackages[2].price),
@@ -70,9 +68,7 @@ const breadcrumbs = [
     <p class="mb-8 text-center">{t('packagesIntroduction')}</p>
     <p class="mb-4 text-center text-sm">{t('durationNote')}</p>
 
-    <PackageComparison packages={displayedPackages} label={t('comparisonLabel')} caption={t('comparisonCaption')} />
-
-    <div class="mt-8"><PricingCards prices={pregnancyPricingCards} /></div>
+    <PricingCards prices={pregnancyPricingCards} />
   </section>
 
   <section class="mx-auto max-w-4xl px-4 py-8 text-start">

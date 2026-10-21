@@ -1,0 +1,45 @@
+# Dependencies and generated/cache directories
+node_modules/
+.git/
+.astro/
+.vercel/
+.output/
+dist/
+output/
+tmp/
+coverage/
+graphify-out/
+
+# Credentials and machine-local configuration
+.env
+.env.*
+.aws/
+.codex/
+.DS_Store
+
+# Photos and other binary/media assets (keep the map code-only)
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.avif
+*.gif
+*.tif
+*.tiff
+*.heic
+*.ico
+*.svg
+*.pdf
+*.mp4
+*.mov
+*.mp3
+*.wav
+*.woff
+*.woff2
+*.ttf
+*.otf
+
+# Generated dependency metadata
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

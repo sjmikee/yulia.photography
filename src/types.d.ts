@@ -101,11 +101,6 @@ export interface Image {
   alt?: string;
 }
 
-export interface Video {
-  src: string;
-  type?: string;
-}
-
 export interface Widget {
   id?: string;
   isDark?: boolean;
@@ -118,26 +113,6 @@ export interface Headline {
   subtitle?: string;
   tagline?: string;
   classes?: Record<string, string>;
-}
-
-interface TeamMember {
-  name?: string;
-  job?: string;
-  image?: Image;
-  socials?: Array<Social>;
-  description?: string;
-  classes?: Record<string, string>;
-}
-
-interface Social {
-  icon?: string;
-  href?: string;
-}
-
-export interface Stat {
-  amount?: number | string;
-  title?: string;
-  icon?: string;
 }
 
 export interface Item {
@@ -163,33 +138,6 @@ export interface Price {
   ribbonTitle?: string;
 }
 
-export interface Testimonial {
-  title?: string;
-  testimonial?: string;
-  name?: string;
-  job?: string;
-  image?: string | unknown;
-}
-
-export interface Input {
-  type: HTMLInputTypeAttribute;
-  name: string;
-  label?: string;
-  autocomplete?: string;
-  placeholder?: string;
-}
-
-export interface Textarea {
-  label?: string;
-  name?: string;
-  placeholder?: string;
-  rows?: number;
-}
-
-export interface Disclaimer {
-  label?: string;
-}
-
 // COMPONENTS
 export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'link';
@@ -199,52 +147,6 @@ export interface CallToAction extends Omit<HTMLAttributes<'a'>, 'slot'> {
   type?: 'button' | 'submit' | 'reset';
 }
 
-export interface SliderCardType {
-  title?: string;
-  subTitle?: string;
-  text?: string;
-  callToAction?: CallToAction;
-  images?: Array<ImageMetadata, string>;
-}
-
-export interface ContentType extends Omit<Headline, 'classes'>, Widget {
-  title?: string;
-  subTitle?: string;
-  text?: string;
-  callToAction?: CallToAction;
-  actions?: CallToAction[];
-  imagesFolder?: string;
-  galleryImages?: Array<{ image: ImageMetadata; alt: string }>;
-  galleryLayout?: 'masonry' | 'grid';
-}
-
-export interface SlideModalType extends Omit<Headline, 'classes'>, Widget {
-  images?: Array<ImageMetadata>;
-}
-
-export interface ItemGrid {
-  items?: Array<Item>;
-  columns?: number;
-  defaultIcon?: string;
-  classes?: Record<string, string>;
-}
-
-export interface Collapse {
-  iconUp?: string;
-  iconDown?: string;
-  items?: Array<Item>;
-  columns?: number;
-  classes?: Record<string, string>;
-}
-
-export interface Form {
-  inputs?: Array<Input>;
-  textarea?: Textarea;
-  disclaimer?: Disclaimer;
-  button?: string;
-  description?: string;
-}
-
 // WIDGETS
 export interface Hero extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' | 'classes'> {
   content?: string;
@@ -252,39 +154,8 @@ export interface Hero extends Omit<Headline, 'classes'>, Omit<Widget, 'isDark' |
   image?: string | unknown;
 }
 
-export interface Team extends Omit<Headline, 'classes'>, Widget {
-  team?: Array<TeamMember>;
-}
-
-export interface Stats extends Omit<Headline, 'classes'>, Widget {
-  stats?: Array<Stat>;
-}
-
 export interface Pricing extends Omit<Headline, 'classes'>, Widget {
   prices?: Array<Price>;
-}
-
-export interface Testimonials extends Omit<Headline, 'classes'>, Widget {
-  testimonials?: Array<Testimonial>;
-  callToAction?: CallToAction;
-}
-
-export interface Brands extends Omit<Headline, 'classes'>, Widget {
-  icons?: Array<string>;
-  images?: Array<Image>;
-}
-
-export interface Features extends Omit<Headline, 'classes'>, Widget {
-  image?: string | unknown;
-  video?: Video;
-  items?: Array<Item>;
-  columns?: number;
-  defaultIcon?: string;
-  callToAction1?: CallToAction;
-  callToAction2?: CallToAction;
-  isReversed?: boolean;
-  isBeforeContent?: boolean;
-  isAfterContent?: boolean;
 }
 
 export interface Faqs extends Omit<Headline, 'classes'>, Widget {
@@ -305,24 +176,3 @@ export interface Steps extends Omit<Headline, 'classes'>, Widget {
   image?: string | Image;
   isReversed?: boolean;
 }
-
-export interface Content extends Omit<Headline, 'classes'>, Widget {
-  content?: string;
-  image?: string | unknown;
-  images?: Array<MetaDataImage, string>;
-  items?: Array<Item>;
-  columns?: number;
-  isReversed?: boolean;
-  isAfterContent?: boolean;
-  callToAction?: CallToAction;
-}
-
-export interface ContentGridType extends Omit<Headline, 'classes'>, Widget {
-  image?: string | unknown;
-  contentArray?: Array<ContentType>;
-  columns?: number;
-  isReversed?: boolean;
-  isAfterContent?: boolean;
-}
-
-export interface Contact extends Omit<Headline, 'classes'>, Form, Widget {}
