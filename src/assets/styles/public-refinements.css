@@ -1,0 +1,160 @@
+/* Opt-in only: family, first-year, campaigns and private pages retain their styles. */
+.public-refined {
+  --site-radius-image: 6px;
+  --site-radius-panel: 10px;
+  --site-width-reading: 48rem;
+  --site-width-content: 64rem;
+  --site-width-wide: 75rem;
+  --site-section-space: clamp(2.5rem, 5vw, 4rem);
+  --site-gutter: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* Breadcrumbs use the same readable secondary text in either theme. */
+.public-refined #breadcrumb {
+  max-width: var(--site-width-wide);
+  padding-inline: var(--site-gutter);
+  color: var(--aw-color-text-muted);
+}
+.public-refined #breadcrumb ol {
+  margin-inline: 0;
+}
+.public-refined #breadcrumb a {
+  color: var(--aw-color-text-muted);
+}
+.public-refined #breadcrumb a:hover {
+  color: var(--aw-color-accent);
+}
+
+/* Preserve wide photo layouts and narrower reading sections as distinct roles. */
+.public-refined main section:is(.max-w-3xl, .max-w-4xl) {
+  max-width: var(--site-width-reading);
+  padding-inline: var(--site-gutter);
+  padding-block: var(--site-section-space);
+}
+.public-refined main section.max-w-5xl {
+  max-width: var(--site-width-content);
+  padding-inline: var(--site-gutter);
+  padding-block: var(--site-section-space);
+}
+.public-refined main section.max-w-6xl {
+  max-width: var(--site-width-wide);
+  padding-inline: var(--site-gutter);
+  padding-block: var(--site-section-space);
+}
+.public-refined main :is(.about-story, .contact-panel, .home-section, .home-about) {
+  max-width: var(--site-width-wide);
+}
+.public-refined main :is(.page-introduction, .gallery-heading) {
+  max-width: var(--site-width-content);
+  padding: var(--site-section-space) var(--site-gutter) 1.5rem;
+}
+.public-refined main :is(.page-introduction, .gallery-heading) h1 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.2;
+}
+.public-refined main .faq-section {
+  max-width: var(--site-width-wide);
+  padding: var(--site-section-space) var(--site-gutter);
+}
+
+/* Match photographic edges; small circular portraits remain circular. */
+.public-refined main :is(img.w-full, .about-story img, .home-about img, .selected-work img, .session-photo) {
+  border-radius: var(--site-radius-image);
+}
+.public-refined .hero-photo img {
+  border-radius: 0;
+}
+.public-refined main :is(.rounded-xl, .rounded-2xl, .contact-primary):not(img):not(a) {
+  border-radius: var(--site-radius-panel);
+}
+.public-refined main :is(.bg-gray-50, .bg-gray-100, .dark\:bg-slate-800, .dark\:bg-slate-900) {
+  background-color: var(--site-surface);
+}
+
+/* Article and legal content share the site's palette and restrained imagery. */
+.public-refined main section.blog-listing {
+  max-width: var(--site-width-content);
+}
+.public-refined .blog-listing > header > div {
+  color: var(--aw-color-text-muted);
+}
+.public-refined .prose {
+  --tw-prose-body: var(--aw-color-text-default);
+  --tw-prose-headings: var(--aw-color-text-heading);
+  --tw-prose-bold: var(--aw-color-text-heading);
+  --tw-prose-links: var(--aw-color-accent);
+  --tw-prose-counters: var(--aw-color-text-muted);
+  --tw-prose-bullets: var(--aw-color-text-muted);
+  color: var(--aw-color-text-default);
+}
+.public-refined .prose :is(h1, h2, h3, h4, strong) {
+  color: var(--aw-color-text-heading);
+}
+.public-refined .prose a {
+  color: var(--aw-color-accent);
+  text-underline-offset: 4px;
+}
+.public-refined .prose a:hover {
+  text-decoration-thickness: 2px;
+}
+.public-refined :is(.blog-card, .blog-content) :is(h2, h3, time),
+.public-refined .blog-card p {
+  color: var(--aw-color-text-default);
+}
+.public-refined .blog-card :is(p, time) {
+  color: var(--aw-color-text-muted);
+}
+.public-refined .blog-card :is(h2, h3) a:hover {
+  color: var(--aw-color-accent);
+}
+.public-refined :is(.blog-card, .blog-content, .prose) img,
+.public-refined .blog-card .shadow-lg {
+  box-shadow: none;
+  border-radius: var(--site-radius-image);
+}
+
+/* One closing invitation, with existing page-specific copy and destinations. */
+.public-refined .contact-invitation {
+  max-width: var(--site-width-content);
+  margin: var(--site-section-space) auto;
+  padding: var(--site-section-space) var(--site-gutter);
+  border-block: 1px solid var(--site-border);
+  text-align: center;
+}
+.public-refined .contact-invitation h2 {
+  color: var(--aw-color-text-heading);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.2;
+  margin: 0 auto 1.25rem;
+  max-width: 24ch;
+}
+.public-refined .contact-invitation p {
+  max-width: 55ch;
+  margin: 0 auto 1.75rem;
+  color: var(--aw-color-text-muted);
+  line-height: 1.8;
+}
+.public-refined .contact-phone {
+  display: block;
+  width: fit-content;
+  margin: 1rem auto 0;
+  padding: 0.5rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.public-refined .contact-phone:hover {
+  color: var(--aw-color-accent);
+}
+
+/* Keep the closing footer on the same charcoal palette in both themes. */
+.public-refined #footer > [aria-hidden='true'] {
+  background: var(--aw-color-bg-footer);
+}
+.public-refined #footer > .relative {
+  max-width: var(--site-width-wide);
+  padding-inline: var(--site-gutter);
+  color: #e1e7e3;
+}
+.public-refined #footer .text-page {
+  color: #e1e7e3;
+}

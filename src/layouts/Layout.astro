@@ -1,6 +1,8 @@
 ---
 import '~/assets/styles/tailwind.css';
 import '~/assets/styles/public-site.css';
+import '~/assets/styles/public-refinements.css';
+import { usesRefinedPresentation } from '~/lib/public-presentation';
 
 import '@fontsource-variable/rubik';
 import { localeFromPath } from '~/i18n/routes';
@@ -57,7 +59,12 @@ const privatePage = managementPage || contractPage;
     <ClientRouter fallback="swap" />
   </head>
 
-  <body class:list={['antialiased text-default bg-page tracking-tight', { 'public-site': !privatePage }]}>
+  <body
+    class:list={[
+      'antialiased text-default bg-page tracking-tight',
+      { 'public-site': !privatePage, 'public-refined': !privatePage && usesRefinedPresentation(Astro.url.pathname) },
+    ]}
+  >
     {!privatePage && <GtmBody />}
     <slot />
 

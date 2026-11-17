@@ -1,6 +1,8 @@
 ---
 import { localeFromPath } from '~/i18n/routes';
 import CallToAction from './CallToAction.astro';
+import ContactSection from '~/components/ui/ContactSection.astro';
+import { usesRefinedPresentation } from '~/lib/public-presentation';
 interface Props {
   title?: string;
   subtitle?: string;
@@ -14,26 +16,38 @@ const {
 } = Astro.props;
 ---
 
-<CallToAction
-  id="bottomCallToAction"
-  actions={[
-    {
-      variant: 'primary',
-      text: localeFromPath(Astro.url.pathname) === 'ru' ? 'WhatsApp' : 'ווטסאפ',
-      href,
-      target: '_blank',
-      icon: 'tabler:brand-whatsapp',
-    },
-  ]}
->
-  <Fragment slot="title">
-    {title}
-  </Fragment>
+{
+  usesRefinedPresentation(Astro.url.pathname) ? (
+    <ContactSection
+      id="bottomCallToAction"
+      title={title}
+      description={subtitle}
+      action={{
+        text: localeFromPath(Astro.url.pathname) === 'ru' ? 'WhatsApp' : 'ווטסאפ',
+        href,
+        target: '_blank',
+        icon: 'tabler:brand-whatsapp',
+      }}
+    />
+  ) : (
+    <CallToAction
+      id="bottomCallToAction"
+      actions={[
+        {
+          variant: 'primary',
+          text: localeFromPath(Astro.url.pathname) === 'ru' ? 'WhatsApp' : 'ווטסאפ',
+          href,
+          target: '_blank',
+          icon: 'tabler:brand-whatsapp',
+        },
+      ]}
+    >
+      <Fragment slot="title">{title}</Fragment>
 
-  <Fragment slot="subtitle">
-    {subtitle}
-  </Fragment>
-  <Fragment slot="bg">
-    <div class="absolute inset-0 bg-page dark:bg-slate-900"></div>
-  </Fragment>
-</CallToAction>
+      <Fragment slot="subtitle">{subtitle}</Fragment>
+      <Fragment slot="bg">
+        <div class="absolute inset-0 bg-page dark:bg-slate-900" />
+      </Fragment>
+    </CallToAction>
+  )
+}

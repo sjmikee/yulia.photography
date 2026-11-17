@@ -7,6 +7,7 @@ import { overviewMessages } from '~/i18n/overview';
 import { getHomepageImages } from '~/lib/homepage-gallery';
 import { PRICES } from '~/lib/pricing';
 import Button from '~/components/ui/Button.astro';
+import ContactSection from '~/components/ui/ContactSection.astro';
 import Reviews from '~/components/widgets/reviews.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
@@ -229,10 +230,12 @@ const metadata = {
       items={faqKeys.map((n) => ({ title: t(`faq${n}Question`), description: t(`faq${n}Answer`) }))}
     />
     <BlogLatestPosts title={t('articlesTitle')} information={t('articlesDescription')} count={3} />
-    <section id="bottomCallToAction" class="home-cta">
-      <h2>{t('ctaTitle')}</h2><p>{t('ctaSubtitle')}</p>
-      <Button href={whatsapp} target="_blank" variant="primary" icon="tabler:brand-whatsapp">{t('inquire')}</Button>
-    </section>
+    <ContactSection
+      id="bottomCallToAction"
+      title={t('ctaTitle')}
+      description={t('ctaSubtitle')}
+      action={{ href: whatsapp, target: '_blank', icon: 'tabler:brand-whatsapp', text: t('inquire') }}
+    />
   </art-portfolio>
 </Layout>
 
@@ -551,30 +554,6 @@ const metadata = {
   }
   .pricing-invitation :global(.btn) {
     flex-shrink: 0;
-  }
-  .home-cta {
-    text-align: center;
-    padding: 6rem 1.5rem;
-    background: var(--aw-color-accent);
-    color: white;
-  }
-  .home-cta h2 {
-    font-size: clamp(2.5rem, 6vw, 6rem);
-  }
-  .home-cta p {
-    max-width: 52ch;
-    margin: 1.5rem auto 2rem;
-    line-height: 1.8;
-  }
-  .home-cta :global(.btn-primary) {
-    border-color: white;
-    background: rgb(255 255 255 / 0.12);
-    backdrop-filter: blur(10px);
-    color: white;
-  }
-  .home-cta :global(.btn-primary:hover) {
-    background: white;
-    color: #b90004;
   }
   @media (max-width: 999px) {
     .session,

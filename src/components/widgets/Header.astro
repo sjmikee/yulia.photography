@@ -96,6 +96,15 @@ const message =
         }
       </ul>
       <div class="mobile-contact">
+        {
+          showToggleTheme && (
+            <ToggleTheme
+              label={labels.theme}
+              class="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md text-heading hover:bg-primary hover:text-white"
+              iconClass="w-5 h-5"
+            />
+          )
+        }
         <a
           class="btn-primary"
           href={`https://wa.me/972525836940?text=${encodeURIComponent(message)}`}
@@ -533,6 +542,8 @@ const message =
     .mobile-contact {
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
       direction: ltr;
       flex-shrink: 0;
       padding-top: 1.5rem;

@@ -60,7 +60,7 @@ const {
 
     {
       subtitle && (
-        <p class="text-gray-600 mb-4 leading-relaxed">
+        <p class="text-muted mb-4 leading-relaxed">
           <Fragment set:html={subtitle} />
         </p>
       )
@@ -76,7 +76,7 @@ const {
 
     <a
       href={href}
-      class="inline-block text-sm font-medium text-gray-800 hover:underline"
+      class="inline-block text-sm font-medium text-heading hover:underline"
       aria-label={typeof title === 'string'
         ? isRussian
           ? `Подробнее: ${title.replace(/<[^>]*>/g, '').trim()}`
