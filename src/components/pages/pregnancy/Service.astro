@@ -1,5 +1,5 @@
 ---
-import { clientReviews } from '~/i18n/client-reviews';
+import { clientReviews, googleProfileUrl } from '~/i18n/client-reviews';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { pregnancyMessages } from '~/i18n/pregnancy';
 import { getPregnancy, pregnancyChildSupplement } from '~/lib/pregnancy';
@@ -188,6 +188,11 @@ const breadcrumbs = [
         </footer>
       </blockquote>
     </div>
+    <p class="mt-6 text-center">
+      <a href={googleProfileUrl} class="underline underline-offset-4"
+        >{locale === 'he' ? 'לכל הביקורות בגוגל' : 'Все отзывы в Google'}</a
+      >
+    </p>
   </section>
 
   <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">

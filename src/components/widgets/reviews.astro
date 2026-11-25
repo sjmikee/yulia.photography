@@ -1,12 +1,11 @@
 ---
 import { localeFromPath } from '~/i18n/routes';
-import { googleProfileUrl } from '~/i18n/client-reviews';
+import { clientReviews, googleProfileUrl, sessionLabels } from '~/i18n/client-reviews';
 import { homeMessages } from '~/i18n/home';
 const locale = localeFromPath(Astro.url.pathname);
 const t = homeMessages('reviews', locale);
 import { Image } from 'astro:assets';
 
-import tali_review from '~/assets/reviewers/tali_review.jpg';
 import ira_review from '~/assets/reviewers/ira_review.jpg';
 import cristina_review from '~/assets/reviewers/cristina_review.jpg';
 import WidgetWrapper from '../ui/WidgetWrapper.astro';
@@ -29,7 +28,10 @@ import WidgetWrapper from '../ui/WidgetWrapper.astro';
         </p>
         <footer class="mt-4 font-bold flex items-center">
           <Image src={cristina_review} alt="" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
-          <span class="mx-2 dark:text-gray-200"> {t('cristinaName')}</span>
+          <span class="mx-2 dark:text-gray-200">
+            {t('cristinaName')}
+            {locale === 'ru' && <small class="block font-normal">{t('translated')}</small>}</span
+          >
         </footer>
       </blockquote>
       <blockquote
@@ -45,7 +47,10 @@ import WidgetWrapper from '../ui/WidgetWrapper.astro';
         </p>
         <footer class="mt-4 font-bold flex items-center">
           <Image src={ira_review} alt="" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
-          <span class="mx-2 dark:text-gray-200"> {t('iraName')}</span>
+          <span class="mx-2 dark:text-gray-200">
+            {t('iraName')}
+            {locale === 'he' && <small class="block font-normal">{t('translated')}</small>}</span
+          >
         </footer>
       </blockquote>
       <blockquote
@@ -54,13 +59,11 @@ import WidgetWrapper from '../ui/WidgetWrapper.astro';
         <p class="dark:text-gray-200">
           <span class="text-yellow-400 text-lg">★★★★★</span>
           <br />
-          {t('taliStart')}
-          <strong>{t('taliEmphasis')}</strong>
-          {t('taliEnd')}
+          {clientReviews.hila[locale]}
         </p>
-        <footer class="mt-4 font-bold flex items-center">
-          <Image src={tali_review} alt="" class="w-10 h-10 rounded-full mr-3" width={40} height={40} />
-          <span class="mx-2 dark:text-gray-200"> {t('taliName')}</span>
+        <footer class="mt-4 font-bold">
+          <bdi>{clientReviews.hila.name}</bdi> · {sessionLabels.feminine[locale]}
+          {locale === 'ru' && <small class="block font-normal">{t('translated')}</small>}
         </footer>
       </blockquote>
     </div>

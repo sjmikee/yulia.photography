@@ -25,6 +25,7 @@ const {
   {tagline && <p class="intro-context" set:html={tagline} />}
   {title && <h1 set:html={title} />}
   {subtitle && <p class="intro-description" set:html={subtitle} />}
+  <slot name="afterSubtitle" />
   {
     (callToAction || callToAction2) && (
       <div class="intro-actions">

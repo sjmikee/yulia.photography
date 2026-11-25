@@ -1,20 +1,23 @@
 ---
+import Button from '~/components/ui/Button.astro';
 import { Icon } from 'astro-icon/components';
 import { clientReviews, googleProfileUrl, sessionLabels } from '~/i18n/client-reviews';
 import { localeFromPath } from '~/i18n/routes';
 
 interface Props {
   reviewer: keyof typeof clientReviews;
+  id?: string;
+  enquiry?: { href: string; label: string };
 }
 
-const { reviewer } = Astro.props;
+const { reviewer, id = 'reviews', enquiry } = Astro.props;
 const locale = localeFromPath(Astro.url.pathname);
 const review = clientReviews[reviewer];
 const translation = locale === 'he' ? 'תרגום מרוסית' : 'перевод с иврита';
 const ratingLabel = locale === 'he' ? `${review.rating} מתוך 5 כוכבים` : `${review.rating} из 5 звёзд`;
 ---
 
-<figure id="reviews" class="review-card">
+<figure id={id} class="review-card">
   <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
     <span class="review-stars" role="img" aria-label={ratingLabel}>
       <span aria-hidden="true">{'★'.repeat(review.rating)}</span>
@@ -31,6 +34,21 @@ const ratingLabel = locale === 'he' ? `${review.rating} מתוך 5 כוכבים`
     {locale !== review.original && <small>{translation}</small>}
   </figcaption>
 </figure>
+{
+  enquiry && (
+    <div class="mx-auto mb-8 max-w-3xl px-4 text-center">
+      <Button
+        variant="primary"
+        href={enquiry.href}
+        target="_blank"
+        icon="tabler:brand-whatsapp"
+        data-lead-source="post_review"
+      >
+        {enquiry.label}
+      </Button>
+    </div>
+  )
+}
 
 <style>
   .review-card {

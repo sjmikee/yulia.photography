@@ -1,4 +1,5 @@
 ---
+import ReviewJumpLink from '~/components/photoshoots/ReviewJumpLink.astro';
 import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { feminineMessages } from '~/i18n/feminine';
@@ -54,7 +55,9 @@ const breadcrumbs = [
     content={t('introduction')}
     callToAction={{ text: t('compareAction'), href: '#packages' }}
     callToAction2={{ text: t('dateAction'), href: feminineWhatsApp(), target: '_blank' }}
-  />
+  >
+    <ReviewJumpLink slot="afterSubtitle" reviewer="hila" />
+  </HeroText>
   <Breadcrumbs
     items={[
       { label: t('homeLabel'), href: link('/') },
@@ -69,7 +72,10 @@ const breadcrumbs = [
 
     <PricingCards prices={femininePricingCards} />
   </section>
-  <ClientReview reviewer="hila" />
+  <ClientReview
+    reviewer="hila"
+    enquiry={{ href: feminineWhatsApp(t('postReviewMessage')), label: t('postReviewAction') }}
+  />
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-start">
     <h2 class="text-2xl font-bold">{t('overviewTitle')}</h2>
     <p>
