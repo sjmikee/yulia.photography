@@ -1,4 +1,5 @@
 ---
+import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { couplesMessages } from '~/i18n/couples';
 import { getCouples } from '~/lib/couples';
@@ -76,6 +77,7 @@ const breadcrumbs = [
 
       <PricingCards prices={couplesPricingCards} />
     </section>
+    <ClientReview reviewer="iryna" />
     <section class="mx-auto max-w-4xl space-y-4 px-4 py-8">
       <h2 class="text-2xl font-bold">{t('overviewTitle')}</h2>
       <p>
@@ -134,13 +136,6 @@ const breadcrumbs = [
           href={link('/about')}>{t('aboutLink')}</a
         >
       </p>
-    </section>
-    <section id="reviews" class="mx-auto max-w-3xl px-4 py-10">
-      <h2 class="mb-4 text-3xl font-bold">{t('reviewTitle')}</h2>
-      <p class="mb-6 text-sm text-muted">{t('reviewNote')}</p>
-      <blockquote class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
-        <p>{t('reviewQuote')}</p><footer class="mt-4 font-semibold">{t('reviewName')}</footer>
-      </blockquote>
     </section>
     <FAQs
       title={t('faqTitle')}

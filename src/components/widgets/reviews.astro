@@ -1,5 +1,6 @@
 ---
 import { localeFromPath } from '~/i18n/routes';
+import { googleProfileUrl } from '~/i18n/client-reviews';
 import { homeMessages } from '~/i18n/home';
 const locale = localeFromPath(Astro.url.pathname);
 const t = homeMessages('reviews', locale);
@@ -63,5 +64,8 @@ import WidgetWrapper from '../ui/WidgetWrapper.astro';
         </footer>
       </blockquote>
     </div>
+    <p class="mt-6 text-center">
+      <a class="underline underline-offset-4" href={googleProfileUrl}>{t('googleLink')}</a>
+    </p>
   </WidgetWrapper>
 </section>

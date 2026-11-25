@@ -1,4 +1,5 @@
 ---
+import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { intimateMessages } from '~/i18n/intimate';
 import { getIntimate } from '~/lib/couples-intimate';
@@ -132,6 +133,7 @@ const breadcrumbs = [
       <h3 class="text-xl font-bold">{t('clothingTitle')}</h3>
       <p>{t('clothingBody')}</p>
     </ImageSection>
+    <ClientReview reviewer="lili" />
     <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
       <h2 class="text-3xl font-bold">{t('priceTitle')}</h2>
       <p>{t('pricesPrefix')}{intimatePackages.map((p) => p.price).join(', ')} {t('pricesSuffix')}</p>

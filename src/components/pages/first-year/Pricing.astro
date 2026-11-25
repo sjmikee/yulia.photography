@@ -1,4 +1,5 @@
 ---
+import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { firstYearMessages } from '~/i18n/first-year';
 import { FIRST_YEAR_PRICE_KEY, firstYearWhatsApp } from '~/lib/first-year';
@@ -164,6 +165,7 @@ const breadcrumbs = [
     ]}
   />
 
+  <ClientReview reviewer="parent" />
   <section class="mx-auto max-w-4xl space-y-5 px-4 py-8 text-start">
     <h2 class="text-2xl font-bold">{t('selectionTitle')}</h2>
     <p>

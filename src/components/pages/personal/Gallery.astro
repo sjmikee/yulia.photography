@@ -1,4 +1,5 @@
 ---
+import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { personalMessages } from '~/i18n/personal';
 import { getPersonal } from '~/lib/personal';
@@ -65,6 +66,7 @@ const breadcrumbs = [
       <p>{t('reassuranceBody')}</p>
       <Button href={link('/services/personal-photography')}>{t('serviceLink')}</Button>
     </section>
+    <ClientReview reviewer="daniel" />
     <Journey journey={personalJourney} current="gallery" cta />
   </LeadTracking>
 </Layout>

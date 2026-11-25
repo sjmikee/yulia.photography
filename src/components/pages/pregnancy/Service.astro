@@ -1,4 +1,5 @@
 ---
+import { clientReviews } from '~/i18n/client-reviews';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { pregnancyMessages } from '~/i18n/pregnancy';
 import { getPregnancy, pregnancyChildSupplement } from '~/lib/pregnancy';
@@ -180,7 +181,7 @@ const breadcrumbs = [
         <p>
           <span class="text-yellow-400 text-lg">★★★★★</span>
           <br />
-          {t('zehavaReview')}
+          <span class="whitespace-pre-line">{clientReviews.zehava[locale]}</span>
         </p>
         <footer class="mt-4 font-bold flex items-center">
           <span class="mx-2">{t('zehavaName')}</span>

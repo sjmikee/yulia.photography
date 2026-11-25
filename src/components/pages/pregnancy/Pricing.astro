@@ -1,4 +1,5 @@
 ---
+import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { pregnancyMessages } from '~/i18n/pregnancy';
 import { getPregnancy, pregnancyChildSupplement } from '~/lib/pregnancy';
@@ -70,6 +71,7 @@ const breadcrumbs = [
 
     <PricingCards prices={pregnancyPricingCards} />
   </section>
+  <ClientReview reviewer="zehava" />
 
   <section class="mx-auto max-w-4xl px-4 py-8 text-start">
     <h2 class="mb-4 text-2xl font-bold">{t('overviewTitle')}</h2>

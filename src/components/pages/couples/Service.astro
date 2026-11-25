@@ -1,4 +1,5 @@
 ---
+import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { couplesMessages } from '~/i18n/couples';
 import { getCouples } from '~/lib/couples';
@@ -143,13 +144,7 @@ const breadcrumbs = [
         </li>
       </ol>
     </section>
-    <section id="reviews" class="mx-auto max-w-3xl px-4 py-10">
-      <h2 class="mb-4 text-3xl font-bold">{t('reviewTitle')}</h2>
-      <p class="mb-6 text-sm text-muted">{t('reviewNote')}</p>
-      <blockquote class="rounded-2xl bg-gray-50 p-6 dark:bg-slate-800">
-        <p>{t('reviewQuote')}</p><footer class="mt-4 font-semibold">{t('reviewName')}</footer>
-      </blockquote>
-    </section>
+    <ClientReview reviewer="row" />
     <section class="mx-auto max-w-4xl space-y-4 px-4 py-12 text-center">
       <h2 class="text-3xl font-bold">{t('priceTitle')}</h2>
       <p>{t('pricesPrefix')}{couplesPackages.map((p) => p.price).join(', ')} {t('pricesSuffix')}</p>

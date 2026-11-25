@@ -92,21 +92,22 @@
 .public-site .skip-link:focus {
   transform: translateY(0);
 }
-.public-site #reviews {
+.public-site section#reviews {
+  border-radius: var(--site-radius-panel, 10px);
   background: var(--site-surface);
   padding-block: 4rem;
 }
-.public-site #reviews blockquote {
+.public-site section#reviews blockquote {
   box-shadow: 0 12px 36px rgb(35 50 55 / 0.04);
   border-radius: 10px;
   background: color-mix(in srgb, var(--aw-color-bg-page) 70%, transparent);
   backdrop-filter: blur(12px);
   border-top: 2px solid var(--aw-color-accent);
 }
-.public-site #reviews .text-yellow-400 {
+.public-site section#reviews .text-yellow-400 {
   color: var(--aw-color-accent);
 }
-.public-site #reviews > div {
+.public-site section#reviews > div {
   padding-block: 0;
 }
 .public-site #footer {

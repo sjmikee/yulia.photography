@@ -1,4 +1,5 @@
 ---
+import ClientReview from '~/components/photoshoots/ClientReview.astro';
 import { localeFromPath, translatedPath } from '~/i18n/routes';
 import { personalMessages } from '~/i18n/personal';
 import { getPersonal } from '~/lib/personal';
@@ -82,6 +83,7 @@ const breadcrumbs = [
 
       <PricingCards prices={personalPricingCards} />
     </section>
+    <ClientReview reviewer="ira" />
 
     <section class="mx-auto max-w-4xl space-y-5 px-4 py-10">
       <h2 class="text-3xl font-bold">{t('selectionTitle')}</h2>
